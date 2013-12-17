@@ -1,0 +1,45 @@
+﻿<div class="row">
+  <div class="large-12 columns">
+    <a href="/issue/${project.Id}/index">terug naar overzicht</a>
+    <% if item.Number > 0: %>
+    <h1>Taak bewerken</h1>
+    <% else: %>
+    <h1>Nieuwe taak</h1>
+    <% end %>
+    <form action="/issue/${project.Id}/save" method="POST">
+      ${Form.HiddenField("item.Number")}
+      <input type="hidden" name="item.Milestone.Number" value="${project.Milestone}" />
+      <div class="row">
+        <div class="large-3 columns">Naam</div>
+        <div class="large-9 columns">${Form.TextField("item.Name")}</div>
+      </div>
+      <% if CurrentUser.IsAdmin: %>
+      <div class="row">
+        <div class="large-3 columns">Schatting</div>
+        <div class="large-9 columns">${Form.TextField("item.Hours")}</div>
+      </div>
+      <% end %>
+      <div class="row">
+        <div class="large-3 columns">Omschrijving</div>
+        <div class="large-9 columns">${Form.TextArea("item.Body")}</div>
+      </div>
+      <% if CurrentUser.IsAdmin: %>
+      <div class="row">
+        <div class="large-3 columns">Accepted</div>
+        <div class="large-9 columns">${Form.CheckboxField("item.Accepted")}</div>
+      </div>
+      <div class="row">
+        <div class="large-3 columns">Customer issue</div>
+        <div class="large-9 columns">${Form.CheckboxField("item.CustomerIssue")}</div>
+      </div>
+      <div class="row">
+        <div class="large-3 columns">Gefactureerd</div>
+        <div class="large-9 columns">${Form.CheckboxField("item.Invoiced")}</div>
+      </div>
+      <% end %>
+      <div class="row">
+        <div class="large-12 columns"><input type="submit" class="button" value="Opslaan"/></div>
+      </div>
+    </form>
+  </div>
+</div>

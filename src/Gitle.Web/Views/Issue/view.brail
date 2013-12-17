@@ -1,0 +1,29 @@
+﻿<div class="row">
+  <div class="large-12 columns">
+    <a href="/issue/${project.Id}/index">terug naar overzicht</a>
+    <h1>${project.Name}: ${item.Name}</h1>
+    <p class="hours"><strong>Geschatte tijd:</strong> <% if item.Hours > 0: %>${item.Hours} uur<% else: %>geen schatting<% end %></p>
+    <p class="hours"><strong>Status:</strong> ${item.State}</p>
+    <p class="labels">
+      <strong>Labels:</strong>
+      <% for label in item.Labels: %>
+      <span class="label no-margin" style="background-color: #${label.Color};">${label.Name}</span>
+      <% end %>
+    </p>
+    <p>${item.Body}</p>
+    <h2>Reacties</h2>
+    <% for comment in comments: %>
+    <div class="panel">
+      ${comment.Body}
+    </div>
+    <% end %>
+    <% if comments.Count == 0: %>
+    <strong>Geen reacties</strong>
+    <% end %>
+    <h3>Nieuwe reactie</h3>
+    <form action="addcomment?issue=${item.Number}" method="POST">
+      <textarea name="body"></textarea>
+      <input type="submit" value="Comment" class="button"/>
+    </form>
+  </div>
+</div>

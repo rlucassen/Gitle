@@ -1,0 +1,27 @@
+﻿<div class="row">
+  <div class="large-12 columns">
+    <h1>Projecten</h1>
+    <table>
+      <thead>
+        <tr>
+          <th>Klant</th>
+          <th>Project</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for item in items: %>
+        <tr>
+          <td>${item.Customer.Name}</td>
+          <td>${item.Name}</td>
+          <td>
+            <a class="button tiny no-margin" href="/project/${item.Id}/issue/index">Open</a>
+            <% if CurrentUser.IsAdmin: %><a class="button tiny success no-margin" href="/project/${item.Id}/edit">Bewerk</a><% end %>
+
+          </td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

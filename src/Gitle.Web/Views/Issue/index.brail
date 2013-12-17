@@ -1,0 +1,43 @@
+﻿<div class="row">
+  <div class="large-12 columns">
+    <h1>${project.Name}: Taken</h1>
+    <form action="/issue/${project.Id}/invoice" method="POST">
+      <a class="button" href="/project/${project.Id}/issue/new">Nieuw</a>
+      <% if CurrentUser.IsAdmin: %><input class="button success" type="submit" value="Factureren" /><% end %>
+      <table>
+        <thead>
+          <tr>
+            <% if CurrentUser.IsAdmin: %><th></th><% end %>
+            <th>Id</th>
+            <th>Naam</th>
+            <th>Schatting</th>
+            <th>Comments</th>
+            <th>Klantakkoord</th>
+            <% if CurrentUser.IsAdmin: %><th>Gefactureerd</th><% end %>
+            <th>Voltooid</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% for issue in items: %>
+          <tr>
+            <% if CurrentUser.IsAdmin: %><td><input type="checkbox" name="issues" value="${issue.Number}"/></td><% end %>
+            <td>${issue.Number}</td>
+            <td>${issue.Name}</td>
+            <td>${issue.Hours} uur</td>
+            <td>${issue.Comments}</td>
+            <td><% if issue.Accepted: %><i class="fa fa-check-circle-o"></i><% else: %><i class="fa fa-circle-o"></i><% end %></td>
+            <% if CurrentUser.IsAdmin: %><td><% if issue.Invoiced: %><i class="fa fa-check-circle-o"></i><% else: %><i class="fa fa-circle-o"></i><% end %></td><% end %>
+            <td><% if issue.State == "closed": %><i class="fa fa-check-circle-o"></i><% else: %><i class="fa fa-circle-o"></i><% end %></td>
+            <td>
+              <a class="button tiny no-margin" href="/project/${project.Id}/issue/${issue.Number}/view">Open</a>
+              <% if CurrentUser.IsAdmin: %><a class="button tiny success no-margin" href="/project/${project.Id}/issue/${issue.Number}/edit">Bewerk</a><% end %>
+              <% if not issue.Accepted and issue.Hours > 0: %><a class="button tiny success no-margin" href="/project/${project.Id}/issue/${issue.Number}/accept">Akkoord</a><% end %>
+            </td>
+          </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </form>
+  </div>
+</div>

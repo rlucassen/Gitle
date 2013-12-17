@@ -1,0 +1,27 @@
+﻿<div class="row">
+  <div class="large-12 columns">
+    <% if item.Id > 0: %>
+    <h1>Project bewerken</h1>
+    <% else: %>
+    <h1>Nieuw project</h1>
+    <% end %>
+    <form action="/project/${?item.Id}/save" method="POST">
+      ${Form.HiddenField("item.Id")}
+      <div class="row">
+        <div class="large-3 columns">Naam</div>
+        <div class="large-9 columns">${Form.TextField("item.Name")}</div>
+      </div>
+      <div class="row">
+        <div class="large-3 columns">Repository</div>
+        <div class="large-9 columns">${Form.Select("item.Repository", repositories, {"value": "FullName", "text": "Name"})}</div>
+      </div>
+      <div class="row">
+        <div class="large-3 columns">Milestone</div>
+        <div class="large-9 columns">${Form.TextField("item.Milestone")}</div>
+      </div>
+      <div class="row">
+        <div class="large-12 columns"><input type="submit" class="button" value="Opslaan"/></div>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,44 @@
+﻿<div class="row">
+    <div class="large-12 columns panel">
+        <h2>${t.AppName}</h2>
+        <hr />
+        <form class="custom">
+            <div class="row">
+                <div class="small-8">
+                    <div class="row">
+                        <div class="small-3 columns">
+                            <label for="right-label" class="right inline">${t.User_Name}</label>
+                        </div>
+                        <div class="small-9 columns">
+                            <input type="text" name="name" placeholder="${t.User_Name}">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="small-3 columns">
+                            <label for="right-label" class="right inline">${t.User_Password}</label>
+                        </div>
+                        <div class="small-9 columns">
+                            <input type="password" name="password" placeholder="${t.User_Password}">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="small-3 columns"></div>
+                        <div class="small-9 columns">
+                            <label for="Persistent">
+                                <input type="checkbox" id="Persistent" name="Persistent" style="display: none;">
+                                <span class="custom checkbox"></span> ${t.Login_Persistent}
+                            </label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="small-3 columns"></div>
+                        <div class="small-9 columns">
+                            <input type="submit" class="button" value="${t.Login}">
+                            <a class="right" href="/signin/resetpassword">${t.ForgotPassword}?</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
