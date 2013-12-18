@@ -1,0 +1,40 @@
+﻿<div class="row">
+  <div class="large-12 columns">
+    <h1>Gebruikers</h1>
+    <a class="button" href="/user/new">Nieuw</a>
+    <table class="tablesorter small-blocks">
+      <thead>
+        <tr>
+          <th>Klant</th>
+          <th>Telefoonnummer</th>
+          <th>Emailadres</th>
+          <th>Admin</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for item in items: %>
+        <tr>
+          <td class="name">${item.Name}</td>
+          <td class="phone">${item.Phone}</td>
+          <td class="email">${item.EmailAddress}</td>
+          <td class="admin"><span class="hide">${item.IsAdmin}</span><% if item.IsAdmin: %><i class="fa fa-check green"></i><% else: %><i class="fa fa-times red"></i><% end %></td>
+          <td>
+            <a class="button tiny success no-margin" href="/user/${item.Id}/edit">Bewerk</a>
+            <a class="button tiny alert no-margin" href="/user/${item.Id}/delete">Verwijder</a>
+          </td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+<script>
+  $(function () {
+    $('.tablesorter').tablesorter({
+      headers: {
+        2: { sorter: false }
+      }
+    });
+  })
+</script>

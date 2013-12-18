@@ -9,25 +9,31 @@ namespace Gitle.Clients.GitHub
     using Interfaces;
     using ServiceStack.ServiceClient.Web;
 
-    public class MilestoneClient : IMilestoneClient
+    public class LabelClient : ILabelClient
     {
         private readonly JsonServiceClient _client;
 
-        public MilestoneClient(string token, string useragent, string githubApi)
+        public LabelClient(string token, string useragent, string githubApi)
         {
             _client = new JsonServiceClient(githubApi);
             _client.Headers.Add("Authorization", "token " + token);
             _client.LocalHttpWebRequestFilter = request => request.UserAgent = useragent;
         }
 
-        public List<Milestone> List(string repo)
+        public List<Label> List(string repo)
         {
-            return _client.Get<List<Milestone>>("repos/" + repo + "/milestones");
+            return _client.Get<List<Label>>("repos/" + repo + "/labels");
         }
 
-        public Milestone Get(string repo, int milestoneId)
+        public Label Get(string repo, int labelId)
         {
-            return _client.Get<Milestone>("repos/" + repo + "/milestones/" + milestoneId);
+            return _client.Get<Label>("repos/" + repo + "/labels/" + labelId);
         }
+
+        public Label Post(string repo, Label label)
+        {
+            return _client.Post<Label>("repos/" + repo + "/labels", label);
+        }
+
     }
 }

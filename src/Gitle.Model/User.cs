@@ -2,7 +2,9 @@
 {
     #region Usings
 
+    using System;
     using System.Collections.Generic;
+    using System.Security.Cryptography;
     using System.Security.Principal;
     using Enum;
     using Interfaces.Model;
@@ -14,9 +16,12 @@
     {
         public virtual IPassword Password { get; set; }
         public virtual string Name { get; set; }
+        public virtual string FullName { get; set; }
         public virtual string EmailAddress { get; set; }
-        public virtual IList<Project> Projects { get; set; }
+        public virtual IList<UserProject> Projects { get; set; }
         public virtual bool IsAdmin { get; set; }
+        public virtual string Phone { get; set; }
+        public virtual string GitHubUsername { get; set; }
 
         #region Implementation of IPrincipal
 

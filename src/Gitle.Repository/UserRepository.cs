@@ -9,11 +9,11 @@
 
     #endregion
 
-    public class UserRepository : IUserRepository
+    public class UserRepository : BaseRepository<User>, IUserRepository
     {
         private readonly ISession session;
 
-        public UserRepository(ISessionFactory sessionFactory)
+        public UserRepository(ISessionFactory sessionFactory) : base(sessionFactory)
         {
             session = sessionFactory.GetCurrentSession();
         }

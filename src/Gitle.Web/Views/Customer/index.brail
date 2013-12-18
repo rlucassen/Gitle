@@ -1,0 +1,34 @@
+﻿<div class="row">
+  <div class="large-12 columns">
+    <h1>Klanten</h1>
+    <a class="button" href="/customer/new">Nieuw</a>
+    <table class="tablesorter small-blocks">
+      <thead>
+        <tr>
+          <th>Klant</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for item in items: %>
+        <tr>
+          <td class="name">${item.Name}</td>
+          <td class="actions">
+            <a class="button tiny success no-margin" href="/customer/${item.Id}/edit">Bewerk</a>
+            <a class="button tiny alert no-margin" href="/customer/${item.Id}/delete">Verwijder</a>
+          </td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+<script>
+  $(function () {
+    $('.tablesorter').tablesorter({
+      headers: {
+        1: { sorter: false }
+      }
+    });
+  })
+</script>

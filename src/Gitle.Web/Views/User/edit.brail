@@ -1,0 +1,78 @@
+﻿<div class="row">
+  <div class="large-12 columns">
+    <% if item.Id > 0: %>
+    <h1>Gebruiker bewerken</h1>
+    <% else: %>
+    <h1>Nieuwe gebruiker</h1>
+    <% end %>
+    <form action="/user/${?item.Id}/save" method="POST">
+      ${Form.HiddenField("item.Id")}
+      <div class="row">
+        <div class="large-3 columns">Naam</div>
+        <div class="large-9 columns">${Form.TextField("item.FullName")}</div>
+      </div>
+      <div class="row">
+        <div class="large-3 columns">Inlog</div>
+        <div class="large-9 columns">${Form.TextField("item.Name")}</div>
+      </div>
+      <div class="row">
+        <div class="large-3 columns">Wachtwoord</div>
+        <div class="large-9 columns">${Form.TextField("password")}</div>
+      </div>
+      <div class="row">
+        <div class="large-3 columns">Telefoonnummer</div>
+        <div class="large-9 columns">${Form.TextField("item.Phone")}</div>
+      </div>
+      <div class="row">
+        <div class="large-3 columns">Emailadres</div>
+        <div class="large-9 columns">${Form.TextField("item.Emailaddress")}</div>
+      </div>
+      <div class="row">
+        <div class="large-3 columns">GitHub username</div>
+        <div class="large-9 columns">${Form.TextField("item.GitHubUsername")}</div>
+      </div>
+      <div class="row">
+        <div class="large-3 small-6 columns">Heeft adminrechten</div>
+        <div class="large-9 small-6 columns">${Form.CheckboxField("item.IsAdmin")}</div>
+      </div>
+      <div class="row projects">
+        <div class="large-3 columns">Projecten</div>
+        <div class="large-9 columns">
+          <table>
+            <thead>
+              <tr>
+                <td><i class="fa fa-users"></i></td>
+                <td><i class="fa fa-bell"></i></td>
+                <td>Project</td>
+              </tr>
+            </thead>
+            <tbody>
+              <% for project in projects: %>
+              <tr>
+                <td class="checkbox">
+                  <% if selectedprojects.Contains(project): %>
+                  <input type="checkbox" name="selectedprojects" value="${project.Id}" checked/>
+                  <% else: %>             
+                  <input type="checkbox" name="selectedprojects" value="${project.Id}"/>
+                  <% end %>
+                </td>
+                <td class="checkbox">
+                  <% if notificationprojects.Contains(project): %>
+                  <input type="checkbox" name="notificationprojects" value="${project.Id}" checked/>
+                  <% else: %>             
+                  <input type="checkbox" name="notificationprojects" value="${project.Id}"/>
+                  <% end %>
+                </td>
+                <td>${project.Name}</td>
+              </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="row">
+        <div class="large-12 columns"><input type="submit" class="button" value="Opslaan"/></div>
+      </div>
+    </form>
+  </div>
+</div>

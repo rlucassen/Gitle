@@ -20,8 +20,9 @@ html[xmlns] .clearfix {
 }
 
 .row {
-  max-width: 1240px;
-  width: 1440px;
+  max-width: 90%;
+  width: 1200px;
+  padding-top: 10px;
 }
 
 
@@ -32,6 +33,55 @@ html[xmlns] .clearfix {
 
 .no-margin {
   margin: 0;
+}
+
+.red {
+  color: #f04124;
+}
+
+.green {
+  color: #43ac6a;
+}
+
+.progress.round {
+  font-size: 0.8em;
+  padding-top: 5px;
+  padding-right: 10px;
+  text-align: right;
+}
+
+.progress.round .meter {
+  padding: 3px 10px;
+  color: #fff;
+  text-align: right;
+  float: left;
+  margin-top: -3px;
+  height: 19px;
+}
+
+textarea {
+  height: 200px;
+}
+
+table {
+  width: 100%;
+}
+
+table thead {
+  background-color: #e7e7e7;
+}
+
+table i {
+  font-size: 18px;
+}
+
+table td input[type=checkbox] {
+  margin-bottom: 0;
+  margin-top: 0.1em;
+}
+
+table td.checkbox {
+  width: 20px;
 }
 
 table.row-clickable tbody tr:hover {
@@ -50,26 +100,10 @@ table.row-clickable tbody td:hover {
   cursor: pointer;
 }
 
-.wrapper {
-}
-
 .container {
   max-width: 100%;
 }
 
-.nav-container {
-  background-color: #222;
-}
-
-.menu {
-  -moz-box-shadow: inset -5px -3px 17px rgba(0, 0, 0, 0.4);
-  -webkit-box-shadow: inset -5px -3px 17px rgba(0, 0, 0, 0.4);
-  background-color: #323232;
-  box-shadow: inset -5px -3px 17px rgba(0, 0, 0, 0.4);
-  height: 100%;
-  padding: 0;
-  position: relative;
-}
 
 .content {
   margin: 0 auto;
@@ -247,10 +281,6 @@ table.row-clickable tbody td:hover {
   right: 100%;
 }
 
-.top-bar-section .has-dropdown:hover > .dropdown {
-  visibility: visible;
-}
-
 
 .tablesorter .header {
   cursor: pointer;
@@ -285,4 +315,59 @@ table.row-clickable tbody td:hover {
 
 .tablesorter .header.headerSortUp:before {
   display: none;
+}
+
+@media only screen and (max-width: 64em)  
+{
+  table.small-blocks, table.small-blocks thead, table.small-blocks tbody, table.small-blocks tbody tr, table.small-blocks thead tr th, table.small-blocks tbody tr td {
+    display: block;
+  }
+  
+  table.small-blocks {
+    border: none;
+  }
+    
+  table.small-blocks thead tr {
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+  }
+  
+  table.small-blocks tr {
+    border: 1px solid #ddd;
+    margin-bottom: 1em;
+  }
+  
+  table.small-blocks tbody tr td {
+    border: none;
+    position: relative;
+    padding-top: 0;
+  }
+  
+  table.small-blocks td.id {
+    display: none;
+  }
+  
+  table.small-blocks td.name {
+    font-family: "Open Sans","Helvetica Neue","Helvetica",Helvetica,Arial,sans-serif;
+    font-size: 1.5em;
+    padding-right: 0;
+    padding-top: 0.375em;
+    line-height: 1.1em;
+    background-color: #e7e7e7;
+    margin-bottom: 0.5em;
+  }
+  
+  table.small-blocks td.estimate:before { content: "Schatting: "; }
+  table.small-blocks td.comments:before { content: "Reacties: "; }
+  table.small-blocks td.accepted:before { content: "Klantakkoord: "; }
+  table.small-blocks td.invoiced:before { content: "Gefactureerd: "; }
+  table.small-blocks td.state:before { content: "Voltooid: "; }
+  table.small-blocks td.customer:before { content: "Klant: "; }
+  table.small-blocks td.repository:before { content: "Repository: "; }
+  table.small-blocks td.milestone:before { content: "Milestone: "; }
+  table.small-blocks td.admin:before { content: "Admin: "; }
+  table.small-blocks td.phone:before { content: "Telefoonnummer: "; }
+  table.small-blocks td.email:before { content: "Emailadres: "; }
+  table.small-blocks td.notifications:before { content: "Notificaties: "; }
 }

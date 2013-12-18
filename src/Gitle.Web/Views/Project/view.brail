@@ -1,0 +1,71 @@
+﻿<div class="row">
+  <div class="large-12 columns">
+    <h1>${project.Name}</h1>
+    <div class="row">
+      <div class="large-2 columns">Voortgang taken</div>
+      <div class="large-10 columns">
+        <div class="progress success round">
+          <span class="meter" style="width: ${donePercentage.ToString().Replace(',', '.')}%">${doneTime} uur</span>${totalTime} uur
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="large-2 columns">Voortgang uren</div>
+      <div class="large-10 columns">
+        <div class="progress round">
+          <span class="meter" style="width: ${bookedPercentage.ToString().Replace(',', '.')}%">${bookedTime} uur</span>${totalTime} uur
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="large-12 columns">
+        <h2>Klantcontacten</h2>
+        <table class="small-blocks">
+          <thead>
+            <tr>
+              <th>Naam</th>
+              <th>Telefoonnummer</th>
+              <th>Emailadres</th>
+              <th class="Notificaties"><i class="fa fa-bell"></i></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% for customer in customers: %>
+            <tr>
+              <td class="name">${customer.User.FullName}</td>
+              <td class="phone">${customer.User.Phone}</td>
+              <td class="email"><a href="mailto:${customer.User.EmailAddress}">${customer.User.EmailAddress}</a></td>
+              <td class="notifications"><% if customer.Notifications: %><i class="fa fa-check green"></i><% else: %><i class="fa fa-times red"></i><% end %></td>
+            </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="row">
+      <div class="large-12 columns">
+        <h2>Developers</h2>
+        <table class="small-blocks">
+          <thead>
+            <tr>
+              <th>Naam</th>
+              <th>Telefoonnummer</th>
+              <th>Emailadres</th>
+              <th title="Notificaties"><i class="fa fa-bell"></i></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% for developer in developers: %>
+            <tr>
+              <td class="name">${developer.User.FullName}</td>
+              <td class="phone">${developer.User.Phone}</td>
+              <td class="email"><a href="mailto:${developer.User.EmailAddress}">${developer.User.EmailAddress}</a></td>
+              <td class="notifications"><% if developer.Notifications: %><i class="fa fa-check green"></i><% else: %><i class="fa fa-times red"></i><% end %></td>
+            </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

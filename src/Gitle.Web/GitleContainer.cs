@@ -69,6 +69,13 @@
                                            registration.DependsOn(Dependency.OnAppSettingsValue("token", "token")).
                                                DependsOn(Dependency.OnAppSettingsValue("useragent", "useragent")).
                                                DependsOn(Dependency.OnAppSettingsValue("githubApi", "githubApi"))));
+                container.Register(Classes.FromAssemblyNamed("Gitle.Clients.Freckle")
+                                       .Where(type => type.Name.EndsWith("Client"))
+                                       .WithService.DefaultInterfaces()
+                                       .LifestylePerWebRequest().Configure(
+                                           registration =>
+                                           registration.DependsOn(Dependency.OnAppSettingsValue("domain", "freckleDomain")).
+                                               DependsOn(Dependency.OnAppSettingsValue("token", "freckleToken"))));
             }
         }
     }

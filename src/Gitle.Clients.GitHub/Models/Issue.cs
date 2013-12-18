@@ -91,7 +91,7 @@
             }
             else
             {
-                Labels.Remove(Labels.First(l => l.Name == label));
+                Labels.Remove(Labels.FirstOrDefault(l => l.Name == label));
             }
         }
 

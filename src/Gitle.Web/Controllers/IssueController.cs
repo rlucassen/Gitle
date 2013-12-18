@@ -1,10 +1,14 @@
 ﻿namespace Gitle.Web.Controllers
 {
+    using System;
     using System.Collections.Generic;
+    using System.IO;
+    using System.Text;
     using Admin;
     using Clients.GitHub.Interfaces;
     using Clients.GitHub.Models;
     using Model;
+    using Model.Helpers;
     using Model.Interfaces.Repository;
     using Helpers;
 
@@ -13,57 +17,75 @@
         private readonly IIssueClient client;
         private readonly ICommentClient commentClient;
         private readonly IProjectRepository repository;
+        private readonly IMilestoneClient milestoneClient;
 
-        public IssueController(IProjectRepository repository, IIssueClient client, ICommentClient commentClient)
+        public IssueController(IProjectRepository repository, IIssueClient client, ICommentClient commentClient, IMilestoneClient milestoneClient)
         {
             this.repository = repository;
             this.client = client;
             this.commentClient = commentClient;
+            this.milestoneClient = milestoneClient;
         }
 
-        public void Index(int projectId)
+        [MustHaveProject]
+        public void Index(string projectSlug)
         {
-            Project project = repository.Get(projectId);
-            List<Issue> items = client.List(project.Repository, project.Milestone);
+            var project = repository.FindBySlug(projectSlug);
+            var items = client.List(project.Repository, project.MilestoneId);
             PropertyBag.Add("items", items);
             PropertyBag.Add("project", project);
         }
 
-        public void View(int projectId, int issueId)
+        [MustHaveProject]
+        public void View(string projectSlug, int issueId)
         {
-            Project project = repository.Get(projectId);
+            var project = repository.FindBySlug(projectSlug);
             PropertyBag.Add("project", project);
-            Issue item = client.Get(project.Repository, issueId);
+            var item = client.Get(project.Repository, issueId);
             PropertyBag.Add("item", item);
-            List<Comment> comments = commentClient.List(project.Repository, issueId);
+            var comments = commentClient.List(project.Repository, issueId);
             PropertyBag.Add("comments", comments);
         }
 
-        public void New(int projectId)
+        [MustHaveProject]
+        public void New(string projectSlug)
         {
-            PropertyBag.Add("project", repository.Get(projectId));
+            PropertyBag.Add("project", repository.FindBySlug(projectSlug));
             PropertyBag.Add("item", new Issue());
             RenderView("edit");
         }
 
         [Admin]
-        public void Edit(int projectId, int issueId)
+        public void Edit(string projectSlug, int issueId)
         {
-            Project project = repository.Get(projectId);
+            var project = repository.FindBySlug(projectSlug);
             PropertyBag.Add("project", project);
-            Issue item = client.Get(project.Repository, issueId);
+            var item = client.Get(project.Repository, issueId);
             PropertyBag.Add("item", item);
         }
 
-        public void Save(int projectId)
+        [MustHaveProject]
+        public void Save(string projectSlug, int issueId)
         {
-            var issue = BindObject<Issue>("item");
+            var project = repository.FindBySlug(projectSlug);
+            var issue = client.Get(project.Repository, issueId);
+
+            if (issue != null)
+            {
+                BindObjectInstance(issue, "item");
+            }
+            else
+            {
+                issue = BindObject<Issue>("item");
+            }
             if (!CurrentUser.IsAdmin)
             {
                 issue.CustomerIssue = true;
                 issue.Accepted = true;
             }
-            Project project = repository.Get(projectId);
+
+            issue.Milestone = milestoneClient.Get(project.Repository, project.MilestoneId);
+
             if (issue.Number > 0)
             {
                 client.Patch(project.Repository, issue.Number, issue);
@@ -75,9 +97,10 @@
             RedirectToUrl(string.Format("/project/{0}/issue/index", project.Id));
         }
 
-        public void AddComment(int projectId, int issueId, string body)
+        [MustHaveProject]
+        public void AddComment(string projectSlug, int issueId, string body)
         {
-            Project project = repository.Get(projectId);
+            var project = repository.FindBySlug(projectSlug);
             var comment = new Comment
                               {
                                   Body = string.Format("{0}: {1}", CurrentUser.Name, body)
@@ -86,25 +109,36 @@
             RedirectToReferrer();
         }
 
-        public void Accept(int projectId, int issueId)
+        [MustHaveProject]
+        public void Accept(string projectSlug, int issueId)
         {
-            Project project = repository.Get(projectId);
-            Issue issue = client.Get(project.Repository, issueId);
+            var project = repository.FindBySlug(projectSlug);
+            var issue = client.Get(project.Repository, issueId);
             issue.Accepted = true;
             client.Patch(project.Repository, issueId, issue);
             RedirectToReferrer();
         }
 
         [Admin]
-        public void Invoice(int projectId, int[] issueIds)
+        public void Export(string projectSlug)
         {
-            Project project = repository.Get(projectId);
-            foreach (int issueId in issueIds)
-            {
-                Issue issue = client.Get(project.Repository, issueId);
-                issue.Invoiced = true;
-                client.Patch(project.Repository, issueId, issue);
-            }
+            var project = repository.FindBySlug(projectSlug);
+            var issues = client.List(project.Repository, project.MilestoneId);
+
+            var csv = CsvHelper.IssuesCsv(project, issues);
+            CancelView();
+
+            Response.ClearContent();
+            Response.Clear();
+
+            var filename = string.Format("issues_{0}_{1:yyyyMMdd_hhmm}.csv", project.Name, DateTime.Now);
+
+            Response.AppendHeader("content-disposition", string.Format("attachment; filename={0}", filename));
+            Response.ContentType = "application/csv";
+
+            var byteArray = Encoding.Default.GetBytes(csv);
+            var stream = new MemoryStream(byteArray);
+            Response.BinaryWrite(stream);
         }
     }
 }

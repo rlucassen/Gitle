@@ -1,43 +1,48 @@
 ﻿<div class="row">
   <div class="large-12 columns">
     <h1>${project.Name}: Taken</h1>
-    <form action="/issue/${project.Id}/invoice" method="POST">
-      <a class="button" href="/project/${project.Id}/issue/new">Nieuw</a>
-      <% if CurrentUser.IsAdmin: %><input class="button success" type="submit" value="Factureren" /><% end %>
-      <table>
+      <a class="button" href="/project/${project.Slug}/issue/new">Nieuw</a>
+      <% if CurrentUser.IsAdmin: %><a class="button success" href="/project/${project.Slug}/issue/export" />Exporteren</a><% end %>
+      <table class="tablesorter small-blocks">
         <thead>
           <tr>
-            <% if CurrentUser.IsAdmin: %><th></th><% end %>
             <th>Id</th>
             <th>Naam</th>
             <th>Schatting</th>
-            <th>Comments</th>
-            <th>Klantakkoord</th>
-            <% if CurrentUser.IsAdmin: %><th>Gefactureerd</th><% end %>
-            <th>Voltooid</th>
+            <th title="Reacties"><i class="fa fa-comments-o"></i></th>
+            <th title="Klantakkoord"><i class="fa fa-thumbs-up"></i></th>
+            <% if CurrentUser.IsAdmin: %><th title="Gefactureerd"><i class="fa fa-euro"></i></th><% end %>
+            <th title="Voltooid"><i class="fa fa-check-square-o"></i></th>
             <th></th>
           </tr>
         </thead>
         <tbody>
           <% for issue in items: %>
           <tr>
-            <% if CurrentUser.IsAdmin: %><td><input type="checkbox" name="issues" value="${issue.Number}"/></td><% end %>
-            <td>${issue.Number}</td>
-            <td>${issue.Name}</td>
-            <td>${issue.Hours} uur</td>
-            <td>${issue.Comments}</td>
-            <td><% if issue.Accepted: %><i class="fa fa-check-circle-o"></i><% else: %><i class="fa fa-circle-o"></i><% end %></td>
-            <% if CurrentUser.IsAdmin: %><td><% if issue.Invoiced: %><i class="fa fa-check-circle-o"></i><% else: %><i class="fa fa-circle-o"></i><% end %></td><% end %>
-            <td><% if issue.State == "closed": %><i class="fa fa-check-circle-o"></i><% else: %><i class="fa fa-circle-o"></i><% end %></td>
-            <td>
-              <a class="button tiny no-margin" href="/project/${project.Id}/issue/${issue.Number}/view">Open</a>
-              <% if CurrentUser.IsAdmin: %><a class="button tiny success no-margin" href="/project/${project.Id}/issue/${issue.Number}/edit">Bewerk</a><% end %>
-              <% if not issue.Accepted and issue.Hours > 0: %><a class="button tiny success no-margin" href="/project/${project.Id}/issue/${issue.Number}/accept">Akkoord</a><% end %>
+            <td class="id">${issue.Number}</td>
+            <td class="name">${issue.Name}</td>
+            <td class="estimate">${issue.Hours} uur</td>
+            <td class="comments">${issue.Comments}</td>
+            <td class="accepted"><span class="hide">${issue.Accepted}</span><% if issue.Accepted: %><i class="fa fa-check green"></i><% else: %><i class="fa fa-times red"></i><% end %></td>
+            <% if CurrentUser.IsAdmin: %><td class="invoiced"><span class="hide">${issue.Invoiced}</span><% if issue.Invoiced: %><i class="fa fa-check green"></i><% else: %><i class="fa fa-times red"></i><% end %></td><% end %>
+            <td class="state"><span class="hide">${issue.State}</span><% if issue.State == "closed": %><i class="fa fa-check green"></i><% else: %><i class="fa fa-times red"></i><% end %></td>
+            <td class="actions">
+              <a class="button tiny no-margin" href="/project/${project.Slug}/issue/${issue.Number}/view">Open</a>
+              <% if CurrentUser.IsAdmin: %><a class="button tiny success no-margin" href="/project/${project.Slug}/issue/${issue.Number}/edit">Bewerk</a><% end %>
+              <% if not issue.Accepted and issue.Hours > 0: %><a class="button tiny success no-margin" href="/project/${project.Slug}/issue/${issue.Number}/accept">Akkoord</a><% end %>
             </td>
           </tr>
           <% end %>
         </tbody>
       </table>
-    </form>
   </div>
 </div>
+<script>
+  $(function () {
+    $('.tablesorter').tablesorter({
+      headers: {
+        7: { sorter: false }
+      }
+    });
+  })
+</script>

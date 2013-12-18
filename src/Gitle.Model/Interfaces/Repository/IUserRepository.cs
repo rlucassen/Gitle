@@ -1,6 +1,6 @@
 ﻿namespace Gitle.Model.Interfaces.Repository
 {
-    public interface IUserRepository
+    public interface IUserRepository : IBaseRepository<User>
     {
         User FindByName(string name);
     }

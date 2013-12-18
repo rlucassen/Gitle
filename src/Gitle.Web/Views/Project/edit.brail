@@ -5,19 +5,32 @@
     <% else: %>
     <h1>Nieuw project</h1>
     <% end %>
-    <form action="/project/${?item.Id}/save" method="POST">
+    <form action="/project/<% if item.Slug: %>${?item.Slug}<% else: %>0<% end %>/save" method="POST">
       ${Form.HiddenField("item.Id")}
+      ${Form.HiddenField("item.MilestoneName")}
       <div class="row">
         <div class="large-3 columns">Naam</div>
         <div class="large-9 columns">${Form.TextField("item.Name")}</div>
       </div>
       <div class="row">
+        <div class="large-3 columns">Klant</div>
+        <div class="large-9 columns">${Form.Select("customerId", customers, {"value": "Id", "text": "Name", "firstoption": "Kies een klant"})}</div>
+      </div>
+      <div class="row">
         <div class="large-3 columns">Repository</div>
-        <div class="large-9 columns">${Form.Select("item.Repository", repositories, {"value": "FullName", "text": "Name"})}</div>
+        <div class="large-9 columns">${Form.Select("item.Repository", repositories, {"value": "FullName", "text": "Name", "firstoption": "Kies een repository"})}</div>
       </div>
       <div class="row">
         <div class="large-3 columns">Milestone</div>
-        <div class="large-9 columns">${Form.TextField("item.Milestone")}</div>
+        <div class="large-9 columns milestone-select"></div>
+      </div>
+      <div class="row">
+        <div class="large-3 columns">Freckle project id</div>
+        <div class="large-9 columns">${Form.TextField("item.FreckleId")}</div>
+      </div>
+      <div class="row">
+        <div class="large-3 columns">Uurprijs</div>
+        <div class="large-9 columns">${Form.TextField("item.HourPrice")}</div>
       </div>
       <div class="row">
         <div class="large-12 columns"><input type="submit" class="button" value="Opslaan"/></div>
@@ -25,3 +38,12 @@
     </form>
   </div>
 </div>
+<script>
+  $(function () {
+    $("#item_Repository").change(function () {
+      var fullrepo = $(this).val();
+      var url = '/milestone/select?fullrepo=' + fullrepo + '&projectSlug=' + '${?item.Id}';
+      $('.milestone-select').load(url);
+    }).change();
+  });
+</script>

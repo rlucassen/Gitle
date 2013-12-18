@@ -3,8 +3,7 @@
     using System.Collections.Generic;
     using Enum;
 
-    public interface IProjectRepository : IBaseRepository<Project>
+    public interface IUserProjectRepository : IBaseRepository<UserProject>
     {
-        Project FindBySlug(string slug);
     }
 }

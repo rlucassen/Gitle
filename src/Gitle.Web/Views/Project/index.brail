@@ -1,23 +1,31 @@
 ﻿<div class="row">
   <div class="large-12 columns">
     <h1>Projecten</h1>
-    <table>
+    <% if CurrentUser.IsAdmin: %><a class="button" href="/project/new">Nieuw</a><% end %>
+    <table class="tablesorter small-blocks">
       <thead>
         <tr>
-          <th>Klant</th>
+          <th>Id</th>
           <th>Project</th>
+          <th>Klant</th>
+          <th>Repository</th>
+          <th>Milestone</th>
           <th></th>
         </tr>
       </thead>
       <tbody>
         <% for item in items: %>
         <tr>
-          <td>${item.Customer.Name}</td>
-          <td>${item.Name}</td>
-          <td>
-            <a class="button tiny no-margin" href="/project/${item.Id}/issue/index">Open</a>
-            <% if CurrentUser.IsAdmin: %><a class="button tiny success no-margin" href="/project/${item.Id}/edit">Bewerk</a><% end %>
-
+          <td class="id">${item.Id}</td>
+          <td class="name">${item.Name}</td>
+          <td class="customer">${item.Customer.Name}</td>
+          <td class="repository">${item.Repository}</td>
+          <td class="milestone">${item.MilestoneName}</td>
+          <td class="actions">
+            <% if CurrentUser.IsAdmin: %><a class="button tiny secondary no-margin" href="/project/${item.Slug}/view">Open</a><% end %>
+            <a class="button tiny no-margin" href="/project/${item.Slug}/issue/index">Takenlijst</a>
+            <% if CurrentUser.IsAdmin: %><a class="button tiny success no-margin" href="/project/${item.Slug}/edit">Bewerk</a><% end %>
+            <% if CurrentUser.IsAdmin: %><a class="button tiny alert no-margin" href="/project/${item.Slug}/delete">Verwijder</a><% end %>
           </td>
         </tr>
         <% end %>
@@ -25,3 +33,12 @@
     </table>
   </div>
 </div>
+<script>
+  $(function () {
+    $('.tablesorter').tablesorter({
+      headers: {
+        5: { sorter: false }
+      }
+    });
+  })
+</script>

@@ -123,19 +123,43 @@
                                            .DefaultForController().Is<AuthenticationController>()
                                            .DefaultForAction().Is("signout"));
 
+            RoutingModuleEx.Engine.Add(new PatternRoute("/users")
+                                           .DefaultForController().Is<UserController>()
+                                           .DefaultForAction().Is("index"));
+            RoutingModuleEx.Engine.Add(new PatternRoute("/user/<action>")
+                                           .DefaultForController().Is<UserController>()
+                                           .DefaultForAction().Is("index"));
+            RoutingModuleEx.Engine.Add(new PatternRoute("/user/<userId>/<action>")
+                                           .DefaultForController().Is<UserController>()
+                                           .DefaultForAction().Is("index"));
+            RoutingModuleEx.Engine.Add(new PatternRoute("/customers")
+                                           .DefaultForController().Is<CustomerController>()
+                                           .DefaultForAction().Is("index"));
+            RoutingModuleEx.Engine.Add(new PatternRoute("/customer/<action>")
+                                           .DefaultForController().Is<CustomerController>()
+                                           .DefaultForAction().Is("index"));
+            RoutingModuleEx.Engine.Add(new PatternRoute("/customer/<customerId>/<action>")
+                                           .DefaultForController().Is<CustomerController>()
+                                           .DefaultForAction().Is("index"));
+            RoutingModuleEx.Engine.Add(new PatternRoute("/milestone/<action>")
+                                           .DefaultForController().Is<MilestoneController>()
+                                           .DefaultForAction().Is("index"));
             RoutingModuleEx.Engine.Add(new PatternRoute("/projects")
                                            .DefaultForController().Is<ProjectController>()
                                            .DefaultForAction().Is("index"));
-            RoutingModuleEx.Engine.Add(new PatternRoute("/project/<projectId>/<action>")
+            RoutingModuleEx.Engine.Add(new PatternRoute("/project/<action>")
                                            .DefaultForController().Is<ProjectController>()
                                            .DefaultForAction().Is("index"));
-            RoutingModuleEx.Engine.Add(new PatternRoute("/project/<projectId>/issues")
+            RoutingModuleEx.Engine.Add(new PatternRoute("/project/<projectSlug>/<action>")
+                                           .DefaultForController().Is<ProjectController>()
+                                           .DefaultForAction().Is("index"));
+            RoutingModuleEx.Engine.Add(new PatternRoute("/project/<projectSlug>/issues")
                                            .DefaultForController().Is<IssueController>()
                                            .DefaultForAction().Is("index"));
-            RoutingModuleEx.Engine.Add(new PatternRoute("/project/<projectId>/issue/<action>")
+            RoutingModuleEx.Engine.Add(new PatternRoute("/project/<projectSlug>/issue/<action>")
                                            .DefaultForController().Is<IssueController>()
                                            .DefaultForAction().Is("index"));
-            RoutingModuleEx.Engine.Add(new PatternRoute("/project/<projectId>/issue/<issueId>/<action>")
+            RoutingModuleEx.Engine.Add(new PatternRoute("/project/<projectSlug>/issue/<issueId>/<action>")
                                            .DefaultForController().Is<IssueController>()
                                            .DefaultForAction().Is("index"));
 

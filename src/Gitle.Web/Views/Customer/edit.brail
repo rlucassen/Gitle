@@ -1,0 +1,19 @@
+﻿<div class="row">
+  <div class="large-12 columns">
+    <% if item.Id > 0: %>
+    <h1>Klant bewerken</h1>
+    <% else: %>
+    <h1>Nieuwe klant</h1>
+    <% end %>
+    <form action="/customer/${?item.Id}/save" method="POST">
+      ${Form.HiddenField("item.Id")}
+      <div class="row">
+        <div class="large-3 columns">Naam</div>
+        <div class="large-9 columns">${Form.TextField("item.Name")}</div>
+      </div>
+      <div class="row">
+        <div class="large-12 columns"><input type="submit" class="button" value="Opslaan"/></div>
+      </div>
+    </form>
+  </div>
+</div>

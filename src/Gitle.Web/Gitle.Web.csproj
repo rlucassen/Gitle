@@ -52,10 +52,8 @@
     <Content Include="Content\javascript\foundation\foundation.section.js" />
     <Content Include="Content\javascript\foundation\foundation.tooltips.js" />
     <Content Include="Content\javascript\foundation\foundation.topbar.js" />
-    <Content Include="Content\javascript\jquery-ui-timepicker-addon.js" />
     <Content Include="Content\javascript\jquery.tablesorter.js" />
     <Content Include="Content\javascript\jquery.tablesorter.min.js" />
-    <Content Include="Content\javascript\overlapping-marker-spiderfier.min.js" />
     <Content Include="Content\javascript\vendor\custom.modernizr.js" />
     <Content Include="Content\javascript\vendor\jquery.js" />
     <Content Include="Content\javascript\vendor\zepto.js" />
@@ -65,8 +63,6 @@
     <Content Include="Content\stylesheets\font-awesome.min.css" />
     <Content Include="Content\stylesheets\foundation.css" />
     <Content Include="Content\stylesheets\foundation.min.css" />
-    <Content Include="Content\stylesheets\jquery-ui-timepicker-addon.css" />
-    <Content Include="Content\stylesheets\maps.css" />
     <Content Include="Content\stylesheets\normalize.css" />
     <Content Include="Global.asax" />
     <Content Include="Web.config">
@@ -74,7 +70,10 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="Controllers\CustomerController.cs" />
     <Compile Include="Controllers\IssueController.cs" />
+    <Compile Include="Controllers\MilestoneController.cs" />
     <Compile Include="Controllers\ProjectController.cs" />
     <Compile Include="Controllers\OAuthController.cs" />
     <Compile Include="Filters\LocalizationFilter.cs" />
@@ -89,6 +88,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers\AdminAttribute.cs" />
+    <Compile Include="Helpers\ProjectAttribute.cs" />
     <Compile Include="Helpers\DayPartHelper.cs" />
     <Compile Include="Helpers\SaveFeedback.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -173,9 +173,12 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\images\" />
-    <Folder Include="Controllers\Admin\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Gitle.Clients.Freckle\Gitle.Clients.Freckle.csproj">
+      <Project>{79178042-4CA8-4F5C-ABAB-8F0928854322}</Project>
+      <Name>Gitle.Clients.Freckle</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Gitle.Clients.GitHub\Gitle.Clients.GitHub.csproj">
       <Project>{E9C28D89-80BD-4384-BAB4-88911DD8236D}</Project>
       <Name>Gitle.Clients.GitHub</Name>
@@ -202,9 +205,14 @@
     <None Include="Content\fonts\fontawesome-webfont.ttf" />
     <None Include="Content\fonts\fontawesome-webfont.woff" />
     <None Include="Content\fonts\FontAwesome.otf" />
+    <None Include="Views\Project\view.brail" />
+    <None Include="Views\User\edit.brail" />
+    <None Include="Views\User\index.brail" />
+    <None Include="Views\Customer\edit.brail" />
+    <None Include="Views\Customer\index.brail" />
     <None Include="Views\Issue\edit.brail" />
     <None Include="Views\Issue\invoice.brail" />
-    <None Include="Views\Milestone\index.brail" />
+    <None Include="Views\Milestone\select.brail" />
     <None Include="Views\Issue\index.brail" />
     <None Include="Views\Issue\view.brail" />
     <None Include="Views\Project\edit.brail" />

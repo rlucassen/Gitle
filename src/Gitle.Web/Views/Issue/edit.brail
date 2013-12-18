@@ -1,14 +1,15 @@
 ﻿<div class="row">
   <div class="large-12 columns">
-    <a href="/issue/${project.Id}/index">terug naar overzicht</a>
+    <a href="/project/${project.Slug}/issues">terug naar overzicht</a>
     <% if item.Number > 0: %>
     <h1>Taak bewerken</h1>
     <% else: %>
     <h1>Nieuwe taak</h1>
     <% end %>
-    <form action="/issue/${project.Id}/save" method="POST">
+    <form action="/project/${project.Slug}/issue/${item.Number}/save" method="POST">
       ${Form.HiddenField("item.Number")}
-      <input type="hidden" name="item.Milestone.Number" value="${project.Milestone}" />
+      ${Form.HiddenField("item.State")}
+      <input type="hidden" name="item.Milestone.Number" value="${project.MilestoneId}" />
       <div class="row">
         <div class="large-3 columns">Naam</div>
         <div class="large-9 columns">${Form.TextField("item.Name")}</div>
@@ -25,16 +26,16 @@
       </div>
       <% if CurrentUser.IsAdmin: %>
       <div class="row">
-        <div class="large-3 columns">Accepted</div>
-        <div class="large-9 columns">${Form.CheckboxField("item.Accepted")}</div>
+        <div class="large-3 small-4 columns">Accepted</div>
+        <div class="large-9 small-8 columns">${Form.CheckboxField("item.Accepted")}</div>
       </div>
       <div class="row">
-        <div class="large-3 columns">Customer issue</div>
-        <div class="large-9 columns">${Form.CheckboxField("item.CustomerIssue")}</div>
+        <div class="large-3 small-4 columns">Customer issue</div>
+        <div class="large-9 small-8 columns">${Form.CheckboxField("item.CustomerIssue")}</div>
       </div>
       <div class="row">
-        <div class="large-3 columns">Gefactureerd</div>
-        <div class="large-9 columns">${Form.CheckboxField("item.Invoiced")}</div>
+        <div class="large-3 small-4 columns">Gefactureerd</div>
+        <div class="large-9 small-8 columns">${Form.CheckboxField("item.Invoiced")}</div>
       </div>
       <% end %>
       <div class="row">

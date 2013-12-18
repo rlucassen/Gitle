@@ -5,6 +5,7 @@
 
     public interface IMilestoneClient
     {
-        List<Milestone> List(string fullrepo);
+        List<Milestone> List(string repo);
+        Milestone Get(string repo, int milestoneId);
     }
 }

@@ -67,6 +67,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommentClient.cs" />
+    <Compile Include="Interfaces\ILabelClient.cs" />
+    <Compile Include="LabelClient.cs" />
     <Compile Include="Interfaces\ICommentClient.cs" />
     <Compile Include="Interfaces\IIssueClient.cs" />
     <Compile Include="Interfaces\IMilestoneClient.cs" />

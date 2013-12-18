@@ -8,9 +8,11 @@ using Gitle.Web.Filters;
 namespace Gitle.Web.Controllers.Admin
 {
     using System.Collections.Generic;
+    using System.Linq;
     using System.Reflection;
     using System.Security;
     using Helpers;
+    using Model.Interfaces.Repository;
 
     [Layout("secure")]
     [Filter(ExecuteWhen.BeforeAction, typeof (AuthorisationFilter), ExecutionOrder = 1)]
@@ -27,6 +29,12 @@ namespace Gitle.Web.Controllers.Admin
         {
             var adminAttributes = (AdminAttribute[])method.GetCustomAttributes(typeof(AdminAttribute), false);
             if (adminAttributes.Length > 0 && !CurrentUser.IsAdmin)
+            {
+                RenderView("/shared/forbidden");
+                return null;
+            }
+            var projectAttributes = (MustHaveProjectAttribute[])method.GetCustomAttributes(typeof(MustHaveProjectAttribute), false);
+            if (!CurrentUser.IsAdmin && extraArgs.ContainsKey("projectSlug") && projectAttributes.Length > 0 && CurrentUser.Projects.All(p => p.Id != long.Parse(extraArgs["projectSlug"].ToString())))
             {
                 RenderView("/shared/forbidden");
                 return null;

@@ -33,7 +33,7 @@
 
             FormsAuthentication.SetAuthCookie(name, persistent);
 
-            RedirectUsingRoute("admin","home","index", false);
+            RedirectToSiteRoot();
         }
 
         public void Signout()
