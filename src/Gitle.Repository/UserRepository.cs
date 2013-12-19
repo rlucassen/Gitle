@@ -2,6 +2,7 @@
 {
     #region Usings
 
+    using System.Collections.Generic;
     using System.Linq;
     using Model;
     using Model.Interfaces.Repository;
@@ -22,6 +23,16 @@
         {
             var users = session.QueryOver<User>().Where(x => x.IsActive).And(x => x.Name == name).List();
             return users.Count > 0 ? users.First() : new User.NullUser();
+        }
+
+        public IList<User> FindByEmail(string email)
+        {
+            return session.QueryOver<User>().Where(x => x.IsActive).And(x => x.EmailAddress == email).List();
+        }
+
+        public IList<User> FindByPasswordHash(string hash)
+        {
+            return session.QueryOver<User>().Where(x => x.IsActive).And(x => x.Password.Hash == hash).List();
         }
     }
 }

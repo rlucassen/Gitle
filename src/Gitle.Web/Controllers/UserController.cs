@@ -48,6 +48,34 @@
             PropertyBag.Add("projects", projectRepository.FindAll());
         }
 
+        public void Profile()
+        {
+            PropertyBag.Add("item", CurrentUser);
+            PropertyBag.Add("projects", CurrentUser.Projects.Select(up => up.Project).ToList());
+            PropertyBag.Add("notificationprojects", CurrentUser.Projects.Where(up => up.Notifications).Select(up => up.Project).ToList());
+        }
+
+        public void SaveProfile(string password, int[] notificationprojects)
+        {
+            var item = CurrentUser;
+            if (item != null)
+            {
+                BindObjectInstance(item, "item");
+            }
+            else
+            {
+                item = BindObject<User>("item");
+            }
+            if (!string.IsNullOrEmpty(password))
+            {
+                item.Password = new Password(password);
+            }
+            item.Projects.Each(up => up.Notifications = false);
+            notificationprojects.Each(i => item.Projects.First(up => up.Project.Id == i).Notifications = true);
+            userRepository.Save(item);
+            RedirectToSiteRoot();
+        }
+
         [Admin]
         public void Delete(int userId)
         {
@@ -60,7 +88,7 @@
         [Admin]
         public void Save(int userId, string password, int[] selectedprojects, int[] notificationprojects)
         {
-            User item = userRepository.Get(userId);
+            var item = userRepository.Get(userId);
             if (item != null)
             {
                 BindObjectInstance(item, "item");
@@ -72,11 +100,12 @@
             if (!string.IsNullOrEmpty(password))
             {
                 item.Password = new Password(password);
-            }item.Projects.Clear();
+            }
             
+            item.Projects.Clear();
             selectedprojects.Select(p => new UserProject {Project = projectRepository.Get(p), User = item, Notifications = notificationprojects.ToList().Contains(p)}).Each(item.Projects.Add);
+            
             userRepository.Save(item);
-
             RedirectToUrl("/users");
         }
     }

@@ -18,8 +18,14 @@
 
         public Project FindBySlug(string slug)
         {
-            var users = Session.QueryOver<Project>().Where(x => x.IsActive).And(x => x.Slug == slug).List();
-            return users.FirstOrDefault();
+            var projects = Session.QueryOver<Project>().Where(x => x.IsActive).And(x => x.Slug == slug).List();
+            return projects.FirstOrDefault();
+        }
+
+        public IList<Project> FindByRepoAndMilestone(string repo, int milestoneId)
+        {
+            var projects = Session.QueryOver<Project>().Where(x => x.IsActive).And(x => x.Repository == repo).And(x => x.MilestoneId == milestoneId).List();
+            return projects.ToList();
         }
     }
 }

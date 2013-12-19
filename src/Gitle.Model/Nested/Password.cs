@@ -4,6 +4,7 @@
 
     using System;
     using System.Linq;
+    using System.Security.Cryptography;
     using Gitle.Model.Interfaces.Model;
     using SimpleCrypto;
 
@@ -11,15 +12,15 @@
 
     public class Password : IPassword
     {
-        protected Password()
-        {
-            CreationDate = DateTime.Now;
-        }
-
-        public Password(string password, bool temporary = false)
+        public Password(string password)
             : this()
         {
-            Temporary = temporary;
+            EncryptPassword(password);
+        }
+
+        public Password()
+        {
+            var password = GeneratePassword();
             EncryptPassword(password);
         }
 
@@ -27,9 +28,7 @@
 
         public virtual string EncriptedPassword { get; protected set; }
 
-        public virtual DateTime CreationDate { get; private set; }
-
-        public virtual bool Temporary { get; protected set; }
+        public virtual string Hash { get; protected set; }
 
         public virtual bool Match(string password)
         {
@@ -61,32 +60,16 @@
                           .ToArray());
         }
 
-        public class NullPassword : IPassword
+        public void GenerateHash()
         {
-            public bool Match(string password)
+            var bytes = new byte[16];
+            using (var rng = new RNGCryptoServiceProvider())
             {
-                return false;
+                rng.GetBytes(bytes);
             }
 
-            public string Salt
-            {
-                get { return string.Empty; }
-            }
-
-            public string EncriptedPassword
-            {
-                get { return string.Empty; }
-            }
-
-            public DateTime CreationDate
-            {
-                get { return DateTime.MinValue; }
-            }
-
-            public bool Temporary
-            {
-                get { return true; }
-            }
+            Hash = BitConverter.ToString(bytes).Replace("-", "");
         }
+
     }
 }

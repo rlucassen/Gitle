@@ -5,15 +5,21 @@
     <% else: %>
     <h1>Nieuwe gebruiker</h1>
     <% end %>
-    <form action="/user/${?item.Id}/save" method="POST">
+    <form action="/user/${?item.Id}/save" method="POST" data-abide>
       ${Form.HiddenField("item.Id")}
       <div class="row">
         <div class="large-3 columns">Naam</div>
-        <div class="large-9 columns">${Form.TextField("item.FullName")}</div>
+        <div class="large-9 columns">
+          <input type="text" name="item.FullName" value="${?item.FullName}" required />
+          <small class="error">Geef een naam op</small>
+        </div>
       </div>
       <div class="row">
         <div class="large-3 columns">Inlog</div>
-        <div class="large-9 columns">${Form.TextField("item.Name")}</div>
+        <div class="large-9 columns">
+          <input type="text" name="item.Name" value="${?item.Name}" required />
+          <small class="error">Geef een inlognaam op</small>
+        </div>
       </div>
       <div class="row">
         <div class="large-3 columns">Wachtwoord</div>
@@ -21,11 +27,14 @@
       </div>
       <div class="row">
         <div class="large-3 columns">Telefoonnummer</div>
-        <div class="large-9 columns">${Form.TextField("item.Phone")}</div>
+        <div class="large-9 columns"><input type="tel" name="item.Phone" value="${?item.Phone}" /></div>
       </div>
       <div class="row">
         <div class="large-3 columns">Emailadres</div>
-        <div class="large-9 columns">${Form.TextField("item.Emailaddress")}</div>
+        <div class="large-9 columns">
+          <input type="text" name="item.Emailaddress" value="${?item.EmailAddress}" required />
+          <small class="error">Geef een emailadres op</small>
+        </div>
       </div>
       <div class="row">
         <div class="large-3 columns">GitHub username</div>

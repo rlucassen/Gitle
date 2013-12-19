@@ -38,25 +38,26 @@
     <Content Include="Content\fonts\fontawesome-webfont.svg" />
     <Content Include="Content\javascript\app.js" />
     <Content Include="Content\javascript\foundation.min.js" />
-    <Content Include="Content\javascript\foundation\foundation.alerts.js" />
+    <Content Include="Content\javascript\foundation\foundation.abide.js" />
+    <Content Include="Content\javascript\foundation\foundation.accordion.js" />
+    <Content Include="Content\javascript\foundation\foundation.alert.js" />
     <Content Include="Content\javascript\foundation\foundation.clearing.js" />
-    <Content Include="Content\javascript\foundation\foundation.cookie.js" />
     <Content Include="Content\javascript\foundation\foundation.dropdown.js" />
-    <Content Include="Content\javascript\foundation\foundation.forms.js" />
+    <Content Include="Content\javascript\foundation\foundation.interchange.js" />
     <Content Include="Content\javascript\foundation\foundation.joyride.js" />
     <Content Include="Content\javascript\foundation\foundation.js" />
     <Content Include="Content\javascript\foundation\foundation.magellan.js" />
+    <Content Include="Content\javascript\foundation\foundation.offcanvas.js" />
     <Content Include="Content\javascript\foundation\foundation.orbit.js" />
-    <Content Include="Content\javascript\foundation\foundation.placeholder.js" />
     <Content Include="Content\javascript\foundation\foundation.reveal.js" />
-    <Content Include="Content\javascript\foundation\foundation.section.js" />
-    <Content Include="Content\javascript\foundation\foundation.tooltips.js" />
+    <Content Include="Content\javascript\foundation\foundation.tab.js" />
+    <Content Include="Content\javascript\foundation\foundation.tooltip.js" />
     <Content Include="Content\javascript\foundation\foundation.topbar.js" />
     <Content Include="Content\javascript\jquery.tablesorter.js" />
     <Content Include="Content\javascript\jquery.tablesorter.min.js" />
     <Content Include="Content\javascript\vendor\custom.modernizr.js" />
+    <Content Include="Content\javascript\vendor\jquery.cookie.js" />
     <Content Include="Content\javascript\vendor\jquery.js" />
-    <Content Include="Content\javascript\vendor\zepto.js" />
     <Content Include="Content\stylesheets\app.css" />
     <Content Include="Content\stylesheets\font-awesome-ie7.min.css" />
     <Content Include="Content\stylesheets\font-awesome.css" />
@@ -70,6 +71,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\GitHubHookController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\CustomerController.cs" />
     <Compile Include="Controllers\IssueController.cs" />
@@ -195,6 +197,10 @@
       <Project>{3F11166A-A55D-4F2D-99FE-E3F1736E4409}</Project>
       <Name>Gitle.Repository</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Gitle.Service\Gitle.Service.csproj">
+      <Project>{83DEC67C-B367-4EB5-873F-AC4BDA8E3281}</Project>
+      <Name>Gitle.Service</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="castle.config" />
@@ -205,7 +211,13 @@
     <None Include="Content\fonts\fontawesome-webfont.ttf" />
     <None Include="Content\fonts\fontawesome-webfont.woff" />
     <None Include="Content\fonts\FontAwesome.otf" />
+    <None Include="Views\Authentication\changepassword.brail" />
+    <None Include="Views\Authentication\requestreset.brail" />
+    <None Include="Views\Mail\comment.brail" />
+    <None Include="Views\Mail\password.brail" />
+    <None Include="Views\Mail\issue.brail" />
     <None Include="Views\Project\view.brail" />
+    <None Include="Views\User\profile.brail" />
     <None Include="Views\User\edit.brail" />
     <None Include="Views\User\index.brail" />
     <None Include="Views\Customer\edit.brail" />
@@ -219,7 +231,7 @@
     <None Include="Views\Project\index.brail" />
     <None Include="Views\Repository\index.brail" />
     <None Include="Views\Authentication\index.brail" />
-    <None Include="Views\Authentication\resetpassword.brail" />
+    <None Include="Views\Authentication\forgotpassword.brail" />
     <None Include="Views\Layouts\default.brail" />
     <None Include="Views\Layouts\secure.brail" />
     <None Include="Views\shared\forbidden.brail" />
@@ -232,7 +244,7 @@
         <WebProjectProperties>
           <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>50026</DevelopmentServerPort>
+          <DevelopmentServerPort>51459</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>http://localhost:50026/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>

@@ -9,7 +9,7 @@
           <th>Telefoonnummer</th>
           <th>Emailadres</th>
           <th>Admin</th>
-          <th></th>
+          <th class="{sorter: false}"></th>
         </tr>
       </thead>
       <tbody>
@@ -20,8 +20,10 @@
           <td class="email">${item.EmailAddress}</td>
           <td class="admin"><span class="hide">${item.IsAdmin}</span><% if item.IsAdmin: %><i class="fa fa-check green"></i><% else: %><i class="fa fa-times red"></i><% end %></td>
           <td>
-            <a class="button tiny success no-margin" href="/user/${item.Id}/edit">Bewerk</a>
-            <a class="button tiny alert no-margin" href="/user/${item.Id}/delete">Verwijder</a>
+            <ul class="button-group">
+              <li><a class="button tiny success no-margin" href="/user/${item.Id}/edit">Bewerk</a></li>
+              <li><a class="button tiny alert no-margin" href="/user/${item.Id}/delete">Verwijder</a></li>
+            </ul>
           </td>
         </tr>
         <% end %>
@@ -29,12 +31,3 @@
     </table>
   </div>
 </div>
-<script>
-  $(function () {
-    $('.tablesorter').tablesorter({
-      headers: {
-        2: { sorter: false }
-      }
-    });
-  })
-</script>

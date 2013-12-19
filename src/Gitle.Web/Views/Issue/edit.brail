@@ -6,18 +6,21 @@
     <% else: %>
     <h1>Nieuwe taak</h1>
     <% end %>
-    <form action="/project/${project.Slug}/issue/${item.Number}/save" method="POST">
+    <form action="/project/${project.Slug}/issue/${item.Number}/save" method="POST" data-abide>
       ${Form.HiddenField("item.Number")}
       ${Form.HiddenField("item.State")}
       <input type="hidden" name="item.Milestone.Number" value="${project.MilestoneId}" />
       <div class="row">
         <div class="large-3 columns">Naam</div>
-        <div class="large-9 columns">${Form.TextField("item.Name")}</div>
+        <div class="large-9 columns">
+          <input type="text" name="item.Name" value="${?item.Name}" required />
+          <small class="error">Geef een naam op</small>
+        </div>
       </div>
       <% if CurrentUser.IsAdmin: %>
       <div class="row">
         <div class="large-3 columns">Schatting</div>
-        <div class="large-9 columns">${Form.TextField("item.Hours")}</div>
+        <div class="large-9 columns"><input type="number" name="item.Hours" value="${?item.Hours}"/></div>
       </div>
       <% end %>
       <div class="row">

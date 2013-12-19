@@ -19,6 +19,7 @@
     <script src="/Content/javascript/vendor/jquery.js"> </script>
     <script src="/Content/javascript/vendor/custom.modernizr.js"> </script>
     <script src="/Content/javascript/marked.js"> </script>
+    <script src="/Content/javascript/jquery.metadata.js" type="text/javascript"> </script>
     <script src="/Content/javascript/jquery.tablesorter.min.js" type="text/javascript"> </script>
   </head>
   <body>
@@ -32,17 +33,20 @@
       <section class="top-bar-section">
         <ul class="left">
           <li class="divider"></li>
-          <li><a href="/home/index">Home</a></li>
-          <li class="divider"></li>
           <li><a href="/projects">Projecten</a></li>
           <% if CurrentUser.IsAdmin: %>
           <li class="divider"></li>
           <li><a href="/customers">Klanten</a></li>
           <li class="divider"></li>
           <li><a href="/users">Gebruikers</a></li>
+          <% else: %>
+          <li class="divider"></li>
+          <li><a href="/user/profile">Gegevens wijzigen</a></li>
           <% end %>
         </ul>
         <ul class="right">
+          <li class="divider"></li>
+          <li class="has-form"><a id="initiate-joyride" class="button success" href="#"><i class="fa fa-question"></i></a></li>
           <li class="divider"></li>
           <li><a href="#">Ingelogd als: ${?CurrentUser.Name}</a></li>
           <li class="divider"></li>
@@ -55,8 +59,14 @@
     </div>
 
     <script src="/Content/javascript/foundation.min.js"> </script>
+    <script src="/Content/javascript/foundation/foundation.abide.js"> </script>
+    <script src="/Content/javascript/foundation/foundation.joyride.js"> </script>
+    <script src="/Content/javascript/vendor/jquery.cookie.js"> </script>
     <script>
-      $(document).foundation();
+      $(document).foundation()
+                 .foundation('abide', {
+                   live_validate: false
+                 });
     </script>
     <script src="/Content/javascript/app.js"> </script>
   </body>

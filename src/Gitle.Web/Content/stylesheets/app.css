@@ -110,14 +110,6 @@ table.row-clickable tbody td:hover {
   width: 960px;
 }
 
-.alert-box {
-  position: fixed;
-  right: 25%;
-  top: 0;
-  width: 50%;
-  z-index: 100;
-}
-
 .lt-ie9 .top-bar {
   background: #2f2f2f;
   overflow: visible;

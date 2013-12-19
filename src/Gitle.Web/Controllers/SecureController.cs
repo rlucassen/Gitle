@@ -34,7 +34,7 @@ namespace Gitle.Web.Controllers.Admin
                 return null;
             }
             var projectAttributes = (MustHaveProjectAttribute[])method.GetCustomAttributes(typeof(MustHaveProjectAttribute), false);
-            if (!CurrentUser.IsAdmin && extraArgs.ContainsKey("projectSlug") && projectAttributes.Length > 0 && CurrentUser.Projects.All(p => p.Id != long.Parse(extraArgs["projectSlug"].ToString())))
+            if (!CurrentUser.IsAdmin && extraArgs.ContainsKey("projectSlug") && projectAttributes.Length > 0 && CurrentUser.Projects.Select(p => p.Project).All(p => p.Slug != extraArgs["projectSlug"].ToString()))
             {
                 RenderView("/shared/forbidden");
                 return null;

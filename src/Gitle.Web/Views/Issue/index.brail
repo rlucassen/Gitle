@@ -1,48 +1,64 @@
 ﻿<div class="row">
   <div class="large-12 columns">
     <h1>${project.Name}: Taken</h1>
-      <a class="button" href="/project/${project.Slug}/issue/new">Nieuw</a>
-      <% if CurrentUser.IsAdmin: %><a class="button success" href="/project/${project.Slug}/issue/export" />Exporteren</a><% end %>
-      <table class="tablesorter small-blocks">
-        <thead>
-          <tr>
-            <th>Id</th>
-            <th>Naam</th>
-            <th>Schatting</th>
-            <th title="Reacties"><i class="fa fa-comments-o"></i></th>
-            <th title="Klantakkoord"><i class="fa fa-thumbs-up"></i></th>
-            <% if CurrentUser.IsAdmin: %><th title="Gefactureerd"><i class="fa fa-euro"></i></th><% end %>
-            <th title="Voltooid"><i class="fa fa-check-square-o"></i></th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          <% for issue in items: %>
-          <tr>
-            <td class="id">${issue.Number}</td>
-            <td class="name">${issue.Name}</td>
-            <td class="estimate">${issue.Hours} uur</td>
-            <td class="comments">${issue.Comments}</td>
-            <td class="accepted"><span class="hide">${issue.Accepted}</span><% if issue.Accepted: %><i class="fa fa-check green"></i><% else: %><i class="fa fa-times red"></i><% end %></td>
-            <% if CurrentUser.IsAdmin: %><td class="invoiced"><span class="hide">${issue.Invoiced}</span><% if issue.Invoiced: %><i class="fa fa-check green"></i><% else: %><i class="fa fa-times red"></i><% end %></td><% end %>
-            <td class="state"><span class="hide">${issue.State}</span><% if issue.State == "closed": %><i class="fa fa-check green"></i><% else: %><i class="fa fa-times red"></i><% end %></td>
-            <td class="actions">
-              <a class="button tiny no-margin" href="/project/${project.Slug}/issue/${issue.Number}/view">Open</a>
-              <% if CurrentUser.IsAdmin: %><a class="button tiny success no-margin" href="/project/${project.Slug}/issue/${issue.Number}/edit">Bewerk</a><% end %>
-              <% if not issue.Accepted and issue.Hours > 0: %><a class="button tiny success no-margin" href="/project/${project.Slug}/issue/${issue.Number}/accept">Akkoord</a><% end %>
-            </td>
-          </tr>
-          <% end %>
-        </tbody>
-      </table>
+    <a class="button" href="/project/${project.Slug}/issue/new">Nieuw</a>
+    <% if CurrentUser.IsAdmin: %><a class="button success" href="/project/${project.Slug}/issue/export" />Exporteren</a><% end %>
+    <table id="issue-table" class="tablesorter small-blocks">
+      <thead>
+        <tr>
+          <th id="issue-id">Id</th>
+          <th id="issue-name">Naam</th>
+          <th id="issue-hours">Schatting</th>
+          <th id="issue-comments" title="Reacties"><i class="fa fa-comments-o"></i></th>
+          <th id="issue-accepted" title="Klantakkoord"><i class="fa fa-thumbs-up"></i></th>
+          <% if CurrentUser.IsAdmin: %><th title="Gefactureerd"><i class="fa fa-euro"></i></th><% end %>
+          <th id="issue-state" title="Voltooid"><i class="fa fa-check-square-o"></i></th>
+          <th class="{sorter: false}"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for issue in items: %>
+        <tr>
+          <td class="id">${issue.Number}</td>
+          <td class="name">${issue.Name}</td>
+          <td class="estimate">${issue.Hours} uur</td>
+          <td class="comments">${issue.Comments}</td>
+          <td class="accepted"><span class="hide">${issue.Accepted}</span><% if issue.Accepted: %><i class="fa fa-check green"></i><% else: %><i class="fa fa-times red"></i><% end %></td>
+          <% if CurrentUser.IsAdmin: %><td class="invoiced"><span class="hide">${issue.Invoiced}</span><% if issue.Invoiced: %><i class="fa fa-check green"></i><% else: %><i class="fa fa-times red"></i><% end %></td><% end %>
+          <td class="state"><span class="hide">${issue.State}</span><% if issue.State == "closed": %><i class="fa fa-check green"></i><% else: %><i class="fa fa-times red"></i><% end %></td>
+          <td class="actions">
+            <ul class="button-group">
+              <li><a class="button tiny no-margin" href="/project/${project.Slug}/issue/${issue.Number}/view">Open</a></li>
+              <% if CurrentUser.IsAdmin: %><li><a class="button tiny success no-margin" href="/project/${project.Slug}/issue/${issue.Number}/edit">Bewerk</a></li><% end %>
+              <% if not issue.Accepted and issue.Hours > 0: %><li><a class="button tiny success no-margin" href="/project/${project.Slug}/issue/${issue.Number}/accept">Akkoord</a></li><% end %>
+            </ul>
+          </td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
   </div>
 </div>
-<script>
-  $(function () {
-    $('.tablesorter').tablesorter({
-      headers: {
-        7: { sorter: false }
-      }
-    });
-  })
-</script>
+<ol class="joyride-list" data-joyride>
+  <li data-id="issue-table" data-text="Volgende" data-options="tip_location: top">
+    <p>Dit zijn alle taken die in het project zitten.</p>
+  </li>
+  <li data-id="issue-id" data-text="Volgende" data-options="tip_location: top">
+    <p>Dit zijn de identifiers van de taken, deze kunnen als referentie gebruikt worden.</p>
+  </li>
+  <li data-id="issue-name" data-text="Volgende" data-options="tip_location: top">
+    <p>Dit zijn de korte beschrijvingen van de taken, als je een taak opent kun je de uitgebreide omschrijving zien.</p>
+  </li>
+  <li data-id="issue-hours" data-text="Volgende" data-options="tip_location: top">
+    <p>Dit zijn de uren die Auxilium verwacht nodig te hebben om een taak te voltooien.</p>
+  </li>
+  <li data-id="issue-comments" data-text="Volgende" data-options="tip_location: top">
+    <p>Dit geeft aan hoeveel reacties er op een taak gegeven zijn.</p>
+  </li>
+  <li data-id="issue-accepted" data-text="Volgende" data-options="tip_location: top">
+    <p>Dit geeft aan of de taken door de klant als volledig en correct gemarkeerd zijn.</p>
+  </li>
+  <li data-id="issue-state" data-text="Klaar" data-options="tip_location: top">
+    <p>Dit geeft aan of de taken door Auxilium voltooid zijn, dit wil echter niet zeggen dat de functionaliteit al opgeleverd is.</p>
+  </li>
+</ol>

@@ -6,7 +6,7 @@
       <thead>
         <tr>
           <th>Klant</th>
-          <th></th>
+          <th class="{sorter: false}"></th>
         </tr>
       </thead>
       <tbody>
@@ -14,8 +14,10 @@
         <tr>
           <td class="name">${item.Name}</td>
           <td class="actions">
-            <a class="button tiny success no-margin" href="/customer/${item.Id}/edit">Bewerk</a>
-            <a class="button tiny alert no-margin" href="/customer/${item.Id}/delete">Verwijder</a>
+            <ul class="button-group">
+              <li><a class="button tiny success no-margin" href="/customer/${item.Id}/edit">Bewerk</a></li>
+              <li><a class="button tiny alert no-margin" href="/customer/${item.Id}/delete">Verwijder</a></li>
+            </ul>
           </td>
         </tr>
         <% end %>
@@ -23,12 +25,3 @@
     </table>
   </div>
 </div>
-<script>
-  $(function () {
-    $('.tablesorter').tablesorter({
-      headers: {
-        1: { sorter: false }
-      }
-    });
-  })
-</script>

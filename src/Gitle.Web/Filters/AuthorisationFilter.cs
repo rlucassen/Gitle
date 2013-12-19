@@ -23,7 +23,8 @@
         {
             if (!context.CurrentUser.Identity.IsAuthenticated)
             {
-                context.Response.Redirect("authentication", "index");
+                //context.Response.Redirect("authentication", "index");
+                context.Response.RedirectToUrl(string.Format("/signin?returnUrl={0}", context.Request.Url));
                 return false;
             }
 

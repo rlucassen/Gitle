@@ -5,6 +5,7 @@
     using Admin;
     using Clients.GitHub.Interfaces;
     using Clients.GitHub.Models;
+    using Model;
     using Model.Interfaces.Repository;
     using Helpers;
 
@@ -22,17 +23,17 @@
         [Admin]
         public void Select(string projectSlug, string fullrepo)
         {
-            var project = repository.FindBySlug(projectSlug);
-            PropertyBag.Add("item", project);
+            var project = string.IsNullOrEmpty(projectSlug) ? new Project() : repository.FindBySlug(projectSlug);
             if (fullrepo == "0")
             {
                 PropertyBag.Add("items", new List<Milestone>());
             }
             else
             {
+                project.Repository = fullrepo;
                 PropertyBag.Add("items", client.List(fullrepo));
             }
-
+            PropertyBag.Add("item", project);
             CancelLayout();
         }
     }

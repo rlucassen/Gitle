@@ -1,8 +1,2 @@
-﻿${Form.Select("item.MilestoneId", items, {"value": "Number", "text": "Title", "firstoption": "Kies een milestone"})}
-<script>
-  $(function () {
-    $('#item_MilestoneId').change(function () {
-      $('#item_MilestoneName').val($(this).find('option:selected').html());
-    }).change();
-  });
-</script>
+﻿${Form.Select("item.MilestoneId", items, {"value": "Number", "text": "Title", "firstoption": "Kies een milestone", "required": "", "pattern": "^[^0]+$"})}
+<small class="error">Kies een milstone</small>

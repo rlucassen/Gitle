@@ -60,7 +60,7 @@
 
             public override IPassword Password
             {
-                get { return new Password.NullPassword(); }
+                get { return new Password(); }
             }
         }
     }

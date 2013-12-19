@@ -9,10 +9,10 @@
     public interface IPassword
     {
         bool Match(string password);
+        void GenerateHash();
 
         string Salt { get; }
         string EncriptedPassword { get; }
-        DateTime CreationDate { get; }
-        bool Temporary { get; }
+        string Hash { get; }
     }
 }

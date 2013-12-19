@@ -61,6 +61,17 @@
         }
 
         [Admin]
+        public void Hooks(string projectSlug)
+        {
+            var project = repository.FindBySlug(projectSlug);
+            var hooks = client.GetHooks(project.Repository);
+            if (hooks.Count == 0)
+            {
+                var postHook = client.PostHook(project.Repository, "http://ebf53b9.ngrok.com/githubhook/hook");
+            }
+        }
+
+        [Admin]
         public void New()
         {
             PropertyBag.Add("repositories", client.List());

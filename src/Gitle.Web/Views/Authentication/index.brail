@@ -1,7 +1,13 @@
 ﻿<div class="row">
   <div class="large-12 columns">
     <h1>Inloggen</h1>
-    <form>
+    <% if ?message: %>
+    <div class="alert-box">
+        ${message}
+    </div>
+    <% end %>
+    <form method="POST" action="/signin/index">
+      <input type="hidden" name="returnUrl" value="${returnUrl}"/>
       <div class="row">
         <div class="large-3 columns">
           <label class="hide-for-medium-down" for="name">${t.User_Name}</label>
@@ -19,8 +25,16 @@
         </div>
       </div>
       <div class="row">
+        <div class="large-3 medium-3 small-5 columns">
+          <label for="persistent">Ingelogd blijven</label>
+        </div>
+        <div class="large-9 medium-9 small-7 columns">
+          <input type="checkbox" name="persistent">
+        </div>
+      </div>
+      <div class="row">
         <div class="small-8 columns">
-          <a href="/signin/resetpassword">${t.ForgotPassword}?</a>
+          <a href="/signin/forgotpassword">${t.ForgotPassword}?</a>
         </div>
         <div class="small-4 columns">
           <input type="submit" class="button right" value="${t.Login}">

@@ -13,8 +13,7 @@
         {
             Map(x => x.Salt);
             Map(x => x.EncriptedPassword);
-            Map(x => x.CreationDate);
-            Map(x => x.Temporary);
+            Map(x => x.Hash);
         }
     }
 }

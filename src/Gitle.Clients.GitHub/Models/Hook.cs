@@ -21,8 +21,8 @@ namespace Gitle.Clients.GitHub.Models
 
         public Hook(string url)
         {
-            Config = new Dictionary<string, string> {{"url", url}, {"content_type", "json"}};
-            Events = new List<string> {"push"};
+            Config = new Dictionary<string, string> {{"url", url}, {"content_type", "form"}, {"insecure_ssl", "1"}};
+            Events = new List<string> {"issue_comment", "issues"};
             Active = true;
             Name = "web";
         }

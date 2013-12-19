@@ -119,6 +119,9 @@
                                            .DefaultForAction().Is("index"));
             RoutingModuleEx.Engine.Add(new PatternRoute("/signin/<action>")
                                            .DefaultForController().Is<AuthenticationController>());
+            RoutingModuleEx.Engine.Add(new PatternRoute("/signin/changepassword/<hash>")
+                                           .DefaultForController().Is<AuthenticationController>()
+                                           .DefaultForAction().Is("changepassword"));
             RoutingModuleEx.Engine.Add(new PatternRoute("/signout")
                                            .DefaultForController().Is<AuthenticationController>()
                                            .DefaultForAction().Is("signout"));
@@ -161,6 +164,9 @@
                                            .DefaultForAction().Is("index"));
             RoutingModuleEx.Engine.Add(new PatternRoute("/project/<projectSlug>/issue/<issueId>/<action>")
                                            .DefaultForController().Is<IssueController>()
+                                           .DefaultForAction().Is("index"));
+            RoutingModuleEx.Engine.Add(new PatternRoute("/githubhook/<action>")
+                                           .DefaultForController().Is<GitHubHookController>()
                                            .DefaultForAction().Is("index"));
 
             RoutingModuleEx.Engine.Add<DatabaseController>();

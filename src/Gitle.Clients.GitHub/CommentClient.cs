@@ -25,6 +25,11 @@ namespace Gitle.Clients.GitHub
             return _client.Get<List<Comment>>("repos/" +  repo + "/issues/" + issueId + "/comments");
         }
 
+        public Comment Get(string repo, int commentId)
+        {
+            return _client.Get<Comment>("repos/" + repo + "/issues/comments/" + commentId);
+        }
+
         public Comment Post(string repo, int issueId, Comment comment)
         {
             return _client.Post<Comment>("repos/" + repo + "/issues/" + issueId + "/comments", comment.ToPost());

@@ -16,6 +16,15 @@
         }
 
         private Regex r = new Regex(@"\(.*?\)");
+        private Regex repo = new Regex(@"repos/(.*?)/issues");
+
+        [DataMember(Name = "url")]
+        public virtual string Url { get; set; }
+
+        public virtual string RepoName
+        {
+            get { return repo.Matches(Url).Cast<Match>().Select(p => p.Value).FirstOrDefault().Replace("repos/", "").Replace("/issues", ""); }
+        }
 
         [DataMember(Name = "number")]
         public virtual int Number { get; set; }
