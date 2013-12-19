@@ -63,19 +63,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Customer.cs" />
     <Compile Include="Enum\FindOption.cs" />
     <Compile Include="Helpers\CsvHelper.cs" />
     <Compile Include="Helpers\SlugHelper.cs" />
     <Compile Include="Interfaces\Repository\IUserProjectRepository.cs" />
-    <Compile Include="Interfaces\Repository\ICustomerRepository.cs" />
     <Compile Include="Interfaces\Repository\IBaseRepository.cs" />
     <Compile Include="Interfaces\Model\IPassword.cs" />
     <Compile Include="Interfaces\Repository\IProjectRepository.cs" />
     <Compile Include="Interfaces\Repository\IUserRepository.cs" />
     <Compile Include="Interfaces\Service\IEmailService.cs" />
     <Compile Include="Mapping\Component\PasswordComponentMap.cs" />
-    <Compile Include="Mapping\CustomerMap.cs" />
     <Compile Include="Mapping\ModelBaseMap.cs" />
     <Compile Include="Mapping\ProjectMap.cs" />
     <Compile Include="Mapping\UserMap.cs" />

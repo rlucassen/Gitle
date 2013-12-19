@@ -21,7 +21,6 @@
         public virtual int MilestoneId { get; set; }
         public virtual string MilestoneName { get; set; }
         public virtual int HourPrice { get; set; }
-        public virtual Customer Customer { get; set; }
         public virtual int FreckleId { get; set; }
         public virtual IList<UserProject> Users { get; set; }
 

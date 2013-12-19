@@ -55,6 +55,7 @@
     <Content Include="Content\javascript\foundation\foundation.topbar.js" />
     <Content Include="Content\javascript\jquery.tablesorter.js" />
     <Content Include="Content\javascript\jquery.tablesorter.min.js" />
+    <Content Include="Content\javascript\marked.js" />
     <Content Include="Content\javascript\vendor\custom.modernizr.js" />
     <Content Include="Content\javascript\vendor\jquery.cookie.js" />
     <Content Include="Content\javascript\vendor\jquery.js" />
@@ -73,7 +74,6 @@
   <ItemGroup>
     <Compile Include="Controllers\GitHubHookController.cs" />
     <Compile Include="Controllers\UserController.cs" />
-    <Compile Include="Controllers\CustomerController.cs" />
     <Compile Include="Controllers\IssueController.cs" />
     <Compile Include="Controllers\MilestoneController.cs" />
     <Compile Include="Controllers\ProjectController.cs" />
@@ -220,8 +220,6 @@
     <None Include="Views\User\profile.brail" />
     <None Include="Views\User\edit.brail" />
     <None Include="Views\User\index.brail" />
-    <None Include="Views\Customer\edit.brail" />
-    <None Include="Views\Customer\index.brail" />
     <None Include="Views\Issue\edit.brail" />
     <None Include="Views\Issue\invoice.brail" />
     <None Include="Views\Milestone\select.brail" />

@@ -17,13 +17,6 @@
         </div>
       </div>
       <div class="row">
-        <div class="large-3 columns">Klant</div>
-        <div class="large-9 columns">
-          ${Form.Select("customerId", customers, {"value": "Id", "text": "Name", "firstoption": "Kies een klant", "required": "", "pattern": "^[^0]+$"})}
-          <small class="error">Kies een klant</small>
-        </div>
-      </div>
-      <div class="row">
         <div class="large-3 columns">Repository</div>
         <div class="large-9 columns">
           ${Form.Select("item.Repository", repositories, {"value": "FullName", "text": "Name", "firstoption": "Kies een repository"})}

@@ -135,15 +135,6 @@
             RoutingModuleEx.Engine.Add(new PatternRoute("/user/<userId>/<action>")
                                            .DefaultForController().Is<UserController>()
                                            .DefaultForAction().Is("index"));
-            RoutingModuleEx.Engine.Add(new PatternRoute("/customers")
-                                           .DefaultForController().Is<CustomerController>()
-                                           .DefaultForAction().Is("index"));
-            RoutingModuleEx.Engine.Add(new PatternRoute("/customer/<action>")
-                                           .DefaultForController().Is<CustomerController>()
-                                           .DefaultForAction().Is("index"));
-            RoutingModuleEx.Engine.Add(new PatternRoute("/customer/<customerId>/<action>")
-                                           .DefaultForController().Is<CustomerController>()
-                                           .DefaultForAction().Is("index"));
             RoutingModuleEx.Engine.Add(new PatternRoute("/milestone/<action>")
                                            .DefaultForController().Is<MilestoneController>()
                                            .DefaultForAction().Is("index"));

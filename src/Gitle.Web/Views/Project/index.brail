@@ -6,7 +6,6 @@
       <thead>
         <tr>
           <th>Project</th>
-          <th>Klant</th>
           <th>Repository</th>
           <th>Milestone</th>
           <th id="project-actions" class="{sorter: false}"></th>
@@ -16,7 +15,6 @@
         <% for item in items: %>
         <tr>
           <td class="name">${item.Name}</td>
-          <td class="customer">${item.Customer.Name}</td>
           <td class="repository">${item.Repository}</td>
           <td class="milestone">${item.MilestoneName}</td>
           <td class="actions">

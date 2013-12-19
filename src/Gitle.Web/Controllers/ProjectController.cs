@@ -13,18 +13,16 @@
     public class ProjectController : SecureController
     {
         private IProjectRepository repository;
-        private ICustomerRepository customerRepository;
         private IRepositoryClient client;
         private ILabelClient labelClient;
         private IProjectClient projectClient;
         private IIssueClient issueClient;
 
-        public ProjectController(IRepositoryClient client, ILabelClient labelClient, IProjectRepository repository, ICustomerRepository customerRepository, IProjectClient projectClient, IIssueClient issueClient)
+        public ProjectController(IRepositoryClient client, ILabelClient labelClient, IProjectRepository repository, IProjectClient projectClient, IIssueClient issueClient)
         {
             this.repository = repository;
             this.client = client;
             this.labelClient = labelClient;
-            this.customerRepository = customerRepository;
             this.projectClient = projectClient;
             this.issueClient = issueClient;
         }
@@ -75,7 +73,6 @@
         public void New()
         {
             PropertyBag.Add("repositories", client.List());
-            PropertyBag.Add("customers", customerRepository.FindAll());
             PropertyBag.Add("item", new Project());
             RenderView("edit");
         }
@@ -85,8 +82,6 @@
         {
             var project = repository.FindBySlug(projectSlug);
             PropertyBag.Add("repositories", client.List());
-            PropertyBag.Add("customers", customerRepository.FindAll());
-            PropertyBag.Add("customerId", project.Customer.Id);
             PropertyBag.Add("item", project);
         }
 
@@ -100,7 +95,7 @@
         }
 
         [Admin]
-        public void Save(string projectSlug, int customerId)
+        public void Save(string projectSlug)
         {
             var item = repository.FindBySlug(projectSlug);
             if (item != null)
@@ -111,8 +106,6 @@
             {
                 item = BindObject<Project>("item");
             }
-            var customer = customerRepository.Get(customerId);
-            item.Customer = customer;
             repository.Save(item);
 
             var labels = labelClient.List(item.Repository);

@@ -36,8 +36,6 @@
           <li><a href="/projects">Projecten</a></li>
           <% if CurrentUser.IsAdmin: %>
           <li class="divider"></li>
-          <li><a href="/customers">Klanten</a></li>
-          <li class="divider"></li>
           <li><a href="/users">Gebruikers</a></li>
           <% else: %>
           <li class="divider"></li>
