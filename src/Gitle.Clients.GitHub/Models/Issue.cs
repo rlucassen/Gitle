@@ -40,9 +40,9 @@
             get { return r.Matches(Title).Cast<Match>().Select(p => p.Value).FirstOrDefault(); }
         }
 
-        public virtual int Hours
+        public virtual double Hours
         {
-            get { return string.IsNullOrEmpty(HoursMatch) ? 0 : int.Parse(HoursMatch.Trim(new[] { '(', ')' })); }
+            get { return string.IsNullOrEmpty(HoursMatch) ? 0 : double.Parse(HoursMatch.Trim(new[] { '(', ')' })); }
             set
             {
                 Title = string.IsNullOrEmpty(HoursMatch)

@@ -94,7 +94,7 @@
             {
                 client.Post(project.Repository, issue);
             }
-            RedirectToUrl(string.Format("/project/{0}/issue/index", project.Id));
+            RedirectToUrl(string.Format("/project/{0}/issue/index", project.Slug));
         }
 
         [MustHaveProject]
@@ -103,7 +103,7 @@
             var project = repository.FindBySlug(projectSlug);
             var comment = new Comment
                               {
-                                  Body = string.Format("{0}: {1}", CurrentUser.Name, body)
+                                  Body = string.Format("{0}: {1}", CurrentUser.FullName, body)
                               };
             commentClient.Post(project.Repository, issueId, comment);
             RedirectToReferrer();

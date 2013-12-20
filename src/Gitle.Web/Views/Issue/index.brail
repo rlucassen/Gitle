@@ -13,7 +13,7 @@
           <th id="issue-accepted" title="Klantakkoord"><i class="fa fa-thumbs-up"></i></th>
           <% if CurrentUser.IsAdmin: %><th title="Gefactureerd"><i class="fa fa-euro"></i></th><% end %>
           <th id="issue-state" title="Voltooid"><i class="fa fa-check-square-o"></i></th>
-          <th class="{sorter: false}"></th>
+          <th id="issue-actions" class="{sorter: false}"></th>
         </tr>
       </thead>
       <tbody>
@@ -30,7 +30,7 @@
             <ul class="button-group">
               <li><a class="button tiny no-margin" href="/project/${project.Slug}/issue/${issue.Number}/view">Open</a></li>
               <% if CurrentUser.IsAdmin: %><li><a class="button tiny success no-margin" href="/project/${project.Slug}/issue/${issue.Number}/edit">Bewerk</a></li><% end %>
-              <% if not issue.Accepted and issue.Hours > 0: %><li><a class="button tiny success no-margin" href="/project/${project.Slug}/issue/${issue.Number}/accept">Akkoord</a></li><% end %>
+              <% if not issue.Accepted: %><li><a class="button tiny success no-margin" href="/project/${project.Slug}/issue/${issue.Number}/accept">Akkoord</a></li><% end %>
             </ul>
           </td>
         </tr>
@@ -58,7 +58,10 @@
   <li data-id="issue-accepted" data-text="Volgende" data-options="tip_location: top">
     <p>Dit geeft aan of de taken door de klant als volledig en correct gemarkeerd zijn.</p>
   </li>
-  <li data-id="issue-state" data-text="Klaar" data-options="tip_location: top">
+  <li data-id="issue-state" data-text="Volgende" data-options="tip_location: top">
     <p>Dit geeft aan of de taken door Auxilium voltooid zijn, dit wil echter niet zeggen dat de functionaliteit al opgeleverd is.</p>
+  </li>
+  <li data-id="issue-actions" data-text="Klaar" data-options="tip_location: top">
+    <p>Met 'open' kun je de details van de taak bekijken, met 'akkoord' kun je akkoord gaan met de beschreven functionaliteit.</p>
   </li>
 </ol>

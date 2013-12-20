@@ -43,20 +43,11 @@ html[xmlns] .clearfix {
   color: #43ac6a;
 }
 
-.progress.round {
-  font-size: 0.8em;
-  padding-top: 5px;
-  padding-right: 10px;
-  text-align: right;
-}
-
 .progress.round .meter {
+  font-size: 0.8em;
   padding: 3px 10px;
   color: #fff;
   text-align: right;
-  float: left;
-  margin-top: -3px;
-  height: 19px;
 }
 
 textarea {
@@ -362,4 +353,5 @@ table.row-clickable tbody td:hover {
   table.small-blocks td.phone:before { content: "Telefoonnummer: "; }
   table.small-blocks td.email:before { content: "Emailadres: "; }
   table.small-blocks td.notifications:before { content: "Notificaties: "; }
+  table.small-blocks td.freckle:before { content: "Freckle project: "; }
 }

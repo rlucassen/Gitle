@@ -11,6 +11,7 @@
              Map(x => x.MilestoneName);
              Map(x => x.HourPrice);
              Map(x => x.FreckleId);
+             Map(x => x.FreckleName);
              HasMany(x => x.Users).Cascade.All();
          }
     }

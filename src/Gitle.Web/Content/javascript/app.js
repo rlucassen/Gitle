@@ -33,10 +33,17 @@ Application.prototype = {
     $('.tablesorter').tablesorter({});
 
     self.initMilestoneSelect();
+    self.initFreckleSelect();
   },
 
   initOnLoad: function () {
 
+  },
+
+  initFreckleSelect: function () {
+    $('#item_FreckleId').change(function () {
+      $('#item_FreckleName').val($(this).find('option:selected').html());
+    }).change();
   },
 
   initMilestoneSelect: function () {

@@ -3,24 +3,40 @@
     <h1>${project.Name}</h1>
     <div class="row">
       <div class="large-2 columns">Voortgang taken</div>
-      <div class="large-10 columns">
-        <div class="progress success round">
-          <span class="meter" style="width: ${donePercentage.ToString().Replace(',', '.')}%">${doneTime} uur</span>${totalTime} uur
+      <div class="large-8 columns">
+        <div class="progress success round" id="issue-progress">
+          <span class="meter" style="width: ${donePercentage.ToString().Replace(',', '.')}%">${doneTime} uur</span>
         </div>
       </div>
+      <div class="large-2 columns">
+        ${totalIssueTime} uur
+      </div>
     </div>
+    <% if IsDefined("totalTime"): %>
     <div class="row">
       <div class="large-2 columns">Voortgang uren</div>
-      <div class="large-10 columns">
-        <div class="progress round">
-          <span class="meter" style="width: ${bookedPercentage.ToString().Replace(',', '.')}%">${bookedTime} uur</span>${totalTime} uur
+      <div class="large-8 columns">
+        <div class="progress round" id="time-progress">
+          <span class="meter" style="width: ${bookedPercentage.ToString().Replace(',', '.')}%">${bookedTime} uur</span>
         </div>
       </div>
+      <div class="large-2 columns">
+        ${totalTime} uur
+      </div>
     </div>
+    <% else: %>
+    <% if CurrentUser.IsAdmin: %>
+    <div class="row">
+      <div class="large-12 columns">
+        <div class="alert-box warning">Er is nog geen freckle project gekoppeld, als je een freckle project koppelt kun je de voortgang vergelijken.</div>
+      </div>
+    </div>
+    <% end %>
+    <% end %>
     <div class="row">
       <div class="large-12 columns">
         <h2>Klantcontacten</h2>
-        <table class="small-blocks">
+        <table class="small-blocks" id="customers">
           <thead>
             <tr>
               <th>Naam</th>
@@ -45,7 +61,7 @@
     <div class="row">
       <div class="large-12 columns">
         <h2>Developers</h2>
-        <table class="small-blocks">
+        <table class="small-blocks" id="developers">
           <thead>
             <tr>
               <th>Naam</th>
@@ -69,3 +85,21 @@
     </div>
   </div>
 </div>
+<ol class="joyride-list" data-joyride>
+  <% if CurrentUser.IsAdmin: %>
+  <li data-id="issue-progress" data-text="Volgende">
+    <p>Deze balk geeft aan hoeveel uren er aan taken al zijn afgerond van het totaal aantal uren over alle taken.</p>
+  </li>
+  <% if IsDefined("totalTime"): %>
+  <li data-id="time-progress" data-text="Volgende">
+    <p>Deze balk geeft aan hoeveel uren er al geboekt zijn van het totale gebudgeteerde aantal uren.</p>
+  </li>
+  <% end %>
+  <% end %>
+  <li data-id="customers" data-text="Volgende">
+    <p>Hier vind je de gegevens van alle contactpersonen vanuit de klant.</p>
+  </li>
+  <li data-id="developers" data-text="Klaar">
+    <p>Hier vind je de gegevens van alle contactpersonen vanuit Auxilium.</p>
+  </li>
+</ol>

@@ -51,7 +51,7 @@
 
             var project = projectRepository.FindByRepoAndMilestone(hookPayload.Issue.RepoName, hookPayload.Issue.Milestone.Number).FirstOrDefault();
 
-            IList<User> users = (from userProject in project.Users select userProject.User).ToList();
+            IList<User> users = (from userProject in project.Users where userProject.Notifications select userProject.User).ToList();
 
             if (hookPayload.Comment != null)
             {

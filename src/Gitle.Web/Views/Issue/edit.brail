@@ -20,7 +20,7 @@
       <% if CurrentUser.IsAdmin: %>
       <div class="row">
         <div class="large-3 columns">Schatting</div>
-        <div class="large-9 columns"><input type="number" name="item.Hours" value="${?item.Hours}"/></div>
+        <div class="large-9 columns"><input type="text" name="item.Hours" value="${?item.Hours}"/></div>
       </div>
       <% end %>
       <div class="row">

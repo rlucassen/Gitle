@@ -4,33 +4,33 @@
     <form action="/user/saveprofile" method="POST">
       ${Form.HiddenField("item.Id")}
       <div class="row">
-        <div class="large-3 columns">Naam</div>
-        <div class="large-9 columns">${Form.TextField("item.FullName")}</div>
+        <div class="large-3 columns">Volledige naam</div>
+        <div class="large-9 columns" id="fullname">${Form.TextField("item.FullName")}</div>
       </div>
       <div class="row">
         <div class="large-3 columns">Inlog</div>
-        <div class="large-9 columns">${Form.TextField("item.Name")}</div>
+        <div class="large-9 columns" id="name">${Form.TextField("item.Name")}</div>
       </div>
       <div class="row">
         <div class="large-3 columns">Nieuw wachtwoord</div>
-        <div class="large-9 columns">${Form.TextField("password")}</div>
+        <div class="large-9 columns" id="password">${Form.PasswordField("password")}</div>
       </div>
       <div class="row">
         <div class="large-3 columns">Telefoonnummer</div>
-        <div class="large-9 columns">${Form.TextField("item.Phone")}</div>
+        <div class="large-9 columns" id="phone">${Form.TextField("item.Phone")}</div>
       </div>
       <div class="row">
         <div class="large-3 columns">Emailadres</div>
-        <div class="large-9 columns">${Form.TextField("item.Emailaddress")}</div>
+        <div class="large-9 columns" id="email">${Form.TextField("item.Emailaddress")}</div>
       </div>
       <div class="row projects">
         <div class="large-3 columns">Notificaties</div>
         <div class="large-9 columns">
-          <table>
+          <table id="notifications">
             <thead>
               <tr>
-                <td><i class="fa fa-bell"></i></td>
-                <td>Project</td>
+                <th title="Notificaties ontvangen"><i class="fa fa-bell"></i></th>
+                <th>Project</th>
               </tr>
             </thead>
             <tbody>
@@ -56,3 +56,23 @@
     </form>
   </div>
 </div>
+<ol class="joyride-list" data-joyride>
+  <li data-id="fullname" data-text="Volgende" data-options="tip_location: top">
+    <p>Je volledige naam is zichtbaar in de reacties op taken.</p>
+  </li>
+  <li data-id="name" data-text="Volgende">
+    <p>Kies een inlognaam waarmee je wilt inloggen.</p>
+  </li>
+  <li data-id="password" data-text="Volgende">
+    <p>Vul hier een nieuw wachtwoord in als je je wachtwoord wilt wijzgen.</p>
+  </li>
+  <li data-id="phone" data-text="Volgende">
+    <p>Vul hier een telefoonnummer in waar je tijdens werkuren bereikbaar bent.</p>
+  </li>
+  <li data-id="email" data-text="Volgende">
+    <p>Vul hier je emailadres in, je zult hier de notificaties op ontvangen.</p>
+  </li>
+  <li data-id="notifications" data-text="Klaar" data-options="tip_location: top">
+    <p>Geef hier aan voor welke projecten je notificaties in je emailbox wilt ontvangen.</p>
+  </li>
+</ol>

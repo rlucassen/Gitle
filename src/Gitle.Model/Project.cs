@@ -11,7 +11,7 @@
             get { return name; }
             set { 
                 name = value;
-                Slug = string.IsNullOrEmpty(value) ? string.Empty : SlugHelper.Slugify(value);
+                Slug = string.IsNullOrEmpty(value) ? string.Empty : value.Slugify();
             }
         }
 
@@ -22,6 +22,7 @@
         public virtual string MilestoneName { get; set; }
         public virtual int HourPrice { get; set; }
         public virtual int FreckleId { get; set; }
+        public virtual string FreckleName { get; set; }
         public virtual IList<UserProject> Users { get; set; }
 
     }

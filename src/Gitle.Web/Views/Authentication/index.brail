@@ -6,6 +6,11 @@
         ${message}
     </div>
     <% end %>
+    <% if ?error: %>
+    <div class="alert-box warning">
+        ${error}
+    </div>
+    <% end %>
     <form method="POST" action="/signin/index">
       <input type="hidden" name="returnUrl" value="${returnUrl}"/>
       <div class="row">

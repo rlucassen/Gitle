@@ -35,7 +35,7 @@
             
             var user = userRepository.FindByName(name);
 
-            if (!user.Password.Match(password))
+            if (string.IsNullOrEmpty(password) || !user.Password.Match(password))
             {
                 Error("Inloggen niet gelukt", true);
                 return;

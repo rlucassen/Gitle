@@ -32,47 +32,43 @@
             PropertyBag.Add("items", CurrentUser.IsAdmin ? repository.FindAll() : CurrentUser.Projects.Select(x => x.Project));
         }
 
-        [Admin]
+        [MustHaveProject]
         public void View(string projectSlug)
         {
             var project = repository.FindBySlug(projectSlug);
-            var freckleProject = projectClient.Show(project.FreckleId);
-            var issues = issueClient.List(project.Repository, project.MilestoneId);
-
             PropertyBag.Add("project", project);
 
-            var doneTime = issues.Where(i => i.State == "closed").Sum(i => i.Hours);
-            var bookedTime = freckleProject.BillableMinutes / 60.0;
-            var totalTime = freckleProject.BudgetMinutes/60.0;
+            if (project.FreckleId > 0 && CurrentUser.IsAdmin)
+            {
+                var freckleProject = projectClient.Show(project.FreckleId);
 
-            var bookedPercentage = bookedTime*100.0/totalTime;
-            var donePercentage = doneTime*100.0/totalTime;
+                var bookedTime = freckleProject.BillableMinutes/60.0;
+                var totalTime = freckleProject.BudgetMinutes/60.0;
+
+                var bookedPercentage = bookedTime*100.0/totalTime;
+
+                PropertyBag.Add("bookedTime", bookedTime);
+                PropertyBag.Add("bookedPercentage", bookedPercentage);
+                PropertyBag.Add("totalTime", totalTime);
+            }
+            var issues = issueClient.List(project.Repository, project.MilestoneId);
+            var doneTime = issues.Where(i => i.State == "closed").Sum(i => i.Hours);
+            var totalIssueTime = issues.Sum(i => i.Hours);
+            var donePercentage = doneTime * 100.0 / totalIssueTime;
 
             PropertyBag.Add("doneTime", doneTime);
             PropertyBag.Add("donePercentage", donePercentage);
-            PropertyBag.Add("bookedTime", bookedTime);
-            PropertyBag.Add("bookedPercentage", bookedPercentage);
-            PropertyBag.Add("totalTime", totalTime);
+            PropertyBag.Add("totalIssueTime", totalIssueTime);
 
             PropertyBag.Add("customers", project.Users.Where(up => !up.User.IsAdmin));
             PropertyBag.Add("developers", project.Users.Where(up => up.User.IsAdmin));
         }
 
         [Admin]
-        public void Hooks(string projectSlug)
-        {
-            var project = repository.FindBySlug(projectSlug);
-            var hooks = client.GetHooks(project.Repository);
-            if (hooks.Count == 0)
-            {
-                var postHook = client.PostHook(project.Repository, "http://ebf53b9.ngrok.com/githubhook/hook");
-            }
-        }
-
-        [Admin]
         public void New()
         {
             PropertyBag.Add("repositories", client.List());
+            PropertyBag.Add("freckleProjects", projectClient.List());
             PropertyBag.Add("item", new Project());
             RenderView("edit");
         }
@@ -82,6 +78,7 @@
         {
             var project = repository.FindBySlug(projectSlug);
             PropertyBag.Add("repositories", client.List());
+            PropertyBag.Add("freckleProjects", projectClient.List());
             PropertyBag.Add("item", project);
         }
 
@@ -108,14 +105,15 @@
             }
             repository.Save(item);
 
-            var labels = labelClient.List(item.Repository);
-            CreateInitialLabels(labels, item);
+            CreateInitialLabels(item);
+            CreateHooks(item);
 
             RedirectToUrl("/projects");
         }
 
-        private void CreateInitialLabels(List<Label> labels, Project project )
+        private void CreateInitialLabels(Project project )
         {
+            var labels = labelClient.List(project.Repository);
             if (!labels.Select(l => l.Name).Contains("accepted"))
             {
                 labelClient.Post(project.Repository, new Label() { Name = "accepted", Color = "008cba" });
@@ -129,5 +127,18 @@
                 labelClient.Post(project.Repository, new Label() { Name = "customer issue", Color = "f04124" });
             }
         }
+
+        private void CreateHooks(Project project)
+        {
+            var hooks = client.GetHooks(project.Repository);
+
+            var url = string.Format("{0}://{1}/githubhook/hook", Request.Uri.Scheme, Request.Uri.Authority);
+            if (!hooks.Any(h => h.Events.Contains("issues") && h.Events.Contains("issue_comment") && h.Config["url"] == url))
+            {
+                var postHook = client.PostHook(project.Repository, url);
+            }
+        }
+
+
     }
 }
