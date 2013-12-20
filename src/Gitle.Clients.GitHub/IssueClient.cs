@@ -22,15 +22,15 @@ namespace Gitle.Clients.GitHub
 
         public List<Issue> List(string repo)
         {
-            var issues = _client.Get<List<Issue>>("repos/" + repo + "/issues");
-            issues.AddRange(_client.Get<List<Issue>>("repos/" + repo + "/issues?state=closed"));
+            var issues = _client.Get<List<Issue>>("repos/" + repo + "/issues?per_page=100");
+            issues.AddRange(_client.Get<List<Issue>>("repos/" + repo + "/issues?per_page=100&state=closed"));
             return issues;
         }
 
         public List<Issue> List(string repo, int milestoneId)
         {
-            var issues = _client.Get<List<Issue>>("repos/" + repo + "/issues?milestone=" + milestoneId);
-            issues.AddRange(_client.Get<List<Issue>>("repos/" + repo + "/issues?state=closed&milestone=" + milestoneId));
+            var issues = _client.Get<List<Issue>>("repos/" + repo + "/issues?per_page=100&milestone=" + milestoneId);
+            issues.AddRange(_client.Get<List<Issue>>("repos/" + repo + "/issues?per_page=100&state=closed&milestone=" + milestoneId));
             return issues;
         }
 

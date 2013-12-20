@@ -22,7 +22,7 @@ namespace Gitle.Clients.GitHub
 
         public List<Repository> List()
         {
-            return _client.Get<List<Repository>>("user/repos?type=owner");
+            return _client.Get<List<Repository>>("user/repos?type=owner&per_page=100");
         }
 
         public Repository Get(string repo)
