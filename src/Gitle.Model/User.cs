@@ -14,6 +14,11 @@
 
     public class User : ModelBase, IPrincipal, IIdentity
     {
+        public User()
+        {
+            Projects = new List<UserProject>();
+        }
+
         public virtual IPassword Password { get; set; }
         public virtual string Name { get; set; }
         public virtual string FullName { get; set; }
