@@ -5,6 +5,11 @@
 
     public class Project : ModelBase
     {
+        public Project()
+        {
+            Users = new List<UserProject>();
+        }
+
         private string name;
         public virtual string Name
         {
