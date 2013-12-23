@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Gitle.Clients.Freckle
+﻿namespace Gitle.Clients.Freckle
 {
+    using System.Collections.Generic;
+    using System.Linq;
     using Interfaces;
     using Models;
     using ServiceStack.ServiceClient.Web;
+
 
     public class ProjectClient : IProjectClient 
     {
