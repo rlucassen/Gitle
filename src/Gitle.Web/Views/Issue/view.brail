@@ -29,8 +29,9 @@
     <h2>Reacties</h2>
     <% for comment in comments: %>
     <div class="panel">
-      <strong>${comment.User.Login}</strong><br/>
-      ${comment.Body}
+      <small class="right">${comment.CreatedAt}</small><br/>
+      <strong>${comment.Name}:</strong> 
+      <div class="marked">${comment.Text}</div>
     </div>
     <% end %>
     <% if comments.Count == 0: %>
@@ -45,6 +46,8 @@
 </div>
 <script>
   $(function () {
-    $('.marked').html(marked($('.marked').html()));
+    $('.marked').each(function () {
+      $(this).html(marked($(this).html()));
+    })
   });
 </script>
