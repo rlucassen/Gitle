@@ -12,6 +12,9 @@
         [DataMember(Name = "body")]
         public virtual string Body { get; set; }
 
+        [DataMember(Name = "user")]
+        public virtual User User { get; set; }
+
         public virtual CommentPost ToPost()
         {
             return new CommentPost

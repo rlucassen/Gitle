@@ -37,12 +37,17 @@
 
         private string HoursMatch
         {
-            get { return r.Matches(Title).Cast<Match>().Select(p => p.Value).FirstOrDefault(); }
+            get { return r.Matches(Title).Cast<Match>().Select(p => p.Value).LastOrDefault(); }
         }
 
         public virtual double Hours
         {
-            get { return string.IsNullOrEmpty(HoursMatch) ? 0 : double.Parse(HoursMatch.Trim(new[] { '(', ')' })); }
+            get
+            {
+                double hours;
+                var tryParse = double.TryParse(string.IsNullOrEmpty(HoursMatch) ? "0" : HoursMatch.Trim(new[] {'(', ')'}), out hours);
+                return tryParse ? hours : 0;
+            }
             set
             {
                 Title = string.IsNullOrEmpty(HoursMatch)
