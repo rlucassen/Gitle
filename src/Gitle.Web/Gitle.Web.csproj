@@ -166,6 +166,7 @@
       <HintPath>..\packages\NHibernate.Validator.1.3.2.4000\lib\Net35\NHibernate.Validator.Specific.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
@@ -213,6 +214,9 @@
     <None Include="Views\Mail\comment.brail" />
     <None Include="Views\Mail\password.brail" />
     <None Include="Views\Mail\issue.brail" />
+    <None Include="Views\OAuth\codeexpired.brail" />
+    <None Include="Views\OAuth\stateincorrect.brail" />
+    <None Include="Views\OAuth\nogitleuser.brail" />
     <None Include="Views\Project\view.brail" />
     <None Include="Views\User\profile.brail" />
     <None Include="Views\User\edit.brail" />

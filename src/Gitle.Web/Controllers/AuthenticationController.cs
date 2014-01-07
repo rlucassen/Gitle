@@ -4,8 +4,10 @@
 
     using System.Collections;
     using System.Collections.Generic;
+    using System.Configuration;
     using System.Web;
     using System.Web.Security;
+    using Model.Helpers;
     using Model.Interfaces.Repository;
     using Model.Interfaces.Service;
     using Model.Nested;
@@ -25,6 +27,13 @@
 
         public void Index(string name, string password, bool persistent, string returnUrl)
         {
+            PropertyBag.Add("githubClientId", ConfigurationManager.AppSettings["githubClientId"]);
+            PropertyBag.Add("githubOAuthCallback", ConfigurationManager.AppSettings["githubOAuthCallback"]);
+            PropertyBag.Add("githubScope", ConfigurationManager.AppSettings["githubScope"]);
+            var state = HashHelper.GenerateHash();
+            Session.Add("state", state);
+            PropertyBag.Add("state", state);
+
             if (string.IsNullOrWhiteSpace(name) && string.IsNullOrWhiteSpace(password))
             {
                 PropertyBag.Add("returnUrl", returnUrl);

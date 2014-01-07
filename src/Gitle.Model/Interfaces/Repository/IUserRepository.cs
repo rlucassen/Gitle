@@ -7,5 +7,6 @@
         User FindByName(string name);
         IList<User> FindByEmail(string email);
         IList<User> FindByPasswordHash(string hash);
+        IList<User> FindByGithubUser(string githubUser);
     }
 }

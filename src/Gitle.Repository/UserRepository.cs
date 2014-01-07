@@ -34,5 +34,10 @@
         {
             return session.QueryOver<User>().Where(x => x.IsActive).And(x => x.Password.Hash == hash).List();
         }
+
+        public IList<User> FindByGithubUser(string githubUser)
+        {
+            return session.QueryOver<User>().Where(x => x.IsActive).And(x => x.GitHubUsername == githubUser).List();
+        }
     }
 }

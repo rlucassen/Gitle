@@ -17,6 +17,7 @@
             Map(x => x.IsAdmin);
             Map(x => x.Phone);
             Map(x => x.GitHubUsername);
+            Map(x => x.GitHubAccessToken);
             HasMany(x => x.Projects).Cascade.AllDeleteOrphan();
         }
     }

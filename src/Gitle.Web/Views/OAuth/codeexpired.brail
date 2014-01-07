@@ -1,0 +1,6 @@
+﻿<div class="row">
+  <div class="large-12 columns">
+    <h1>Error</h1>
+    <p>De login code is verlopen, je kunt proberen opnieuw <a href="/">in te loggen</a>.</p>
+  </div>
+</div>
