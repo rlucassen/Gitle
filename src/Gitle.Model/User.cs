@@ -27,6 +27,7 @@
         public virtual bool IsAdmin { get; set; }
         public virtual string Phone { get; set; }
         public virtual string GitHubUsername { get; set; }
+        public virtual string GitHubAccessToken { get; set; }
 
         #region Implementation of IPrincipal
 

@@ -161,6 +161,7 @@
                                            .DefaultForAction().Is("index"));
 
             RoutingModuleEx.Engine.Add<DatabaseController>();
+            RoutingModuleEx.Engine.Add<OAuthController>();
         }
 
         protected void Application_End(object sender, EventArgs e)

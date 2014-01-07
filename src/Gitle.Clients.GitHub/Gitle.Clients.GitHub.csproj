@@ -64,7 +64,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommentClient.cs" />
+    <Compile Include="Interfaces\IUserClient.cs" />
+    <Compile Include="UserClient.cs" />
+    <Compile Include="Models\Post\LoginPost.cs" />
+    <Compile Include="OAuthClient.cs" />
     <Compile Include="Interfaces\ILabelClient.cs" />
+    <Compile Include="Interfaces\IOAuthClient.cs" />
     <Compile Include="LabelClient.cs" />
     <Compile Include="Interfaces\ICommentClient.cs" />
     <Compile Include="Interfaces\IIssueClient.cs" />
@@ -72,6 +77,7 @@
     <Compile Include="IssueClient.cs" />
     <Compile Include="MilstoneClient.cs" />
     <Compile Include="Interfaces\IRepositoryClient.cs" />
+    <Compile Include="Models\AccessToken.cs" />
     <Compile Include="Models\Comment.cs" />
     <Compile Include="Models\Hook.cs" />
     <Compile Include="Models\Hooks\HookPayload.cs" />
