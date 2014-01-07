@@ -7,6 +7,10 @@
   </configSections>
   <appSettings>
     <add key="githubApi" value="https://api.github.com/" />
+    <add key="githubClientId" value="" />
+    <add key="githubClientSecret" value="" />
+    <add key="githubScope" value="user" />
+    <add key="githubOAuthCallback" value="" />
     <add key="token" value="" />
     <add key="useragent" value="" />
     <add key="freckleToken" value="" />

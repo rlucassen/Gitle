@@ -6,6 +6,7 @@
     using System.Linq;
     using System.Security.Cryptography;
     using Gitle.Model.Interfaces.Model;
+    using Helpers;
     using SimpleCrypto;
 
     #endregion
@@ -62,13 +63,7 @@
 
         public void GenerateHash()
         {
-            var bytes = new byte[16];
-            using (var rng = new RNGCryptoServiceProvider())
-            {
-                rng.GetBytes(bytes);
-            }
-
-            Hash = BitConverter.ToString(bytes).Replace("-", "");
+            Hash = HashHelper.GenerateHash();
         }
 
     }
