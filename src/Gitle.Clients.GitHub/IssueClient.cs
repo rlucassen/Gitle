@@ -36,6 +36,7 @@ namespace Gitle.Clients.GitHub
 
         public Issue Get(string repo, int issueId)
         {
+            if (issueId == 0) return null;
             return _client.Get<Issue>("repos/" + repo + "/issues/" + issueId);
         }
 
