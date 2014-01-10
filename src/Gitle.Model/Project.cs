@@ -10,15 +10,7 @@
             Users = new List<UserProject>();
         }
 
-        private string name;
-        public virtual string Name
-        {
-            get { return name; }
-            set { 
-                name = value;
-                Slug = string.IsNullOrEmpty(value) ? string.Empty : value.Slugify();
-            }
-        }
+        public virtual string Name { get; set; }
 
         public virtual string Slug { get; set; }
 

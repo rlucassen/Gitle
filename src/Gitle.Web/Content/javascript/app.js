@@ -9,6 +9,22 @@ var growl = function(type, text) {
   });
 };
 
+var slugify = function (origin, target) {
+  $(origin).change(function () {
+    $.ajax({
+      method: 'POST',
+      data: {
+        text: $(this).val()
+      },
+      url: '/slug/index',
+      success: function (data) {
+        $(target).val(data);
+      }
+    });
+
+  }).change();
+};
+
 function Application() {
 }
 
@@ -34,6 +50,8 @@ Application.prototype = {
 
     self.initMilestoneSelect();
     self.initFreckleSelect();
+    
+    slugify('#item_Name', '#item_Slug')
   },
 
   initOnLoad: function () {
@@ -52,7 +70,7 @@ Application.prototype = {
       var url = '/milestone/select?fullrepo=' + fullrepo + '&projectSlug=' + $('#item_Slug').val();
       $('.milestone-select').load(url);
     }).change();
-    $('#item_MilestoneId').change(function () {
+    $('form').on('change', '#item_MilestoneId', function () {
       $('#item_MilestoneName').val($(this).find('option:selected').html());
     }).change();
   }
