@@ -1,7 +1,8 @@
 ﻿<div class="row">
   <div class="large-12 columns">
     <h1>${project.Name}: Taken</h1>
-    <a class="button" href="/project/${project.Slug}/issue/new">Nieuw</a>
+    <a class="button" href="/project/${project.Slug}/issue/new">Nieuwe taak</a>
+    <a class="button secondary no-margin" href="/project/${project.Slug}/view">Projectdetails</a>    
     <% if CurrentUser.IsAdmin: %><a class="button success" href="/project/${project.Slug}/issue/export" />Exporteren</a><% end %>
     <table id="issue-table" class="tablesorter small-blocks">
       <thead>

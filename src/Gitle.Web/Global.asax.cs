@@ -160,6 +160,7 @@
                                            .DefaultForController().Is<GitHubHookController>()
                                            .DefaultForAction().Is("index"));
 
+            RoutingModuleEx.Engine.Add<UploadController>();
             RoutingModuleEx.Engine.Add<SlugController>();
             RoutingModuleEx.Engine.Add<DatabaseController>();
             RoutingModuleEx.Engine.Add<OAuthController>();
