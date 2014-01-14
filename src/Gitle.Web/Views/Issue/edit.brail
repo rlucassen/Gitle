@@ -25,7 +25,9 @@
       <% end %>
       <div class="row">
         <div class="large-3 columns">Omschrijving</div>
-        <div class="large-9 columns">${Form.TextArea("item.Body")}</div>
+        <div class="large-9 columns">
+          ${Form.TextArea("item.Body", {"class": "uploadarea"})}
+        </div>
       </div>
       <% if CurrentUser.IsAdmin: %>
       <div class="row">

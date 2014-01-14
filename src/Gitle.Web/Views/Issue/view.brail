@@ -39,7 +39,7 @@
     <% end %>
     <h3>Nieuwe reactie</h3>
     <form action="addcomment" method="POST">
-      <textarea name="body"></textarea>
+      <textarea name="body" class="uploadarea"></textarea>
       <input type="submit" value="Comment" class="button"/>
     </form>
   </div>

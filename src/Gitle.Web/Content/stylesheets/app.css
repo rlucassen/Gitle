@@ -54,6 +54,15 @@ textarea {
   height: 200px;
 }
 
+small.info {
+  display: block;
+  margin-top: -1rem;
+  padding: 5px 3px;
+  background: #e7e7e7;
+  border: 1px solid #ccc;
+}
+
+
 table {
   width: 100%;
 }
