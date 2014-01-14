@@ -24,7 +24,8 @@
                 var extension = upload.FileName.Substring(upload.FileName.LastIndexOf("."));
                 if (AllowedExtensions.Contains(extension))
                 {
-                    var filename = string.Format("{0}-{1}", DateTime.Now.Ticks, upload.FileName);
+                    var info = new FileInfo(upload.FileName);
+                    var filename = string.Format("{0}-{1}", DateTime.Now.Ticks, info.Name);
                     var path = Path.Combine(ConfigurationManager.AppSettings["fileUpload"], filename);
                     uploads[0].SaveAs(path);
                     var fileInfo = new FileInfo(path);
