@@ -31,7 +31,7 @@
                     var fileInfo = new FileInfo(path);
                     if (fileInfo.Exists)
                     {
-                        var url = string.Format("{0}/Uploads/{1}", ConfigurationManager.AppSettings["webPath"], filename);
+                        var url = string.Format("{0}/Public/{1}", ConfigurationManager.AppSettings["webPath"], filename);
                         feedback.Uploads.Add(url);
                     }
                     else

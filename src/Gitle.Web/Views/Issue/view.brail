@@ -44,10 +44,3 @@
     </form>
   </div>
 </div>
-<script>
-  $(function () {
-    $('.marked').each(function () {
-      $(this).html(marked($(this).html()));
-    })
-  });
-</script>

@@ -103,7 +103,7 @@
             var project = repository.FindBySlug(projectSlug);
             var comment = new Comment
                               {
-                                  Body = string.Format("{0}: {1}", CurrentUser.FullName, body)
+                                  Body = string.Format("({0}): {1}", CurrentUser.FullName, body)
                               };
             commentClient.Post(project.Repository, issueId, comment);
             RedirectToReferrer();

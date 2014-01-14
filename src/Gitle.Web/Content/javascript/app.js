@@ -109,10 +109,10 @@ Application.prototype = {
 
     marked.setOptions({
       breaks: true
-    })
+    });
     $('.marked').each(function () {
       $(this).html(marked($(this).html()));
-    })
+    });
 
   },
 
