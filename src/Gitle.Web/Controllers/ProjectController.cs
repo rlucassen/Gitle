@@ -3,12 +3,15 @@
     using System.Collections.Generic;
     using System.Linq;
     using Admin;
+    using Castle.MonoRail.Framework;
     using Clients.Freckle.Interfaces;
     using Clients.GitHub.Interfaces;
     using Clients.GitHub.Models;
+    using FluentNHibernate.Utils;
     using Model;
     using Model.Interfaces.Repository;
     using Helpers;
+    using Label = Clients.GitHub.Models.Label;
 
     public class ProjectController : SecureController
     {
@@ -17,14 +20,16 @@
         private ILabelClient labelClient;
         private IProjectClient projectClient;
         private IIssueClient issueClient;
+        private ILabelRepository labelRepository;
 
-        public ProjectController(IRepositoryClient client, ILabelClient labelClient, IProjectRepository repository, IProjectClient projectClient, IIssueClient issueClient)
+        public ProjectController(IRepositoryClient client, ILabelClient labelClient, IProjectRepository repository, IProjectClient projectClient, IIssueClient issueClient, ILabelRepository labelRepository)
         {
             this.repository = repository;
             this.client = client;
             this.labelClient = labelClient;
             this.projectClient = projectClient;
             this.issueClient = issueClient;
+            this.labelRepository = labelRepository;
         }
 
         public void Index()
@@ -92,7 +97,7 @@
         }
 
         [Admin]
-        public void Save(string projectSlug)
+        public void Save(string projectSlug, [DataBind("label")] Model.Label[] labels)
         {
             var item = repository.FindBySlug(projectSlug);
             if (item != null)
@@ -103,6 +108,14 @@
             {
                 item = BindObject<Project>("item");
             }
+
+            item.Labels.Clear();
+            labels.Each(l =>
+                            {
+                                l.Project = item;
+                                item.Labels.Add(l);
+                            });
+
             repository.Save(item);
 
             CreateInitialLabels(item);
@@ -111,20 +124,26 @@
             RedirectToUrl("/projects");
         }
 
-        private void CreateInitialLabels(Project project )
+        private void CreateInitialLabels(Project project)
         {
             var labels = labelClient.List(project.Repository);
-            if (!labels.Select(l => l.Name).Contains("accepted"))
+
+            foreach (var label in project.Labels)
             {
-                labelClient.Post(project.Repository, new Label() { Name = "accepted", Color = "008cba" });
-            }
-            if (!labels.Select(l => l.Name).Contains("invoiced"))
-            {
-                labelClient.Post(project.Repository, new Label() { Name = "invoiced", Color = "43ac6a" });
-            }
-            if (!labels.Select(l => l.Name).Contains("customer issue"))
-            {
-                labelClient.Post(project.Repository, new Label() { Name = "customer issue", Color = "f04124" });
+                var ghLabel = labels.FirstOrDefault(l => l.Name == label.Name);
+                if (ghLabel != null)
+                {
+                    // if label exists check if color has changed
+                    if (ghLabel.Color != label.Color)
+                    {
+                        labelClient.Patch(project.Repository, ghLabel.Name,
+                                          new Label { Name = label.Name, Color = label.Color });
+                    }
+                }
+                else
+                {
+                    labelClient.Post(project.Repository, new Label {Name = label.Name, Color = label.Color});
+                }
             }
         }
 

@@ -38,6 +38,42 @@
         <div class="large-9 columns"><input type="number" name="item.HourPrice" value="${?item.HourPrice}"/></div>
       </div>
       <div class="row">
+        <div class="large-3 columns">Taak labels</div>
+        <div class="large-9 columns">
+          <table class="nested">
+            <thead>
+              <tr>
+                <th>Label</th>
+                <th>Beschrijving</th>
+                <th>Kleur</th>
+                <th>Zichtbaar voor klanten</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% count = 0 %>
+              <% for label in item.Labels: %>
+              <tr>
+                <td><input type="text" name="label[${count}].Name" value="${label.Name}"/></td>
+                <td><input type="text" name="label[${count}].Description" value="${label.Description}"/></td>
+                <td>
+                  <div class="row collapse">
+                    <div class="small-10 columns">
+                      <input type="text" name="label[${count}].Color" value="${label.Color}" class="colorpicker"/>
+                    </div>
+                    <div class="small-2 columns">
+                      <a class="colorpicker-open button secondary postfix" rel="label[${count}].Color" href="#" title="Open kleurenpalet"><i class="fa fa-th"></i></a>
+                    </div>
+                  </div>
+                </td>
+                <td><input type="checkbox" name="label[${count}].VisibleForCustomer" value="true" <% if label.VisibleForCustomer: %>checked="checked"<% end %>/></td>
+              </tr>
+              <% count++ %>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="row">
         <div class="large-12 columns"><input type="submit" class="button" value="Opslaan"/></div>
       </div>
     </form>

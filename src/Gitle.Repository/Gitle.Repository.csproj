@@ -55,6 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseRepository.cs" />
+    <Compile Include="LabelRepository.cs" />
     <Compile Include="UserProjectRepository.cs" />
     <Compile Include="ProjectRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

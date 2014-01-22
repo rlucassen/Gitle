@@ -20,8 +20,6 @@ namespace Gitle.Model.Helpers
                                        "Schatting",
                                        "Prijs",
                                        "Beschrijving",
-                                       "Klantakkoord",
-                                       "Gefactureerd",
                                        "Voltooid");
 
             var rows = string.Empty;
@@ -33,8 +31,6 @@ namespace Gitle.Model.Helpers
                                       issue.Hours,
                                       issue.Hours*project.HourPrice,
                                       issue.Body.Replace(lineEnd, "").TrimStart('-'),
-                                      issue.Accepted,
-                                      issue.Invoiced,
                                       issue.State
                     );
             }

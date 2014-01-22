@@ -22,6 +22,16 @@
         <div class="large-3 columns">Schatting</div>
         <div class="large-9 columns"><input type="text" name="item.Hours" value="${?item.Hours}"/></div>
       </div>
+      <div class="row">
+        <div class="large-3 columns">Labels</div>
+        <div class="large-9 columns">
+          <% for label in project.Labels: %>
+          <div>
+            <input type="checkbox" name="labels[${label.Id}]" value="${label.Name}" <% if item.CheckLabel(label.Name): %>checked="checked"<% end %>/> <span title="${label.Description}" class="label no-margin radius" style="background-color: #${label.Color};">${label.Name}</span> <small>${label.Description}</small>
+          </div>
+          <% end %>
+        </div>
+      </div>
       <% end %>
       <div class="row">
         <div class="large-3 columns">Omschrijving</div>
@@ -29,20 +39,6 @@
           ${Form.TextArea("item.Body", {"class": "uploadarea"})}
         </div>
       </div>
-      <% if CurrentUser.IsAdmin: %>
-      <div class="row">
-        <div class="large-3 small-4 columns">Accepted</div>
-        <div class="large-9 small-8 columns">${Form.CheckboxField("item.Accepted")}</div>
-      </div>
-      <div class="row">
-        <div class="large-3 small-4 columns">Customer issue</div>
-        <div class="large-9 small-8 columns">${Form.CheckboxField("item.CustomerIssue")}</div>
-      </div>
-      <div class="row">
-        <div class="large-3 small-4 columns">Gefactureerd</div>
-        <div class="large-9 small-8 columns">${Form.CheckboxField("item.Invoiced")}</div>
-      </div>
-      <% end %>
       <div class="row">
         <div class="large-12 columns"><input type="submit" class="button" value="Opslaan"/></div>
       </div>

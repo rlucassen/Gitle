@@ -8,6 +8,7 @@
         public Project()
         {
             Users = new List<UserProject>();
+            Labels = new List<Label>();
         }
 
         public virtual string Name { get; set; }
@@ -21,6 +22,7 @@
         public virtual int FreckleId { get; set; }
         public virtual string FreckleName { get; set; }
         public virtual IList<UserProject> Users { get; set; }
+        public virtual IList<Label> Labels { get; set; }
 
     }
 }

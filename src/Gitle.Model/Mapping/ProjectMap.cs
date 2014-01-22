@@ -13,6 +13,7 @@
              Map(x => x.FreckleId);
              Map(x => x.FreckleName);
              HasMany(x => x.Users).Cascade.All();
+             HasMany(x => x.Labels).Cascade.AllDeleteOrphan();
          }
     }
 }

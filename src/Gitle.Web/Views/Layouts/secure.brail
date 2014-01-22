@@ -23,6 +23,7 @@
     <script src="/Content/javascript/jquery.metadata.js"> </script>
     <script src="/Content/javascript/jquery.ajaxupload.js"> </script>
     <script src="/Content/javascript/jquery.tablesorter.min.js"> </script>
+    <script src="/Content/javascript/jquery.colorpicker.js"> </script>
   </head>
   <body>
     <nav class="top-bar" data-topbar>

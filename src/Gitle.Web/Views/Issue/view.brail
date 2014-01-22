@@ -4,24 +4,14 @@
     <h1>${project.Name}: ${item.Name}</h1>
     <p class="labels">
       <strong>Labels:</strong>
-      <% for label in item.Labels: %>
-      <span class="label no-margin round" style="background-color: #${label.Color};">${label.Name}</span>
-      <% end %>
-      <% if item.Labels.Count == 0: %>
-      Geen labels
+      <% for label in project.Labels: %>
+      <%  if item.CheckLabel(label.Name) and (CurrentUser.IsAdmin or label.VisibleForCustomer): %>
+        <span class="label no-margin radius" title="${label.Description}" style="background-color: #${label.Color};">${label.Name}</span>
+      <%  end %>
       <% end %>
     </p>
     <p class="hours"><strong>Geschatte tijd:</strong> <% if item.Hours > 0: %>${item.Hours} uur<% else: %>geen schatting<% end %></p>
     <p class="hours"><strong>Status:</strong> ${item.State}</p>
-    <p>
-      <strong>Klantakkoord:</strong>
-      <% if item.Accepted: %>
-      <i class="fa fa-check green"></i>
-      <% else: %>
-      <i class="fa fa-times red"></i>
-      <a class="button tiny" href="/project/${project.Slug}/issue/${item.Number}/accept">Taak is akkoord</a>
-      <% end %>
-    </p>
     <strong>Omschrijving:</strong>
     <div class="panel">
       <div class="marked">${item.Body}</div>

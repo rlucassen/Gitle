@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
     using System.Text;
     using Admin;
     using Clients.GitHub.Interfaces;
@@ -11,6 +12,7 @@
     using Model.Helpers;
     using Model.Interfaces.Repository;
     using Helpers;
+    using Label = Clients.GitHub.Models.Label;
 
     public class IssueController : SecureController
     {
@@ -18,13 +20,15 @@
         private readonly ICommentClient commentClient;
         private readonly IProjectRepository repository;
         private readonly IMilestoneClient milestoneClient;
+        private readonly ILabelClient labelClient;
 
-        public IssueController(IProjectRepository repository, IIssueClient client, ICommentClient commentClient, IMilestoneClient milestoneClient)
+        public IssueController(IProjectRepository repository, IIssueClient client, ICommentClient commentClient, IMilestoneClient milestoneClient, ILabelClient labelClient)
         {
             this.repository = repository;
             this.client = client;
             this.commentClient = commentClient;
             this.milestoneClient = milestoneClient;
+            this.labelClient = labelClient;
         }
 
         [MustHaveProject]
@@ -65,7 +69,7 @@
         }
 
         [MustHaveProject]
-        public void Save(string projectSlug, int issueId)
+        public void Save(string projectSlug, int issueId, string[] labels)
         {
             var project = repository.FindBySlug(projectSlug);
             var issue = client.Get(project.Repository, issueId);
@@ -78,11 +82,8 @@
             {
                 issue = BindObject<Issue>("item");
             }
-            if (!CurrentUser.IsAdmin)
-            {
-                issue.CustomerIssue = true;
-                issue.Accepted = true;
-            }
+
+            issue.Labels = labels.Select(label => labelClient.Get(project.Repository, label)).ToList();
 
             issue.Milestone = milestoneClient.Get(project.Repository, project.MilestoneId);
 
@@ -106,16 +107,6 @@
                                   Body = string.Format("({0}): {1}", CurrentUser.FullName, body)
                               };
             commentClient.Post(project.Repository, issueId, comment);
-            RedirectToReferrer();
-        }
-
-        [MustHaveProject]
-        public void Accept(string projectSlug, int issueId)
-        {
-            var project = repository.FindBySlug(projectSlug);
-            var issue = client.Get(project.Repository, issueId);
-            issue.Accepted = true;
-            client.Patch(project.Repository, issueId, issue);
             RedirectToReferrer();
         }
 

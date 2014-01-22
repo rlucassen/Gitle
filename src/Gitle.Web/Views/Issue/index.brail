@@ -11,8 +11,7 @@
           <th id="issue-name">Naam</th>
           <th id="issue-hours">Schatting</th>
           <th id="issue-comments" title="Reacties"><i class="fa fa-comments-o"></i></th>
-          <th id="issue-accepted" title="Klantakkoord"><i class="fa fa-thumbs-up"></i></th>
-          <% if CurrentUser.IsAdmin: %><th title="Gefactureerd"><i class="fa fa-euro"></i></th><% end %>
+          <th id="issue-labels" title="Labels">Labels</th>
           <th id="issue-state" title="Voltooid"><i class="fa fa-check-square-o"></i></th>
           <th id="issue-actions" class="{sorter: false}"></th>
         </tr>
@@ -24,14 +23,18 @@
           <td class="name">${issue.Name}</td>
           <td class="estimate">${issue.Hours} uur</td>
           <td class="comments">${issue.Comments}</td>
-          <td class="accepted"><span class="hide">${issue.Accepted}</span><% if issue.Accepted: %><i class="fa fa-check green"></i><% else: %><i class="fa fa-times red"></i><% end %></td>
-          <% if CurrentUser.IsAdmin: %><td class="invoiced"><span class="hide">${issue.Invoiced}</span><% if issue.Invoiced: %><i class="fa fa-check green"></i><% else: %><i class="fa fa-times red"></i><% end %></td><% end %>
+          <td class="accepted">
+            <% for label in project.Labels: %>
+            <%  if issue.CheckLabel(label.Name) and (CurrentUser.IsAdmin or label.VisibleForCustomer): %>
+            <span title="${label.Description}" class="label no-margin radius" style="background-color: #${label.Color};">${label.Name}</span>
+            <%  end %>
+            <% end %>
+          </td>
           <td class="state"><span class="hide">${issue.State}</span><% if issue.State == "closed": %><i class="fa fa-check green"></i><% else: %><i class="fa fa-times red"></i><% end %></td>
           <td class="actions">
             <ul class="button-group">
               <li><a class="button tiny no-margin" href="/project/${project.Slug}/issue/${issue.Number}/view">Open</a></li>
               <% if CurrentUser.IsAdmin: %><li><a class="button tiny success no-margin" href="/project/${project.Slug}/issue/${issue.Number}/edit">Bewerk</a></li><% end %>
-              <% if not issue.Accepted: %><li><a class="button tiny success no-margin" href="/project/${project.Slug}/issue/${issue.Number}/accept">Akkoord</a></li><% end %>
             </ul>
           </td>
         </tr>

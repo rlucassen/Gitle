@@ -71,42 +71,9 @@
         [DataMember(Name = "labels")]
         public virtual List<Label> Labels { get; set; }
 
-        public virtual bool Accepted
-        {
-            get { return CheckLabel("accepted"); }
-            set { CheckLabel("accepted", value); }
-        }
-
-        public virtual bool CustomerIssue
-        {
-            get { return CheckLabel("customer issue"); }
-            set { CheckLabel("customer issue", value); }
-        }
-
-        public virtual bool Invoiced
-        {
-            get { return CheckLabel("invoiced"); }
-            set { CheckLabel("invoiced", value); }
-        }
-
-        private bool CheckLabel(string label)
+        public bool CheckLabel(string label)
         {
             return Labels.Select(l => l.Name).Contains(label);
-        }
-
-        private void CheckLabel(string label, bool check)
-        {
-            if (check)
-            {
-                if (!Labels.Select(l => l.Name).Contains(label))
-                {
-                    Labels.Add(new Label() { Name = label });
-                }
-            }
-            else
-            {
-                Labels.Remove(Labels.FirstOrDefault(l => l.Name == label));
-            }
         }
 
         [DataMember(Name = "comments")]

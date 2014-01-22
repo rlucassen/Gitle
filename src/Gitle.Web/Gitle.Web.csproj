@@ -54,6 +54,7 @@
     <Content Include="Content\javascript\foundation\foundation.tooltip.js" />
     <Content Include="Content\javascript\foundation\foundation.topbar.js" />
     <Content Include="Content\javascript\jquery.ajaxupload.js" />
+    <Content Include="Content\javascript\jquery.colorpicker.js" />
     <Content Include="Content\javascript\jquery.metadata.js" />
     <Content Include="Content\javascript\jquery.tablesorter.js" />
     <Content Include="Content\javascript\jquery.tablesorter.min.js" />

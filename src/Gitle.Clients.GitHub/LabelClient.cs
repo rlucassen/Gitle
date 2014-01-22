@@ -25,7 +25,7 @@ namespace Gitle.Clients.GitHub
             return _client.Get<List<Label>>("repos/" + repo + "/labels");
         }
 
-        public Label Get(string repo, int labelId)
+        public Label Get(string repo, string labelId)
         {
             return _client.Get<Label>("repos/" + repo + "/labels/" + labelId);
         }
@@ -33,6 +33,11 @@ namespace Gitle.Clients.GitHub
         public Label Post(string repo, Label label)
         {
             return _client.Post<Label>("repos/" + repo + "/labels", label);
+        }
+
+        public Label Patch(string repo, string labelId, Label label)
+        {
+            return _client.Patch<Label>("repos/" + repo + "/labels/" + labelId, label);
         }
 
     }

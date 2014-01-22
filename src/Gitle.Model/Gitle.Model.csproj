@@ -67,13 +67,16 @@
     <Compile Include="Helpers\CsvHelper.cs" />
     <Compile Include="Helpers\HashHelper.cs" />
     <Compile Include="Helpers\SlugHelper.cs" />
+    <Compile Include="Interfaces\Repository\ILabelRepository.cs" />
     <Compile Include="Interfaces\Repository\IUserProjectRepository.cs" />
     <Compile Include="Interfaces\Repository\IBaseRepository.cs" />
     <Compile Include="Interfaces\Model\IPassword.cs" />
     <Compile Include="Interfaces\Repository\IProjectRepository.cs" />
     <Compile Include="Interfaces\Repository\IUserRepository.cs" />
     <Compile Include="Interfaces\Service\IEmailService.cs" />
+    <Compile Include="Label.cs" />
     <Compile Include="Mapping\Component\PasswordComponentMap.cs" />
+    <Compile Include="Mapping\LabelMap.cs" />
     <Compile Include="Mapping\ModelBaseMap.cs" />
     <Compile Include="Mapping\ProjectMap.cs" />
     <Compile Include="Mapping\UserMap.cs" />

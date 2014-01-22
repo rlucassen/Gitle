@@ -53,6 +53,54 @@
   }
 });
 
+$.fn.nestedTable = function (conf) {
+
+  var config = jQuery.extend({
+    deleteText: 'Verwijder',
+    afterAdd: function (row) { }
+  }, conf);
+
+  var deleteRow = function (e) {
+    e.preventDefault();
+    $(this).parents('tr').remove();
+  };
+
+  return this.each(function () {
+
+    var table = $(this);
+
+    var deleteHeader = $('<th>' + config.deleteText + '</th>');
+    table.find('thead tr').append(deleteHeader);
+    var deleteButton = $('<a href="#" class="button tiny no-margin alert">Verwijder</a>');
+    deleteButton.click(deleteRow);
+    var deleteCell = $('<td></td>').append(deleteButton);
+    table.find('tbody tr').append(deleteCell);
+
+    var addRow = $('<a href="#" class="button small">Nieuw</a>');
+    addRow.click(function (e) {
+      e.preventDefault();
+      var newRowNumber = parseInt(table.find('tbody tr:last-child input:first-child').prop('name').match(/\d+/)[0]) + 1;
+      var firstRow = table.find('tbody tr:first-child'); // use first row to clone
+      var newRow = firstRow.clone();
+      // rename all inputs
+      newRow.find(':input').each(function () {
+        var input = $(this);
+        var name = input.prop('name');
+        var newName = name.replace(/\d+/g, newRowNumber);
+        input.attr('name', newName);
+      });
+
+      newRow.find('[type=text]').val(''); // set all values to nothing
+      newRow.find('[type=checkbox]').removeProp('checked'); // uncheck checkbox
+      newRow.find('.button.alert').click(deleteRow); // set delete action on delete button
+
+      table.find('tbody').append(newRow); // append new row
+      config.afterAdd(newRow); // trigger the afterAdd callback from config
+    });
+    table.after(addRow);
+  });
+};
+
 var growl = function(type, text) {
   var alert = $('<div>').addClass("alert-box");
   $("body").prepend(alert.addClass(type).html(text));
@@ -77,9 +125,7 @@ var slugify = function (origin, target) {
   }).change();
 };
 
-function Application() {
-}
-
+function Application() {}
 Application.prototype = {
   init: function () {
     var self = this;
@@ -106,6 +152,14 @@ Application.prototype = {
     slugify('#item_Name', '#item_Slug');
 
     $('.uploadarea').upload();
+
+    $('.colorpicker').colorPicker();
+    $('table.nested').nestedTable({
+      afterAdd: function (row) {
+        row.find('.colorpicker-open').prop('rel', row.find('.colorpicker').prop('name'));
+        row.find('.colorpicker').colorPicker();
+      }
+    });
 
     marked.setOptions({
       breaks: true

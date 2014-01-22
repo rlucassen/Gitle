@@ -62,13 +62,20 @@ small.info {
   border: 1px solid #ccc;
 }
 
-
 table {
   width: 100%;
 }
 
+table input[type="text"] {
+  margin-bottom: 0;
+}
+
 table thead {
   background-color: #e7e7e7;
+}
+
+table .row.collapse {
+  padding: 0;
 }
 
 table i {
@@ -309,6 +316,52 @@ table.row-clickable tbody td:hover {
   display: none;
 }
 
+.colorpicker-open.button.postfix {
+  padding-top: 3px;
+  margin: 0;
+  border-width: 1px 1px 1px 0;
+  border-style: solid;
+  border-color: #ccc;
+}
+
+.colorpicker-popup {
+  background-color: #e7e7e7;
+  width: 180px;
+  padding: 10px 5px 5px 10px;
+  border: 1px solid #ccc;
+  z-index: 99;
+}
+
+.colorpicker-popup h2 {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.colorpicker-popup ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.colorpicker-popup ul li {
+  float: left;
+  margin: 0 5px 5px 0;
+}
+
+.colorpicker-popup ul li a {
+  display: block;
+  width: 13px;
+  height: 13px;
+  text-decoration: none;
+  text-indent: -9999px;
+  outline: 0;
+  border: 1px solid #aaa;
+}
+
+.colorpicker-popup ul li a:hover {
+  border-color: #000;
+}
+
 @media only screen and (max-width: 64em)  
 {
   table.small-blocks, table.small-blocks thead, table.small-blocks tbody, table.small-blocks tbody tr, table.small-blocks thead tr th, table.small-blocks tbody tr td {
@@ -352,8 +405,7 @@ table.row-clickable tbody td:hover {
   
   table.small-blocks td.estimate:before { content: "Schatting: "; }
   table.small-blocks td.comments:before { content: "Reacties: "; }
-  table.small-blocks td.accepted:before { content: "Klantakkoord: "; }
-  table.small-blocks td.invoiced:before { content: "Gefactureerd: "; }
+  table.small-blocks td.labels:before { content: "Labels: "; }
   table.small-blocks td.state:before { content: "Voltooid: "; }
   table.small-blocks td.customer:before { content: "Klant: "; }
   table.small-blocks td.repository:before { content: "Repository: "; }
