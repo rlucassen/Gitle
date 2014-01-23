@@ -26,7 +26,7 @@
           <td class="actions">
             <ul class="button-group">
               <li><a class="button tiny secondary no-margin" href="/project/${item.Slug}/view">Details</a></li>
-              <li><a class="button tiny no-margin" href="/project/${item.Slug}/issue/index">Takenlijst</a></li>
+              <li><a class="button tiny no-margin" href="/project/${item.Slug}/issues">Takenlijst</a></li>
               <% if CurrentUser.IsAdmin: %><li><a class="button tiny success no-margin" href="/project/${item.Slug}/edit">Bewerk</a></li><% end %>
               <% if CurrentUser.IsAdmin: %><li><a class="button tiny alert no-margin" href="/project/${item.Slug}/delete">Verwijder</a></li><% end %>
             </ul>

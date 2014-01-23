@@ -32,12 +32,20 @@
         }
 
         [MustHaveProject]
-        public void Index(string projectSlug)
+        public void Index(string projectSlug, string label, string state)
         {
             var project = repository.FindBySlug(projectSlug);
-            var items = client.List(project.Repository, project.MilestoneId);
+
+            var items = client.List(project.Repository, project.MilestoneId, string.IsNullOrEmpty(state) ? "open,closed" : state);
+
+            if (!string.IsNullOrEmpty(label) && label != "0")
+                items = items.Where(i => i.Labels.Any(l => l.Name == label)).ToList();
+
             PropertyBag.Add("items", items);
             PropertyBag.Add("project", project);
+            PropertyBag.Add("label", label);
+            PropertyBag.Add("labels", CurrentUser.IsAdmin ? project.Labels : project.Labels.Where(l => l.VisibleForCustomer));
+            PropertyBag.Add("state", state);
         }
 
         [MustHaveProject]

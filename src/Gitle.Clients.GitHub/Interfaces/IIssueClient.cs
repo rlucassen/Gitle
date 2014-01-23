@@ -6,7 +6,7 @@
     public interface IIssueClient
     {
         List<Issue> List(string repo);
-        List<Issue> List(string repo, int milestoneId);
+        List<Issue> List(string repo, int milestoneId, string state = "open,closed");
         Issue Get(string repo, int issueId);
         Issue Post(string repo, Issue issue);
         Issue Patch(string repo, int issueId, Issue issue);

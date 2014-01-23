@@ -27,10 +27,14 @@ namespace Gitle.Clients.GitHub
             return issues;
         }
 
-        public List<Issue> List(string repo, int milestoneId)
+        public List<Issue> List(string repo, int milestoneId, string state = "open,closed")
         {
-            var issues = _client.Get<List<Issue>>("repos/" + repo + "/issues?per_page=100&milestone=" + milestoneId);
-            issues.AddRange(_client.Get<List<Issue>>("repos/" + repo + "/issues?per_page=100&state=closed&milestone=" + milestoneId));
+
+            var issues = new List<Issue>();
+            foreach (var s in state.Split(','))
+            {
+                issues.AddRange(_client.Get<List<Issue>>("repos/" + repo + "/issues?per_page=100&state=" + s + "&milestone=" + milestoneId));
+            }
             return issues;
         }
 
