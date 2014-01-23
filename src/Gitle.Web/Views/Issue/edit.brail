@@ -19,7 +19,11 @@
       </div>
       <% if CurrentUser.IsAdmin: %>
       <div class="row">
-        <div class="large-3 columns">Schatting</div>
+        <div class="large-3 columns">Developers</div>
+        <div class="large-9 columns"><input type="text" name="item.Devvers" value="${?item.Devvers}"/></div>
+      </div>
+      <div class="row">
+        <div class="large-3 columns">Uren</div>
         <div class="large-9 columns"><input type="text" name="item.Hours" value="${?item.Hours}"/></div>
       </div>
       <div class="row">

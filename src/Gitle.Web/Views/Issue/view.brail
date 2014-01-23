@@ -10,7 +10,7 @@
       <%  end %>
       <% end %>
     </p>
-    <p class="hours"><strong>Geschatte tijd:</strong> <% if item.Hours > 0: %>${item.Hours} uur<% else: %>geen schatting<% end %></p>
+    <p class="hours"><strong>Geschatte tijd:</strong> ${item.EstimateString}</p>
     <p class="hours"><strong>Status:</strong> ${item.State}</p>
     <strong>Omschrijving:</strong>
     <div class="panel">

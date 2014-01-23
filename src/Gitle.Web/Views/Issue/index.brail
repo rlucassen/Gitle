@@ -9,7 +9,8 @@
         <tr>
           <th id="issue-id">Id</th>
           <th id="issue-name">Naam</th>
-          <th id="issue-hours">Schatting</th>
+          <th id="issue-devvers" title="Developers"><i class="fa fa-users"></i></th>
+          <th id="issue-hours" title="Tijd"><i class="fa fa-clock-o"></i></th>
           <th id="issue-comments" title="Reacties"><i class="fa fa-comments-o"></i></th>
           <th id="issue-labels" title="Labels">Labels</th>
           <th id="issue-state" title="Voltooid"><i class="fa fa-check-square-o"></i></th>
@@ -21,7 +22,8 @@
         <tr>
           <td class="id">${issue.Number}</td>
           <td class="name">${issue.Name}</td>
-          <td class="estimate">${issue.Hours} uur</td>
+          <td class="devvers">${issue.DevversString}</td>
+          <td class="hours">${issue.HoursString}</td>
           <td class="comments">${issue.Comments}</td>
           <td class="accepted">
             <% for label in project.Labels: %>

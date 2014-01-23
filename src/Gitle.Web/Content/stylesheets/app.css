@@ -362,6 +362,10 @@ table.row-clickable tbody td:hover {
   border-color: #000;
 }
 
+table#issue-table th#issue-actions {
+  width: 166px;
+}
+
 @media only screen and (max-width: 64em)  
 {
   table.small-blocks, table.small-blocks thead, table.small-blocks tbody, table.small-blocks tbody tr, table.small-blocks thead tr th, table.small-blocks tbody tr td {
@@ -403,7 +407,8 @@ table.row-clickable tbody td:hover {
     margin-bottom: 0.5em;
   }
   
-  table.small-blocks td.estimate:before { content: "Schatting: "; }
+  table.small-blocks td.devvers:before { content: "Developers: "; }
+  table.small-blocks td.hours:before { content: "Tijd: "; }
   table.small-blocks td.comments:before { content: "Reacties: "; }
   table.small-blocks td.labels:before { content: "Labels: "; }
   table.small-blocks td.state:before { content: "Voltooid: "; }

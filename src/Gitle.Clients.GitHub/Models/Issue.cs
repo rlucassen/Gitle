@@ -4,6 +4,7 @@
     using System.Linq;
     using System.Runtime.Serialization;
     using System.Text.RegularExpressions;
+    using Helpers;
     using Post;
 
     [DataContract]
@@ -15,8 +16,7 @@
             Labels = new List<Label>();
         }
 
-        private Regex r = new Regex(@"\(.*?\)");
-        private Regex repo = new Regex(@"repos/(.*?)/issues");
+        private readonly Regex repo = new Regex(@"repos/(.*?)/issues");
 
         [DataMember(Name = "url")]
         public virtual string Url { get; set; }
@@ -35,31 +35,37 @@
         [DataMember(Name = "state")]
         public virtual string State { get; set; }
 
-        private string HoursMatch
-        {
-            get { return r.Matches(Title).Cast<Match>().Select(p => p.Value).LastOrDefault(); }
-        }
-
         public virtual double Hours
         {
-            get
-            {
-                double hours;
-                var tryParse = double.TryParse(string.IsNullOrEmpty(HoursMatch) ? "0" : HoursMatch.Trim(new[] {'(', ')'}), out hours);
-                return tryParse ? hours : 0;
-            }
-            set
-            {
-                Title = string.IsNullOrEmpty(HoursMatch)
-                            ? string.Format("{0} ({1})", Name, value)
-                            : Title.Replace(HoursMatch, string.Format("({0})", value));
-            }
+            get { return HoursHelper.GetHoursFromTitle(Title); }
+            set { Title = HoursHelper.CreateTitle(Title, Devvers, value); }
+        }
+
+        public virtual int Devvers
+        {
+            get { return HoursHelper.GetDevversFromTitle(Title); }
+            set { Title = HoursHelper.CreateTitle(Title, value, Hours); }
         }
 
         public virtual string Name
         {
-            get { return string.IsNullOrEmpty(HoursMatch) ? Title : Title.Replace(HoursMatch, string.Empty).TrimEnd(' '); }
-            set { Title = string.Format("{0} {1}", value, string.IsNullOrEmpty(HoursMatch) ? string.Empty : HoursMatch); }
+            get { return HoursHelper.GetNameFromTitle(Title); }
+            set { Title = HoursHelper.CreateTitle(value, Devvers, Hours); }
+        }
+
+        public virtual string DevversString
+        {
+            get { return Hours > 0 ? Devvers.ToString() : "n.n.b."; }
+        }
+
+        public virtual string HoursString
+        {
+            get { return Hours > 0 ? Hours <= 2.5 ? string.Format("{0} uur", Hours) : string.Format("{0} dag", Hours/8) : "n.n.b."; }
+        }
+
+        public virtual string EstimateString
+        {
+            get { return Hours > 0 ? string.Format("{0} developer{1} {2}", Devvers, Devvers > 1 ? "s" : "", HoursString) : "n.n.b."; }
         }
 
         [DataMember(Name = "body")]
