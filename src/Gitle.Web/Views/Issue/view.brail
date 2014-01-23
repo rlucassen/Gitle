@@ -1,36 +1,48 @@
 ﻿<div class="row">
   <div class="large-12 columns">
     <a href="/project/${project.Slug}/issues">terug naar overzicht</a>
-    <h1>${project.Name}: ${item.Name}</h1>
-    <p class="labels">
-      <strong>Labels:</strong>
-      <% for label in project.Labels: %>
-      <%  if item.CheckLabel(label.Name) and (CurrentUser.IsAdmin or label.VisibleForCustomer): %>
-        <span class="label no-margin radius" title="${label.Description}" style="background-color: #${label.Color};">${label.Name}</span>
-      <%  end %>
-      <% end %>
-    </p>
-    <p class="hours"><strong>Geschatte tijd:</strong> ${item.EstimateString}</p>
-    <p class="hours"><strong>Status:</strong> ${item.State}</p>
-    <strong>Omschrijving:</strong>
-    <div class="panel">
-      <div class="marked">${item.Body}</div>
+    <h1>${item.Name}</h1>
+    <div class="row">
+      <div class="large-3 columns">
+        <p class="project no-margin"><strong>Project:</strong> ${project.Name}</p>
+        <p class="created no-margin"><strong>Aangemaakt op:</strong> <span class="capitalize">${item.CreatedAt.ToString("MMM d, yyyy HH:mm")}</span></p>
+        <p class="hours no-margin"><strong>Geschatte tijd:</strong> ${item.EstimateString}</p>
+        <p class="state no-margin"><strong>Status:</strong> ${item.State}</p>
+        <p class="labels no-margin">
+          <strong>Labels:</strong>
+        </p>
+        <ul class="no-style">
+          <% for label in project.Labels: %>
+          <%  if item.CheckLabel(label.Name) and (CurrentUser.IsAdmin or label.VisibleForCustomer): %>
+          <li><span class="label no-margin radius" title="${label.Description}" style="background-color: #${label.Color};">${label.Name}</span> <small>${label.Description}</small></li>
+          <%  end %>
+          <% end %>
+        </ul>
+      </div>
+      <div class="large-9 columns">
+        <div class="panel">
+          <small class="right capitalize">${item.UpdatedAt.ToString("MMM d, yyyy HH:mm")}</small><br/>
+          <div class="marked">${item.Body}</div>
+        </div>
+        <h2>Reacties</h2>
+        <% for comment in comments: %>
+        <div class="panel">
+          <small class="right capitalize">${comment.CreatedAt.ToString("MMM d, yyyy HH:mm")}</small><br/>
+          <strong>${comment.Name}:</strong> 
+          <div class="marked">${comment.Text}</div>
+        </div>
+        <% end %>
+        <% if comments.Count == 0: %>
+        <strong>Geen reacties</strong>
+        <% end %>
+        <div class="panel">
+          <h3>Nieuwe reactie</h3>
+          <form action="addcomment" method="POST">
+            <textarea name="body" class="uploadarea"></textarea>
+            <input type="submit" value="Comment" class="button no-margin"/>
+          </form>
+        </div>
+      </div>
     </div>
-    <h2>Reacties</h2>
-    <% for comment in comments: %>
-    <div class="panel">
-      <small class="right">${comment.CreatedAt}</small><br/>
-      <strong>${comment.Name}:</strong> 
-      <div class="marked">${comment.Text}</div>
-    </div>
-    <% end %>
-    <% if comments.Count == 0: %>
-    <strong>Geen reacties</strong>
-    <% end %>
-    <h3>Nieuwe reactie</h3>
-    <form action="addcomment" method="POST">
-      <textarea name="body" class="uploadarea"></textarea>
-      <input type="submit" value="Comment" class="button"/>
-    </form>
   </div>
 </div>

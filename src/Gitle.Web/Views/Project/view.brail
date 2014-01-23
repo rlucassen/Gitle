@@ -1,6 +1,20 @@
 ﻿<div class="row">
   <div class="large-12 columns">
     <h1>${project.Name}</h1>
+    <% if CurrentUser.IsAdmin: %>
+    <div class="row">
+      <div class="large-2 columns">Github</div>
+      <div class="large-10 columns"><a href="http://github.com/${project.Repository}">http://github.com/${project.Repository}</a></div>
+    </div>
+    <div class="row">
+      <div class="large-2 columns">Milestone</div>
+      <div class="large-10 columns"><a href="https://github.com/${project.Repository}/issues?milestone=${project.MilestoneId}">${project.MilestoneName}</a></div>
+    </div>
+    <div class="row">
+      <div class="large-2 columns">Freckle</div>
+      <div class="large-10 columns"><a href="http://auxilium.letsfreckle.com/time/projects/${project.FreckleId}">${project.FreckleName}</a></div>
+    </div>
+    <% end %>
     <div class="row">
       <div class="large-2 columns">Voortgang taken</div>
       <div class="large-8 columns">
@@ -42,7 +56,7 @@
               <th>Naam</th>
               <th>Telefoonnummer</th>
               <th>Emailadres</th>
-              <th class="Notificaties"><i class="fa fa-bell"></i></th>
+              <th title="Notificaties"><i class="fa fa-bell"></i></th>
             </tr>
           </thead>
           <tbody>

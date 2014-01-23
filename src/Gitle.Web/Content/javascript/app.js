@@ -18,7 +18,7 @@
       var progressbar = $('<div class="progress">').append($('<span class="meter">')).insertAfter(this).hide();
       if (!$.browser.msie)
         textarea.after($('<small class="info">Je kunt ook afbeeldingen uploaden door ze op het textveld te slepen.</small>'));
-      var uploadButton = $('<a href="#" class="button">Upload afbeelding</a>').insertBefore(this);
+      var uploadButton = $('<a href="#" class="button no-margin tiny">Upload afbeelding</a>').insertBefore(this);
       var uploadOptions = {
         url: '/upload/file',
         beforeSend: function (e, a) {

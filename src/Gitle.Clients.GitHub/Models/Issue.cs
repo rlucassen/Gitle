@@ -1,5 +1,6 @@
 ﻿namespace Gitle.Clients.GitHub.Models
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Runtime.Serialization;
@@ -84,6 +85,13 @@
 
         [DataMember(Name = "comments")]
         public virtual int Comments { get; set; }
+
+        [DataMember(Name = "created_at")]
+        public virtual DateTime CreatedAt { get; set; }
+
+        [DataMember(Name = "updated_at")]
+        public virtual DateTime UpdatedAt { get; set; }
+
 
         public virtual IssuePost ToPost()
         {

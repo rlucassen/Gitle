@@ -34,6 +34,7 @@
 
         public void Index()
         {
+            if (CurrentUser.Projects.Count == 1 && !CurrentUser.IsAdmin) RedirectUsingNamedRoute("issues", new {projectSlug = CurrentUser.Projects.First().Project.Slug});
             PropertyBag.Add("items", CurrentUser.IsAdmin ? repository.FindAll() : CurrentUser.Projects.Select(x => x.Project));
         }
 

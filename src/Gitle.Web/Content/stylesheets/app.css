@@ -62,6 +62,15 @@ small.info {
   border: 1px solid #ccc;
 }
 
+ul.no-style {
+  list-style-type: none;
+  margin: 0;
+}
+
+.capitalize {
+  text-transform: capitalize;
+}
+
 table {
   width: 100%;
 }
@@ -365,6 +374,12 @@ table.row-clickable tbody td:hover {
 table#issue-table th#issue-actions {
   width: 166px;
 }
+table#issue-table th#issue-estimate {
+  display: none;
+}
+table#issue-table td.estimate {
+  display: none;
+}
 
 @media only screen and (max-width: 64em)  
 {
@@ -407,8 +422,13 @@ table#issue-table th#issue-actions {
     margin-bottom: 0.5em;
   }
   
+  table#issue-table.small-blocks td.estimate { display: block; }
+  table#issue-table.small-blocks td.devvers { display: none; }
+  table#issue-table.small-blocks td.hours { display: none; }
+  
   table.small-blocks td.devvers:before { content: "Developers: "; }
   table.small-blocks td.hours:before { content: "Tijd: "; }
+  table.small-blocks td.estimate:before { content: "Schatting: "; }
   table.small-blocks td.comments:before { content: "Reacties: "; }
   table.small-blocks td.labels:before { content: "Labels: "; }
   table.small-blocks td.state:before { content: "Voltooid: "; }
