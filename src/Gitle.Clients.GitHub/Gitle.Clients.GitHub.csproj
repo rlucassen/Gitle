@@ -66,6 +66,7 @@
     <Compile Include="CommentClient.cs" />
     <Compile Include="Helpers\HoursHelper.cs" />
     <Compile Include="Interfaces\IUserClient.cs" />
+    <Compile Include="Models\Post\MilestonePost.cs" />
     <Compile Include="UserClient.cs" />
     <Compile Include="Models\Post\LoginPost.cs" />
     <Compile Include="OAuthClient.cs" />

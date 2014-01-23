@@ -1,6 +1,7 @@
 ﻿namespace Gitle.Clients.GitHub.Models
 {
     using System.Runtime.Serialization;
+    using Post;
 
     [DataContract]
     public class Milestone
@@ -16,5 +17,15 @@
 
         [DataMember(Name = "description")]
         public virtual string Description { get; set; }
+
+        public virtual MilestonePost ToPost()
+        {
+            return new MilestonePost
+            {
+                Title = Title
+            };
+        }
+
+
     }
 }

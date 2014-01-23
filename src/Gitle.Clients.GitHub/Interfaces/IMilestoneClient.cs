@@ -7,5 +7,6 @@
     {
         List<Milestone> List(string repo);
         Milestone Get(string repo, int milestoneId);
+        Milestone Post(string repo, Milestone milestone);
     }
 }

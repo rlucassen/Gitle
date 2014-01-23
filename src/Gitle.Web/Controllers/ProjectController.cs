@@ -20,16 +20,16 @@
         private ILabelClient labelClient;
         private IProjectClient projectClient;
         private IIssueClient issueClient;
-        private ILabelRepository labelRepository;
+        private IMilestoneClient milestoneClient;
 
-        public ProjectController(IRepositoryClient client, ILabelClient labelClient, IProjectRepository repository, IProjectClient projectClient, IIssueClient issueClient, ILabelRepository labelRepository)
+        public ProjectController(IRepositoryClient client, ILabelClient labelClient, IProjectRepository repository, IProjectClient projectClient, IIssueClient issueClient, ILabelRepository labelRepository, IMilestoneClient milestoneClient)
         {
             this.repository = repository;
             this.client = client;
             this.labelClient = labelClient;
             this.projectClient = projectClient;
             this.issueClient = issueClient;
-            this.labelRepository = labelRepository;
+            this.milestoneClient = milestoneClient;
         }
 
         public void Index()
@@ -120,10 +120,16 @@
                                 }
                             });
 
+            if (item.MilestoneId == 0)
+            {
+                item.MilestoneId = milestoneClient.Post(item.Repository, new Milestone {Title = item.MilestoneName}).Number;
+            }
+
             repository.Save(item);
 
             CreateInitialLabels(item);
             CreateHooks(item);
+            
 
             RedirectToUrl("/projects");
         }

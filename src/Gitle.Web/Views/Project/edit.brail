@@ -7,7 +7,6 @@
     <% end %>
     <form action="/project/<% if item.Slug: %>${?item.Slug}<% else: %>0<% end %>/save" method="POST" data-abide>
       ${Form.HiddenField("item.Id")}
-      ${Form.HiddenField("item.MilestoneName")}
       ${Form.HiddenField("item.FreckleName")}
       ${Form.HiddenField("item.Slug")}
       <div class="row">
@@ -25,7 +24,12 @@
       </div>
       <div class="row">
         <div class="large-3 columns">Milestone</div>
-        <div class="large-9 columns milestone-select"></div>
+        <div class="large-4 columns milestone-select"></div>
+        <div class="large-1 columns milestone-new">Naam</div>
+        <div class="large-4 columns milestone-new">
+          <input name="item.MilestoneName" id="item_MilestoneName" type="text" value="${?item.MilestoneName}" required/>
+          <small class="error">Kies een milestone of geef een naam op</small>
+        </div>
       </div>
       <div class="row">
         <div class="large-3 columns">Freckle project id</div>

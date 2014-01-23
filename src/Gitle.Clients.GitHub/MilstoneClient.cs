@@ -29,5 +29,11 @@ namespace Gitle.Clients.GitHub
         {
             return _client.Get<Milestone>("repos/" + repo + "/milestones/" + milestoneId);
         }
+
+        public Milestone Post(string repo, Milestone milestone)
+        {
+            return _client.Post<Milestone>("repos/" + repo + "/milestones", milestone.ToPost());
+        }
+
     }
 }

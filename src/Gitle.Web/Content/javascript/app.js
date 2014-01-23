@@ -181,13 +181,21 @@ Application.prototype = {
   },
 
   initMilestoneSelect: function () {
+    $('.milestone-new').hide();
     $("#item_Repository").change(function () {
       var fullrepo = $(this).val();
       var url = '/milestone/select?fullrepo=' + fullrepo + '&projectSlug=' + $('#item_Slug').val();
       $('.milestone-select').load(url);
     }).change();
     $('form').on('change', '#item_MilestoneId', function () {
-      $('#item_MilestoneName').val($(this).find('option:selected').html());
+      var selected = $(this).find('option:selected');
+      if ($(this).val() == 0) {
+        $('.milestone-new').show();
+        $('#item_MilestoneName').val('');
+      } else {
+        $('#item_MilestoneName').val(selected.html());
+        $('.milestone-new').hide();
+      }
     }).change();
   }
 };
