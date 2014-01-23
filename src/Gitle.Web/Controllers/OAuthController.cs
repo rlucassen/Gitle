@@ -35,7 +35,7 @@
                         userRepository.Save(gitleUsers[0]);
 
                         FormsAuthentication.Initialize();
-                        FormsAuthentication.SetAuthCookie(gitleUsers[0].Name, false);
+                        FormsAuthentication.SetAuthCookie(gitleUsers[0].Name, true);
                         RedirectToSiteRoot();
                     }
                     else
