@@ -14,7 +14,7 @@
         <ul class="no-style">
           <% for label in project.Labels: %>
           <%  if item.CheckLabel(label.Name) and (CurrentUser.IsAdmin or label.VisibleForCustomer): %>
-          <li><span class="label no-margin radius" title="${label.Description}" style="background-color: #${label.Color};">${label.Name}</span> <small>${label.Description}</small></li>
+          <li><span class="label no-margin radius" title="${label.Name}" style="background-color: #${label.Color};">${label.Name}</span></li>
           <%  end %>
           <% end %>
         </ul>

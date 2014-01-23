@@ -13,7 +13,7 @@
               ${Form.Select("state", {"open,closed": "Alle taken", "open": "Open taken", "closed": "Voltooide taken"}, {"value": "Key", "text": "Value", "class": "no-margin"})}
             </div>
             <div class="large-3 columns">
-              ${Form.Select("label", labels, {"value": "Name", "text": "Description", "firstoption": "Alle labels", "class": "no-margin"})}
+              ${Form.Select("label", labels, {"value": "Name", "text": "Name", "firstoption": "Alle labels", "class": "no-margin"})}
             </div>
             <div class="large-1 columns"><input type="submit" value="GO" class="button tiny no-margin expand"/></div>
             <div class="large-4 columns"></div>
@@ -47,7 +47,7 @@
           <td class="accepted">
             <% for label in labels: %>
             <%  if issue.CheckLabel(label.Name): %>
-            <span title="${label.Description}" class="label no-margin radius" style="background-color: #${label.Color};">${label.Name}</span>
+            <span title="${label.Name}" class="label no-margin radius" style="background-color: #${label.Color};">${label.Name}</span>
             <%  end %>
             <% end %>
           </td>

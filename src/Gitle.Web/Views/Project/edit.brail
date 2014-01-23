@@ -48,7 +48,6 @@
             <thead>
               <tr>
                 <th>Label</th>
-                <th>Beschrijving</th>
                 <th>Kleur</th>
                 <th>Zichtbaar voor klanten</th>
               </tr>
@@ -58,7 +57,6 @@
               <% for label in item.Labels: %>
               <tr>
                 <td><input type="text" name="label[${count}].Name" value="${label.Name}"/></td>
-                <td><input type="text" name="label[${count}].Description" value="${label.Description}"/></td>
                 <td>
                   <div class="row collapse">
                     <div class="small-10 columns">
@@ -76,7 +74,6 @@
               <% if item.Labels.Count == 0: %>
               <tr>
                 <td><input type="text" name="label[${count}].Name"/></td>
-                <td><input type="text" name="label[${count}].Description"/></td>
                 <td>
                   <div class="row collapse">
                     <div class="small-10 columns">
