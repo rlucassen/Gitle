@@ -69,6 +69,11 @@
             get { return Hours > 0 ? string.Format("{0} developer{1} {2}", Devvers, Devvers > 1 ? "s" : "", HoursString) : "n.n.b."; }
         }
 
+        public virtual double TotalHours
+        {
+            get { return Hours*Devvers; }
+        }
+
         [DataMember(Name = "body")]
         public virtual string Body { get; set; }
 

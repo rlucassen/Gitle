@@ -58,8 +58,8 @@
                 PropertyBag.Add("totalTime", totalTime);
             }
             var issues = issueClient.List(project.Repository, project.MilestoneId);
-            var doneTime = issues.Where(i => i.State == "closed").Sum(i => i.Hours);
-            var totalIssueTime = issues.Sum(i => i.Hours);
+            var doneTime = issues.Where(i => i.State == "closed").Sum(i => i.TotalHours);
+            var totalIssueTime = issues.Sum(i => i.TotalHours);
             var donePercentage = doneTime * 100.0 / totalIssueTime;
 
             PropertyBag.Add("doneTime", doneTime);
