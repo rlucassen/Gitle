@@ -58,6 +58,10 @@
       <Project>{E9C28D89-80BD-4384-BAB4-88911DD8236D}</Project>
       <Name>Gitle.Clients.GitHub</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Gitle.Localization\Gitle.Localization.csproj">
+      <Project>{369FBFE1-7ACC-4A9E-A632-A1FFD1EF7607}</Project>
+      <Name>Gitle.Localization</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Gitle.Model\Gitle.Model.csproj">
       <Project>{10247283-4DAB-4008-9E68-FEE82305A6FC}</Project>
       <Name>Gitle.Model</Name>
