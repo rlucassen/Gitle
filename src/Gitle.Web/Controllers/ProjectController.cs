@@ -112,8 +112,11 @@
             item.Labels.Clear();
             labels.Each(l =>
                             {
-                                l.Project = item;
-                                item.Labels.Add(l);
+                                if (!string.IsNullOrWhiteSpace(l.Name))
+                                {
+                                    l.Project = item;
+                                    item.Labels.Add(l);
+                                }
                             });
 
             repository.Save(item);

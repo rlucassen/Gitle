@@ -69,6 +69,23 @@
               </tr>
               <% count++ %>
               <% end %>
+              <% if item.Labels.Count == 0: %>
+              <tr>
+                <td><input type="text" name="label[${count}].Name"/></td>
+                <td><input type="text" name="label[${count}].Description"/></td>
+                <td>
+                  <div class="row collapse">
+                    <div class="small-10 columns">
+                      <input type="text" name="label[${count}].Color" class="colorpicker"/>
+                    </div>
+                    <div class="small-2 columns">
+                      <a class="colorpicker-open button secondary postfix" rel="label[${count}].Color" href="#" title="Open kleurenpalet"><i class="fa fa-th"></i></a>
+                    </div>
+                  </div>
+                </td>
+                <td><input type="checkbox" name="label[${count}].VisibleForCustomer" value="true"/></td>
+              </tr>
+              <% end %>
             </tbody>
           </table>
         </div>
