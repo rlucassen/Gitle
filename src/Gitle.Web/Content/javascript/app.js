@@ -176,7 +176,11 @@ Application.prototype = {
 
   initFreckleSelect: function () {
     $('#item_FreckleId').change(function () {
-      $('#item_FreckleName').val($(this).find('option:selected').html());
+      if ($(this).val() != '0') {
+        $('#item_FreckleName').val($(this).find('option:selected').html());
+      } else {
+        $('#item_FreckleName').val('');
+      }
     }).change();
   },
 
@@ -185,7 +189,9 @@ Application.prototype = {
     $("#item_Repository").change(function () {
       var fullrepo = $(this).val();
       var url = '/milestone/select?fullrepo=' + fullrepo + '&projectSlug=' + $('#item_Slug').val();
-      $('.milestone-select').load(url);
+      $('.milestone-select').load(url, function () {
+        $('#item_MilestoneId').trigger('change');
+      });
     }).change();
     $('form').on('change', '#item_MilestoneId', function () {
       var selected = $(this).find('option:selected');
@@ -196,7 +202,7 @@ Application.prototype = {
         $('#item_MilestoneName').val(selected.html());
         $('.milestone-new').hide();
       }
-    }).change();
+    });
   }
 };
 

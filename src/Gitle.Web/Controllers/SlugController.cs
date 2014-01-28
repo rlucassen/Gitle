@@ -7,7 +7,7 @@
          public void Index(string text)
          {
              CancelLayout();
-             RenderText(text.Slugify());
+             RenderText(string.IsNullOrEmpty(text) ? string.Empty : text.Slugify());
          }
     }
 }

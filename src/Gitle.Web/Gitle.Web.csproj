@@ -243,7 +243,9 @@
     <None Include="Views\Layouts\default.brail" />
     <None Include="Views\Layouts\secure.brail" />
     <None Include="Views\shared\forbidden.brail" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <None Include="Web.config.sample" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
