@@ -19,7 +19,7 @@
         public Project FindBySlug(string slug)
         {
             var projects = Session.QueryOver<Project>().Where(x => x.IsActive).And(x => x.Slug == slug).List();
-            return projects.FirstOrDefault();
+            return projects.Any() ? projects.FirstOrDefault() : new Project();
         }
 
         public IList<Project> FindByRepoAndMilestone(string repo, int milestoneId)

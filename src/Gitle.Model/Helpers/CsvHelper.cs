@@ -13,12 +13,14 @@ namespace Gitle.Model.Helpers
 
         public static string IssuesCsv(Project project, List<Issue> issues)
         {
-            const string rowTemplate = "\"{2}\"{0}\"{3}\"{0}\"{4}\"{0}\"{5}\"{0}\"{6}\"{0}\"{7}\"{0}\"{8}\"{0}{1}";
+            const string rowTemplate = "\"{2}\"{0}\"{3}\"{0}\"{4}\"{0}\"{5}\"{0}\"{6}\"{0}\"{7}\"{0}\"{8}\"{0}\"{9}\"{0}\"{10}\"{0}{1}";
 
             var header = string.Format(rowTemplate, fieldseparator, lineEnd,
                                        "Id",
                                        "Naam",
-                                       "Schatting",
+                                       "Developers",
+                                       "Uren",
+                                       "Totale schatting",
                                        "Prijs",
                                        "Beschrijving",
                                        "Voltooid",
@@ -30,9 +32,11 @@ namespace Gitle.Model.Helpers
                 rows += string.Format(rowTemplate, fieldseparator, lineEnd,
                                       issue.Number,
                                       issue.Name,
+                                      issue.Devvers,
                                       issue.Hours,
+                                      issue.TotalHours,
                                       issue.Hours*project.HourPrice,
-                                      issue.Body.Replace(lineEnd, "").TrimStart('-'),
+                                      string.IsNullOrEmpty(issue.Body) ? string.Empty : issue.Body.Replace(lineEnd, "").TrimStart('-'),
                                       issue.State,
                                       string.Join(", ", issue.Labels.Select(l => l.Name))
                     );
