@@ -5,7 +5,8 @@
     <table class="tablesorter small-blocks">
       <thead>
         <tr>
-          <th>Klant</th>
+          <th>Naam</th>
+          <th>Username</th>
           <th>Telefoonnummer</th>
           <th>Emailadres</th>
           <th>Admin</th>
@@ -15,7 +16,8 @@
       <tbody>
         <% for item in items: %>
         <tr>
-          <td class="name">${item.Name}</td>
+          <td class="name">${item.FullName}</td>
+          <td class="login">${item.Name}</td>
           <td class="phone">${item.Phone}</td>
           <td class="email">${item.EmailAddress}</td>
           <td class="admin"><span class="hide">${item.IsAdmin}</span><% if item.IsAdmin: %><i class="fa fa-check green"></i><% else: %><i class="fa fa-times red"></i><% end %></td>

@@ -440,4 +440,5 @@ table#issue-table td.estimate {
   table.small-blocks td.email:before { content: "Emailadres: "; }
   table.small-blocks td.notifications:before { content: "Notificaties: "; }
   table.small-blocks td.freckle:before { content: "Freckle project: "; }
+  table.small-blocks td.login:before { content: "Username: "; }
 }
