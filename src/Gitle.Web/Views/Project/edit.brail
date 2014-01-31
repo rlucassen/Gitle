@@ -43,6 +43,12 @@
         <div class="large-9 columns"><input type="number" name="item.HourPrice" value="${?item.HourPrice}"/></div>
       </div>
       <div class="row">
+        <div class="large-3 columns">Projectinformatie</div>
+        <div class="large-9 columns">
+          ${Form.TextArea("item.Information", {"class": "uploadarea"})}
+        </div>
+      </div>
+      <div class="row">
         <div class="large-3 columns">Taak labels</div>
         <div class="large-9 columns">
           <table class="nested">

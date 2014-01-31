@@ -97,6 +97,12 @@
         </table>
       </div>
     </div>
+    <div class="row">
+      <div class="large-12 columns">
+        <h2>Projectinformatie</h2>
+        <div class="marked">${project.Information}</div>
+      </div>
+    </div>
   </div>
 </div>
 <ol class="joyride-list" data-joyride>
