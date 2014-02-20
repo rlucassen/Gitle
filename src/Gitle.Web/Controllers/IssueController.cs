@@ -62,8 +62,10 @@
         [MustHaveProject]
         public void New(string projectSlug)
         {
-            PropertyBag.Add("project", repository.FindBySlug(projectSlug));
+            var project = repository.FindBySlug(projectSlug);
+            PropertyBag.Add("project", project);
             PropertyBag.Add("item", new Issue());
+            PropertyBag.Add("labels", CurrentUser.IsAdmin ? project.Labels : project.Labels.Where(l => l.ApplicableByCustomer));
             RenderView("edit");
         }
 
@@ -74,6 +76,7 @@
             PropertyBag.Add("project", project);
             var item = client.Get(project.Repository, issueId);
             PropertyBag.Add("item", item);
+            PropertyBag.Add("labels", CurrentUser.IsAdmin ? project.Labels : project.Labels.Where(l => l.ApplicableByCustomer));
         }
 
         [MustHaveProject]
@@ -115,6 +118,18 @@
                                   Body = string.Format("({0}): {1}", CurrentUser.FullName, body)
                               };
             commentClient.Post(project.Repository, issueId, comment);
+            RedirectToReferrer();
+        }
+
+        [MustHaveProject]
+        public void AddLabel(string projectSlug, int issueId, int param)
+        {
+            var project = repository.FindBySlug(projectSlug);
+            var issue = client.Get(project.Repository, issueId);
+            var label = project.Labels.First(l => l.Id == param);
+            issue.Labels.Add(labelClient.Get(project.Repository, label.Name));
+            client.Patch(project.Repository, issue.Number, issue);
+
             RedirectToReferrer();
         }
 

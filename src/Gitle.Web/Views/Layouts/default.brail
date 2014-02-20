@@ -14,7 +14,6 @@
 
     <script src="/Content/javascript/vendor/custom.modernizr.js"> </script>
 	  <script src="/Content/javascript/vendor/jquery.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?libraries=geometry&key=AIzaSyCiISBPsskV7f8TPpJBy2F779feH4tlT3g&sensor=false"> </script>
 </head>
 <body>
 	<div class="top-bar">

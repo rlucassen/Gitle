@@ -26,17 +26,17 @@
         <div class="large-3 columns">Uren</div>
         <div class="large-9 columns"><input type="text" name="item.Hours" value="${?item.Hours}"/></div>
       </div>
+      <% end %>
       <div class="row">
         <div class="large-3 columns">Labels</div>
         <div class="large-9 columns">
-          <% for label in project.Labels: %>
+          <% for label in labels: %>
           <div>
             <input type="checkbox" name="labels[${label.Id}]" value="${label.Name}" <% if item.CheckLabel(label.Name): %>checked="checked"<% end %>/> <span class="label no-margin radius" style="background-color: #${label.Color};">${label.Name}</span>
           </div>
           <% end %>
         </div>
       </div>
-      <% end %>
       <div class="row">
         <div class="large-3 columns">Omschrijving</div>
         <div class="large-9 columns">

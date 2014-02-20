@@ -2,7 +2,7 @@
 <br/>
 <% if item.Action == "opened": %>
 Er is een nieuwe taak geopend voor het project <strong>${project.Name}</strong>:<br/>
-<% elif item.Action == "reopened" %>
+<% elif item.Action == "reopened": %>
 Er is een taak heropend voor het project <strong>${project.Name}</strong>:<br/>
 <% end %>
 ${item.Issue.Name}<br/>
