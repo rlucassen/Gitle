@@ -1,0 +1,44 @@
+﻿    <table id="issue-table" class="tablesorter small-blocks">
+      <thead>
+        <tr>
+          <th id="issue-id">Id</th>
+          <th id="issue-name">Naam</th>
+          <th id="issue-devvers" title="Developers"><i class="fa fa-users"></i></th>
+          <th id="issue-hours" title="Tijd"><i class="fa fa-clock-o"></i></th>
+          <th id="issue-estimate" title="Schatting"><i class="fa fa-clock-o"></i></th>
+          <th id="issue-comments" title="Reacties"><i class="fa fa-comments-o"></i></th>
+          <th id="issue-labels" title="Labels">Labels</th>
+          <th id="issue-state" title="Voltooid"><i class="fa fa-check-square-o"></i></th>
+          <% if actions: %><th id="issue-actions" class="{sorter: false}"></th><% end %>
+        </tr>
+      </thead>
+      <tbody>
+        <% for issue in items: %>
+        <tr>
+          <td class="id">${issue.Number}</td>
+          <td class="name">${issue.Name}</td>
+          <td class="devvers">${issue.DevversString}</td>
+          <td class="hours">${issue.HoursString}</td>
+          <td class="estimate">${issue.EstimateString}</td>
+          <td class="comments">${issue.Comments}</td>
+          <td class="accepted">
+            <% for label in labels: %>
+            <%  if issue.CheckLabel(label.Name): %>
+            <span title="${label.Name}" class="label no-margin radius" style="background-color: #${label.Color};">${label.Name}</span>
+            <%  end %>
+            <% end %>
+          </td>
+          <td class="state"><span class="hide">${issue.State}</span><% if issue.State == "closed": %><i class="fa fa-check green"></i><% else: %><i class="fa fa-times red"></i><% end %></td>
+          <% if actions: %>
+          <td class="actions">
+            <ul class="button-group">
+              <li><a class="button tiny no-margin" href="/project/${project.Slug}/issue/${issue.Number}/view">Open</a></li>
+              <% if CurrentUser.IsAdmin: %><li><a class="button tiny success no-margin" href="/project/${project.Slug}/issue/${issue.Number}/edit">Bewerk</a></li><% end %>
+              <% if CurrentUser.IsAdmin: %><li><a class="button tiny secondary no-margin" href="${issue.HtmlUrl}">Github</a></li><% end %>
+            </ul>
+          </td>
+          <% end %>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>

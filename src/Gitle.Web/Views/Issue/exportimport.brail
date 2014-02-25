@@ -1,0 +1,13 @@
+﻿<div class="row">
+  <div class="large-12 columns">
+    <h1>${project.Name}: Exporteren / Importeren</h1>
+    <h3>Exporteren</h3>
+    <a class="button" href="/project/${project.Slug}/issue/exportcsv">Exporteren naar een CSV bestand</a><br />
+    <a class="button" href="/project/${project.Slug}/issue/exportjson">Exporteren naar een JSON bestand</a><br />
+    <h3>JSON Importeren</h3>
+    <form action="/project/${project.Slug}/issue/readjson" enctype="multipart/form-data" method="POST">
+      <input type="file" name="import"/>
+      <input type="submit" value="Upload" class="button small"/>
+    </form>
+  </div>
+</div>
