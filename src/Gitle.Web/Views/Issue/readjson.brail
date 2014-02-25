@@ -1,0 +1,15 @@
+﻿<div class="row">
+  <div class="large-12 columns">
+    <h1>${project.Name}: JSON Importeren</h1>
+    <p>Let a.u.b. op het volgende:</p>
+    <ul>
+      <li>U staat op het punt om <strong>${items.Count}</strong> issues te importeren in <strong>${project.Name}</strong>.</li>
+      <li>Dit project heeft al <strong>${milestone.TotalIssues}</strong> issues.</li>
+      <li>Er zijn <strong>${project.NotifiedUsers}</strong> personen geabboneerd, deze personen krijgen voor elke geimporteerde issue een losse email.</li>
+      <li>Github heeft de regie over Id's, deze zullen dus verloren gaan.</li>
+      <li>Commentaar op de issues wordt niet geimporteerd.</li>
+    </ul>
+    <% OutputSubView("_issuetable", {"actions": false}) %>
+    <a class="button" href="/project/${project.Slug}/issue/importjson?seskey=${seskey}">Doorgaan</a>
+  </div>
+</div>

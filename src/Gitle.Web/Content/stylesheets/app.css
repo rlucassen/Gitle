@@ -102,6 +102,10 @@ table td.checkbox {
   width: 20px;
 }
 
+table tbody tr:hover {
+  background-color: #f3f3f3;
+}
+
 table.row-clickable tbody tr:hover {
   background-color: #eee;
 }
@@ -373,8 +377,8 @@ table.row-clickable tbody td:hover {
   border-color: #000;
 }
 
-table#issue-table th#issue-actions {
-  width: 166px;
+body.admin table#issue-table th#issue-actions {
+  width: 238px;
 }
 table#issue-table th#issue-estimate {
   display: none;

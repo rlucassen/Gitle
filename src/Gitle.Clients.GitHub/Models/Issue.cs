@@ -97,6 +97,8 @@
         [DataMember(Name = "updated_at")]
         public virtual DateTime UpdatedAt { get; set; }
 
+        [DataMember(Name = "html_url")]
+        public virtual string HtmlUrl { get; set; }
 
         public virtual IssuePost ToPost()
         {

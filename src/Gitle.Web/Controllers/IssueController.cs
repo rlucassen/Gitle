@@ -4,7 +4,9 @@
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using System.Runtime.Serialization.Json;
     using System.Text;
+    using System.Web;
     using Admin;
     using Clients.GitHub.Interfaces;
     using Clients.GitHub.Models;
@@ -12,6 +14,7 @@
     using Model.Helpers;
     using Model.Interfaces.Repository;
     using Helpers;
+    using Newtonsoft.Json;
     using Label = Clients.GitHub.Models.Label;
 
     public class IssueController : SecureController
@@ -134,7 +137,73 @@
         }
 
         [Admin]
-        public void Export(string projectSlug)
+        public void ExportImport(string projectSlug)
+        {
+            var project = repository.FindBySlug(projectSlug);
+
+            PropertyBag.Add("project", project);
+        }
+
+        [Admin]
+        public void ExportJson(string projectSlug)
+        {
+            var project = repository.FindBySlug(projectSlug);
+            var issues = client.List(project.Repository, project.MilestoneId);
+
+            var json = JsonConvert.SerializeObject(issues);
+
+            CancelView();
+
+            Response.ClearContent();
+            Response.Clear();
+
+            var filename = string.Format("issues_{0}_{1:yyyyMMdd_hhmm}.json", project.Name, DateTime.Now);
+
+            Response.AppendHeader("content-disposition", string.Format("attachment; filename={0}", filename));
+            Response.ContentType = "application/json";
+
+            var byteArray = Encoding.Default.GetBytes(json);
+            var stream = new MemoryStream(byteArray);
+            Response.BinaryWrite(stream);
+        }
+
+        [Admin]
+        public void ReadJson(string projectSlug, HttpPostedFile import)
+        {
+            var project = repository.FindBySlug(projectSlug);
+            var milestone = milestoneClient.Get(project.Repository, project.MilestoneId);
+
+            var json = new StreamReader(import.InputStream).ReadToEnd();
+            var issues = JsonConvert.DeserializeObject<List<Issue>>(json);
+
+            var seskey = string.Format("{0:yyyyMMdd_hhmmss}", DateTime.Now);
+            Session.Add(seskey, issues);
+
+            PropertyBag.Add("seskey", seskey);
+            PropertyBag.Add("milestone", milestone);
+            PropertyBag.Add("items", issues);
+            PropertyBag.Add("project", project);
+            PropertyBag.Add("labels", CurrentUser.IsAdmin ? project.Labels : project.Labels.Where(l => l.VisibleForCustomer));
+        }
+
+
+        [Admin]
+        public void ImportJson(string projectSlug, string seskey)
+        {
+            var project = repository.FindBySlug(projectSlug);
+            var issues = (List<Issue>) Session[seskey];
+
+            foreach (var issue in issues)
+            {
+                client.Post(project.Repository, issue);
+            }
+
+            RedirectUsingNamedRoute("issues", new {projectSlug = project.Slug});
+        }
+
+
+        [Admin]
+        public void ExportCsv(string projectSlug)
         {
             var project = repository.FindBySlug(projectSlug);
             var issues = client.List(project.Repository, project.MilestoneId);

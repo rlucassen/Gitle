@@ -25,7 +25,7 @@
     <script src="/Content/javascript/jquery.tablesorter.min.js"> </script>
     <script src="/Content/javascript/jquery.colorpicker.js"> </script>
   </head>
-  <body>
+  <body class="<% if CurrentUser.IsAdmin: %>admin<% end %>">
     <nav class="top-bar" data-topbar>
       <ul class="title-area">
         <li class="name">
