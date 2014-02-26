@@ -92,6 +92,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers\AdminAttribute.cs" />
+    <Compile Include="Helpers\FileBinderAttribute.cs" />
     <Compile Include="Helpers\ProjectAttribute.cs" />
     <Compile Include="Helpers\DayPartHelper.cs" />
     <Compile Include="Helpers\SaveFeedback.cs" />

@@ -1,4 +1,6 @@
-﻿$.fn.extend({
+﻿$.ajaxUploadSettings.name = 'uploads';
+
+$.fn.extend({
   insert: function (text) {
     return this.each(function () {
       var textarea = $(this);

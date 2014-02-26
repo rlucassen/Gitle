@@ -16,7 +16,7 @@
     {
         private readonly IList<string> AllowedExtensions = new List<string> {".jpg", ".png", ".gif", ".JPG", ".PNG", ".GIF"};
 
-        public void File(HttpPostedFile[] uploads)
+        public void File([FileBinder] IEnumerable<HttpPostedFile> uploads)
         {
             var feedback = new UploadFeedback();
             foreach (var upload in uploads)
@@ -27,7 +27,7 @@
                     var info = new FileInfo(upload.FileName);
                     var filename = string.Format("{0}-{1}", DateTime.Now.Ticks, info.Name);
                     var path = Path.Combine(ConfigurationManager.AppSettings["fileUpload"], filename);
-                    uploads[0].SaveAs(path);
+                    upload.SaveAs(path);
                     var fileInfo = new FileInfo(path);
                     if (fileInfo.Exists)
                     {
