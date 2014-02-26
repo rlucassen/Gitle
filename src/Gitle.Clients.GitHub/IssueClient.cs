@@ -12,6 +12,7 @@ namespace Gitle.Clients.GitHub
     public class IssueClient : IIssueClient
     {
         private readonly JsonServiceClient _client;
+        private readonly int perPage = 20;
 
         public IssueClient(string token, string useragent, string githubApi)
         {
@@ -20,20 +21,28 @@ namespace Gitle.Clients.GitHub
             _client.LocalHttpWebRequestFilter = request => request.UserAgent = useragent;
         }
 
-        public List<Issue> List(string repo)
+        public List<Issue> List(string repo, string state = "open,closed")
         {
-            var issues = _client.Get<List<Issue>>("repos/" + repo + "/issues?per_page=100");
-            issues.AddRange(_client.Get<List<Issue>>("repos/" + repo + "/issues?per_page=100&state=closed"));
-            return issues;
+            return List(repo, 0, state);
         }
 
         public List<Issue> List(string repo, int milestoneId, string state = "open,closed")
         {
-
             var issues = new List<Issue>();
             foreach (var s in state.Split(','))
             {
-                issues.AddRange(_client.Get<List<Issue>>("repos/" + repo + "/issues?per_page=100&state=" + s + "&milestone=" + milestoneId));
+                var paging = true;
+                for (var page = 1; paging; page++ )
+                {
+                    var url = string.Format("repos/{0}/issues?page={1}&per_page={2}&state={3}{4}", 
+                                            repo, page, perPage, s,
+                                            milestoneId > 0 ? string.Format("&milestone={0}", milestoneId) : string.Empty);
+                    var issuePage = _client.Get<List<Issue>>(url);
+                    issues.AddRange(issuePage);
+
+                    if (issuePage.Count < perPage)
+                        paging = false;
+                }
             }
             return issues;
         }

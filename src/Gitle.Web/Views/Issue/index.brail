@@ -1,6 +1,6 @@
 ﻿<div class="row">
   <div class="large-12 columns">
-    <h1>${project.Name}: Taken</h1>
+    <h1>${project.Name}: ${items.Count} Taken</h1>
     <a class="button" href="/project/${project.Slug}/issue/new">Nieuwe taak</a>
     <a class="button secondary" href="/project/${project.Slug}/view">Projectdetails</a>
     <% if CurrentUser.IsAdmin: %><a class="button success" href="/project/${project.Slug}/issue/exportimport">Exporteren / Importeren</a><% end %>
