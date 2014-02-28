@@ -5,8 +5,8 @@
     <div class="row">
       <div class="large-3 columns">
         <p class="project no-margin"><strong>Project:</strong> ${project.Name}</p>
-        <p class="created no-margin"><strong>Aangemaakt op:</strong> <span class="capitalize">${item.CreatedAt.ToString("MMM d, yyyy HH:mm")}</span></p>
-        <p class="created no-margin"><strong>Laatst gewijzigd:</strong> <span class="capitalize">${item.UpdatedAt.ToString("MMM d, yyyy HH:mm")}</span></p>
+        <p class="created no-margin"><strong>Aangemaakt op:</strong> <span class="">${Helpers.DateTimeHelper.Relative(item.CreatedAt)}</span></p>
+        <p class="created no-margin"><strong>Laatst gewijzigd:</strong> <span class="">${Helpers.DateTimeHelper.Relative(item.UpdatedAt)}</span></p>
         <p class="hours no-margin"><strong>Geschatte tijd:</strong> ${item.EstimateString}</p>
         <p class="state no-margin"><strong>Status:</strong> ${item.State}</p>
         <p class="labels no-margin">
@@ -41,13 +41,13 @@
       </div>
       <div class="large-9 columns">
         <div class="panel">
-          <small class="right capitalize">${item.CreatedAt.ToString("MMM d, yyyy HH:mm")}</small>
+          <small class="right">${Helpers.DateTimeHelper.Relative(item.CreatedAt)}</small>
           <div class="marked">${item.Body}</div>
         </div>
         <h2>Reacties</h2>
         <% for comment in comments: %>
         <div class="panel">
-          <small class="right capitalize">${comment.CreatedAt.ToString("MMM d, yyyy HH:mm")}</small>
+          <small class="right">${Helpers.DateTimeHelper.Relative(comment.CreatedAt)}</small>
           <strong>${comment.Name}:</strong> 
           <div class="marked">${comment.Text}</div>
         </div>

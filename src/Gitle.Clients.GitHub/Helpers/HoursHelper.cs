@@ -3,7 +3,7 @@
     using System.Linq;
     using System.Text.RegularExpressions;
 
-    public static class HoursHelper
+    public static class TitleHelper
     {
         private static Regex r = new Regex(@"\(.*?\)");
 

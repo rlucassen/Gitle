@@ -38,20 +38,20 @@
 
         public virtual double Hours
         {
-            get { return HoursHelper.GetHoursFromTitle(Title); }
-            set { Title = HoursHelper.CreateTitle(Title, Devvers, value); }
+            get { return TitleHelper.GetHoursFromTitle(Title); }
+            set { Title = TitleHelper.CreateTitle(Title, Devvers, value); }
         }
 
         public virtual int Devvers
         {
-            get { return HoursHelper.GetDevversFromTitle(Title); }
-            set { Title = HoursHelper.CreateTitle(Title, value, Hours); }
+            get { return TitleHelper.GetDevversFromTitle(Title); }
+            set { Title = TitleHelper.CreateTitle(Title, value, Hours); }
         }
 
         public virtual string Name
         {
-            get { return HoursHelper.GetNameFromTitle(Title); }
-            set { Title = HoursHelper.CreateTitle(value, Devvers, Hours); }
+            get { return TitleHelper.GetNameFromTitle(Title); }
+            set { Title = TitleHelper.CreateTitle(value, Devvers, Hours); }
         }
 
         public virtual string DevversString
