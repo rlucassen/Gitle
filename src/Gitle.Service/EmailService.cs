@@ -84,17 +84,19 @@
         {
             foreach (var user in users)
             {
+                if (hookPayload.Comment.Name == user.FullName || hookPayload.Comment.Name == user.GitHubUsername)
+                    continue;
+
                 var message = new MailMessage(sourceAddress, user.EmailAddress)
-                {
-                    Subject = string.Format("Gitle: Nieuwe reactie bij project {0}", project.Name),
-                    IsBodyHtml = true
-                };
+                                  {
+                                      Subject = string.Format("Gitle: Nieuwe reactie bij project {0}", project.Name),
+                                      IsBodyHtml = true
+                                  };
 
                 message.Body = GetBody("comment",
                                        new Hashtable {{"item", hookPayload}, {"project", project}, {"user", user}});
 
-                if(hookPayload.Comment.Name != user.FullName && hookPayload.Comment.Name != user.GitHubUsername)
-                    SendMessage(message);
+                SendMessage(message);
             }
         }
 
