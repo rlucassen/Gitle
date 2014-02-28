@@ -36,6 +36,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Content Include="Content\fonts\fontawesome-webfont.svg" />
+    <Content Include="Content\images\favicon.ico" />
+    <Content Include="Content\images\logo.png" />
     <Content Include="Content\javascript\app.js" />
     <Content Include="Content\javascript\foundation.min.js" />
     <Content Include="Content\javascript\foundation\foundation.abide.js" />
@@ -181,9 +183,7 @@
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xml" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Content\images\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\Gitle.Clients.Freckle\Gitle.Clients.Freckle.csproj">
       <Project>{79178042-4CA8-4F5C-ABAB-8F0928854322}</Project>

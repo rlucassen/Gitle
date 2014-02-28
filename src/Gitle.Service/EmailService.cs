@@ -93,7 +93,8 @@
                 message.Body = GetBody("comment",
                                        new Hashtable {{"item", hookPayload}, {"project", project}, {"user", user}});
 
-                SendMessage(message);
+                if(hookPayload.Comment.Name != user.FullName && hookPayload.Comment.Name != user.GitHubUsername)
+                    SendMessage(message);
             }
         }
 

@@ -1,11 +1,13 @@
 ﻿<!DOCTYPE html>
-	<!--[if IE 8]><html class="no-js lt-ie9" lang="en"> <![endif]-->
-	<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
 
-<head>
+  <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
     <title>${t.AppName}</title>
+
+    <link rel="shortcut icon" href="/Content/images/favicon.ico"/>
 
     <link rel="stylesheet" href="/content/stylesheets/normalize.css" />
     <link rel="stylesheet" href="/content/stylesheets/foundation.min.css" />
@@ -13,25 +15,38 @@
     <link rel="stylesheet" href="/Content/stylesheets/app.css">
 
     <script src="/Content/javascript/vendor/custom.modernizr.js"> </script>
-	  <script src="/Content/javascript/vendor/jquery.js"></script>
-</head>
-<body>
-	<div class="top-bar">
-	    <nav class="top-bar">
-			<ul class="title-area">
-			<li class="name">
-				<h1><a href="/"><img src="/Content/images/logo.png" /> ${t.AppName}</a></h1>
-			</li>
-			</ul>
-		</nav>
-	</div>
+    <script src="/Content/javascript/vendor/jquery.js"> </script>
+  </head>
+  <body>
+    <div class="top-bar">
+      <nav class="top-bar">
+        <ul class="title-area">
+          <li class="name">
+            <h1><a href="/"><img src="/Content/images/logo.png" /> ${t.AppName}</a></h1>
+          </li>
+        </ul>
+      </nav>
+    </div>
     <div class="row">
-		${ChildOutput}
+      ${ChildOutput}
     </div>
   
+    <div class="footer">
+      <div class="row">
+        <div class="large-8 columns">
+          <h1><a href="/"><img src="/Content/images/logo.png" /> ${t.AppName}</a></h1>
+          <p>This is a project by Auxilium B.V.</p>
+        </div>
+        <div class="large-4 columns text-right">
+          <h1>Auxilium</h1>
+          <p>0900 - 289 454 86</p>
+        </div>
+      </div>
+    </div>
+
     <script src="/Content/javascript/foundation.min.js"> </script>
     <script>
-        $(document).foundation();
+      $(document).foundation();
     </script>
-</body>
+  </body>
 </html>
