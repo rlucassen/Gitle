@@ -11,6 +11,8 @@
     <meta name="viewport" content="width=device-width" />
     <title>${t.AppName}</title>
 
+    <link rel="shortcut icon" href="/Content/images/favicon.ico"/>
+
     <link rel="stylesheet" href="/content/stylesheets/normalize.css" />
     <link rel="stylesheet" href="/content/stylesheets/foundation.min.css" />
     <link rel="stylesheet" href="/Content/stylesheets/font-awesome.min.css">
@@ -59,6 +61,19 @@
     </nav>
     <div class="row">
       ${ChildOutput}
+    </div>
+
+    <div class="footer">
+      <div class="row">
+        <div class="large-8 columns">
+          <h1><a href="/"><img src="/Content/images/logo.png" /> ${t.AppName}</a></h1>
+          <p>This is a project by Auxilium B.V.</p>
+        </div>
+        <div class="large-4 columns text-right">
+          <h1>Auxilium</h1>
+          <p>0900 - 289 454 86</p>
+        </div>
+      </div>
     </div>
 
     <script src="/Content/javascript/foundation.min.js"> </script>

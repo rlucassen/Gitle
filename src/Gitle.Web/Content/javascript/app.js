@@ -134,6 +134,10 @@ Application.prototype = {
 
     $(document.body).addClass("js-enabled");
 
+    $(window).resize(function() {
+      self.windowResize();
+    }).resize();
+
 
     $("table.row-clickable tr").click(function () {
       var href = $(this).find("a").first().attr("href");
@@ -170,6 +174,14 @@ Application.prototype = {
       $(this).html(marked($(this).html()));
     });
 
+  },
+
+  windowResize: function () {
+    if ($(window).height() < $(document).height()) {
+      $(document.body).addClass("scroll");
+    } else {
+      $(document.body).removeClass("scroll");
+    }
   },
 
   initOnLoad: function () {
