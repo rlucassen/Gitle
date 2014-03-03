@@ -76,6 +76,10 @@ body.scroll .footer
   color: #43ac6a;
 }
 
+.small-text, .small-text p {
+  font-size: 0.9rem;
+}
+
 .progress.round .meter {
   font-size: 0.8em;
   padding: 3px 10px;
