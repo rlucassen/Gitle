@@ -49,7 +49,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EntryClient.cs" />
+    <Compile Include="Interfaces\IEntryClient.cs" />
     <Compile Include="Interfaces\IProjectClient.cs" />
+    <Compile Include="Models\Entry.cs" />
     <Compile Include="Models\Project.cs" />
     <Compile Include="ProjectClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

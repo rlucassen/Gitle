@@ -27,7 +27,7 @@
         <ul id="addlabels" data-dropdown-content class="f-dropdown">
           <% openLabels = false %>
           <% for label in project.Labels: %>
-          <%   if (CurrentUser.IsAdmin or label.VisibleForCustomer): %>
+          <%   if (CurrentUser.IsAdmin or label.ApplicableByCustomer): %>
           <%     if not item.CheckLabel(label.Name): %>
           <%       openLabels = true %>
           <li><a href="/project/${project.Slug}/issue/${item.Number}/addlabel/${label.Id}"><span class="label no-margin radius" title="${label.Name}" style="background-color: #${label.Color};">${label.Name}</span></a></li>
@@ -38,6 +38,25 @@
           <li><a href="#">Allen toegevoegd</a></li>
           <% end %>
         </ul>
+        <% if CurrentUser.IsAdmin: %>
+        <form action="booktime" method="POST">
+          <h2>Uren boeken</h2>
+          <div class="row">
+            <div class="large-12 columns">
+              ${Form.Select("date", days, {"value": "Value", "text": "Key", "class": "no-margin"})}
+            </div>
+          </div>
+          <div class="row">
+            <div class="large-3 small-3 columns">Uren</div>
+            <div class="large-9 small-9 columns">${Form.TextField("hours")}</div>
+          </div>
+          <div class="row">
+            <div class="large-12 columns">
+              <input type="submit" class="button right" value="Boek in Freckle"/>
+            </div>
+          </div>
+        </form>
+        <% end %>
       </div>
       <div class="large-9 columns">
         <div class="panel">

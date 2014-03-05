@@ -11,9 +11,9 @@
     {
         private readonly JsonServiceClient _client;
 
-        public ProjectClient(string domain, string token)
+        public ProjectClient(string freckleApi, string token)
         {
-            _client = new JsonServiceClient("https://" + domain + ".letsfreckle.com/api/");
+            _client = new JsonServiceClient(freckleApi);
             _client.Headers.Add("X-FreckleToken", token);
         }
 

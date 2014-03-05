@@ -60,6 +60,16 @@
       </section>
     </nav>
     <div class="row">
+      <div class="row">
+        <div class="large-12 columns">
+          <% if IsDefined("error"): %>
+            <div class="alert-box alert radius">${error}</div>
+          <% end %>
+          <% if IsDefined("info"): %>
+            <div class="alert-box radius">${info}</div>
+          <% end %>
+        </div>
+      </div>
       ${ChildOutput}
     </div>
 

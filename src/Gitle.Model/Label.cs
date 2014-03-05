@@ -6,6 +6,7 @@
         public virtual string Color { get; set; }
         public virtual bool VisibleForCustomer { get; set; }
         public virtual bool ApplicableByCustomer { get; set; }
+        public virtual bool ToFreckle { get; set; }
         public virtual Project Project { get; set; }
     }
 }

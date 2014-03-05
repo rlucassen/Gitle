@@ -35,7 +35,7 @@ namespace Gitle.Model.Helpers
                                       issue.Devvers,
                                       issue.Hours,
                                       issue.TotalHours,
-                                      issue.Hours*project.HourPrice,
+                                      issue.TotalHours*project.HourPrice,
                                       string.IsNullOrEmpty(issue.Body) ? string.Empty : issue.Body.Replace(lineEnd, "").TrimStart('-'),
                                       issue.State,
                                       string.Join(", ", issue.Labels.Select(l => l.Name))

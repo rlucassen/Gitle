@@ -134,10 +134,11 @@ Application.prototype = {
 
     $(document.body).addClass("js-enabled");
 
-    $(window).resize(function() {
+    $(window).resize(function () {
       self.windowResize();
     }).resize();
 
+    $('form .focus[value=]').focus();
 
     $("table.row-clickable tr").click(function () {
       var href = $(this).find("a").first().attr("href");
@@ -154,6 +155,7 @@ Application.prototype = {
 
     self.initMilestoneSelect();
     self.initFreckleSelect();
+    self.initCtrlS();
 
     slugify('#item_Name', '#item_Slug');
 
@@ -186,6 +188,15 @@ Application.prototype = {
 
   initOnLoad: function () {
 
+  },
+
+  initCtrlS: function () {
+    $(document).keydown(function (e) {
+      if (!(e.which == 83 && e.ctrlKey)) return true;
+      $("form").submit();
+      e.preventDefault();
+      return false;
+    });
   },
 
   initFreckleSelect: function () {

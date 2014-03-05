@@ -28,6 +28,7 @@
         public virtual string Phone { get; set; }
         public virtual string GitHubUsername { get; set; }
         public virtual string GitHubAccessToken { get; set; }
+        public virtual string FreckleEmail { get; set; }
 
         #region Implementation of IPrincipal
 

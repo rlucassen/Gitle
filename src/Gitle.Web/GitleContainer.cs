@@ -74,7 +74,7 @@
                                        .WithService.DefaultInterfaces()
                                        .LifestylePerWebRequest().Configure(
                                            registration =>
-                                           registration.DependsOn(Dependency.OnAppSettingsValue("domain", "freckleDomain")).
+                                           registration.DependsOn(Dependency.OnAppSettingsValue("freckleApi", "freckleApi")).
                                                DependsOn(Dependency.OnAppSettingsValue("token", "freckleToken"))));
             }
         }

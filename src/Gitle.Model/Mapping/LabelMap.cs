@@ -10,6 +10,7 @@
              Map(x => x.Color);
              Map(x => x.VisibleForCustomer);
              Map(x => x.ApplicableByCustomer);
+             Map(x => x.ToFreckle);
              References(x => x.Project).Column("Project_id").LazyLoad(Laziness.False);
          }
     }

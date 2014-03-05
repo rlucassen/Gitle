@@ -8,6 +8,8 @@
     using System.Text;
     using System.Web;
     using Admin;
+    using Clients.Freckle.Interfaces;
+    using Clients.Freckle.Models;
     using Clients.GitHub.Interfaces;
     using Clients.GitHub.Models;
     using Model;
@@ -24,14 +26,16 @@
         private readonly IProjectRepository repository;
         private readonly IMilestoneClient milestoneClient;
         private readonly ILabelClient labelClient;
+        private readonly IEntryClient entryClient;
 
-        public IssueController(IProjectRepository repository, IIssueClient client, ICommentClient commentClient, IMilestoneClient milestoneClient, ILabelClient labelClient)
+        public IssueController(IProjectRepository repository, IIssueClient client, ICommentClient commentClient, IMilestoneClient milestoneClient, ILabelClient labelClient, IEntryClient entryClient)
         {
             this.repository = repository;
             this.client = client;
             this.commentClient = commentClient;
             this.milestoneClient = milestoneClient;
             this.labelClient = labelClient;
+            this.entryClient = entryClient;
         }
 
         [MustHaveProject]
@@ -60,6 +64,7 @@
             PropertyBag.Add("item", item);
             var comments = commentClient.List(project.Repository, issueId);
             PropertyBag.Add("comments", comments);
+            PropertyBag.Add("days", DayHelper.GetPastDaysList());
         }
 
         [MustHaveProject]
@@ -133,6 +138,35 @@
             issue.Labels.Add(labelClient.Get(project.Repository, label.Name));
             client.Patch(project.Repository, issue.Number, issue);
 
+            RedirectToReferrer();
+        }
+
+        [Admin]
+        public void BookTime(string projectSlug, int issueId, string date, double hours)
+        {
+            if (hours <= 0.0)
+            {
+                Flash.Add("error", "Geen uren ingevuld, niets geboekt naar Freckle");
+                RedirectToReferrer();
+                return;
+            }
+            var project = repository.FindBySlug(projectSlug);
+            var issue = client.Get(project.Repository, issueId);
+            var labels = project.Labels.Where(l => l.ToFreckle && issue.Labels.Select(label => label.Name).Contains(l.Name)).Select(l => l.Name).ToList();
+            var description = string.Format("{0}, !!#{1} - {2}", string.Join(",", labels), issue.Number, issue.Title);
+            var entry = new Entry()
+                            {
+                                Date = date,
+                                Description = description,
+                                Minutes = string.Format("{0}h", hours),
+                                ProjectId = project.FreckleId,
+                                User = CurrentUser.FreckleEmail
+                            };
+            if (entryClient.Post(entry))
+                Flash.Add("info", "Uren geboekt in Freckle");
+            else
+                Flash.Add("error", "Er is iets mis gegaan moet boeken in Freckle");
+            
             RedirectToReferrer();
         }
 
