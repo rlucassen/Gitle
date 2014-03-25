@@ -5,5 +5,6 @@
 
     public interface ILabelRepository : IBaseRepository<Label>
     {
+        Label FindByName(string name);
     }
 }

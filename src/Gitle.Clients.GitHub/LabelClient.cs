@@ -40,5 +40,10 @@ namespace Gitle.Clients.GitHub
             return _client.Patch<Label>("repos/" + repo + "/labels/" + labelId, label);
         }
 
+        public List<Label> AddLabelToIssue(string repo, int issueId, Label label)
+        {
+            return _client.Post<List<Label>>("repos/" + repo + "/issues/" + issueId + "/labels", new[] {label.Name});
+        }
+
     }
 }

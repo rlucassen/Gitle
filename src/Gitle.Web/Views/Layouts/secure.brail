@@ -9,7 +9,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
-    <title>${t.AppName}</title>
+    <title>${t.AppName}<% if IsDefined("project"): %> - ${project.Name}<% end %><% if IsDefined("issueId"): %> #${issueId}<% end %></title>
 
     <link rel="shortcut icon" href="/Content/images/favicon.ico"/>
 
@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="/content/stylesheets/foundation.min.css" />
     <link rel="stylesheet" href="/Content/stylesheets/font-awesome.min.css">
     <link rel="stylesheet" href="/Content/stylesheets/app.css">
+    <link rel="stylesheet" href="/Content/stylesheets/chosen.min.css">
 	
     <script src="http://code.jquery.com/jquery-1.8.3.min.js"> </script>
     <script src="http://code.jquery.com/jquery-migrate-1.2.1.js"></script>
@@ -26,6 +27,7 @@
     <script src="/Content/javascript/jquery.ajaxupload.js"> </script>
     <script src="/Content/javascript/jquery.tablesorter.min.js"> </script>
     <script src="/Content/javascript/jquery.colorpicker.js"> </script>
+    <script src="/Content/javascript/chosen.jquery.min.js"> </script>
   </head>
   <body class="<% if CurrentUser.IsAdmin: %>admin<% end %>">
     <nav class="top-bar" data-topbar>

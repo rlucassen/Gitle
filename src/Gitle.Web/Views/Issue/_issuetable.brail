@@ -1,6 +1,7 @@
 ﻿    <table id="issue-table" class="tablesorter small-blocks">
       <thead>
         <tr>
+          <th id="issue-check" class="{sorter: false}"></th>
           <th id="issue-id">Id</th>
           <th id="issue-name">Naam</th>
           <th id="issue-devvers" title="Developers"><i class="fa fa-users"></i></th>
@@ -15,6 +16,9 @@
       <tbody>
         <% for issue in items: %>
         <tr>
+          <td class="check">
+            <input type="checkbox" name="issue" value="${issue.Number}" />
+          </td>
           <td class="id">${issue.Number}</td>
           <td class="name">${issue.Name}</td>
           <td class="devvers">${issue.DevversString}</td>

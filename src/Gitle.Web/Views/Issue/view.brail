@@ -1,7 +1,7 @@
 ﻿<div class="row">
   <div class="large-12 columns">
     <a href="/project/${project.Slug}/issues">terug naar overzicht</a>
-    <h1>${item.Name}</h1>
+    <h1>#<strong>${item.Number}</strong> - ${item.Name}<% if CurrentUser.IsAdmin: %><small> - <a href="edit">bewerk</a></small><% end %></h1>
     <div class="row">
       <div class="large-3 columns small-text">
         <p class="project no-margin"><strong>Project:</strong> ${project.Name}</p>
@@ -39,8 +39,10 @@
           <% end %>
         </ul>
         <% if CurrentUser.IsAdmin: %>
+        <hr/>
         <form action="booktime" method="POST">
           <h2>Uren boeken</h2>
+          <% if not string.IsNullOrEmpty(CurrentUser.FreckleEmail) and project.FreckleId > 0: %>
           <div class="row">
             <div class="large-12 columns">
               ${Form.Select("date", days, {"value": "Value", "text": "Key", "class": "no-margin"})}
@@ -48,14 +50,32 @@
           </div>
           <div class="row">
             <div class="large-3 small-3 columns">Uren</div>
-            <div class="large-9 small-9 columns">${Form.TextField("hours")}</div>
+            <div class="large-9 small-9 columns">${Form.TextField("hours", {"class": "no-margin"})}</div>
+          </div>
+          <div class="row">
+            <div class="large-12 columns">${Form.CheckboxField("close")} Sluit de ticket</div>
           </div>
           <div class="row">
             <div class="large-12 columns">
               <input type="submit" class="button right" value="Boek in Freckle"/>
             </div>
           </div>
+          <% else: %>
+          <%   if string.IsNullOrEmpty(CurrentUser.FreckleEmail): %>
+          <p>Als je een Freckle emailadres in je account toevoegd kun je hier direct uren boeken.</p>
+          <%   elif project.FreckleId == 0: %>
+          <p>Er is nog geen Freckle project aan dit project gekoppeld.</p>
+          <%   end %>
+          <% end %>
         </form>
+        <% end %>
+        <% if CurrentUser.IsAdmin: %>
+        <hr />
+        <%   if item.State != "closed": %>
+        <a href="issuestate?state=closed" class="button alert large-12">Sluit issue</a>
+        <%   else: %>
+        <a href="issuestate?state=open" class="button success large-12">Heropen issue</a>
+        <%   end %>
         <% end %>
       </div>
       <div class="large-9 columns">

@@ -11,9 +11,17 @@
 
     public class LabelRepository : BaseRepository<Label>, ILabelRepository
     {
+        private readonly ISession session;
         public LabelRepository(ISessionFactory sessionFactory)
             : base(sessionFactory)
         {
+            session = sessionFactory.GetCurrentSession();
+        }
+
+        public Label FindByName(string name)
+        {
+            var labels = session.QueryOver<Label>().Where(x => x.IsActive).And(x => x.Name == name).List();
+            return labels.FirstOrDefault();
         }
     }
 }

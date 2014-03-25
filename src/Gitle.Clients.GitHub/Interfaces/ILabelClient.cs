@@ -9,5 +9,6 @@
         Label Get(string repo, string labelId);
         Label Post(string repo, Label label);
         Label Patch(string repo, string labelId, Label label);
+        List<Label> AddLabelToIssue(string repo, int issueId, Label label);
     }
 }

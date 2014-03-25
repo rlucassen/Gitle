@@ -11,6 +11,7 @@ $.fn.extend({
   },
   error: function (error) {
     return this.each(function () {
+      $(this).siblings('small.error').remove();
       $(this).after('<small class="error">' + error + '</small>').parent().addClass("error");
     });
   },
@@ -153,6 +154,24 @@ Application.prototype = {
 
     $('.tablesorter').tablesorter({});
 
+    $(".chosen-select").chosen({ no_results_text: "Oops, nothing found!" });
+
+    $('.time-parser').blur(function () {
+      var value = $(this).val();
+      value = value.replace(/[A-Za-z$-]/g, "");
+      value = value.replace(",", ".");
+      value = parseFloat(value);
+      var lessThanQuarter = value < 0.25;
+      if (lessThanQuarter) {
+        value = 0.25;
+      }
+      value = value.toString().replace(".", ",");
+      $(this).val(value);
+      if (lessThanQuarter) {
+        $(this).error("minimum is een kwartier");
+      }
+    });
+
     self.initMilestoneSelect();
     self.initFreckleSelect();
     self.initCtrlS();
@@ -168,6 +187,21 @@ Application.prototype = {
         row.find('.colorpicker').colorPicker();
       }
     });
+
+    $('#group-actions').hide();
+    $('table .check input[type=checkbox]').change(function () {
+      var checkedBoxes = $('table .check input[type=checkbox]:checked');
+      if (checkedBoxes.length > 0) {
+        $('#group-actions').show();
+      } else {
+        $('#group-actions').hide();
+      }
+      var values = [];
+      checkedBoxes.each(function () {
+        values.push($(this).val());
+      });
+      $('#group-actions [name=issues]').val(values.join(','));
+    }).change();
 
     marked.setOptions({
       breaks: true

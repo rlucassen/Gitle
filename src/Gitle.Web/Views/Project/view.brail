@@ -19,11 +19,17 @@
       <div class="large-2 columns">Voortgang taken</div>
       <div class="large-8 columns">
         <div class="progress success round" id="issue-progress">
+          <% if CurrentUser.IsAdmin: %>
           <span class="meter" style="width: ${donePercentage.ToString().Replace(',', '.')}%">${doneTime} uur</span>
+          <% else: %>
+          <span class="meter" style="width: ${donePercentage.ToString().Replace(',', '.')}%">${donePercentage.ToString("00.##")}%</span>
+          <% end %>
         </div>
       </div>
       <div class="large-2 columns">
+        <% if CurrentUser.IsAdmin: %>
         ${totalIssueTime} uur
+        <% end %>
       </div>
     </div>
     <% if IsDefined("totalTime"): %>

@@ -18,6 +18,7 @@
     using Helpers;
     using Newtonsoft.Json;
     using Label = Clients.GitHub.Models.Label;
+    using Project = Model.Project;
 
     public class IssueController : SecureController
     {
@@ -52,6 +53,7 @@
             PropertyBag.Add("project", project);
             PropertyBag.Add("label", label);
             PropertyBag.Add("labels", CurrentUser.IsAdmin ? project.Labels : project.Labels.Where(l => l.VisibleForCustomer));
+            PropertyBag.Add("customerLabels", CurrentUser.IsAdmin ? project.Labels : project.Labels.Where(l => l.ApplicableByCustomer));
             PropertyBag.Add("state", state);
         }
 
@@ -142,7 +144,7 @@
         }
 
         [Admin]
-        public void BookTime(string projectSlug, int issueId, string date, double hours)
+        public void BookTime(string projectSlug, int issueId, string date, double hours, bool close)
         {
             if (hours <= 0.0)
             {
@@ -163,11 +165,32 @@
                                 User = CurrentUser.FreckleEmail
                             };
             if (entryClient.Post(entry))
+            {
                 Flash.Add("info", "Uren geboekt in Freckle");
+                if (close)
+                {
+                    IssueState(project, issue, "closed");
+                }
+            }
             else
-                Flash.Add("error", "Er is iets mis gegaan moet boeken in Freckle");
+                Flash.Add("error", "Er is iets mis gegaan met boeken in Freckle");
             
             RedirectToReferrer();
+        }
+
+        [Admin]
+        public void IssueState(string projectSlug, int issueId, string state)
+        {
+            var project = repository.FindBySlug(projectSlug);
+            var issue = client.Get(project.Repository, issueId);
+            IssueState(project, issue, state);
+            RedirectToReferrer();
+        }
+
+        private void IssueState(Project project, Issue issue, string state)
+        {
+            issue.State = state;
+            client.Patch(project.Repository, issue.Number, issue);
         }
 
         [Admin]

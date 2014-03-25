@@ -2,7 +2,7 @@
   <div class="large-12 columns">
     <a href="/project/${project.Slug}/issues">terug naar overzicht</a>
     <% if item.Number > 0: %>
-    <h1>Taak bewerken</h1>
+    <h1>#<strong>${item.Number}</strong> - Taak bewerken</h1>
     <% else: %>
     <h1>Nieuwe taak</h1>
     <% end %>
@@ -24,7 +24,7 @@
       </div>
       <div class="row">
         <div class="large-3 columns">Uren</div>
-        <div class="large-9 columns"><input type="text" name="item.Hours" value="${?item.Hours}"/></div>
+        <div class="large-9 columns"><input type="text" name="item.Hours" value="${?item.Hours}" class="time-parser"/></div>
       </div>
       <% end %>
       <div class="row">

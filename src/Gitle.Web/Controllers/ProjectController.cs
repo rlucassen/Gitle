@@ -21,6 +21,7 @@
         private IProjectClient projectClient;
         private IIssueClient issueClient;
         private IMilestoneClient milestoneClient;
+        private ILabelRepository labelRepository;
 
         public ProjectController(IRepositoryClient client, ILabelClient labelClient, IProjectRepository repository, IProjectClient projectClient, IIssueClient issueClient, ILabelRepository labelRepository, IMilestoneClient milestoneClient)
         {
@@ -30,6 +31,7 @@
             this.projectClient = projectClient;
             this.issueClient = issueClient;
             this.milestoneClient = milestoneClient;
+            this.labelRepository = labelRepository;
         }
 
         public void Index()
@@ -74,7 +76,7 @@
         public void New()
         {
             PropertyBag.Add("repositories", client.List());
-            PropertyBag.Add("freckleProjects", projectClient.List());
+            PropertyBag.Add("freckleProjects", projectClient.List().Where(x => x.Enabled));
             PropertyBag.Add("item", new Project());
             RenderView("edit");
         }
@@ -84,7 +86,7 @@
         {
             var project = repository.FindBySlug(projectSlug);
             PropertyBag.Add("repositories", client.List());
-            PropertyBag.Add("freckleProjects", projectClient.List());
+            PropertyBag.Add("freckleProjects", projectClient.List().Where(x => x.Enabled));
             PropertyBag.Add("item", project);
         }
 
@@ -134,6 +136,27 @@
             RedirectToUrl("/projects");
         }
 
+        [MustHaveProject]
+        public void AddLabel(string projectSlug, string issues, string label)
+        {
+            var project = repository.FindBySlug(projectSlug);
+            var issueIds = issues.Split(',');
+            var realLabel = labelRepository.FindByName(label);
+            if (!realLabel.ApplicableByCustomer && !CurrentUser.IsAdmin)
+            {
+                RedirectToReferrer();
+                return;
+            }
+
+            foreach (var id in issueIds)
+            {
+                var issueId = int.Parse(id);
+                labelClient.AddLabelToIssue(project.Repository, issueId, new Label{Name = label});
+            }
+
+            RedirectToReferrer();
+        }
+
         private void CreateInitialLabels(Project project)
         {
             var labels = labelClient.List(project.Repository);
@@ -167,6 +190,8 @@
                 var postHook = client.PostHook(project.Repository, url);
             }
         }
+
+
 
 
     }
