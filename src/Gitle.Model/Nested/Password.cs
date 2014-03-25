@@ -21,8 +21,6 @@
 
         public Password()
         {
-            var password = GeneratePassword();
-            EncryptPassword(password);
         }
 
         public virtual string Salt { get; protected set; }
