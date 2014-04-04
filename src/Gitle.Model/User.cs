@@ -19,6 +19,7 @@
             Projects = new List<UserProject>();
         }
 
+
         public virtual IPassword Password { get; set; }
         public virtual string Name { get; set; }
         public virtual string FullName { get; set; }
@@ -29,6 +30,13 @@
         public virtual string GitHubUsername { get; set; }
         public virtual string GitHubAccessToken { get; set; }
         public virtual string FreckleEmail { get; set; }
+
+        private string defaultState;
+        public virtual string DefaultState
+        {
+            get { return string.IsNullOrEmpty(defaultState) ? "open,closed" : defaultState; }
+            set { defaultState = value; }
+        }
 
         #region Implementation of IPrincipal
 

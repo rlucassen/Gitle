@@ -19,6 +19,7 @@
             Map(x => x.GitHubUsername);
             Map(x => x.GitHubAccessToken);
             Map(x => x.FreckleEmail);
+            Map(x => x.DefaultState);
             HasMany(x => x.Projects).Cascade.AllDeleteOrphan();
         }
     }

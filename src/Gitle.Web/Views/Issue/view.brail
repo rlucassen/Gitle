@@ -1,7 +1,8 @@
 ﻿<div class="row">
   <div class="large-12 columns">
     <a href="/project/${project.Slug}/issues">terug naar overzicht</a>
-    <h1>#<strong>${item.Number}</strong> - ${item.Name}<% if CurrentUser.IsAdmin: %><small> - <a href="edit">bewerk</a></small><% end %></h1>
+    <h1>#<strong>${item.Number}</strong> - ${item.Name}</h1>
+    <% if CurrentUser.IsAdmin: %><h3><a href="edit">bewerk</a></h3><% end %>
     <div class="row">
       <div class="large-3 columns small-text">
         <p class="project no-margin"><strong>Project:</strong> ${project.Name}</p>
@@ -53,7 +54,7 @@
             <div class="large-9 small-9 columns">${Form.TextField("hours", {"class": "no-margin"})}</div>
           </div>
           <div class="row">
-            <div class="large-12 columns">${Form.CheckboxField("close")} Sluit de ticket</div>
+            <div class="large-12 columns">${Form.CheckboxField("close")} Sluit de taak</div>
           </div>
           <div class="row">
             <div class="large-12 columns">
@@ -72,9 +73,9 @@
         <% if CurrentUser.IsAdmin: %>
         <hr />
         <%   if item.State != "closed": %>
-        <a href="issuestate?state=closed" class="button alert large-12">Sluit issue</a>
+        <a href="issuestate?state=closed" class="button alert large-12">Sluit taak</a>
         <%   else: %>
-        <a href="issuestate?state=open" class="button success large-12">Heropen issue</a>
+        <a href="issuestate?state=open" class="button success large-12">Heropen taak</a>
         <%   end %>
         <% end %>
       </div>
@@ -99,7 +100,7 @@
           <h3>Nieuwe reactie</h3>
           <form action="addcomment" method="POST">
             <textarea name="body" class="uploadarea"></textarea>
-            <input type="submit" value="Comment" class="button no-margin"/>
+            <input type="submit" value="Plaats reactie" class="button no-margin"/>
           </form>
         </div>
       </div>

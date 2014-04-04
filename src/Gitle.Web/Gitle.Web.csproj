@@ -224,6 +224,7 @@
     <None Include="Views\Authentication\changepassword.brail" />
     <None Include="Views\Authentication\requestreset.brail" />
     <None Include="Views\Issue\exportimport.brail" />
+    <None Include="Views\Issue\quickview.brail" />
     <None Include="Views\Issue\readjson.brail" />
     <None Include="Views\Issue\_issuetable.brail" />
     <None Include="Views\Mail\comment.brail" />

@@ -43,8 +43,8 @@
         public void Index(string projectSlug, string label, string state)
         {
             var project = repository.FindBySlug(projectSlug);
-
-            var items = client.List(project.Repository, project.MilestoneId, string.IsNullOrEmpty(state) ? "open,closed" : state);
+            state = string.IsNullOrEmpty(state) ? CurrentUser.DefaultState : state;
+            var items = client.List(project.Repository, project.MilestoneId, state);
 
             if (!string.IsNullOrEmpty(label) && label != "0")
                 items = items.Where(i => i.Labels.Any(l => l.Name == label)).ToList();
@@ -67,6 +67,18 @@
             var comments = commentClient.List(project.Repository, issueId);
             PropertyBag.Add("comments", comments);
             PropertyBag.Add("days", DayHelper.GetPastDaysList());
+        }
+
+        [MustHaveProject]
+        public void QuickView(string projectSlug, int issueId)
+        {
+            var project = repository.FindBySlug(projectSlug);
+            PropertyBag.Add("project", project);
+            var item = client.Get(project.Repository, issueId);
+            PropertyBag.Add("item", item);
+            var comments = commentClient.List(project.Repository, issueId);
+            PropertyBag.Add("comments", comments);
+            CancelLayout();
         }
 
         [MustHaveProject]

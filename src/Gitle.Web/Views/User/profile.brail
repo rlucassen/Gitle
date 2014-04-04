@@ -23,6 +23,12 @@
         <div class="large-3 columns">Emailadres</div>
         <div class="large-9 columns" id="email">${Form.TextField("item.Emailaddress")}</div>
       </div>
+      <div class="row">
+        <div class="large-3 columns">Default filtering</div>
+        <div class="large-9 columns">
+          ${Form.Select("item.DefaultState", {"open,closed": "Alle taken", "open": "Open taken", "closed": "Voltooide taken"}, {"value": "Key", "text": "Value", "class": "no-margin"})}
+        </div>
+      </div>
       <div class="row projects">
         <div class="large-3 columns">Notificaties</div>
         <div class="large-9 columns">

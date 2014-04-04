@@ -45,6 +45,12 @@
         <div class="large-9 columns">${Form.TextField("item.FreckleEmail")}</div>
       </div>
       <div class="row">
+        <div class="large-3 columns">Default filtering</div>
+        <div class="large-9 columns">
+          ${Form.Select("item.DefaultState", {"open,closed": "Alle taken", "open": "Open taken", "closed": "Voltooide taken"}, {"value": "Key", "text": "Value", "class": "no-margin"})}
+        </div>
+      </div>
+      <div class="row">
         <div class="large-3 small-6 columns">Heeft adminrechten</div>
         <div class="large-9 small-6 columns">${Form.CheckboxField("item.IsAdmin")}</div>
       </div>

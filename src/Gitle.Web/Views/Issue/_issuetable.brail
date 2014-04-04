@@ -1,7 +1,7 @@
 ﻿    <table id="issue-table" class="tablesorter small-blocks">
       <thead>
         <tr>
-          <th id="issue-check" class="{sorter: false}"></th>
+          <th id="issue-check" class="{sorter: false}"><input type="checkbox" class="no-margin" /></th>
           <th id="issue-id">Id</th>
           <th id="issue-name">Naam</th>
           <th id="issue-devvers" title="Developers"><i class="fa fa-users"></i></th>
@@ -20,7 +20,7 @@
             <input type="checkbox" name="issue" value="${issue.Number}" />
           </td>
           <td class="id">${issue.Number}</td>
-          <td class="name">${issue.Name}</td>
+          <td class="name"><a href="/project/${project.Slug}/issue/${issue.Number}/view" data-quickview="/project/${project.Slug}/issue/${issue.Number}/quickview">${issue.Name}</a></td>
           <td class="devvers">${issue.DevversString}</td>
           <td class="hours">${issue.HoursString}</td>
           <td class="estimate">${issue.EstimateString}</td>

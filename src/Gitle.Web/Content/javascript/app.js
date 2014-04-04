@@ -20,28 +20,28 @@ $.fn.extend({
       var textarea = $(this);
       var progressbar = $('<div class="progress">').append($('<span class="meter">')).insertAfter(this).hide();
       if (!$.browser.msie)
-        textarea.after($('<small class="info">Je kunt ook afbeeldingen uploaden door ze op het textveld te slepen.</small>'));
-      var uploadButton = $('<a href="#" class="button no-margin tiny">Upload afbeelding</a>').insertBefore(this);
+        textarea.after($('<small class="info">Je kunt ook afbeeldingen (jpg, png, gif) en bestanden (doc, docx, xls, xlsx, pdf, txt) uploaden door ze op het textveld te slepen.</small>'));
+      var uploadButton = $('<a href="#" class="button no-margin tiny">Upload afbeelding/bestand</a>').insertBefore(this);
       var uploadOptions = {
         url: '/upload/file',
-        beforeSend: function (e, a) {
+        beforeSend: function(e, a) {
           progressbar.show();
         },
-        onprogress: function (e) {
+        onprogress: function(e) {
           if (e.lengthComputable) {
             console.log('Progress ' + e.loaded + ' of ' + e.total);
             var percent = e.loaded / e.total * 100;
             progressbar.find('.meter').css('width', percent + '%');
           }
         },
-        error: function () {
+        error: function() {
           console.log('error');
           textarea.error('Bestand(en) uploaden niet gelukt');
         },
-        success: function (data) {
+        success: function(data) {
           data = $.parseJSON(data);
           for (var upload in data.Uploads) {
-            textarea.insert('![alt](' + data.Uploads[upload] + ')');
+            textarea.insert(data.Uploads[upload]);
           }
           for (var error in data.Errors) {
             console.log('Error: ' + error + ' - ' + data.Errors[error]);
@@ -49,7 +49,7 @@ $.fn.extend({
           }
           progressbar.hide();
         }
-      }
+      };
       $(this).ajaxUploadDrop(uploadOptions);
       uploadButton.ajaxUploadPrompt(uploadOptions);
     });
@@ -188,8 +188,19 @@ Application.prototype = {
       }
     });
 
+    $('table thead input[type=checkbox]').change(function () {
+      var thIndex = $(this).parents('tr').find('th').index($(this).parent('th'));
+      var checkboxes = $(this).parents('table').find('tbody tr td:nth-child(' + (thIndex + 1) + ') input[type=checkbox]');
+      if ($(this).is(':checked')) {
+        checkboxes.attr('checked', 'checked');
+      } else {
+        checkboxes.removeAttr('checked');
+      }
+      checkboxes.change();
+    });
+
     $('#group-actions').hide();
-    $('table .check input[type=checkbox]').change(function () {
+    $('table tbody .check input[type=checkbox]').change(function () {
       var checkedBoxes = $('table .check input[type=checkbox]:checked');
       if (checkedBoxes.length > 0) {
         $('#group-actions').show();
@@ -203,11 +214,47 @@ Application.prototype = {
       $('#group-actions [name=issues]').val(values.join(','));
     }).change();
 
+    $('table#issue-table tbody tr').click(function () {
+      var checkbox = $(this).find('input[type=checkbox]');
+      checkbox.prop('checked', !checkbox.is(':checked')).change();
+    }).on('click', 'a', function (e) {
+      e.stopPropagation();
+    });
+
     marked.setOptions({
       breaks: true
     });
     $('.marked').each(function () {
       $(this).html(marked($(this).html()));
+    });
+
+    var quickviewDelay = 800;
+    $('[data-quickview]').hover(function () {
+      var link = $(this);
+      if ($(this).data('tooltip') == undefined) {
+        var offset = $(this).position();
+        var tooltip = $('<div class="quickview">').css('top', offset.top + $(this).height()).css('left', offset.left);
+        $(this).data('tooltip', tooltip);
+        tooltip.load($(this).data('quickview'), function () {
+          tooltip.find('.marked').each(function () {
+            $(this).html(marked($(this).html()));
+          });
+          link.append(tooltip.hide());
+          link.data('timeout', setTimeout(function () {
+            if (link.is(':hover')) {
+              link.data('tooltip').show();
+            }
+          }, quickviewDelay));
+        });
+      } else {
+        link.data('timeout', setTimeout(function () {
+          if (link.is(':hover')) {
+            link.data('tooltip').show();
+          }
+        }, quickviewDelay));
+      }
+    }, function () {
+      $('.quickview').hide();
     });
 
   },
