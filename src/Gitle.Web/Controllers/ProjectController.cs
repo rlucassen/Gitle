@@ -148,9 +148,8 @@
                 return;
             }
 
-            foreach (var id in issueIds)
+            foreach (var issueId in issueIds.Select(id => int.Parse(id)))
             {
-                var issueId = int.Parse(id);
                 labelClient.AddLabelToIssue(project.Repository, issueId, new Label{Name = label});
             }
 

@@ -3,7 +3,14 @@
     <h1>${project.Name}: ${items.Count} Taken</h1>
     <a class="button" href="/project/${project.Slug}/issue/new">Nieuwe taak</a>
     <a class="button secondary" href="/project/${project.Slug}/view">Projectdetails</a>
-    <% if CurrentUser.IsAdmin: %><a class="button success" href="/project/${project.Slug}/issue/exportimport">Exporteren / Importeren</a><% end %>
+    <% if CurrentUser.IsAdmin: %>
+    <a class="button split success" href="/project/${project.Slug}/issue/exportimport">Exporteren / Importeren<span data-dropdown="exportimport"></span></a>
+    <ul id="exportimport" data-dropdown-content class="f-dropdown">
+      <li><a href="/project/${project.Slug}/issue/exportcsv">Exporteer alles (.csv)</a></li>
+      <% if state != "open,closed" or selectedLabels.Length > 0: %><li><a href="/project/${project.Slug}/issue/exportcsv?state=${state}<% for label in selectedLabels: %>&selectedLabels=${label}<% end %>">Exporteer gefilterd (.csv)</a></li><% end %>
+      <li id="exportselection"><a href="/project/${project.Slug}/issue/exportcsv">Export selectie (.csv)</a></li>
+    </ul>
+    <% end %>
     <div class="row">
       <div class="large-12 columns">
         <div class="row">
@@ -15,7 +22,7 @@
                   ${Form.Select("state", {"open,closed": "Alle taken", "open": "Open taken", "closed": "Voltooide taken"}, {"value": "Key", "text": "Value", "class": "no-margin"})}
                 </div>
                 <div class="large-4 columns">
-                  ${Form.Select("label", labels, {"value": "Name", "text": "Name", "firstoption": "Alle labels", "class": "no-margin"})}
+                  ${Form.Select("selectedLabels", labels, {"value": "Name", "text": "Name", "firstoption": "Alle labels", "class": "no-margin chosen-select", "multiple": true, "data-placeholder": "Alle labels"})}
                 </div>
                 <div class="large-2 columns"><input type="submit" value="Filter" class="button tiny no-margin expand"/></div>
               </div>

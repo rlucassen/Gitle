@@ -203,9 +203,9 @@ Application.prototype = {
     $('table tbody .check input[type=checkbox]').change(function () {
       var checkedBoxes = $('table .check input[type=checkbox]:checked');
       if (checkedBoxes.length > 0) {
-        $('#group-actions').show();
+        $('#group-actions, #exportselection').show();
       } else {
-        $('#group-actions').hide();
+        $('#group-actions, #exportselection').hide();
       }
       var values = [];
       checkedBoxes.each(function () {
@@ -214,10 +214,16 @@ Application.prototype = {
       $('#group-actions [name=issues]').val(values.join(','));
     }).change();
 
+    $('#exportselection a').click(function (e) {
+      e.preventDefault();
+      var issues = $('#group-actions input[name=issues]').val();
+      location.href = $(this).prop('href') + '?issues=' + issues;
+    });
+
     $('table#issue-table tbody tr').click(function () {
       var checkbox = $(this).find('input[type=checkbox]');
       checkbox.prop('checked', !checkbox.is(':checked')).change();
-    }).on('click', 'a', function (e) {
+    }).on('click', 'a, input', function (e) {
       e.stopPropagation();
     });
 

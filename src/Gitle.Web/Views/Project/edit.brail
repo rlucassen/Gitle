@@ -97,6 +97,7 @@
                 </td>
                 <td><input type="checkbox" name="label[${count}].VisibleForCustomer" value="true"/></td>
                 <td><input type="checkbox" name="label[${count}].ApplicableByCustomer" value="true"/></td>
+                <td><input type="checkbox" name="label[${count}].ToFreckle" value="true"/></td>
               </tr>
               <% end %>
             </tbody>

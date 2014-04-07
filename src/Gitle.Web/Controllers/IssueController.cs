@@ -40,18 +40,18 @@
         }
 
         [MustHaveProject]
-        public void Index(string projectSlug, string label, string state)
+        public void Index(string projectSlug, string[] selectedLabels, string state)
         {
             var project = repository.FindBySlug(projectSlug);
             state = string.IsNullOrEmpty(state) ? CurrentUser.DefaultState : state;
             var items = client.List(project.Repository, project.MilestoneId, state);
 
-            if (!string.IsNullOrEmpty(label) && label != "0")
-                items = items.Where(i => i.Labels.Any(l => l.Name == label)).ToList();
+            if (selectedLabels.Length > 0)
+                items = items.Where(i => i.Labels.Select(l => l.Name).Intersect(selectedLabels).Count() == selectedLabels.Length).ToList();
 
             PropertyBag.Add("items", items);
             PropertyBag.Add("project", project);
-            PropertyBag.Add("label", label);
+            PropertyBag.Add("selectedLabels", selectedLabels);
             PropertyBag.Add("labels", CurrentUser.IsAdmin ? project.Labels : project.Labels.Where(l => l.VisibleForCustomer));
             PropertyBag.Add("customerLabels", CurrentUser.IsAdmin ? project.Labels : project.Labels.Where(l => l.ApplicableByCustomer));
             PropertyBag.Add("state", state);
@@ -214,12 +214,25 @@
         }
 
         [Admin]
-        public void ExportJson(string projectSlug)
+        public void ExportJson(string projectSlug, string[] selectedLabels, string state, string issues)
         {
             var project = repository.FindBySlug(projectSlug);
-            var issues = client.List(project.Repository, project.MilestoneId);
 
-            var json = JsonConvert.SerializeObject(issues);
+            state = string.IsNullOrEmpty(state) ? CurrentUser.DefaultState : state;
+            var items = client.List(project.Repository, project.MilestoneId, state);
+
+            if (string.IsNullOrEmpty(issues))
+            {
+                if (selectedLabels.Length > 0)
+                    items = items.Where(
+                            i => i.Labels.Select(l => l.Name).Intersect(selectedLabels).Count() == selectedLabels.Length).ToList();
+            }
+            else
+            {
+                items = items.Where(i => issues.Split(',').Contains(i.Number.ToString())).ToList();
+            }
+
+            var json = JsonConvert.SerializeObject(items);
 
             CancelView();
 
@@ -272,12 +285,25 @@
 
 
         [Admin]
-        public void ExportCsv(string projectSlug)
+        public void ExportCsv(string projectSlug, string[] selectedLabels, string state, string issues)
         {
             var project = repository.FindBySlug(projectSlug);
-            var issues = client.List(project.Repository, project.MilestoneId);
 
-            var csv = CsvHelper.IssuesCsv(project, issues);
+            state = string.IsNullOrEmpty(state) ? CurrentUser.DefaultState : state;
+            var items = client.List(project.Repository, project.MilestoneId, state);
+
+            if (string.IsNullOrEmpty(issues))
+            {
+                if (selectedLabels.Length > 0)
+                    items = items.Where(
+                            i => i.Labels.Select(l => l.Name).Intersect(selectedLabels).Count() == selectedLabels.Length).ToList();
+            }
+            else
+            {
+                items = items.Where(i => issues.Split(',').Contains(i.Number.ToString())).ToList();
+            }
+
+            var csv = CsvHelper.IssuesCsv(project, items);
             CancelView();
 
             Response.ClearContent();
