@@ -115,8 +115,9 @@
                 users[0].Password = new Password(password);
                 userRepository.Save(users[0]);
 
-                PropertyBag.Add("message", "Uw wachtwoord is met succes gewijzigd. U kunt hieronder inloggen met uw nieuwe wachtwoord.");
-                RenderView("Index");
+                Flash.Add("message", "Uw wachtwoord is met succes gewijzigd. U kunt hieronder inloggen met uw nieuwe wachtwoord.");
+                RenderView("index");
+                Index("", "", false, "");
             }
             else
             {
