@@ -7,6 +7,7 @@
     using System.Configuration;
     using System.Web;
     using System.Web.Security;
+    using Model;
     using Model.Helpers;
     using Model.Interfaces.Repository;
     using Model.Interfaces.Service;
@@ -44,9 +45,9 @@
             
             var user = userRepository.FindByName(name);
 
-            if (string.IsNullOrEmpty(password) || !user.Password.Match(password))
+            if (user is User.NullUser || string.IsNullOrEmpty(password) || !user.Password.Match(password))
             {
-                Error("Inloggen niet gelukt", true);
+                Error("De gebruikersnaam of het wachtwoord is onjuist.", true);
                 return;
             }
 
