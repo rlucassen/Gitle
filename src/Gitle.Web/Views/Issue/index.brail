@@ -8,7 +8,7 @@
     <ul id="exportimport" data-dropdown-content class="f-dropdown">
       <li><a href="/project/${project.Slug}/issue/exportcsv">Exporteer alles (.csv)</a></li>
       <% if state != "open,closed" or selectedLabels.Length > 0: %><li><a href="/project/${project.Slug}/issue/exportcsv?state=${state}<% for label in selectedLabels: %>&selectedLabels=${label}<% end %>">Exporteer gefilterd (.csv)</a></li><% end %>
-      <li id="exportselection"><a href="/project/${project.Slug}/issue/exportcsv">Export selectie (.csv)</a></li>
+      <li id="exportselection"><a href="/project/${project.Slug}/issue/exportcsv">Exporteer selectie (.csv)</a></li>
     </ul>
     <% end %>
     <div class="row">

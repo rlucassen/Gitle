@@ -78,5 +78,10 @@
                 return string.Format(message, years);
             }
         }
+
+        public static string Readable(this DateTime dateTime)
+        {
+            return dateTime.ToString("MMM d, yyyy HH:mm").ToCamelCase();
+        }
     }
 }

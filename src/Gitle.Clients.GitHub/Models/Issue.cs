@@ -94,6 +94,9 @@
         [DataMember(Name = "created_at")]
         public virtual DateTime CreatedAt { get; set; }
 
+        [DataMember(Name = "closed_at")]
+        public virtual DateTime ClosedAt { get; set; }
+
         [DataMember(Name = "updated_at")]
         public virtual DateTime UpdatedAt { get; set; }
 
