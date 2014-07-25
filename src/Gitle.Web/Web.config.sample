@@ -15,6 +15,7 @@
     <add key="useragent" value="" />
     <add key="freckleToken" value="" />
     <add key="freckleDomain" value="" />
+    <add key="freckleApi" value="" />
     <add key="fileUpload" value=""/>
     <add key="webPath" value="http://"/>
   </appSettings>
