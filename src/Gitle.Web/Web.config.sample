@@ -27,6 +27,7 @@
   </monorail>
   <brail debug="false" saveToDisk="false" saveDirectory="BrailGen" batch="false" commonScriptsDirectory="CommonScripts">
     <import namespace="Gitle.Model" />
+    <import namespace="System" />
   </brail>
   <castle configSource="castle.config" />
   <system.web>
