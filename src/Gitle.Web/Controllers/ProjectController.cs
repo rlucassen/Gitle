@@ -189,9 +189,5 @@
                 var postHook = client.PostHook(project.Repository, url);
             }
         }
-
-
-
-
     }
 }
