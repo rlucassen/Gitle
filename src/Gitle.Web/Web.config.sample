@@ -30,6 +30,13 @@
     <import namespace="System" />
   </brail>
   <castle configSource="castle.config" />
+  <system.net>
+    <mailSettings>
+      <smtp deliveryMethod="SpecifiedPickupDirectory">
+        <specifiedPickupDirectory pickupDirectoryLocation="c:\temp\" />
+      </smtp>
+    </mailSettings>
+  </system.net>
   <system.web>
     <machineKey validationKey="A4BDB723FB89A2633B732FA2EE8AA7D231DDF44E819DBE42A2881106A1A66837" decryptionKey="4387CD05A0357E2F13BB0867CC7206A0ADC366C4733A12C142BD67D60CC2BB4C" validation="SHA1" decryption="AES" />
     <authentication mode="Forms">
