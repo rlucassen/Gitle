@@ -15,6 +15,7 @@
     <add key="useragent" value="" />
     <add key="freckleToken" value="" />
     <add key="freckleDomain" value="" />
+    <add key="freckleApi" value="" />
     <add key="fileUpload" value=""/>
     <add key="webPath" value="http://"/>
   </appSettings>
@@ -26,8 +27,16 @@
   </monorail>
   <brail debug="false" saveToDisk="false" saveDirectory="BrailGen" batch="false" commonScriptsDirectory="CommonScripts">
     <import namespace="Gitle.Model" />
+    <import namespace="System" />
   </brail>
   <castle configSource="castle.config" />
+  <system.net>
+    <mailSettings>
+      <smtp deliveryMethod="SpecifiedPickupDirectory">
+        <specifiedPickupDirectory pickupDirectoryLocation="c:\temp\" />
+      </smtp>
+    </mailSettings>
+  </system.net>
   <system.web>
     <machineKey validationKey="A4BDB723FB89A2633B732FA2EE8AA7D231DDF44E819DBE42A2881106A1A66837" decryptionKey="4387CD05A0357E2F13BB0867CC7206A0ADC366C4733A12C142BD67D60CC2BB4C" validation="SHA1" decryption="AES" />
     <authentication mode="Forms">
@@ -54,20 +63,16 @@
   <runtime>
     <assemblyBinding xmlns="urn:schemas-microsoft-com:asm.v1">
       <dependentAssembly>
-        <assemblyIdentity name="protobuf-net" publicKeyToken="257b51d87d2e4d67" culture="neutral" />
-        <bindingRedirect oldVersion="0.0.0.0-2.0.0.612" newVersion="2.0.0.612" />
-      </dependentAssembly>
-      <dependentAssembly>
         <assemblyIdentity name="Castle.Core" publicKeyToken="407dd0808d44fbdc" culture="neutral" />
-        <bindingRedirect oldVersion="0.0.0.0-3.2.0.0" newVersion="3.2.0.0" />
-      </dependentAssembly>
-      <dependentAssembly>
-        <assemblyIdentity name="Castle.Windsor" publicKeyToken="407dd0808d44fbdc" culture="neutral" />
         <bindingRedirect oldVersion="0.0.0.0-3.2.0.0" newVersion="3.2.0.0" />
       </dependentAssembly>
       <dependentAssembly>
         <assemblyIdentity name="NHibernate" publicKeyToken="aa95f207798dfdb4" culture="neutral" />
         <bindingRedirect oldVersion="0.0.0.0-3.3.1.4000" newVersion="3.3.1.4000" />
+      </dependentAssembly>
+      <dependentAssembly>
+        <assemblyIdentity name="Castle.Components.Validator" publicKeyToken="407dd0808d44fbdc" culture="neutral" />
+        <bindingRedirect oldVersion="0.0.0.0-3.2.0.0" newVersion="3.2.0.0" />
       </dependentAssembly>
     </assemblyBinding>
   </runtime>
