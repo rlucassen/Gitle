@@ -132,7 +132,6 @@
       <HintPath>..\packages\Castle.Components.Pagination.1.1.1.0\lib\net40\Castle.Components.Pagination.dll</HintPath>
     </Reference>
     <Reference Include="Castle.Components.Validator, Version=3.2.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Auxilium.Castle.Components.Validator.3.2.0.1\lib\net40\Castle.Components.Validator.dll</HintPath>
     </Reference>
     <Reference Include="Castle.Core">

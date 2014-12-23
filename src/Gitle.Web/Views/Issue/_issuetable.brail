@@ -7,6 +7,7 @@
           <th id="issue-devvers" title="Developers"><i class="fa fa-users"></i></th>
           <th id="issue-hours" title="Tijd"><i class="fa fa-clock-o"></i></th>
           <th id="issue-estimate" title="Schatting"><i class="fa fa-clock-o"></i></th>
+          <th id="issue-cost" title="Kosten"><i class="fa fa-euro"></i></th>
           <th id="issue-comments" title="Reacties"><i class="fa fa-comments-o"></i></th>
           <th id="issue-labels" title="Labels">Labels</th>
           <th id="issue-state" title="Voltooid"><i class="fa fa-check-square-o"></i></th>
@@ -24,6 +25,8 @@
           <td class="devvers">${issue.DevversString}</td>
           <td class="hours">${issue.HoursString}</td>
           <td class="estimate">${issue.EstimateString}</td>
+          <% costs = (issue.TotalHours*project.HourPrice).ToString("C") %>
+          <td class="cost">${costs}</td>
           <td class="comments">${issue.Comments}</td>
           <td class="accepted">
             <% for label in labels: %>
