@@ -226,7 +226,9 @@
     <None Include="Views\Issue\exportimport.brail" />
     <None Include="Views\Issue\quickview.brail" />
     <None Include="Views\Issue\readjson.brail" />
-    <None Include="Views\Issue\_issuetable.brail" />
+    <None Include="Views\Issue\_issuetable.brail">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Views\Mail\comment.brail" />
     <None Include="Views\Mail\password.brail" />
     <None Include="Views\Mail\issue.brail" />

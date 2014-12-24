@@ -74,6 +74,11 @@
             get { return Hours*Devvers; }
         }
 
+        public virtual string CostString(double hourPrice)
+        {
+            return TotalHours > 0 ? (TotalHours*hourPrice).ToString("C") : "n.n.b.";
+        }
+
         [DataMember(Name = "body")]
         public virtual string Body { get; set; }
 

@@ -25,7 +25,7 @@
           <td class="devvers">${issue.DevversString}</td>
           <td class="hours">${issue.HoursString}</td>
           <td class="estimate">${issue.EstimateString}</td>
-          <% costs = (issue.TotalHours*project.HourPrice).ToString("C") %>
+          <% costs = issue.CostString(project.HourPrice) %>
           <td class="cost">${costs}</td>
           <td class="comments">${issue.Comments}</td>
           <td class="accepted">
