@@ -4,6 +4,7 @@
     using System.Linq;
     using Clients.GitHub.Interfaces;
     using Model;
+    using Model.Enum;
     using NHibernate;
     using NHibernate.Linq;
     using Comment = Clients.GitHub.Models.Comment;
@@ -38,17 +39,18 @@
                         var newIssue = new Model.Issue
                                            {
                                                Body = issue.Body,
-                                               ClosedAt = issue.ClosedAt,
-                                               CreatedAt = issue.CreatedAt,
                                                Devvers = issue.Devvers,
                                                Hours = issue.Hours,
                                                Name = issue.Name,
                                                Number = issue.Number,
                                                State = issue.State,
                                                Project = project,
-                                               UpdatedAt = issue.UpdatedAt
                                            };
 
+                        newIssue.ChangeStates.Add(new ChangeState{CreatedAt = issue.CreatedAt, IssueState = IssueState.Open});
+                        newIssue.Changes.Add(new Change{CreatedAt = issue.UpdatedAt});
+                        if(issue.ClosedAt.HasValue)
+                            newIssue.ChangeStates.Add(new ChangeState{CreatedAt = issue.ClosedAt.Value, IssueState = IssueState.Closed});
 
                         foreach (Label label in issue.Labels)
                         {

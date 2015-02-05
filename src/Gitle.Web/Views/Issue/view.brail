@@ -6,13 +6,17 @@
     <div class="row">
       <div class="large-3 columns small-text">
         <p class="project no-margin"><strong>Project:</strong> ${project.Name}</p>
+        <% if item.CreatedAt != null: %>
         <p class="created no-margin"><strong>Aangemaakt op:</strong> <span title="${Helpers.DateTimeHelper.Readable(item.CreatedAt)}">${Helpers.DateTimeHelper.Relative(item.CreatedAt)}</span></p>
+        <% end %>
+        <% if item.UpdatedAt != null: %>
         <p class="created no-margin"><strong>Laatst gewijzigd:</strong> <span title="${Helpers.DateTimeHelper.Readable(item.UpdatedAt)}">${Helpers.DateTimeHelper.Relative(item.UpdatedAt)}</span></p>
-        <% if item.State == "closed": %>
+        <% end %>
+        <% if item.ClosedAt != null: %>
         <p class="created no-margin"><strong>Gesloten op:</strong> <span title="${Helpers.DateTimeHelper.Readable(item.ClosedAt)}">${Helpers.DateTimeHelper.Relative(item.ClosedAt)}</span></p>
         <% end %>
         <p class="hours no-margin"><strong>Geschatte tijd:</strong> ${item.EstimateString}</p>
-        <p class="state no-margin"><strong>Status:</strong> ${item.State}</p>
+        <p class="state no-margin"><strong>Status:</strong> <% if item.Open: %>open<% else: %>gesloten<% end %></p>
         <p class="labels no-margin">
           <strong>Labels:</strong>
         </p>
@@ -75,23 +79,27 @@
         <% end %>
         <% if CurrentUser.IsAdmin: %>
         <hr />
-        <%   if item.State != "closed": %>
-        <a href="issuestate?state=closed" class="button alert large-12">Sluit taak</a>
+        <%   if item.Open: %>
+        <a href="close" class="button alert large-12">Sluit taak</a>
         <%   else: %>
-        <a href="issuestate?state=open" class="button success large-12">Heropen taak</a>
+        <a href="reopen" class="button success large-12">Heropen taak</a>
         <%   end %>
         <% end %>
       </div>
       <div class="large-9 columns">
         <div class="panel">
+          <% if item.CreatedAt != null: %>
           <small class="right">${Helpers.DateTimeHelper.Relative(item.CreatedAt)}</small>
+          <% end %>
           <div class="marked">${item.Body}</div>
         </div>
-        <h2>Reacties</h2>
-        <% for comment in comments: %>
-        <div class="panel">
+        <h2>Tijdlijn</h2>
+        <% for comment in item.Actions: %>
+        <div class="panel ${comment.GetType().Name}">
           <small class="right">${Helpers.DateTimeHelper.Relative(comment.CreatedAt)}</small>
-          <strong>${comment.Name}:</strong> 
+          <% if comment.User != null: %>
+          <strong>${comment.User.FullName}:</strong> 
+          <% end %>
           <div class="marked">${comment.Text}</div>
         </div>
         <% end %>

@@ -4,11 +4,11 @@
 
     public static class DateTimeHelper
     {
-        public static string Relative(this DateTime dateTime)
+        public static string Relative(this DateTime? dateTime)
         {
-            var ts = dateTime.Kind == DateTimeKind.Utc
-                ? new TimeSpan(DateTime.UtcNow.Ticks - dateTime.Ticks)
-                : new TimeSpan(DateTime.Now.Ticks - dateTime.Ticks);
+            var ts = dateTime.Value.Kind == DateTimeKind.Utc
+                ? new TimeSpan(DateTime.UtcNow.Ticks - dateTime.Value.Ticks)
+                : new TimeSpan(DateTime.Now.Ticks - dateTime.Value.Ticks);
 
             var future = ts.Ticks < 0;
             var delta = Math.Abs(ts.TotalSeconds);
@@ -79,9 +79,9 @@
             }
         }
 
-        public static string Readable(this DateTime dateTime)
+        public static string Readable(this DateTime? dateTime)
         {
-            return dateTime.ToString("MMM d, yyyy HH:mm").ToCamelCase();
+            return dateTime.Value.ToString("MMM d, yyyy HH:mm").ToCamelCase();
         }
     }
 }

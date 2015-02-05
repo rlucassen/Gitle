@@ -102,7 +102,7 @@
             {
                 issue = BindObject<Issue>("item");
             }
-
+            issue.Change(CurrentUser);
             issue.Labels = labels.Select(label => session.Query<Label>().FirstOrDefault(l => l.Name == label)).ToList();
 
             using (var transaction = session.BeginTransaction())
@@ -175,7 +175,12 @@
                 Flash.Add("info", "Uren geboekt in Freckle");
                 if (close)
                 {
-                    IssueState(project, issue, "closed");
+                    issue.Close(CurrentUser);
+                    using (var tx = session.BeginTransaction())
+                    {
+                        session.SaveOrUpdate(issue);
+                        tx.Commit();
+                    }
                 }
             }
             else
@@ -185,23 +190,33 @@
         }
 
         [Admin]
-        public void IssueState(string projectSlug, int issueId, string state)
+        public void Close(string projectSlug, int issueId)
         {
             var project = session.Query<Project>().FirstOrDefault(p => p.Slug == projectSlug);
-            var issue = session.Query<Issue>().FirstOrDefault(i => i.Number == issueId);
-            IssueState(project, issue, state);
+            var issue = session.Query<Issue>().FirstOrDefault(i => i.Number == issueId && i.Project == project);
+            issue.Close(CurrentUser);
+            using (var tx = session.BeginTransaction())
+            {
+                session.SaveOrUpdate(issue);
+                tx.Commit();
+            }
             RedirectToReferrer();
         }
 
-        private void IssueState(Project project, Issue issue, string state)
+        [Admin]
+        public void Reopen(string projectSlug, int issueId, string state)
         {
-            issue.State = state;
-            using (var transaction = session.BeginTransaction())
+            var project = session.Query<Project>().FirstOrDefault(p => p.Slug == projectSlug);
+            var issue = session.Query<Issue>().FirstOrDefault(i => i.Number == issueId && i.Project == project);
+            issue.Reopen(CurrentUser);
+            using (var tx = session.BeginTransaction())
             {
                 session.SaveOrUpdate(issue);
-                transaction.Commit();
+                tx.Commit();
             }
+            RedirectToReferrer();
         }
+
 
         [Admin]
         public void ExportImport(string projectSlug)

@@ -172,7 +172,6 @@ Application.prototype = {
       }
     });
 
-    self.initMilestoneSelect();
     self.initFreckleSelect();
     self.initCtrlS();
 

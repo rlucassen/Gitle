@@ -36,11 +36,11 @@
             <% end %>
           </td>
           <td class="state">
-            <span class="hide">${issue.State}<% if issue.State == "closed": %> ${issue.ClosedAt.ToString("yyyyMMddhhmm")}<% end %></span>
-            <% if issue.State == "closed": %>
-            <i class="fa fa-check green" title="${Helpers.DateTimeHelper.Readable(issue.ClosedAt)}"></i>
-            <% else: %>
+            <span class="hide"><% if issue.Open: %>open<% else: %>closed ${issue.ClosedAt.ToString("yyyyMMddhhmm")}<% end %></span>
+            <% if issue.Open: %>
             <i class="fa fa-times red"></i>
+            <% else: %>
+            <i class="fa fa-check green" title="${Helpers.DateTimeHelper.Readable(issue.ClosedAt)}"></i>
             <% end %>
           </td>
           <% if actions: %>

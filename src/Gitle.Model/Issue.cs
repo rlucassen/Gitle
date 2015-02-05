@@ -3,6 +3,8 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Enum;
+    using Interfaces.Model;
 
     public class Issue : ModelBase
     {
@@ -10,6 +12,8 @@
         {
             Labels = new List<Label>();
             Comments = new List<Comment>();
+            ChangeStates = new List<ChangeState>();
+            Changes = new List<Change>();
         }
 
         public virtual int Number { get; set; }
@@ -18,14 +22,60 @@
         public virtual string Body { get; set; }
         public virtual double Hours { get; set; }
         public virtual int Devvers { get; set; }
-        public virtual DateTime CreatedAt { get; set; }
-        public virtual DateTime? ClosedAt { get; set; }
-        public virtual DateTime UpdatedAt { get; set; }
 
-        public virtual User User { get; set; }
         public virtual Project Project { get; set; }
         public virtual IList<Label> Labels { get; set; }
         public virtual IList<Comment> Comments { get; set; }
+        public virtual IList<ChangeState> ChangeStates { get; set; }
+        public virtual IList<Change> Changes { get; set; }
+
+        public virtual bool Open
+        {
+            get { return ChangeStates.OrderByDescending(x => x.CreatedAt).First().IssueState != IssueState.Closed; }
+        }
+
+        public virtual DateTime? CreatedAt
+        {
+            get
+            {
+                var state =
+                    ChangeStates.OrderByDescending(x => x.CreatedAt).LastOrDefault(
+                        x => x.IssueState == IssueState.Open);
+                return state != null ? state.CreatedAt : (DateTime?)null;
+            }
+        }
+
+        public virtual DateTime? ClosedAt
+        {
+            get
+            {
+                var state =
+                    ChangeStates.OrderByDescending(x => x.CreatedAt).FirstOrDefault(
+                        x => x.IssueState == IssueState.Closed);
+                return state != null ? state.CreatedAt : (DateTime?)null;
+            }
+        }
+
+        public virtual DateTime? UpdatedAt
+        {
+            get
+            {
+                var state =
+                    Changes.OrderByDescending(x => x.CreatedAt).FirstOrDefault();
+                return state != null ? state.CreatedAt : (DateTime?)null;
+            }
+        }
+
+        public virtual IList<IIssueAction> Actions
+        {
+            get
+            {
+                var actions = new List<IIssueAction>(Comments);
+                actions.AddRange(ChangeStates);
+                actions.AddRange(Changes);
+                return actions.OrderBy(x => x.CreatedAt).ToList();
+            }
+        }
 
         public virtual string DevversString
         {
@@ -55,6 +105,21 @@
         public virtual bool CheckLabel(string label)
         {
             return Labels.Select(l => l.Name).Contains(label);
+        }
+
+        public virtual void Close(User user)
+        {
+            ChangeStates.Add(new ChangeState(){CreatedAt = DateTime.Now, IssueState = IssueState.Closed, User = user});
+        }
+
+        public virtual void Reopen(User user)
+        {
+            ChangeStates.Add(new ChangeState() { CreatedAt = DateTime.Now, IssueState = IssueState.Open, User = user });
+        }
+
+        public virtual void Change(User user)
+        {
+            Changes.Add(new Change() { CreatedAt = DateTime.Now, User = user });
         }
     }
 }
