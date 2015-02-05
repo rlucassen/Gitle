@@ -135,9 +135,6 @@
             RoutingModuleEx.Engine.Add(new PatternRoute("/user/<userId>/<action>")
                                            .DefaultForController().Is<UserController>()
                                            .DefaultForAction().Is("index"));
-            RoutingModuleEx.Engine.Add(new PatternRoute("/milestone/<action>")
-                                           .DefaultForController().Is<MilestoneController>()
-                                           .DefaultForAction().Is("index"));
             RoutingModuleEx.Engine.Add(new PatternRoute("/projects")
                                            .DefaultForController().Is<ProjectController>()
                                            .DefaultForAction().Is("index"));
@@ -158,9 +155,6 @@
                                            .DefaultForAction().Is("index"));
             RoutingModuleEx.Engine.Add(new PatternRoute("/project/<projectSlug>/issue/<issueId>/<action>/<param>")
                                            .DefaultForController().Is<IssueController>()
-                                           .DefaultForAction().Is("index"));
-            RoutingModuleEx.Engine.Add(new PatternRoute("/githubhook/<action>")
-                                           .DefaultForController().Is<GitHubHookController>()
                                            .DefaultForAction().Is("index"));
 
             RoutingModuleEx.Engine.Add<ImportController>();

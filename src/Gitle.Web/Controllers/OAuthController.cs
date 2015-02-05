@@ -1,20 +1,19 @@
 ﻿namespace Gitle.Web.Controllers
 {
     using System.Web.Security;
-    using Castle.MonoRail.Framework;
     using Clients.GitHub.Interfaces;
-    using Model.Interfaces.Repository;
-    using Model.Interfaces.Service;
+    using Model;
+    using NHibernate;
 
     public class OAuthController : BaseController
     {
-        private readonly IUserRepository userRepository;
+        private readonly ISession session;
         private readonly IOAuthClient oauthClient;
         private readonly IUserClient userClient;
 
-        public OAuthController(IUserRepository userRepository, IOAuthClient oauthClient, IUserClient userClient)
+        public OAuthController(ISessionFactory sessionFactory, IOAuthClient oauthClient, IUserClient userClient)
         {
-            this.userRepository = userRepository;
+            this.session = sessionFactory.GetCurrentSession();
             this.userClient = userClient;
             this.oauthClient = oauthClient;
         }
@@ -28,11 +27,16 @@
                 if (!string.IsNullOrEmpty(accessToken.Token))
                 {
                     var user = userClient.Get(accessToken.Token);
-                    var gitleUsers = userRepository.FindByGithubUser(user.Login);
+                    var gitleUsers = session.QueryOver<User>().Where(x => x.IsActive).And(x => x.GitHubUsername == user.Login).List();
+
                     if (gitleUsers.Count > 0)
                     {
                         gitleUsers[0].GitHubAccessToken = accessToken.Token;
-                        userRepository.Save(gitleUsers[0]);
+                        using (var tx = session.BeginTransaction())
+                        {
+                            session.SaveOrUpdate(gitleUsers[0]);
+                            tx.Commit();
+                        }
 
                         FormsAuthentication.Initialize();
                         FormsAuthentication.SetAuthCookie(gitleUsers[0].Name, true);

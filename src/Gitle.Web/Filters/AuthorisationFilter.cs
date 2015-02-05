@@ -2,19 +2,22 @@
 {
     #region Usings
 
+    using System.Linq;
     using Castle.MonoRail.Framework;
     using Model;
-    using Model.Interfaces.Repository;
+    using NHibernate;
+    using NHibernate.Linq;
+    using IFilter = Castle.MonoRail.Framework.IFilter;
 
     #endregion
 
     public class AuthorisationFilter : IFilter
     {
-        private readonly IUserRepository userRepository;
+        private readonly ISession session;
 
-        public AuthorisationFilter(IUserRepository userRepository)
+        public AuthorisationFilter(ISessionFactory sessionFactory)
         {
-            this.userRepository = userRepository;
+            this.session = sessionFactory.GetCurrentSession();
         }
 
         #region Implementation of IFilter
@@ -28,7 +31,7 @@
                 return false;
             }
 
-            var user = userRepository.FindByName(context.CurrentUser.Identity.Name);
+            var user = session.Query<User>().FirstOrDefault(x => x.Name == context.CurrentUser.Identity.Name);
             context.CurrentUser = user;
 
             controllerContext.PropertyBag["currentUser"] = user;

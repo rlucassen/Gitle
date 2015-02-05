@@ -13,8 +13,8 @@
     using Castle.MonoRail.Views.Brail;
     using Clients.GitHub.Models.Hooks;
     using Model;
-    using Model.Interfaces.Repository;
     using Model.Interfaces.Service;
+    using NHibernate;
 
     public class EmailService : IEmailService
     {
@@ -28,41 +28,41 @@
 
         private static readonly StandaloneBooViewEngine StandaloneBooViewEngine = new StandaloneBooViewEngine(ViewSourceLoader, null);
 
-        private readonly IProjectRepository projectRepository;
+        private readonly ISession session;
 
-        public EmailService(string hostname, string sourceAddress, bool testMode, ILogger logger, IProjectRepository projectRepository)
+        public EmailService(string hostname, string sourceAddress, bool testMode, ILogger logger, ISessionFactory sessionFactory)
         {
             defaultSmtpSender = new DefaultSmtpSender(hostname);
 
             this.sourceAddress = sourceAddress;
             this.testMode = testMode;
             this.logger = logger;
-            this.projectRepository = projectRepository;
+            this.session = sessionFactory.GetCurrentSession();
         }
 
         #region IEmailService Members
 
-        public void SendHookNotification(HookPayload hookPayload)
-        {
-            if (string.IsNullOrEmpty(hookPayload.Issue.RepoName) || hookPayload.Issue.Milestone == null)
-            {
-                return;
-            }
+        //public void SendHookNotification(HookPayload hookPayload)
+        //{
+        //    if (string.IsNullOrEmpty(hookPayload.Issue.RepoName) || hookPayload.Issue.Milestone == null)
+        //    {
+        //        return;
+        //    }
 
-            var project = projectRepository.FindByRepoAndMilestone(hookPayload.Issue.RepoName, hookPayload.Issue.Milestone.Number).FirstOrDefault();
+        //    var project = projectRepository.FindByRepoAndMilestone(hookPayload.Issue.RepoName, hookPayload.Issue.Milestone.Number).FirstOrDefault();
 
-            IList<User> users = (from userProject in project.Users where userProject.Notifications select userProject.User).ToList();
+        //    IList<User> users = (from userProject in project.Users where userProject.Notifications select userProject.User).ToList();
 
-            if (hookPayload.Comment != null)
-            {
-                SendCommentNotification(hookPayload, project, users);
-            }
-            else
-            {
-                if(hookPayload.Action == "opened" || hookPayload.Action == "reopened")
-                    SendIssueNotification(hookPayload, project, users);
-            }
-        }
+        //    if (hookPayload.Comment != null)
+        //    {
+        //        SendCommentNotification(hookPayload, project, users);
+        //    }
+        //    else
+        //    {
+        //        if(hookPayload.Action == "opened" || hookPayload.Action == "reopened")
+        //            SendIssueNotification(hookPayload, project, users);
+        //    }
+        //}
 
         public void SendPasswordLink(User user)
         {
@@ -80,42 +80,42 @@
 
         #endregion
 
-        private void SendCommentNotification(HookPayload hookPayload, Project project, IEnumerable<User> users)
-        {
-            foreach (var user in users)
-            {
-                if (hookPayload.Comment.Name == user.FullName || hookPayload.Comment.Name == user.GitHubUsername)
-                    continue;
+        //private void SendCommentNotification(HookPayload hookPayload, Project project, IEnumerable<User> users)
+        //{
+        //    foreach (var user in users)
+        //    {
+        //        if (hookPayload.Comment.Name == user.FullName || hookPayload.Comment.Name == user.GitHubUsername)
+        //            continue;
 
-                var message = new MailMessage(sourceAddress, user.EmailAddress)
-                                  {
-                                      Subject = string.Format("Gitle: Nieuwe reactie bij project {0}", project.Name),
-                                      IsBodyHtml = true
-                                  };
+        //        var message = new MailMessage(sourceAddress, user.EmailAddress)
+        //                          {
+        //                              Subject = string.Format("Gitle: Nieuwe reactie bij project {0}", project.Name),
+        //                              IsBodyHtml = true
+        //                          };
 
-                message.Body = GetBody("comment",
-                                       new Hashtable {{"item", hookPayload}, {"project", project}, {"user", user}});
+        //        message.Body = GetBody("comment",
+        //                               new Hashtable {{"item", hookPayload}, {"project", project}, {"user", user}});
 
-                SendMessage(message);
-            }
-        }
+        //        SendMessage(message);
+        //    }
+        //}
 
-        private void SendIssueNotification(HookPayload hookPayload, Project project, IEnumerable<User> users)
-        {
-            foreach (var user in users)
-            {
-                var message = new MailMessage(sourceAddress, user.EmailAddress)
-                {
-                    Subject = string.Format("Gitle: Taak status gewijzigd bij project {0}", project.Name),
-                    IsBodyHtml = true
-                };
+        //private void SendIssueNotification(HookPayload hookPayload, Project project, IEnumerable<User> users)
+        //{
+        //    foreach (var user in users)
+        //    {
+        //        var message = new MailMessage(sourceAddress, user.EmailAddress)
+        //        {
+        //            Subject = string.Format("Gitle: Taak status gewijzigd bij project {0}", project.Name),
+        //            IsBodyHtml = true
+        //        };
 
-                message.Body = GetBody("issue",
-                                       new Hashtable {{"item", hookPayload}, {"project", project}, {"user", user}});
+        //        message.Body = GetBody("issue",
+        //                               new Hashtable {{"item", hookPayload}, {"project", project}, {"user", user}});
 
-                SendMessage(message);
-            }
-        }
+        //        SendMessage(message);
+        //    }
+        //}
 
         private static string GetBody(string template, IDictionary parameters)
         {

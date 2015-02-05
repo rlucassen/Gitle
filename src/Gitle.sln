@@ -5,8 +5,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gitle.Web", "Gitle.Web\Gitl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gitle.Model", "Gitle.Model\Gitle.Model.csproj", "{10247283-4DAB-4008-9E68-FEE82305A6FC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gitle.Repository", "Gitle.Repository\Gitle.Repository.csproj", "{3F11166A-A55D-4F2D-99FE-E3F1736E4409}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{D95222F1-006A-47A2-A5D6-E77A42C1D2FF}"
 	ProjectSection(SolutionItems) = preProject
 		.nuget\NuGet.Config = .nuget\NuGet.Config
@@ -52,16 +50,6 @@ Global
 		{10247283-4DAB-4008-9E68-FEE82305A6FC}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{10247283-4DAB-4008-9E68-FEE82305A6FC}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{10247283-4DAB-4008-9E68-FEE82305A6FC}.Release|x86.ActiveCfg = Release|Any CPU
-		{3F11166A-A55D-4F2D-99FE-E3F1736E4409}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3F11166A-A55D-4F2D-99FE-E3F1736E4409}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3F11166A-A55D-4F2D-99FE-E3F1736E4409}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{3F11166A-A55D-4F2D-99FE-E3F1736E4409}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{3F11166A-A55D-4F2D-99FE-E3F1736E4409}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{3F11166A-A55D-4F2D-99FE-E3F1736E4409}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3F11166A-A55D-4F2D-99FE-E3F1736E4409}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3F11166A-A55D-4F2D-99FE-E3F1736E4409}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{3F11166A-A55D-4F2D-99FE-E3F1736E4409}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{3F11166A-A55D-4F2D-99FE-E3F1736E4409}.Release|x86.ActiveCfg = Release|Any CPU
 		{369FBFE1-7ACC-4A9E-A632-A1FFD1EF7607}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{369FBFE1-7ACC-4A9E-A632-A1FFD1EF7607}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{369FBFE1-7ACC-4A9E-A632-A1FFD1EF7607}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU

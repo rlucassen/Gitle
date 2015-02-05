@@ -24,8 +24,8 @@
 
         public virtual User User { get; set; }
         public virtual Project Project { get; set; }
-        public virtual IList<Label> Labels { get; set; } // Aangepast naar Label in Model die we al hadden
-        public virtual IList<Comment> Comments { get; set; } // Aangepast naar Label in Model die we al hadden
+        public virtual IList<Label> Labels { get; set; }
+        public virtual IList<Comment> Comments { get; set; }
 
         public virtual string DevversString
         {

@@ -2,48 +2,35 @@
 {
     using System.Collections.Generic;
     using System.Linq;
-    using Admin;
     using Castle.MonoRail.Framework;
     using Clients.Freckle.Interfaces;
-    using Clients.GitHub.Interfaces;
-    using Clients.GitHub.Models;
     using FluentNHibernate.Utils;
     using Model;
-    using Model.Interfaces.Repository;
     using Helpers;
-    using Label = Clients.GitHub.Models.Label;
+    using NHibernate;
+    using NHibernate.Linq;
 
     public class ProjectController : SecureController
     {
-        private IProjectRepository repository;
-        private IRepositoryClient client;
-        private ILabelClient labelClient;
+        private ISession session;
         private IProjectClient projectClient;
-        private IIssueClient issueClient;
-        private IMilestoneClient milestoneClient;
-        private ILabelRepository labelRepository;
 
-        public ProjectController(IRepositoryClient client, ILabelClient labelClient, IProjectRepository repository, IProjectClient projectClient, IIssueClient issueClient, ILabelRepository labelRepository, IMilestoneClient milestoneClient)
+        public ProjectController(ISessionFactory sessionFactory, IProjectClient projectClient)
         {
-            this.repository = repository;
-            this.client = client;
-            this.labelClient = labelClient;
+            this.session = sessionFactory.GetCurrentSession();
             this.projectClient = projectClient;
-            this.issueClient = issueClient;
-            this.milestoneClient = milestoneClient;
-            this.labelRepository = labelRepository;
         }
 
         public void Index()
         {
             if (CurrentUser.Projects.Count == 1 && !CurrentUser.IsAdmin) RedirectUsingNamedRoute("issues", new {projectSlug = CurrentUser.Projects.First().Project.Slug});
-            PropertyBag.Add("items", CurrentUser.IsAdmin ? repository.FindAll() : CurrentUser.Projects.Select(x => x.Project));
+            PropertyBag.Add("items", CurrentUser.IsAdmin ? session.QueryOver<Project>().List() : CurrentUser.Projects.Select(x => x.Project));
         }
 
         [MustHaveProject]
         public void View(string projectSlug)
         {
-            var project = repository.FindBySlug(projectSlug);
+            var project = session.Query<Project>().FirstOrDefault(x => x.IsActive && x.Slug == projectSlug);
             PropertyBag.Add("project", project);
 
             if (project.FreckleId > 0 && CurrentUser.IsAdmin)
@@ -59,7 +46,7 @@
                 PropertyBag.Add("bookedPercentage", bookedPercentage);
                 PropertyBag.Add("totalTime", totalTime);
             }
-            var issues = issueClient.List(project.Repository, project.MilestoneId);
+            var issues = session.Query<Issue>().Where(x => x.Project == project).ToList();
             var doneTime = issues.Where(i => i.State == "closed").Sum(i => i.TotalHours);
             var totalIssueTime = issues.Sum(i => i.TotalHours);
             var donePercentage = doneTime * 100.0 / totalIssueTime;
@@ -75,7 +62,6 @@
         [Admin]
         public void New()
         {
-            PropertyBag.Add("repositories", client.List());
             PropertyBag.Add("freckleProjects", projectClient.List().Where(x => x.Enabled));
             PropertyBag.Add("item", new Project());
             RenderView("edit");
@@ -84,8 +70,7 @@
         [Admin]
         public void Edit(string projectSlug)
         {
-            var project = repository.FindBySlug(projectSlug);
-            PropertyBag.Add("repositories", client.List());
+            var project = session.Query<Project>().FirstOrDefault(x => x.IsActive && x.Slug == projectSlug);
             PropertyBag.Add("freckleProjects", projectClient.List().Where(x => x.Enabled));
             PropertyBag.Add("item", project);
         }
@@ -93,16 +78,20 @@
         [Admin]
         public void Delete(string projectSlug)
         {
-            var project = repository.FindBySlug(projectSlug);
+            var project = session.Query<Project>().FirstOrDefault(x => x.IsActive && x.Slug == projectSlug);
             project.Deactivate();
-            repository.Save(project);
+            using (var tx = session.BeginTransaction())
+            {
+                session.SaveOrUpdate(project);
+                tx.Commit();
+            }
             RedirectToReferrer();
         }
 
         [Admin]
         public void Save(string projectSlug, [DataBind("label")] Model.Label[] labels)
         {
-            var item = repository.FindBySlug(projectSlug);
+            var item = session.Query<Project>().FirstOrDefault(x => x.IsActive && x.Slug == projectSlug);
             if (item != null)
             {
                 BindObjectInstance(item, "item");
@@ -122,16 +111,11 @@
                                 }
                             });
 
-            if (item.MilestoneId == 0)
+            using (var tx = session.BeginTransaction())
             {
-                item.MilestoneId = milestoneClient.Post(item.Repository, new Milestone {Title = item.MilestoneName}).Number;
+                session.SaveOrUpdate(item);
+                tx.Commit();
             }
-
-            repository.Save(item);
-
-            CreateInitialLabels(item);
-            CreateHooks(item);
-            
 
             RedirectToUrl("/projects");
         }
@@ -139,9 +123,8 @@
         [MustHaveProject]
         public void AddLabel(string projectSlug, string issues, string label)
         {
-            var project = repository.FindBySlug(projectSlug);
             var issueIds = issues.Split(',');
-            var realLabel = labelRepository.FindByName(label);
+            var realLabel = session.Query<Label>().FirstOrDefault(x => x.Name == label);
             if (!realLabel.ApplicableByCustomer && !CurrentUser.IsAdmin)
             {
                 RedirectToReferrer();
@@ -150,44 +133,11 @@
 
             foreach (var issueId in issueIds.Select(id => int.Parse(id)))
             {
-                labelClient.AddLabelToIssue(project.Repository, issueId, new Label{Name = label});
+                var issue = session.Query<Issue>().FirstOrDefault(x => x.Number == issueId);
+                issue.Labels.Add(realLabel);
             }
 
             RedirectToReferrer();
-        }
-
-        private void CreateInitialLabels(Project project)
-        {
-            var labels = labelClient.List(project.Repository);
-
-            foreach (var label in project.Labels)
-            {
-                var ghLabel = labels.FirstOrDefault(l => l.Name == label.Name);
-                if (ghLabel != null)
-                {
-                    // if label exists check if color has changed
-                    if (ghLabel.Color != label.Color)
-                    {
-                        labelClient.Patch(project.Repository, ghLabel.Name,
-                                          new Label { Name = label.Name, Color = label.Color });
-                    }
-                }
-                else
-                {
-                    labelClient.Post(project.Repository, new Label {Name = label.Name, Color = label.Color});
-                }
-            }
-        }
-
-        private void CreateHooks(Project project)
-        {
-            var hooks = client.GetHooks(project.Repository);
-
-            var url = string.Format("{0}://{1}/githubhook/hook", Request.Uri.Scheme, Request.Uri.Authority);
-            if (!hooks.Any(h => h.Events.Contains("issues") && h.Events.Contains("issue_comment") && h.Config["url"] == url))
-            {
-                var postHook = client.PostHook(project.Repository, url);
-            }
         }
     }
 }

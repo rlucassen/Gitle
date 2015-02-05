@@ -1,18 +1,15 @@
-﻿using System;
-using System.IO;
-using System.Text;
-using Castle.MonoRail.Framework;
-using Gitle.Model;
-using Gitle.Web.Filters;
-
-namespace Gitle.Web.Controllers.Admin
+﻿namespace Gitle.Web.Controllers
 {
+    using System;
+    using System.IO;
+    using System.Text;
+    using Castle.MonoRail.Framework;
+    using Model;
+    using Filters;
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
-    using System.Security;
     using Helpers;
-    using Model.Interfaces.Repository;
 
     [Layout("secure")]
     [Filter(ExecuteWhen.BeforeAction, typeof (AuthorisationFilter), ExecutionOrder = 1)]

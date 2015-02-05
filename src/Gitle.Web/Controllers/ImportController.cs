@@ -2,7 +2,6 @@
 {
     using System.Collections.Generic;
     using System.Linq;
-    using Admin;
     using Clients.GitHub.Interfaces;
     using Model;
     using NHibernate;
