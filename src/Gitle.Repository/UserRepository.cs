@@ -25,6 +25,12 @@
             return users.Count > 0 ? users.First() : new User.NullUser();
         }
 
+        public User FindByFullName(string fullName)
+        {
+            var users = session.QueryOver<User>().Where(x => x.IsActive).And(x => x.FullName == fullName).List();
+            return users.Count > 0 ? users.First() : new User.NullUser();
+        }
+
         public IList<User> FindByEmail(string email)
         {
             return session.QueryOver<User>().Where(x => x.IsActive).And(x => x.EmailAddress == email).List();

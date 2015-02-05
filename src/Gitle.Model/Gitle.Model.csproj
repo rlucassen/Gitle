@@ -65,6 +65,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Comment.cs" />
     <Compile Include="Enum\FindOption.cs" />
     <Compile Include="Helpers\CsvHelper.cs" />
     <Compile Include="Helpers\DateTimeHelper.cs" />
@@ -77,8 +78,11 @@
     <Compile Include="Interfaces\Repository\IProjectRepository.cs" />
     <Compile Include="Interfaces\Repository\IUserRepository.cs" />
     <Compile Include="Interfaces\Service\IEmailService.cs" />
+    <Compile Include="Issue.cs" />
     <Compile Include="Label.cs" />
     <Compile Include="Mapping\Component\PasswordComponentMap.cs" />
+    <Compile Include="Mapping\CommentMap.cs" />
+    <Compile Include="Mapping\IssueMap.cs" />
     <Compile Include="Mapping\LabelMap.cs" />
     <Compile Include="Mapping\ModelBaseMap.cs" />
     <Compile Include="Mapping\ProjectMap.cs" />

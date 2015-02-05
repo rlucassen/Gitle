@@ -12,7 +12,7 @@
             var match = TrimmedHoursMatch(title).Split('x').Last();
             double hours;
             var tryParse = double.TryParse(match, out hours);
-            return tryParse ? hours : 0;
+            return tryParse && !double.IsNaN(hours) ? hours : 0;
         }
 
         public static int GetDevversFromTitle(string title)

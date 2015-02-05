@@ -15,6 +15,7 @@
              Map(x => x.Information).CustomSqlType("nvarchar(max)");
              HasMany(x => x.Users).Cascade.All();
              HasMany(x => x.Labels).Cascade.AllDeleteOrphan();
+             HasMany(x => x.Issues).Cascade.AllDeleteOrphan();
          }
     }
 }

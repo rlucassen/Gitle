@@ -2,7 +2,6 @@
 {
     using System.Collections.Generic;
     using System.Linq;
-    using Helpers;
 
     public class Project : ModelBase
     {
@@ -22,9 +21,11 @@
         public virtual int HourPrice { get; set; }
         public virtual int FreckleId { get; set; }
         public virtual string FreckleName { get; set; }
+        public virtual string Information { get; set; }
+
         public virtual IList<UserProject> Users { get; set; }
         public virtual IList<Label> Labels { get; set; }
-        public virtual string Information { get; set; }
+        public virtual IList<Issue> Issues { get; set; }
 
         public virtual int NotifiedUsers { get { return Users.Count(u => u.Notifications); } }
     }

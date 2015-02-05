@@ -27,7 +27,7 @@
           <td class="estimate">${issue.EstimateString}</td>
           <% costs = issue.CostString(project.HourPrice) %>
           <td class="cost">${costs}</td>
-          <td class="comments">${issue.Comments}</td>
+          <td class="comments">${issue.Comments.Count}</td>
           <td class="accepted">
             <% for label in labels: %>
             <%  if issue.CheckLabel(label.Name): %>
@@ -48,7 +48,6 @@
             <ul class="button-group">
               <li><a class="button tiny no-margin" href="/project/${project.Slug}/issue/${issue.Number}/view">Open</a></li>
               <% if CurrentUser.IsAdmin: %><li><a class="button tiny success no-margin" href="/project/${project.Slug}/issue/${issue.Number}/edit">Bewerk</a></li><% end %>
-              <% if CurrentUser.IsAdmin: %><li><a class="button tiny secondary no-margin" href="${issue.HtmlUrl}">Github</a></li><% end %>
             </ul>
           </td>
           <% end %>
