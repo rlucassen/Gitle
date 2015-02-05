@@ -69,7 +69,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CommentClient.cs" />
     <Compile Include="Helpers\HoursHelper.cs" />
     <Compile Include="Interfaces\IUserClient.cs" />
     <Compile Include="Models\Post\MilestonePost.cs" />
@@ -78,12 +77,9 @@
     <Compile Include="OAuthClient.cs" />
     <Compile Include="Interfaces\ILabelClient.cs" />
     <Compile Include="Interfaces\IOAuthClient.cs" />
-    <Compile Include="LabelClient.cs" />
     <Compile Include="Interfaces\ICommentClient.cs" />
     <Compile Include="Interfaces\IIssueClient.cs" />
     <Compile Include="Interfaces\IMilestoneClient.cs" />
-    <Compile Include="IssueClient.cs" />
-    <Compile Include="MilstoneClient.cs" />
     <Compile Include="Interfaces\IRepositoryClient.cs" />
     <Compile Include="Models\AccessToken.cs" />
     <Compile Include="Models\Comment.cs" />
@@ -96,7 +92,6 @@
     <Compile Include="Models\Post\IssuePatch.cs" />
     <Compile Include="Models\Post\IssuePost.cs" />
     <Compile Include="Models\Repository.cs" />
-    <Compile Include="RepositoryClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Models\User.cs" />
   </ItemGroup>

@@ -236,7 +236,6 @@
     <None Include="Views\User\index.brail" />
     <None Include="Views\Issue\edit.brail" />
     <None Include="Views\Issue\invoice.brail" />
-    <None Include="Views\Milestone\select.brail" />
     <None Include="Views\Issue\index.brail" />
     <None Include="Views\Issue\view.brail" />
     <None Include="Views\Project\edit.brail" />

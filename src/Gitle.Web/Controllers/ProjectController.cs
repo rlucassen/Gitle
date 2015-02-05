@@ -89,7 +89,7 @@
         }
 
         [Admin]
-        public void Save(string projectSlug, [DataBind("label")] Model.Label[] labels)
+        public void Save(string projectSlug)
         {
             var item = session.Query<Project>().FirstOrDefault(x => x.IsActive && x.Slug == projectSlug);
             if (item != null)
@@ -101,18 +101,21 @@
                 item = BindObject<Project>("item");
             }
 
-            item.Labels.Clear();
-            labels.Each(l =>
-                            {
-                                if (!string.IsNullOrWhiteSpace(l.Name))
-                                {
-                                    l.Project = item;
-                                    item.Labels.Add(l);
-                                }
-                            });
+            var labels = BindObject<Label[]>("label");
+
+            var labelsToDelete = item.Labels.Where(l => !labels.Select(x => x.Id).Contains(l.Id)).ToList();
 
             using (var tx = session.BeginTransaction())
             {
+                foreach (var label in labels.Where(x => !string.IsNullOrWhiteSpace(x.Name)))
+                {
+                    session.Merge(label);
+                }
+                foreach (var label in labelsToDelete)
+                {
+                    item.Labels.Remove(label);
+                    session.Delete(label);
+                }
                 session.SaveOrUpdate(item);
                 tx.Commit();
             }

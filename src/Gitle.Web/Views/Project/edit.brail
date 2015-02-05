@@ -17,22 +17,6 @@
         </div>
       </div>
       <div class="row">
-        <div class="large-3 columns">Repository</div>
-        <div class="large-9 columns">
-          ${Form.Select("item.Repository", repositories, {"value": "FullName", "text": "Name", "firstoption": "Kies een repository", "required": "", "pattern": "^[^0]+$"})}
-          <small class="error">Kies een repository</small>
-        </div>
-      </div>
-      <div class="row">
-        <div class="large-3 columns">Milestone</div>
-        <div class="large-4 columns milestone-select"></div>
-        <div class="large-1 columns milestone-new">Naam</div>
-        <div class="large-4 columns milestone-new">
-          <input name="item.MilestoneName" id="item_MilestoneName" type="text" value="${?item.MilestoneName}" required/>
-          <small class="error">Kies een milestone of geef een naam op</small>
-        </div>
-      </div>
-      <div class="row">
         <div class="large-3 columns">Freckle project id</div>
         <div class="large-9 columns">
           ${Form.Select("item.FreckleId", freckleProjects, {"class": "chosen-select", "value": "Id", "text": "Name", "firstoption": "Kies een freckle project"})}
@@ -65,7 +49,11 @@
               <% count = 0 %>
               <% for label in item.Labels: %>
               <tr>
-                <td><input type="text" name="label[${count}].Name" value="${label.Name}"/></td>
+                <td>
+                  <input type="hidden" name="label[${count}].Id" value="${label.Id}"/>
+                  <input type="hidden" name="label[${count}].Project.Id" value="${label.Project.Id}"/>
+                  <input type="text" name="label[${count}].Name" value="${label.Name}"/>
+                </td>
                 <td>
                   <div class="row collapse">
                     <div class="small-10 columns">
@@ -82,9 +70,11 @@
               </tr>
               <% count++ %>
               <% end %>
-              <% if item.Labels.Count == 0: %>
               <tr>
-                <td><input type="text" name="label[${count}].Name"/></td>
+                <td>
+                  <input type="hidden" name="label[${count}].Project.Id" value="${item.Id}"/>
+                  <input type="text" name="label[${count}].Name"/>
+                </td>
                 <td>
                   <div class="row collapse">
                     <div class="small-10 columns">
@@ -99,7 +89,6 @@
                 <td><input type="checkbox" name="label[${count}].ApplicableByCustomer" value="true"/></td>
                 <td><input type="checkbox" name="label[${count}].ToFreckle" value="true"/></td>
               </tr>
-              <% end %>
             </tbody>
           </table>
         </div>

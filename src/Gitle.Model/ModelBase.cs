@@ -20,6 +20,7 @@
         public virtual long Id
         {
             get { return id; }
+            protected set { id = value; }
         }
 
         public virtual Guid Guid

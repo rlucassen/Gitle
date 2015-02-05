@@ -46,17 +46,6 @@
             }
         }
 
-        public class RepositoriesInstaller : IWindsorInstaller
-        {
-            public void Install(IWindsorContainer container, IConfigurationStore store)
-            {
-                container.Register(Classes.FromAssemblyNamed("Gitle.Repository")
-                                       .Where(type => type.Name.EndsWith("Repository"))
-                                       .WithService.DefaultInterfaces()
-                                       .LifestylePerWebRequest());
-            }
-        }
-
         public class ClientsInstaller : IWindsorInstaller
         {
             public void Install(IWindsorContainer container, IConfigurationStore store)

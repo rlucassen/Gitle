@@ -1,1 +1,0 @@
-﻿${Form.Select("item.MilestoneId", items, {"value": "Number", "text": "Title", "firstoption": "Nieuwe milestone"})}
