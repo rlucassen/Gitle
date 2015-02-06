@@ -1,0 +1,85 @@
+﻿<table>
+  <tbody>
+    <tr>
+      <td></td>
+      <td style="max-width: 800px; margin: 0 auto;">
+        <div style="font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Helvetica, Arial, sans-serif; max-width: 800px; margin: 0 auto;">
+          <h1>
+            <a href="http://gitle.auxilium.nl/project/${item.Issue.Project.Slug}/issue/${item.Issue.Number}/view" style="color: #008cba; text-decoration: none;">
+              #${item.Issue.Number} - ${item.Issue.Name}
+            </a>
+          </h1>
+          <table>
+            <tr>
+              <td width="20%" style="vertical-align: top; font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Helvetica, Arial, sans-serif; font-size: 13px;">
+                <p style="margin-bottom: 0; margin: 0; padding: 0;"><strong>Project:</strong> ${item.Issue.Project.Name}</p>
+                <% if item.Issue.CreatedAt != null: %>
+                <p style="margin-bottom: 0; margin: 0; padding: 0;"><strong>Aangemaakt op:</strong> <span title="${Helpers.DateTimeHelper.Readable(item.Issue.CreatedAt)}">${Helpers.DateTimeHelper.Relative(item.Issue.CreatedAt)}</span></p>
+                <% end %>
+                <% if item.Issue.UpdatedAt != null: %>
+                <p style="margin-bottom: 0; margin: 0; padding: 0;"><strong>Laatst gewijzigd:</strong> <span title="${Helpers.DateTimeHelper.Readable(item.Issue.UpdatedAt)}">${Helpers.DateTimeHelper.Relative(item.Issue.UpdatedAt)}</span></p>
+                <% end %>
+                <% if item.Issue.ClosedAt != null: %>
+                <p style="margin-bottom: 0; margin: 0; padding: 0;"><strong>Gesloten op:</strong> <span title="${Helpers.DateTimeHelper.Readable(item.Issue.ClosedAt)}">${Helpers.DateTimeHelper.Relative(item.Issue.ClosedAt)}</span></p>
+                <% end %>
+                <p style="margin-bottom: 0; margin: 0; padding: 0;"><strong>Geschatte tijd:</strong> ${item.Issue.EstimateString}</p>
+                <p style="margin-bottom: 0; margin: 0; padding: 0;"><strong>Status:</strong> <% if item.Issue.IsOpen: %>open<% else: %>gesloten<% end %></p>
+                <p style="margin-bottom: 0; margin: 0; padding: 0;">
+                  <strong>Labels:</strong>
+                </p>
+                    <% for label in item.Issue.Project.Labels: %>
+                    <%   if (user.IsAdmin or label.VisibleForCustomer): %>
+                    <%     if item.Issue.CheckLabel(label.Name): %>
+                    <table cellspacing="3" cellpadding="3">
+                        <tr style="">
+                          <td title="${label.Name}" style="background-color: #${label.Color}; color: #fff; font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Helvetica, Arial, sans-serif; font-size: 12px;">
+                            ${label.Name}
+                          </td>
+                        </tr>
+                    </table>
+                    <%     end %>
+                    <%   end %>
+                    <% end %>
+              </td>
+              <td width="5%"></td>
+              <td width="75%" style="vertical-align: top;">
+                <table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin-bottom: 30px; border: 1px solid #d9d9d9;">
+                  <tr>
+                    <td bgcolor="#f2f2f2" width="70%" style="padding: 12px; font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Helvetica, Arial, sans-serif;">
+                      <div>${item.Issue.Body}</div>
+                    </td>
+                    <td bgcolor="#f2f2f2" width="30%" style="padding: 12px; font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Helvetica, Arial, sans-serif; font-size: 12px; text-align: right;">
+                      ${Helpers.DateTimeHelper.Readable(item.Issue.CreatedAt)}
+                    </td>
+                  </tr>
+                </table>
+                <br/>
+                <h2 style="font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Helvetica, Arial, sans-serif;">Tijdlijn</h2>
+                <% for comment in item.Issue.ActionsReverse: %>
+                <table width="100%" border="0" cellpadding="0" cellspacing="0" style="border: 1px solid <% if comment == item: %>red<% else: %>#d9d9d9<% end %>;">
+                  <tr>
+                    <td bgcolor="#f2f2f2" width="70%" style="padding: 12px; font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Helvetica, Arial, sans-serif;">
+                    <% if comment.User != null: %>
+                      <strong>${comment.User.FullName}:</strong> 
+                    <% end %>                    </td>
+                    <td bgcolor="#f2f2f2" width="30%" style="padding: 12px; font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Helvetica, Arial, sans-serif; font-size: 12px; text-align: right;">
+                      ${Helpers.DateTimeHelper.Readable(comment.CreatedAt)}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="2" bgcolor="#f2f2f2" width="100%" style="padding-left: 12px; padding-bottom: 12px; font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Helvetica, Arial, sans-serif;">
+                      <div>${comment.Text}</div>
+                    </td>
+                  </tr>
+                </table><br/>
+                <% end %>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+

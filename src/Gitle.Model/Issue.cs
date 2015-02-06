@@ -18,7 +18,6 @@
 
         public virtual int Number { get; set; }
         public virtual string Name { get; set; }
-        public virtual string State { get; set; }
         public virtual string Body { get; set; }
         public virtual double Hours { get; set; }
         public virtual int Devvers { get; set; }
@@ -29,9 +28,14 @@
         public virtual IList<ChangeState> ChangeStates { get; set; }
         public virtual IList<Change> Changes { get; set; }
 
-        public virtual bool Open
+        public virtual bool IsOpen
         {
-            get { return ChangeStates.OrderByDescending(x => x.CreatedAt).First().IssueState != IssueState.Closed; }
+            get { return State != IssueState.Closed; }
+        }
+
+        public virtual IssueState State
+        {
+            get { return ChangeStates.OrderByDescending(x => x.CreatedAt).First().IssueState; }
         }
 
         public virtual DateTime? CreatedAt
@@ -42,6 +46,17 @@
                     ChangeStates.OrderByDescending(x => x.CreatedAt).LastOrDefault(
                         x => x.IssueState == IssueState.Open);
                 return state != null ? state.CreatedAt : (DateTime?)null;
+            }
+        }
+
+        public virtual User CreatedBy
+        {
+            get
+            {
+                var state =
+                    ChangeStates.OrderByDescending(x => x.CreatedAt).LastOrDefault(
+                        x => x.IssueState == IssueState.Open);
+                return state != null ? state.User : null;
             }
         }
 
@@ -77,6 +92,11 @@
             }
         }
 
+        public virtual IList<IIssueAction> ActionsReverse
+        {
+            get { return Actions.Reverse().ToList(); }
+        }
+
         public virtual string DevversString
         {
             get { return Hours > 0 ? Devvers.ToString() : "n.n.b."; }
@@ -107,19 +127,19 @@
             return Labels.Select(l => l.Name).Contains(label);
         }
 
-        public virtual void Close(User user)
+        public virtual void Open(User user)
         {
-            ChangeStates.Add(new ChangeState(){CreatedAt = DateTime.Now, IssueState = IssueState.Closed, User = user});
+            ChangeStates.Add(new ChangeState() {CreatedAt = DateTime.Now, IssueState = IssueState.Open, User = user, Issue = this});
         }
 
-        public virtual void Reopen(User user)
+        public virtual void Close(User user)
         {
-            ChangeStates.Add(new ChangeState() { CreatedAt = DateTime.Now, IssueState = IssueState.Open, User = user });
+            ChangeStates.Add(new ChangeState() {CreatedAt = DateTime.Now, IssueState = IssueState.Closed, User = user, Issue = this});
         }
 
         public virtual void Change(User user)
         {
-            Changes.Add(new Change() { CreatedAt = DateTime.Now, User = user });
+            Changes.Add(new Change() { CreatedAt = DateTime.Now, User = user, Issue = this});
         }
     }
 }

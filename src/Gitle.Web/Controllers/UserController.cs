@@ -35,7 +35,7 @@
         }
 
         [Admin]
-        public void Edit(int userId)
+        public void Edit(long userId)
         {
             var user = session.Get<User>(userId);
             PropertyBag.Add("item", user);
@@ -90,7 +90,7 @@
         }
 
         [Admin]
-        public void Save(int userId, string password, int[] selectedprojects, int[] notificationprojects)
+        public void Save(long userId, string password, long[] selectedprojects, long[] notificationprojects)
         {
             var item = session.Get<User>(userId);
             if (item != null)

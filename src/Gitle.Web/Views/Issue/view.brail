@@ -16,7 +16,7 @@
         <p class="created no-margin"><strong>Gesloten op:</strong> <span title="${Helpers.DateTimeHelper.Readable(item.ClosedAt)}">${Helpers.DateTimeHelper.Relative(item.ClosedAt)}</span></p>
         <% end %>
         <p class="hours no-margin"><strong>Geschatte tijd:</strong> ${item.EstimateString}</p>
-        <p class="state no-margin"><strong>Status:</strong> <% if item.Open: %>open<% else: %>gesloten<% end %></p>
+        <p class="state no-margin"><strong>Status:</strong> <% if item.IsOpen: %>open<% else: %>gesloten<% end %></p>
         <p class="labels no-margin">
           <strong>Labels:</strong>
         </p>
@@ -77,13 +77,11 @@
           <% end %>
         </form>
         <% end %>
-        <% if CurrentUser.IsAdmin: %>
         <hr />
-        <%   if item.Open: %>
+        <% if item.IsOpen: %>
         <a href="close" class="button alert large-12">Sluit taak</a>
-        <%   else: %>
+        <% else: %>
         <a href="reopen" class="button success large-12">Heropen taak</a>
-        <%   end %>
         <% end %>
       </div>
       <div class="large-9 columns">
@@ -102,9 +100,6 @@
           <% end %>
           <div class="marked">${comment.Text}</div>
         </div>
-        <% end %>
-        <% if comments.Count == 0: %>
-        <strong>Geen reacties</strong>
         <% end %>
         <div class="panel">
           <small class="right capitalize">${Helpers.DateTimeHelper.Readable(DateTime.Now)}</small>

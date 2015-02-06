@@ -12,5 +12,7 @@
         public virtual Issue Issue { get; set; }
 
         public virtual string Name { get { return User != null ? User.FullName : "Auxilium"; } }
+
+        public virtual string EmailSubject { get { return string.Format("Er is gereageerd op taak {1} door {0}", User != null ? User.FullName : string.Empty, Issue.Number); } }
     }
 }

@@ -91,6 +91,7 @@
     <Compile Include="Controllers\SecureController.cs" />
     <Compile Include="Filters\AuthenticationFilter.cs" />
     <Compile Include="Filters\AuthorisationFilter.cs" />
+    <Compile Include="GitleInterceptor.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -225,6 +226,7 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="Views\Mail\comment.brail" />
+    <None Include="Views\Mail\issue-action.brail" />
     <None Include="Views\Mail\password.brail" />
     <None Include="Views\Mail\issue.brail" />
     <None Include="Views\OAuth\codeexpired.brail" />

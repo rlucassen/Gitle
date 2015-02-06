@@ -24,7 +24,7 @@
         public void Index()
         {
             if (CurrentUser.Projects.Count == 1 && !CurrentUser.IsAdmin) RedirectUsingNamedRoute("issues", new {projectSlug = CurrentUser.Projects.First().Project.Slug});
-            PropertyBag.Add("items", CurrentUser.IsAdmin ? session.QueryOver<Project>().List() : CurrentUser.Projects.Select(x => x.Project));
+            PropertyBag.Add("items", CurrentUser.IsAdmin ? session.Query<Project>().Where(x => x.IsActive).ToList() : CurrentUser.Projects.Select(x => x.Project).Where(x => x.IsActive));
         }
 
         [MustHaveProject]
@@ -47,7 +47,7 @@
                 PropertyBag.Add("totalTime", totalTime);
             }
             var issues = session.Query<Issue>().Where(x => x.Project == project).ToList();
-            var doneTime = issues.Where(i => i.State == "closed").Sum(i => i.TotalHours);
+            var doneTime = issues.Where(i => !i.IsOpen).Sum(i => i.TotalHours);
             var totalIssueTime = issues.Sum(i => i.TotalHours);
             var donePercentage = doneTime * 100.0 / totalIssueTime;
 

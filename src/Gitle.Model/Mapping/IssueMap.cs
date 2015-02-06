@@ -8,8 +8,7 @@
          {
              Map(x => x.Number);
              Map(x => x.Name);
-             Map(x => x.State);
-             Map(x => x.Body).CustomSqlType("nvarchar(max)");
+             Map(x => x.Body).CustomSqlType("nvarchar(max)").CustomType("StringClob");
              Map(x => x.Hours);
              Map(x => x.Devvers);
              References(x => x.Project).Column("Project_id").LazyLoad(Laziness.False);

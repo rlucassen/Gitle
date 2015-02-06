@@ -28,9 +28,9 @@
         {
             IQueryable<Project> projects = session.Query<Project>();
 
-            using (ITransaction trans = session.BeginTransaction())
+            foreach (Project project in projects)
             {
-                foreach (Project project in projects)
+                using (ITransaction trans = session.BeginTransaction())
                 {
                     List<Issue> items = issueClient.List(project.Repository, project.MilestoneId);
 
@@ -43,14 +43,18 @@
                                                Hours = issue.Hours,
                                                Name = issue.Name,
                                                Number = issue.Number,
-                                               State = issue.State,
                                                Project = project,
                                            };
 
-                        newIssue.ChangeStates.Add(new ChangeState{CreatedAt = issue.CreatedAt, IssueState = IssueState.Open});
-                        newIssue.Changes.Add(new Change{CreatedAt = issue.UpdatedAt});
-                        if(issue.ClosedAt.HasValue)
-                            newIssue.ChangeStates.Add(new ChangeState{CreatedAt = issue.ClosedAt.Value, IssueState = IssueState.Closed});
+                        newIssue.ChangeStates.Add(new ChangeState
+                                                      {CreatedAt = issue.CreatedAt, IssueState = IssueState.Open});
+                        newIssue.Changes.Add(new Change {CreatedAt = issue.UpdatedAt});
+                        if (issue.ClosedAt.HasValue)
+                            newIssue.ChangeStates.Add(new ChangeState
+                                                          {
+                                                              CreatedAt = issue.ClosedAt.Value,
+                                                              IssueState = IssueState.Closed
+                                                          });
 
                         foreach (Label label in issue.Labels)
                         {
@@ -77,8 +81,8 @@
 
                         session.Save(newIssue);
                     }
+                    trans.Commit();
                 }
-                trans.Commit();
             }
 
             RenderText("import complete");

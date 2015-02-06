@@ -8,6 +8,6 @@
         User User { get; set; }
         DateTime CreatedAt { get; set; }
         string Text { get; }
-
+        string EmailSubject { get; }
     }
 }

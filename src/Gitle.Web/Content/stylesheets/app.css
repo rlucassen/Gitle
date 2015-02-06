@@ -377,6 +377,17 @@ table.row-clickable tbody td:hover {
   right: 100%;
 }
 
+.filter-row .chosen-container {
+  margin-bottom: 0;
+}
+
+.filter-row .filter-labels span {
+  margin-left: 0.6em;
+}
+
+.filter-row .button {
+  font-size: 0.8em;
+}
 
 .tablesorter .header {
   cursor: pointer;

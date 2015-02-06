@@ -11,37 +11,41 @@
       <li id="exportselection"><a href="/project/${project.Slug}/issue/exportcsv">Exporteer selectie (.csv)</a></li>
     </ul>
     <% end %>
-    <div class="row">
-      <div class="large-12 columns">
-        <div class="row">
-          <div class="large-8 columns">
-            <form method="GET">
-              <div class="row">
-                <div class="large-2 columns">Filtering:</div>
-                <div class="large-4 columns">
-                  ${Form.Select("state", {"open,closed": "Alle taken", "open": "Open taken", "closed": "Voltooide taken"}, {"value": "Key", "text": "Value", "class": "no-margin"})}
-                </div>
-                <div class="large-4 columns">
-                  ${Form.Select("selectedLabels", labels, {"value": "Name", "text": "Name", "firstoption": "Alle labels", "class": "no-margin chosen-select", "multiple": true, "data-placeholder": "Alle labels"})}
-                </div>
-                <div class="large-2 columns"><input type="submit" value="Filter" class="button tiny no-margin expand"/></div>
-              </div>
-            </form>
+    <div class="row filter-row">
+      <div class="large-8 columns">
+        <form method="GET">
+          <div class="row collapse filter-labels">
+            <div class="large-3 columns"><span>Filtering:</span></div>
+            <div class="large-4 columns"><span>Bevat:</span></div>
+            <div class="large-5 columns"><span>Bevat niet:</span></div>
           </div>
-          <div class="large-4 columns">
-            <form id="group-actions" method="POST" action="/project/${project.Slug}/addlabel">
-              <input type="hidden" name="issues" />
-              <div class="row collapse">
-                <div class="large-5 columns">
-                  ${Form.Select("label", customerLabels, {"value": "Name", "text": "Name", "firstoption": "Kies een label", "class": "no-margin"})}
-                </div>
-                <div class="large-7 columns">
-                  <input class="button tiny no-margin expand" type="submit" value="Toepassen op geselecteerde issues"/>
-                </div>
-              </div>
-            </form>
+          <div class="row collapse">
+            <div class="large-3 columns">
+              ${Form.Select("state", {"0": "Alle taken", "1": "Open taken", "2": "Voltooide taken"}, {"value": "Key", "text": "Value", "class": "no-margin"})}
+            </div>
+            <div class="large-4 columns">
+              ${Form.Select("selectedLabels", labels, {"value": "Name", "text": "Name", "class": "no-margin chosen-select", "multiple": true, "data-placeholder": "Kies labels"})}
+            </div>
+            <div class="large-4 columns">
+              ${Form.Select("notSelectedLabels", labels, {"value": "Name", "text": "Name", "class": "no-margin chosen-select", "multiple": true, "data-placeholder": "Kies Labels"})}
+            </div>
+            <div class="large-1 columns"><input type="submit" value="Filter" class="button tiny no-margin expand"/></div>
           </div>
-        </div>
+        </form>
+      </div>
+      <div class="large-4 columns">
+        <form id="group-actions" method="POST" action="/project/${project.Slug}/addlabel">
+          <input type="hidden" name="issues" />
+          <div class="row"><div class="large-12 columns">Labels toepassen:</div></div>
+          <div class="row collapse">
+            <div class="large-5 columns">
+              ${Form.Select("label", customerLabels, {"value": "Name", "text": "Name", "firstoption": "Kies een label", "class": "no-margin"})}
+            </div>
+            <div class="large-7 columns">
+              <input class="button tiny no-margin expand" type="submit" value="Toepassen op geselecteerde issues"/>
+            </div>
+          </div>
+        </form>
       </div>
     </div>
     <% OutputSubView("_issuetable", {"actions": true}) %>

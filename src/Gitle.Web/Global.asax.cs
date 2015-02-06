@@ -19,6 +19,7 @@
     using FluentNHibernate.Cfg;
     using FluentNHibernate.Cfg.Db;
     using Model;
+    using Model.Interfaces.Service;
     using NHibernate;
     using NHibernate.Cfg;
     using NHibernate.Context;
@@ -189,6 +190,7 @@
                 .Database(MsSqlConfiguration.MsSql2008.ConnectionString(c => c.FromConnectionStringWithKey("Gitle")))
                 .ExposeConfiguration(c => c.CurrentSessionContext<ManagedWebSessionContext>())
                 .ExposeConfiguration(c => ConfigureValidatorEngine<ModelBase>(c))
+                .ExposeConfiguration(c => c.SetInterceptor(new GitleInterceptor(windsorContainer)))
                 .ExposeConfiguration(ExportSchema)
                 .Mappings(m => m.FluentMappings.AddFromAssemblyOf<ModelBase>());
 

@@ -38,7 +38,7 @@
                                       string.IsNullOrEmpty(issue.Body)
                                           ? string.Empty
                                           : issue.Body.Replace(lineEnd, "").TrimStart('-'),
-                                      issue.State,
+                                      issue.IsOpen ? "Nee" : "Ja",
                                       string.Join(", ", issue.Labels.Select(l => l.Name))
                     );
             }

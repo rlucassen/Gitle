@@ -13,6 +13,7 @@
     using Castle.MonoRail.Views.Brail;
     using Clients.GitHub.Models.Hooks;
     using Model;
+    using Model.Interfaces.Model;
     using Model.Interfaces.Service;
     using NHibernate;
 
@@ -39,30 +40,30 @@
             this.logger = logger;
             this.session = sessionFactory.GetCurrentSession();
         }
-
         #region IEmailService Members
 
-        //public void SendHookNotification(HookPayload hookPayload)
-        //{
-        //    if (string.IsNullOrEmpty(hookPayload.Issue.RepoName) || hookPayload.Issue.Milestone == null)
-        //    {
-        //        return;
-        //    }
+        public void SendIssueActionNotification(IIssueAction action)
+        {
+            if (action is ChangeState)
+                action = session.Get<ChangeState>(((ChangeState)action).Id);
+            var project = action.Issue.Project;
+            IList<User> users = (from userProject in project.Users where userProject.Notifications && userProject.User != action.User select userProject.User).ToList();
 
-        //    var project = projectRepository.FindByRepoAndMilestone(hookPayload.Issue.RepoName, hookPayload.Issue.Milestone.Number).FirstOrDefault();
+            foreach (var user in users)
+            {
+                var message = new MailMessage(sourceAddress, user.EmailAddress)
+                {
+                    Subject =
+                        string.Format("Gitle: {0} - {1}",
+                                        action.EmailSubject, action.Issue.Project.Name),
+                    IsBodyHtml = true
+                };
 
-        //    IList<User> users = (from userProject in project.Users where userProject.Notifications select userProject.User).ToList();
+                message.Body = GetBody("issue-action", new Hashtable { { "item", action }, { "user", user } });
 
-        //    if (hookPayload.Comment != null)
-        //    {
-        //        SendCommentNotification(hookPayload, project, users);
-        //    }
-        //    else
-        //    {
-        //        if(hookPayload.Action == "opened" || hookPayload.Action == "reopened")
-        //            SendIssueNotification(hookPayload, project, users);
-        //    }
-        //}
+                SendMessage(message);
+            }
+        }
 
         public void SendPasswordLink(User user)
         {
@@ -79,43 +80,6 @@
         }
 
         #endregion
-
-        //private void SendCommentNotification(HookPayload hookPayload, Project project, IEnumerable<User> users)
-        //{
-        //    foreach (var user in users)
-        //    {
-        //        if (hookPayload.Comment.Name == user.FullName || hookPayload.Comment.Name == user.GitHubUsername)
-        //            continue;
-
-        //        var message = new MailMessage(sourceAddress, user.EmailAddress)
-        //                          {
-        //                              Subject = string.Format("Gitle: Nieuwe reactie bij project {0}", project.Name),
-        //                              IsBodyHtml = true
-        //                          };
-
-        //        message.Body = GetBody("comment",
-        //                               new Hashtable {{"item", hookPayload}, {"project", project}, {"user", user}});
-
-        //        SendMessage(message);
-        //    }
-        //}
-
-        //private void SendIssueNotification(HookPayload hookPayload, Project project, IEnumerable<User> users)
-        //{
-        //    foreach (var user in users)
-        //    {
-        //        var message = new MailMessage(sourceAddress, user.EmailAddress)
-        //        {
-        //            Subject = string.Format("Gitle: Taak status gewijzigd bij project {0}", project.Name),
-        //            IsBodyHtml = true
-        //        };
-
-        //        message.Body = GetBody("issue",
-        //                               new Hashtable {{"item", hookPayload}, {"project", project}, {"user", user}});
-
-        //        SendMessage(message);
-        //    }
-        //}
 
         private static string GetBody(string template, IDictionary parameters)
         {

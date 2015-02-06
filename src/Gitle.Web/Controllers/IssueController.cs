@@ -10,6 +10,7 @@
     using Clients.Freckle.Models;
     using Helpers;
     using Model;
+    using Model.Enum;
     using Model.Helpers;
     using NHibernate;
     using NHibernate.Linq;
@@ -29,18 +30,26 @@
         }
 
         [MustHaveProject]
-        public void Index(string projectSlug, string[] selectedLabels, string state)
+        public void Index(string projectSlug, string[] selectedLabels, string[] notSelectedLabels, IssueState state)
         {
             var project = session.Query<Project>().FirstOrDefault(p => p.Slug == projectSlug);
-            state = string.IsNullOrEmpty(state) ? CurrentUser.DefaultState : state;
 
             var itemsQuery =
-                session.Query<Issue>().Where(x => x.Project == project).ToList()
-                                      .Where(i => selectedLabels.All(sl => i.Labels.Select(l => l.Name).Contains(sl))).ToList();
+                session.Query<Issue>().Where(
+                    x =>
+                    x.Project == project &&
+                    x.Labels.Count(l => selectedLabels.Contains(l.Name)) == selectedLabels.Length &&
+                    !x.Labels.Any(l => notSelectedLabels.Contains(l.Name))).OrderByDescending(x => x.Number).ToList();
+
+            if (state != IssueState.Unknown)
+            {
+                itemsQuery = itemsQuery.Where(x => x.State == state).ToList();
+            }
 
             PropertyBag.Add("items", itemsQuery);
             PropertyBag.Add("project", project);
             PropertyBag.Add("selectedLabels", selectedLabels);
+            PropertyBag.Add("notSelectedLabels", notSelectedLabels);
             PropertyBag.Add("labels", CurrentUser.IsAdmin ? project.Labels : project.Labels.Where(l => l.VisibleForCustomer));
             PropertyBag.Add("customerLabels", CurrentUser.IsAdmin ? project.Labels : project.Labels.Where(l => l.ApplicableByCustomer));
             PropertyBag.Add("state", state);
@@ -51,7 +60,7 @@
         {
             var project = session.Query<Project>().FirstOrDefault(p => p.Slug == projectSlug);
             PropertyBag.Add("project", project);
-            var item = session.Query<Issue>().FirstOrDefault(i => i.Number == issueId);
+            var item = session.Query<Issue>().FirstOrDefault(i => i.Number == issueId && i.Project == project);
             PropertyBag.Add("item", item);
             PropertyBag.Add("comments", item.Comments);
             PropertyBag.Add("days", DayHelper.GetPastDaysList());
@@ -62,7 +71,7 @@
         {
             var project = session.Query<Project>().FirstOrDefault(p => p.Slug == projectSlug);
             PropertyBag.Add("project", project);
-            var item = session.Query<Issue>().FirstOrDefault(i => i.Number == issueId);
+            var item = session.Query<Issue>().FirstOrDefault(i => i.Number == issueId && i.Project == project);
             PropertyBag.Add("item", item);
             PropertyBag.Add("comments", item.Comments);
             CancelLayout();
@@ -83,7 +92,7 @@
         {
             var project = session.Query<Project>().FirstOrDefault(p => p.Slug == projectSlug);
             PropertyBag.Add("project", project);
-            var item = session.Query<Issue>().FirstOrDefault(i => i.Number == issueId);
+            var item = session.Query<Issue>().FirstOrDefault(i => i.Number == issueId && i.Project == project);
             PropertyBag.Add("item", item);
             PropertyBag.Add("labels", CurrentUser.IsAdmin ? project.Labels : project.Labels.Where(l => l.ApplicableByCustomer));
         }
@@ -92,17 +101,21 @@
         public void Save(string projectSlug, int issueId, string[] labels)
         {
             var project = session.Query<Project>().FirstOrDefault(p => p.Slug == projectSlug);
-            var issue = session.Query<Issue>().FirstOrDefault(i => i.Number == issueId);
+            var issue = session.Query<Issue>().FirstOrDefault(i => i.Number == issueId && i.Project == project);
 
             if (issue != null)
             {
                 BindObjectInstance(issue, "item");
+                issue.Change(CurrentUser);
             }
             else
             {
                 issue = BindObject<Issue>("item");
+                issue.Number = project.NewIssueNumber;
+                issue.Project = project;
+                issue.Open(CurrentUser);
             }
-            issue.Change(CurrentUser);
+
             issue.Labels = labels.Select(label => session.Query<Label>().FirstOrDefault(l => l.Name == label)).ToList();
 
             using (var transaction = session.BeginTransaction())
@@ -116,7 +129,8 @@
         [MustHaveProject]
         public void AddComment(string projectSlug, int issueId, string body)
         {
-            var issue = session.Query<Issue>().FirstOrDefault(i => i.Number == issueId);
+            var project = session.Query<Project>().FirstOrDefault(p => p.Slug == projectSlug);
+            var issue = session.Query<Issue>().FirstOrDefault(i => i.Number == issueId && i.Project == project);
             var comment = new Comment
                               {
                                   Text = body,
@@ -136,7 +150,7 @@
         public void AddLabel(string projectSlug, int issueId, int param)
         {
             var project = session.Query<Project>().FirstOrDefault(p => p.Slug == projectSlug);
-            var issue = session.Query<Issue>().FirstOrDefault(i => i.Number == issueId);
+            var issue = session.Query<Issue>().FirstOrDefault(i => i.Number == issueId && i.Project == project);
             var label = project.Labels.First(l => l.Id == param);
             issue.Labels.Add(label);
 
@@ -159,7 +173,7 @@
                 return;
             }
             var project = session.Query<Project>().FirstOrDefault(p => p.Slug == projectSlug);
-            var issue = session.Query<Issue>().FirstOrDefault(i => i.Number == issueId);
+            var issue = session.Query<Issue>().FirstOrDefault(i => i.Number == issueId && i.Project == project);
             var labels = project.Labels.Where(l => l.ToFreckle && issue.Labels.Select(label => label.Name).Contains(l.Name)).Select(l => l.Name).ToList();
             var description = string.Format("{0}, !!#{1} - {2}", string.Join(",", labels), issue.Number, issue.Name);
             var entry = new Entry()
@@ -208,7 +222,7 @@
         {
             var project = session.Query<Project>().FirstOrDefault(p => p.Slug == projectSlug);
             var issue = session.Query<Issue>().FirstOrDefault(i => i.Number == issueId && i.Project == project);
-            issue.Reopen(CurrentUser);
+            issue.Open(CurrentUser);
             using (var tx = session.BeginTransaction())
             {
                 session.SaveOrUpdate(issue);

@@ -4,9 +4,10 @@
 
     public enum IssueState
     {
-        [Description("geopent")]
-        Open = 0,
+        Unknown = 0,
+        [Description("geopend")]
+        Open = 1,
         [Description("gesloten")]
-        Closed = 1,
+        Closed = 2,
     }
 }
