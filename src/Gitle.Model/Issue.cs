@@ -35,7 +35,10 @@
 
         public virtual IssueState State
         {
-            get { return ChangeStates.OrderByDescending(x => x.CreatedAt).First().IssueState; }
+            get
+            {
+                return ChangeStates.Any() ? ChangeStates.OrderByDescending(x => x.CreatedAt).First().IssueState : IssueState.Unknown;
+            }
         }
 
         public virtual DateTime? CreatedAt
