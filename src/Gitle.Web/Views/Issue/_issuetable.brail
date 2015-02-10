@@ -4,6 +4,7 @@
           <th id="issue-check" class="{sorter: false}"><input type="checkbox" class="no-margin" /></th>
           <th id="issue-id">Id</th>
           <th id="issue-name">Naam</th>
+          <th id="issue-name">Aanmelder</th>
           <th id="issue-devvers" title="Developers"><i class="fa fa-users"></i></th>
           <th id="issue-hours" title="Tijd"><i class="fa fa-clock-o"></i></th>
           <th id="issue-estimate" title="Schatting"><i class="fa fa-clock-o"></i></th>
@@ -22,6 +23,7 @@
           </td>
           <td class="id">${issue.Number}</td>
           <td class="name"><a href="/project/${project.Slug}/issue/${issue.Number}/view" data-quickview="/project/${project.Slug}/issue/${issue.Number}/quickview">${issue.Name}</a></td>
+          <td class="devvers"><% if issue.CreatedBy: %>${issue.CreatedBy.FullName}<% end %></td>
           <td class="devvers">${issue.DevversString}</td>
           <td class="hours">${issue.HoursString}</td>
           <td class="estimate">${issue.EstimateString}</td>

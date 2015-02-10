@@ -7,13 +7,13 @@
       <div class="large-3 columns small-text">
         <p class="project no-margin"><strong>Project:</strong> ${project.Name}</p>
         <% if item.CreatedAt != null: %>
-        <p class="created no-margin"><strong>Aangemaakt op:</strong> <span title="${Helpers.DateTimeHelper.Readable(item.CreatedAt)}">${Helpers.DateTimeHelper.Relative(item.CreatedAt)}</span></p>
+        <p class="created no-margin"><strong>Aangemaakt op:</strong> <span title="${Helpers.DateTimeHelper.Readable(item.CreatedAt)}">${Helpers.DateTimeHelper.Readable(item.CreatedAt)}</span></p>
         <% end %>
         <% if item.UpdatedAt != null: %>
-        <p class="created no-margin"><strong>Laatst gewijzigd:</strong> <span title="${Helpers.DateTimeHelper.Readable(item.UpdatedAt)}">${Helpers.DateTimeHelper.Relative(item.UpdatedAt)}</span></p>
+        <p class="created no-margin"><strong>Laatst gewijzigd:</strong> <span title="${Helpers.DateTimeHelper.Readable(item.UpdatedAt)}">${Helpers.DateTimeHelper.Readable(item.UpdatedAt)}</span></p>
         <% end %>
         <% if item.ClosedAt != null: %>
-        <p class="created no-margin"><strong>Gesloten op:</strong> <span title="${Helpers.DateTimeHelper.Readable(item.ClosedAt)}">${Helpers.DateTimeHelper.Relative(item.ClosedAt)}</span></p>
+        <p class="created no-margin"><strong>Gesloten op:</strong> <span title="${Helpers.DateTimeHelper.Readable(item.ClosedAt)}">${Helpers.DateTimeHelper.Readable(item.ClosedAt)}</span></p>
         <% end %>
         <p class="hours no-margin"><strong>Geschatte tijd:</strong> ${item.EstimateString}</p>
         <p class="state no-margin"><strong>Status:</strong> <% if item.IsOpen: %>open<% else: %>gesloten<% end %></p>
@@ -87,20 +87,46 @@
       <div class="large-9 columns">
         <div class="panel">
           <% if item.CreatedAt != null: %>
-          <small class="right">${Helpers.DateTimeHelper.Relative(item.CreatedAt)}</small>
+          <small class="right">${Helpers.DateTimeHelper.Readable(item.CreatedAt)}</small>
           <% end %>
           <div class="marked">${item.Body}</div>
         </div>
-        <h2>Tijdlijn</h2>
-        <% for comment in item.Actions: %>
-        <div class="panel ${comment.GetType().Name}">
-          <small class="right">${Helpers.DateTimeHelper.Relative(comment.CreatedAt)}</small>
-          <% if comment.User != null: %>
-          <strong>${comment.User.FullName}:</strong> 
+        <div id="timeline">
+          <h2>Tijdlijn</h2>
+          <% for action in item.Actions: %>
+          <% if action.GetType().Name == "ChangeState": %>
+          <div class="row ${action.GetType().Name}">
+            <div class="small-1 columns ${action.IssueState}">
+              <% if action.IssueState.ToString() == "Open": %>
+              <i class="fa fa-exclamation-circle"></i>
+              <% elif action.IssueState.ToString() == "Closed": %>
+              <i class="fa fa-ban"></i>
+              <% end %>
+            </div>
+            <div class="small-11 columns">
+              ${action.HtmlText}
+            </div>
+          </div>
+          <% elif action.GetType().Name == "Change": %>
+          <div class="row ${action.GetType().Name}">
+            <div class="small-1 columns">
+              <i class="fa fa-edit"></i>
+            </div>
+            <div class="small-11 columns">
+              ${action.HtmlText}
+            </div>
+          </div>
+          <% else: %>
+          <div class="panel ${action.GetType().Name}">
+            <small class="right">${Helpers.DateTimeHelper.Readable(action.CreatedAt)}</small>
+            <% if action.User != null: %>
+            <strong>${action.User.FullName}:</strong> 
+            <% end %>
+            <div class="marked">${action.Text}</div>
+          </div>
           <% end %>
-          <div class="marked">${comment.Text}</div>
+          <% end %>
         </div>
-        <% end %>
         <div class="panel">
           <small class="right capitalize">${Helpers.DateTimeHelper.Readable(DateTime.Now)}</small>
           <h3>Nieuwe reactie</h3>

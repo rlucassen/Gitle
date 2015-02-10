@@ -8,6 +8,7 @@
         User User { get; set; }
         DateTime CreatedAt { get; set; }
         string Text { get; }
+        string HtmlText { get; }
         string EmailSubject { get; }
     }
 }

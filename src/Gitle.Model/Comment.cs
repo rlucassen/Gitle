@@ -6,6 +6,12 @@
     public class Comment : ModelBase, IIssueAction
     {
         public virtual string Text { get; set; }
+
+        public virtual string HtmlText
+        {
+            get { return Text; }
+        }
+
         public virtual DateTime CreatedAt { get; set; }
 
         public virtual User User { get; set; }

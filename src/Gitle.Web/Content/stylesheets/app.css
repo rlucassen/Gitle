@@ -154,6 +154,37 @@ a.quickview-delay {
   margin-bottom: 0;
 }
 
+#timeline {
+  font-size: 0.9em;
+  margin-bottom: 1em;
+}
+
+#timeline .panel {
+  margin: 1em 0 0;
+  padding: 1.25rem 1.25rem 0 1.25rem;
+}
+
+#timeline .ChangeState i, #timeline .Change i {
+  font-size: 2em;
+  margin: 0.3em 0.6em;
+}
+
+#timeline .ChangeState .small-11, #timeline .Change .small-11 {
+  margin-top: 1.1em;
+  
+}
+
+#timeline .ChangeState .Open i {
+  color: #3c9a5f;
+}
+
+#timeline .ChangeState .Closed i {
+  color: #f04124;
+}
+
+#timeline .Change i {
+  color: #0079a1;
+}
 
 table {
   width: 100%;
@@ -470,8 +501,14 @@ table.row-clickable tbody td:hover {
   border-color: #000;
 }
 
+body.admin table#issue-table th#issue-hours {
+  width: 50px;
+}
+body.admin table#issue-table th#issue-cost {
+  width: 90px;
+}
 body.admin table#issue-table th#issue-actions {
-  width: 238px;
+  width: 170px;
 }
 table#issue-table th#issue-estimate {
   display: none;

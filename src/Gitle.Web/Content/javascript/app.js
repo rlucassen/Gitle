@@ -154,7 +154,7 @@ Application.prototype = {
 
     $('.tablesorter').tablesorter({});
 
-    $(".chosen-select").chosen({ no_results_text: "Oops, nothing found!" });
+    $(".chosen-select").chosen({ no_results_text: "Oops, nothing found!", width: '100%' });
 
     $('.time-parser').blur(function () {
       var value = $(this).val();

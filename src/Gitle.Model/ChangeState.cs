@@ -29,6 +29,22 @@
             }
         }
 
+        public virtual string HtmlText
+        {
+            get
+            {
+                var state = IssueState.GetDescription();
+                var openings = Issue.ChangeStates.Where(x => x.IssueState == IssueState.Open).ToList();
+                if (openings.Count() > 1 && openings.OrderByDescending(x => x.CreatedAt).Last() != this &&
+                    IssueState == IssueState.Open)
+                {
+                    state = "heropend";
+                }
+                return string.Format("De taak is {0}{1} op <strong>{2}</strong>", state,
+                                     User != null ? string.Format(" door <strong>{0}</strong>", User.FullName) : string.Empty, DateTimeHelper.Readable(CreatedAt));
+            }
+        }
+
         public virtual string EmailSubject
         {
             get {

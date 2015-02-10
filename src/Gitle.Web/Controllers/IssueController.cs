@@ -46,7 +46,7 @@
                 itemsQuery = itemsQuery.Where(x => x.State == state).ToList();
             }
 
-            PropertyBag.Add("items", itemsQuery);
+            PropertyBag.Add("items", itemsQuery.OrderBy(x => x.State).ToList());
             PropertyBag.Add("project", project);
             PropertyBag.Add("selectedLabels", selectedLabels);
             PropertyBag.Add("notSelectedLabels", notSelectedLabels);
