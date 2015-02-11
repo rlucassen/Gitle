@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using Enum;
+    using Helpers;
     using Interfaces.Model;
 
     public class Issue : ModelBase
@@ -27,6 +28,8 @@
         public virtual IList<Comment> Comments { get; set; }
         public virtual IList<ChangeState> ChangeStates { get; set; }
         public virtual IList<Change> Changes { get; set; }
+
+        public virtual string BodyHtml { get { return Body.Markdown(); } }
 
         public virtual bool IsOpen
         {

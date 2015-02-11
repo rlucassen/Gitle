@@ -1,6 +1,7 @@
 ﻿namespace Gitle.Model
 {
     using System;
+    using Helpers;
     using Interfaces.Model;
 
     public class Comment : ModelBase, IIssueAction
@@ -9,7 +10,7 @@
 
         public virtual string HtmlText
         {
-            get { return Text; }
+            get { return Text.Markdown(); }
         }
 
         public virtual DateTime CreatedAt { get; set; }

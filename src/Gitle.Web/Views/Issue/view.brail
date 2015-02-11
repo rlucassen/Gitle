@@ -1,6 +1,6 @@
 ﻿<div class="row">
   <div class="large-12 columns">
-    <a href="/project/${project.Slug}/issues">terug naar overzicht</a>
+    <a href="<% if IsDefined("referer"): %>${referer}<% else: %>/project/${project.Slug}/issues<% end %>">terug naar overzicht</a>
     <h1>#<strong>${item.Number}</strong> - ${item.Name}</h1>
     <% if CurrentUser.IsAdmin: %><h3><a href="edit">bewerk</a></h3><% end %>
     <div class="row">
@@ -89,7 +89,7 @@
           <% if item.CreatedAt != null: %>
           <small class="right">${Helpers.DateTimeHelper.Readable(item.CreatedAt)}</small>
           <% end %>
-          <div class="marked">${item.Body}</div>
+          <div class="">${item.BodyHtml}</div>
         </div>
         <div id="timeline">
           <h2>Tijdlijn</h2>
@@ -122,7 +122,7 @@
             <% if action.User != null: %>
             <strong>${action.User.FullName}:</strong> 
             <% end %>
-            <div class="marked">${action.Text}</div>
+            <div class="">${action.HtmlText}</div>
           </div>
           <% end %>
           <% end %>

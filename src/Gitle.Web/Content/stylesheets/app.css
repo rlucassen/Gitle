@@ -578,6 +578,7 @@ table#issue-table td.estimate {
   table#issue-table.small-blocks td.devvers { display: none; }
   table#issue-table.small-blocks td.hours { display: none; }
   
+  table.small-blocks td.createdby:before { content: "Aanmelder: "; }
   table.small-blocks td.devvers:before { content: "Developers: "; }
   table.small-blocks td.hours:before { content: "Tijd: "; }
   table.small-blocks td.estimate:before { content: "Schatting: "; }

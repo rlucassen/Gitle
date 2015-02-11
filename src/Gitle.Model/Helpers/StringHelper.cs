@@ -2,6 +2,8 @@
 {
     using System.Globalization;
     using System.Text.RegularExpressions;
+    using System.Web;
+    using MarkdownDeep;
 
     public static class StringHelper
     {
@@ -27,6 +29,14 @@
         {
             var textInfo = CultureInfo.CurrentCulture.TextInfo;
             return textInfo.ToTitleCase(txt);
+        }
+
+        public static string Markdown(this string txt)
+        {
+            txt = Regex.Replace(txt, @"\(http(.*)\)", match => match.ToString().Replace(" ", "%20"));
+            var md = new Markdown();
+            md.SafeMode = true;
+            return md.Transform(txt);
         }
     }
 }

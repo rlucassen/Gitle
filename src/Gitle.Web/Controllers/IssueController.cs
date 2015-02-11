@@ -1,11 +1,13 @@
 ﻿namespace Gitle.Web.Controllers
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
     using System.Text;
     using System.Web;
+    using Castle.MonoRail.Framework.Routing;
     using Clients.Freckle.Interfaces;
     using Clients.Freckle.Models;
     using Helpers;
@@ -58,6 +60,10 @@
         [MustHaveProject]
         public void View(string projectSlug, int issueId)
         {
+            var referer = new Uri(Request.UrlReferrer);
+            var routeMatch = RoutingModuleEx.Engine.FindMatch(referer.AbsolutePath, new RouteContext(Request, null, "/", new Hashtable()));
+            if (routeMatch.Name == "issues") PropertyBag.Add("referer", referer.PathAndQuery);
+
             var project = session.Query<Project>().FirstOrDefault(p => p.Slug == projectSlug);
             PropertyBag.Add("project", project);
             var item = session.Query<Issue>().FirstOrDefault(i => i.Number == issueId && i.Project == project);
