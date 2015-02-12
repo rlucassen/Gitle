@@ -47,7 +47,7 @@
       <div class="row">
         <div class="large-3 columns">Default filtering</div>
         <div class="large-9 columns">
-          ${Form.Select("item.DefaultState", {"open,closed": "Alle taken", "open": "Open taken", "closed": "Voltooide taken"}, {"value": "Key", "text": "Value", "class": "no-margin"})}
+          ${Form.Select("item.DefaultState", {"0": "Alle taken", "1": "Open taken", "2": "Voltooide taken"}, {"value": "Key", "text": "Value", "class": "no-margin"})}
         </div>
       </div>
       <div class="row">
@@ -57,36 +57,24 @@
       <div class="row projects">
         <div class="large-3 columns">Projecten</div>
         <div class="large-9 columns">
-          <table>
-            <thead>
-              <tr>
-                <td><i class="fa fa-users"></i></td>
-                <td><i class="fa fa-bell"></i></td>
-                <td>Project</td>
-              </tr>
-            </thead>
-            <tbody>
-              <% for project in projects: %>
-              <tr>
-                <td class="checkbox">
-                  <% if selectedprojects.Contains(project): %>
-                  <input type="checkbox" name="selectedprojects" value="${project.Id}" checked/>
-                  <% else: %>             
-                  <input type="checkbox" name="selectedprojects" value="${project.Id}"/>
-                  <% end %>
-                </td>
-                <td class="checkbox">
-                  <% if notificationprojects.Contains(project): %>
-                  <input type="checkbox" name="notificationprojects" value="${project.Id}" checked/>
-                  <% else: %>             
-                  <input type="checkbox" name="notificationprojects" value="${project.Id}"/>
-                  <% end %>
-                </td>
-                <td>${project.Name}</td>
-              </tr>
-              <% end %>
-            </tbody>
-          </table>
+          <% count = 0 %>
+          <% for project in projects: %>
+          <% userProject = item.GetUserProject(project) %>
+          <div class="panel">
+            <div class="row">
+              <div class="large-12 columns">
+                <input type="hidden" name="userProject[${count}].Id" value="${userProject.Id}"/>
+                <input type="hidden" name="userProject[${count}].Project.Id" value="${project.Id}"/>
+                <input type="hidden" name="userProject[${count}].User.Id" value="${item.Id}"/>
+                <h3>${project.Name}</h3>
+                <div class="inline-checkbox"><input type="checkbox" name="userProject[${count}].Subscribed" value="true" <% if selectedprojects.Contains(project): %>checked<% end %>/> Project is zichtbaar</div>
+                <div class="inline-checkbox"><input type="checkbox" name="userProject[${count}].Notifications" value="true" <% if userProject.Notifications: %>checked<% end %>/> Notificaties ontvangen</div>
+                <div class="inline-checkbox"><input type="checkbox" name="userProject[${count}].OnlyOwnIssues" value="true" <% if userProject.OnlyOwnIssues: %>checked<% end %>/> Alleen van zelf aangemaakte tickets</div>
+              </div>
+            </div>
+          </div>
+          <% count++ %>
+          <% end %>
         </div>
       </div>
       <div class="row">

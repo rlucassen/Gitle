@@ -1,0 +1,1 @@
+update [User] set DefaultState = null;

@@ -34,6 +34,8 @@
         [MustHaveProject]
         public void Index(string projectSlug, string[] selectedLabels, string[] notSelectedLabels, IssueState state)
         {
+            if (Request.Params["state"] == null) state = CurrentUser.DefaultState;
+
             var project = session.Query<Project>().FirstOrDefault(p => p.Slug == projectSlug);
 
             var itemsQuery =
@@ -60,9 +62,13 @@
         [MustHaveProject]
         public void View(string projectSlug, int issueId)
         {
-            var referer = new Uri(Request.UrlReferrer);
-            var routeMatch = RoutingModuleEx.Engine.FindMatch(referer.AbsolutePath, new RouteContext(Request, null, "/", new Hashtable()));
-            if (routeMatch.Name == "issues") PropertyBag.Add("referer", referer.PathAndQuery);
+            if (!string.IsNullOrEmpty(Request.UrlReferrer))
+            {
+                var referer = new Uri(Request.UrlReferrer);
+                var routeMatch = RoutingModuleEx.Engine.FindMatch(referer.AbsolutePath,
+                                                                  new RouteContext(Request, null, "/", new Hashtable()));
+                if (routeMatch.Name == "issues") PropertyBag.Add("referer", referer.PathAndQuery);
+            }
 
             var project = session.Query<Project>().FirstOrDefault(p => p.Slug == projectSlug);
             PropertyBag.Add("project", project);
@@ -247,11 +253,11 @@
         }
 
         [Admin]
-        public void ExportJson(string projectSlug, string[] selectedLabels, string state, string issues)
+        public void ExportJson(string projectSlug, string[] selectedLabels, IssueState state, string issues)
         {
             var project = session.Query<Project>().FirstOrDefault(p => p.Slug == projectSlug);
 
-            state = string.IsNullOrEmpty(state) ? CurrentUser.DefaultState : state;
+            if (Request.Params["state"] == null) state = CurrentUser.DefaultState;
             var items = project.Issues;
 
             if (string.IsNullOrEmpty(issues))
@@ -317,11 +323,11 @@
 
 
         [Admin]
-        public void ExportCsv(string projectSlug, string[] selectedLabels, string state, string issues)
+        public void ExportCsv(string projectSlug, string[] selectedLabels, IssueState state, string issues)
         {
             var project = session.Query<Project>().FirstOrDefault(p => p.Slug == projectSlug);
 
-            state = string.IsNullOrEmpty(state) ? CurrentUser.DefaultState : state;
+            if (Request.Params["state"] == null) state = CurrentUser.DefaultState;
             var items = project.Issues;
 
             if (string.IsNullOrEmpty(issues))

@@ -117,6 +117,30 @@ ul.no-style {
   text-transform: capitalize;
 }
 
+.inline-checkbox {
+  display: inline-block;
+  margin-right: 1em;
+}
+
+.inline-checkbox input[type=checkbox] {
+  margin-bottom: 0;
+}
+
+.projects .panel {
+  padding: 0.5rem 1rem;
+  margin-bottom: 0.5em;
+}
+
+.projects .panel > .row {
+  padding-top: 0;
+}
+
+.projects .panel h3 {
+  margin-top: 0;
+  font-size: 1em;
+  font-weight: bold;
+}
+
 a.quickview-delay {
   cursor: progress;
 }

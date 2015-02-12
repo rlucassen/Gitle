@@ -4,6 +4,7 @@
 
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Security.Cryptography;
     using System.Security.Principal;
     using Enum;
@@ -31,11 +32,11 @@
         public virtual string GitHubAccessToken { get; set; }
         public virtual string FreckleEmail { get; set; }
 
-        private string defaultState;
-        public virtual string DefaultState
+        public virtual IssueState DefaultState { get; set; }
+
+        public virtual UserProject GetUserProject(Project project)
         {
-            get { return string.IsNullOrEmpty(defaultState) ? "open,closed" : defaultState; }
-            set { defaultState = value; }
+            return Projects.FirstOrDefault(x => x.Project == project) ?? new UserProject();
         }
 
         #region Implementation of IPrincipal

@@ -39,8 +39,7 @@
         {
             var user = session.Get<User>(userId);
             PropertyBag.Add("item", user);
-            PropertyBag.Add("selectedprojects", user.Projects.Select(up => up.Project).ToList());
-            PropertyBag.Add("notificationprojects", user.Projects.Where(p => p.Notifications).Select(up => up.Project).ToList());
+            PropertyBag.Add("selectedprojects", user.Projects.Select(x => x.Project).ToList());
             PropertyBag.Add("projects", session.Query<Project>().ToList());
         }
 
@@ -90,7 +89,7 @@
         }
 
         [Admin]
-        public void Save(long userId, string password, long[] selectedprojects, long[] notificationprojects)
+        public void Save(long userId, string password)
         {
             var item = session.Get<User>(userId);
             if (item != null)
@@ -105,15 +104,26 @@
             {
                 item.Password = new Password(password);
             }
-            
-            item.Projects.Clear();
-            selectedprojects.Select(p => new UserProject {Project = session.Get<Project>(p), User = item, Notifications = notificationprojects.ToList().Contains(p)}).Each(item.Projects.Add);
+
+            var userProjects = BindObject<UserProject[]>("userProject");
+
+            var userProjectsToDelete = item.Projects.Where(l => !userProjects.Where(x => x.Subscribed).Select(x => x.Id).Contains(l.Id)).ToList();
 
             using (var tx = session.BeginTransaction())
             {
+                foreach (var userProject in userProjects.Where(x => x.Subscribed))
+                {
+                    session.Merge(userProject);
+                }
+                foreach (var userProject in userProjectsToDelete)
+                {
+                    item.Projects.Remove(userProject);
+                    session.Delete(userProject);
+                }
                 session.SaveOrUpdate(item);
                 tx.Commit();
             }
+
             RedirectToUrl("/users");
         }
     }
