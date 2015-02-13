@@ -31,12 +31,19 @@
             return textInfo.ToTitleCase(txt);
         }
 
-        public static string Markdown(this string txt)
+        public static string Markdown(this string txt, Project project)
         {
+            if (string.IsNullOrEmpty(txt)) return string.Empty;
+            // spaces in urls will not work with MarkdownDeep
             txt = Regex.Replace(txt, @"\(http(.*)\)", match => match.ToString().Replace(" ", "%20"));
+            // single linebreaks become double linebreaks to conform gitle markdown
             var md = new Markdown();
-            md.SafeMode = true;
-            return md.Transform(txt);
+            txt = md.Transform(txt);
+            txt = Regex.Replace(txt, @"(?<!(</p>))\n(?!\n)", match => "<br/>");
+            txt = Regex.Replace(txt, @" (?<hash>#(?<number>[0-9]{1,6})) ",
+                                match => string.Format(" <a href=\"/project/{0}/issue/{2}/view\">{1}</a> ",
+                                                       project.Slug, match.Groups["hash"], match.Groups["number"]));
+            return txt;
         }
     }
 }

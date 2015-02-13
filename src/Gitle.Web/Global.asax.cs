@@ -148,6 +148,9 @@
             RoutingModuleEx.Engine.Add(new PatternRoute("issues", "/project/<projectSlug>/issues")
                                            .DefaultForController().Is<IssueController>()
                                            .DefaultForAction().Is("index"));
+            RoutingModuleEx.Engine.Add(new PatternRoute("issues2", "/project/<projectSlug>/issues2/<query>")
+                                           .DefaultForController().Is<IssueController>()
+                                           .DefaultForAction().Is("index2"));
             RoutingModuleEx.Engine.Add(new PatternRoute("/project/<projectSlug>/issue/<action>")
                                            .DefaultForController().Is<IssueController>()
                                            .DefaultForAction().Is("index"));

@@ -219,6 +219,7 @@
     <None Include="Content\fonts\FontAwesome.otf" />
     <None Include="Views\Authentication\changepassword.brail" />
     <None Include="Views\Authentication\requestreset.brail" />
+    <None Include="Views\Issue\index2.brail" />
     <None Include="Views\Issue\exportimport.brail" />
     <None Include="Views\Issue\quickview.brail" />
     <None Include="Views\Issue\readjson.brail" />

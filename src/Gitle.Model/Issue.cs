@@ -29,7 +29,7 @@
         public virtual IList<ChangeState> ChangeStates { get; set; }
         public virtual IList<Change> Changes { get; set; }
 
-        public virtual string BodyHtml { get { return Body.Markdown(); } }
+        public virtual string BodyHtml { get { return Body.Markdown(Project); } }
 
         public virtual bool IsOpen
         {

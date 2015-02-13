@@ -48,7 +48,7 @@
                     <td bgcolor="#f2f2f2" width="70%" style="padding: 12px; font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Helvetica, Arial, sans-serif;">
                       <div>${item.Issue.BodyHtml}</div>
                     </td>
-                    <td bgcolor="#f2f2f2" width="30%" style="padding: 12px; font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Helvetica, Arial, sans-serif; font-size: 12px; text-align: right;">
+                    <td bgcolor="#f2f2f2" width="30%" style="padding: 12px; font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Helvetica, Arial, sans-serif; font-size: 12px; text-align: right; vertical-align: top;">
                       ${Helpers.DateTimeHelper.Readable(item.Issue.CreatedAt)}
                     </td>
                   </tr>

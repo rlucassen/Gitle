@@ -6,6 +6,7 @@
     using System.IO;
     using System.Linq;
     using System.Text;
+    using System.Text.RegularExpressions;
     using System.Web;
     using Castle.MonoRail.Framework.Routing;
     using Clients.Freckle.Interfaces;
@@ -14,6 +15,7 @@
     using Model;
     using Model.Enum;
     using Model.Helpers;
+    using Model.Interfaces.Model;
     using NHibernate;
     using NHibernate.Linq;
     using Newtonsoft.Json;
@@ -57,6 +59,115 @@
             PropertyBag.Add("labels", CurrentUser.IsAdmin ? project.Labels : project.Labels.Where(l => l.VisibleForCustomer));
             PropertyBag.Add("customerLabels", CurrentUser.IsAdmin ? project.Labels : project.Labels.Where(l => l.ApplicableByCustomer));
             PropertyBag.Add("state", state);
+        }
+
+        [MustHaveProject]
+        public void Index2(string projectSlug, string query)
+        {
+            query = query ?? string.Empty;
+
+            var project = session.Query<Project>().FirstOrDefault(p => p.Slug == projectSlug);
+
+            var matches = Regex.Matches(query, @"[a-zA-Z0-9_]+:(([a-zA-Z0-9_,]+)|('[a-zA-Z0-9_, ]+'))");
+
+            IList<string> selectedLabels = new List<string>();
+            IList<string> notSelectedLabels = new List<string>();
+            IList<IssueState> states = new List<IssueState>();
+            IList<long> ids = new List<long>();
+            IList<string> involveds = new List<string>();
+            IList<string> openedbys = new List<string>();
+            IList<string> closedbys = new List<string>();
+
+            foreach (Match match in matches)
+            {
+                var parts = match.Value.Split(':');
+                var value = parts[1].Replace("'", "");
+                switch (parts[0])
+                {
+                    case "label":
+                        selectedLabels.Add(value);
+                        break;
+                    case "notlabel":
+                        notSelectedLabels.Add(value);
+                        break;
+                    case "state":
+                        states.Add((IssueState)Enum.Parse(typeof(IssueState), value));
+                        break;
+                    case "id":
+                        ids = value.Split(',').Select(long.Parse).ToList();
+                        break;
+                    case "involved":
+                        involveds.Add(value);
+                        break;
+                    case "opened":
+                        openedbys.Add(value);
+                        break;
+                    case "closed":
+                        closedbys.Add(value);
+                        break;
+                }
+            }
+
+            var itemsQuery =
+                session.Query<Issue>().Where(
+                    x =>
+                    x.Project == project &&
+                    x.Labels.Count(l => selectedLabels.Contains(l.Name)) == selectedLabels.Count &&
+                    !x.Labels.Any(l => notSelectedLabels.Contains(l.Name)));
+
+            if (ids.Any())
+                itemsQuery = itemsQuery.Where(x => ids.Contains(x.Number));
+
+            foreach (var involved in involveds)
+            {
+                itemsQuery =
+                    itemsQuery.Where(
+                        x =>
+                        x.Comments.Any(a => a.User != null && (a.User.Name == involved || a.User.FullName == involved)) ||
+                        x.ChangeStates.Any(a => a.User != null && (a.User.Name == involved || a.User.FullName == involved)) ||
+                        x.Changes.Any(a => a.User != null && (a.User.Name == involved || a.User.FullName == involved)));
+            }
+
+            foreach (var openedby in openedbys)
+            {
+                itemsQuery = itemsQuery.Where(
+                    x =>
+                    x.ChangeStates.Any(
+                        a =>
+                        a.IssueState == IssueState.Open && a.User != null &&
+                        (a.User.Name == openedby || a.User.FullName == openedby)));
+            }
+
+            foreach (var closedby in closedbys)
+            {
+                itemsQuery = itemsQuery.Where(
+                    x =>
+                    x.ChangeStates.Any(
+                        a =>
+                        a.IssueState == IssueState.Closed && a.User != null &&
+                        (a.User.Name == closedby || a.User.FullName == closedby)));
+            }
+
+            //if (states.Any())
+            //{
+            //    itemsQuery = itemsQuery.Where(x => states.Contains(x.ChangeStates.Single().IssueState));
+            //}
+
+            var items = itemsQuery.OrderByDescending(x => x.Number).ToList();
+
+            if (states.Any())
+            {
+                items = items.Where(x => states.Contains(x.State)).ToList();
+            }
+
+            PropertyBag.Add("items", items.OrderBy(x => x.State).ToList());
+            PropertyBag.Add("project", project);
+            PropertyBag.Add("selectedLabels", selectedLabels);
+            PropertyBag.Add("notSelectedLabels", notSelectedLabels);
+            PropertyBag.Add("labels", CurrentUser.IsAdmin ? project.Labels : project.Labels.Where(l => l.VisibleForCustomer));
+            PropertyBag.Add("customerLabels", CurrentUser.IsAdmin ? project.Labels : project.Labels.Where(l => l.ApplicableByCustomer));
+            PropertyBag.Add("states", states);
+            PropertyBag.Add("query", query);
         }
 
         [MustHaveProject]

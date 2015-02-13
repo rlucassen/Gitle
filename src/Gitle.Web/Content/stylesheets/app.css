@@ -185,7 +185,7 @@ a.quickview-delay {
 
 #timeline .panel {
   margin: 1em 0 0;
-  padding: 1.25rem 1.25rem 0 1.25rem;
+  padding: 1.25rem;
 }
 
 #timeline .ChangeState i, #timeline .Change i {
@@ -442,6 +442,27 @@ table.row-clickable tbody td:hover {
 
 .filter-row .button {
   font-size: 0.8em;
+}
+
+.filters .button.active {
+  background-color: #b9b9b9;
+  color: #333;
+}
+
+.filters .f-dropdown a {
+  position: relative;
+  height: 2.5em;
+}
+
+.filters .f-dropdown a i {
+  position: absolute;
+  left: 0.7em;
+  top: 0.7em;
+}
+
+.filters .f-dropdown a span {
+  position: absolute;
+  left: 3em;
 }
 
 .tablesorter .header {

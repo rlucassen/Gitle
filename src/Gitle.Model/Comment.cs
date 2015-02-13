@@ -10,7 +10,7 @@
 
         public virtual string HtmlText
         {
-            get { return Text.Markdown(); }
+            get { return Text.Markdown(Issue.Project); }
         }
 
         public virtual DateTime CreatedAt { get; set; }

@@ -1,0 +1,84 @@
+﻿<div class="row">
+  <div class="large-12 columns">
+    <h1>${project.Name}: ${items.Count} Taken</h1>
+    <a class="button" href="/project/${project.Slug}/issue/new">Nieuwe taak</a>
+    <a class="button secondary" href="/project/${project.Slug}/view">Projectdetails</a>
+    <% if CurrentUser.IsAdmin: %>
+    <a class="button split success" href="/project/${project.Slug}/issue/exportimport">Exporteren / Importeren<span data-dropdown="exportimport"></span></a>
+    <ul id="exportimport" data-dropdown-content class="f-dropdown">
+      <li><a href="/project/${project.Slug}/issue/exportcsv">Exporteer alles (.csv)</a></li>
+      <li id="exportselection"><a href="/project/${project.Slug}/issue/exportcsv">Exporteer selectie (.csv)</a></li>
+    </ul>
+    <% end %>
+    <div class="row">
+      <div class="large-12 columns">
+        <div class="row">
+          <div class="large-12 columns">
+            <form id="query-form" method="GET">
+              <div class="row collapse">
+                <div class="small-11 columns">
+                  <input type="text" id="query" name="query" value="${query}"/>
+                </div>
+                <div class="small-1 columns">
+                  <input class="button postfix" type="submit" value="Filter"/>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="row filters">
+          <div class="large-2 columns">
+            <ul class="button-group">
+              <li><a href="#" data-filter="state:Open" class="button tiny secondary<% if states.Contains(Gitle.Model.Enum.IssueState.Open): %> active<% end %>">Open</a></li>
+              <li><a href="#" data-filter="state:Closed" class="button tiny secondary<% if states.Contains(Gitle.Model.Enum.IssueState.Closed): %> active<% end %>">Gesloten</a></li>
+            </ul>
+          </div>
+          <div class="large-3 columns">
+            <button href="#" data-dropdown="selectedLabels" aria-controls="selectedLabels" aria-expanded="false" class="button tiny dropdown">Bevat labels:</button>
+            <ul id="selectedLabels" data-dropdown-content class="f-dropdown" aria-hidden="true" tabindex="-1">
+              <% for label in labels: %>
+              <li>
+                <a href="#" data-filter="label:'${label.Name}'">
+                  <% if selectedLabels.Contains(label.Name): %>
+                  <i class="fa fa-check"></i>
+                  <% end %>
+                  <span class="label no-margin radius" title="${label.Name}" style="background-color: #${label.Color};">${label.Name}</span>
+                </a>
+              </li>
+              <% end %>
+            </ul>
+            <button href="#" data-dropdown="notSelectedLabels" aria-controls="notSelectedLabels" aria-expanded="false" class="button tiny dropdown">Bevat niet labels:</button>
+            <ul id="notSelectedLabels" data-dropdown-content class="f-dropdown" aria-hidden="true" tabindex="-1">
+              <% for label in labels: %>
+              <li>
+                <a href="#" data-filter="notlabel:'${label.Name}'">
+                  <% if notSelectedLabels.Contains(label.Name): %>
+                  <i class="fa fa-check"></i>
+                  <% end %>
+                  <span class="label no-margin radius" title="${label.Name}" style="background-color: #${label.Color};">${label.Name}</span>
+                </a>
+              </li>
+              <% end %>
+            </ul>
+          </div>
+          <div class="large-8 columns"></div>
+        </div>
+      </div>
+    </div>
+    <% OutputSubView("_issuetable", {"actions": true}) %>
+  </div>
+</div>
+<script>
+  $(function () {
+    $('a[data-filter]').click(function () {
+      var filter = $(this).data('filter');
+      var query = $('#query').val();
+      if (query.indexOf(filter) != -1) {
+        $('#query').val(query.replace(filter, ""));
+      } else {
+        $('#query').val(query + " " + filter);
+      }
+      $('#query-form').submit();
+    });
+  });
+</script>
