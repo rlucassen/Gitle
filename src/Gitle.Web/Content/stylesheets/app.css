@@ -92,7 +92,7 @@ body.scroll .footer
 }
 
 .green {
-  color: #43ac6a;
+  color: #3c9a5f;
 }
 
 .small-text, .small-text p {
@@ -170,6 +170,7 @@ a.quickview-delay {
   border-radius: 0;
   position: absolute;
   padding: 1em;
+  z-index: 999;
 }
 
 .quickview:after {
@@ -257,14 +258,6 @@ a.quickview-delay {
 #timeline .ChangeState .small-11, #timeline .Change .small-11 {
   margin-top: 1.1em;
   
-}
-
-#timeline .ChangeState .Open i {
-  color: #3c9a5f;
-}
-
-#timeline .ChangeState .Closed i {
-  color: #f04124;
 }
 
 #timeline .Change i {
@@ -609,6 +602,36 @@ table.row-clickable tbody td:hover {
 
 .row.filters {
   margin-bottom: 1em;
+}
+
+.issues {
+  border-top: 1px solid #ccc;
+}
+
+.issue {
+  padding: 1em 1em 0.2em;
+  border-bottom: 1px solid #ccc;
+}
+
+.issue:hover {
+  background-color: #efefef;
+}
+
+.issue .issuestate .number {
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+.issue .issuestate i {
+  font-size: 2em;
+}
+
+.issue .namerow a {
+  margin-right: 1em;
+}
+
+.issue .detailsrow {
+  font-size: 0.8em;
 }
 
 #group-actions select {

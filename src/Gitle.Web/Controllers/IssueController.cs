@@ -49,11 +49,14 @@
             IList<string> involveds = new List<string>();
             IList<string> openedbys = new List<string>();
             IList<string> closedbys = new List<string>();
+            var searchQuery = query;
+
 
             foreach (Match match in matches)
             {
                 var parts = match.Value.Split(':');
                 var value = parts[1].Replace("'", "");
+                searchQuery = searchQuery.Replace(match.Value, "").Trim();
                 switch (parts[0])
                 {
                     case "label":
@@ -86,6 +89,9 @@
                     x.Project == project &&
                     x.Labels.Count(l => selectedLabels.Contains(l.Name)) == selectedLabels.Count &&
                     !x.Labels.Any(l => notSelectedLabels.Contains(l.Name)));
+
+            if (!string.IsNullOrWhiteSpace(searchQuery))
+                itemsQuery = itemsQuery.Where(x => x.Name.Contains(searchQuery) || x.Body.Contains(searchQuery));
 
             if (ids.Any())
                 itemsQuery = itemsQuery.Where(x => ids.Contains(x.Number));
