@@ -73,6 +73,7 @@
     <Compile Include="ChangeState.cs" />
     <Compile Include="Comment.cs" />
     <Compile Include="Enum\IssueState.cs" />
+    <Compile Include="FilterPreset.cs" />
     <Compile Include="Helpers\CsvHelper.cs" />
     <Compile Include="Helpers\DateTimeHelper.cs" />
     <Compile Include="Helpers\EnumHelper.cs" />
@@ -87,6 +88,7 @@
     <Compile Include="Mapping\CommentMap.cs" />
     <Compile Include="Mapping\ChangeStateMap.cs" />
     <Compile Include="Mapping\ChangeMap.cs" />
+    <Compile Include="Mapping\FilterPresetMap.cs" />
     <Compile Include="Mapping\IssueMap.cs" />
     <Compile Include="Mapping\LabelMap.cs" />
     <Compile Include="Mapping\ModelBaseMap.cs" />

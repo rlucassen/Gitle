@@ -1,9 +1,3 @@
-﻿<h5>${item.Name}</h5>
-<div class="marked">
-  ${item.Body}
-</div>
-<% for comment in comments: %>
-<hr/>
-<strong>${comment.Name}:</strong> 
-<div class="marked">${comment.Text}</div>
-<% end %>
+﻿<h1>${item.Name}</h1>
+<div class="marked">${item.Body}</div>
+<% OutputSubView("_timeline") %>

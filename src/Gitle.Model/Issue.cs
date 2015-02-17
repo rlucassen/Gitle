@@ -133,14 +133,20 @@
             return Labels.Select(l => l.Name).Contains(label);
         }
 
+        public virtual void ChangeState(User user, IssueState state)
+        {
+            if(State != state)
+                ChangeStates.Add(new ChangeState() { CreatedAt = DateTime.Now, IssueState = state, User = user, Issue = this });
+        }
+
         public virtual void Open(User user)
         {
-            ChangeStates.Add(new ChangeState() {CreatedAt = DateTime.Now, IssueState = IssueState.Open, User = user, Issue = this});
+            ChangeState(user, IssueState.Open);
         }
 
         public virtual void Close(User user)
         {
-            ChangeStates.Add(new ChangeState() {CreatedAt = DateTime.Now, IssueState = IssueState.Closed, User = user, Issue = this});
+            ChangeState(user, IssueState.Closed);
         }
 
         public virtual void Change(User user)

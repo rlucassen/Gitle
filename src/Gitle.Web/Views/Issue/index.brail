@@ -7,71 +7,158 @@
     <a class="button split success" href="/project/${project.Slug}/issue/exportimport">Exporteren / Importeren<span data-dropdown="exportimport"></span></a>
     <ul id="exportimport" data-dropdown-content class="f-dropdown">
       <li><a href="/project/${project.Slug}/issue/exportcsv">Exporteer alles (.csv)</a></li>
-      <% if state != "open,closed" or selectedLabels.Length > 0: %><li><a href="/project/${project.Slug}/issue/exportcsv?state=${state}<% for label in selectedLabels: %>&selectedLabels=${label}<% end %>">Exporteer gefilterd (.csv)</a></li><% end %>
-      <li id="exportselection"><a href="/project/${project.Slug}/issue/exportcsv">Exporteer selectie (.csv)</a></li>
+      <li id="exportselection" data-group-action><a href="/project/${project.Slug}/issue/exportcsv">Exporteer selectie (.csv)</a></li>
     </ul>
     <% end %>
-    <div class="row filter-row">
-      <div class="large-8 columns">
-        <form method="GET">
-          <div class="row collapse">
-            <div class="large-3 columns">
-              <span>Filtering:</span>
-              ${Form.Select("state", {"0": "Alle taken", "1": "Open taken", "2": "Voltooide taken"}, {"value": "Key", "text": "Value", "class": "no-margin"})}
-            </div>
-            <div class="large-4 columns">
-              <span>Bevat:</span>
-              ${Form.Select("selectedLabels", labels, {"value": "Name", "text": "Name", "class": "no-margin chosen-select small-12", "multiple": true, "data-placeholder": "Kies labels"})}
-            </div>
-            <div class="large-4 columns">
-              <span>Bevat niet:</span>
-              ${Form.Select("notSelectedLabels", labels, {"value": "Name", "text": "Name", "class": "no-margin chosen-select small-12", "multiple": true, "data-placeholder": "Kies Labels"})}
-            </div>
-            <br/><div class="large-1 columns"><input type="submit" value="Filter" class="button tiny no-margin expand"/></div>
+    <div class="row">
+      <div class="large-12 columns">
+        <div class="row">
+          <div class="large-12 columns">
+            <form id="query-form" method="GET">
+              <div class="row collapse">
+                <div class="large-10 small-7 columns">
+                  <input type="text" id="query" name="query" value="${query}"/>
+                </div>
+                <div class="large-2 small-5 columns">
+                  <span class="button split postfix"><a href="#" class="submit">Filter</a> <span data-dropdown="drop"></span></span>
+                  <ul id="drop" class="f-dropdown" data-dropdown-content>
+                    <% for filterPreset in filterPresets: %>
+                    <li><a class="filter-preset" data-filter="${filterPreset.FilterString}" data-filter-clear href="#">${filterPreset.Name}</a></li>
+                    <% end %>
+                    <li class="divider"></li>
+                    <% for filterPreset in globalFilterPresets: %>
+                    <li><a class="filter-preset" data-filter="${filterPreset.FilterString}" data-filter-clear href="#">${filterPreset.Name}</a></li>
+                    <% end %>
+                    <li class="divider"></li>
+                    <li><strong><a href="#" data-reveal-id="newFilterPreset">Nieuwe filter</a></strong></li>
+                  </ul>
+                </div>
+              </div>
+            </form>
           </div>
-        </form>
-      </div>
-      <div class="large-4 columns">
-        <form id="group-actions" method="POST" action="/project/${project.Slug}/addlabel">
-          <input type="hidden" name="issues" />
-          <div class="row collapse">
-            <div class="large-5 columns">
-              <span>Labels toepassen:</span>
-              ${Form.Select("label", customerLabels, {"value": "Name", "text": "Name", "firstoption": "Kies een label", "class": "no-margin"})}
-            </div>
-            <div class="large-7 columns">
-              <br/><input class="button tiny no-margin expand" type="submit" value="Toepassen op geselecteerde issues"/>
+        </div>
+        <div class="row filters">
+          <div class="large-2 columns">
+            <ul class="button-group">
+              <li><a href="#" data-filter="state:Open" class="button tiny no-margin secondary<% if states.Contains(Gitle.Model.Enum.IssueState.Open): %> active<% end %>">Open</a></li>
+              <li><a href="#" data-filter="state:Closed" class="button tiny no-margin secondary<% if states.Contains(Gitle.Model.Enum.IssueState.Closed): %> active<% end %>">Gesloten</a></li>
+            </ul>
+          </div>
+          <div class="large-3 columns">
+            <% if labels.Count > 0: %>
+            <button href="#" data-dropdown="selectedLabels" aria-controls="selectedLabels" aria-expanded="false" class="button tiny dropdown no-margin">Bevat labels:</button>
+            <ul id="selectedLabels" data-dropdown-content class="f-dropdown" aria-hidden="true" tabindex="-1">
+              <% for label in labels: %>
+              <li>
+                <a href="#" data-filter="label:'${label.Name}'">
+                  <% if selectedLabels.Contains(label.Name): %>
+                  <i class="fa fa-check"></i>
+                  <% end %>
+                  <span class="label no-margin<% if label.VisibleForCustomer: %> radius<% end %>" title="${label.Name}" style="background-color: #${label.Color} ;">${label.Name}</span>
+                </a>
+              </li>
+              <% end %>
+            </ul>
+            <button href="#" data-dropdown="notSelectedLabels" aria-controls="notSelectedLabels" aria-expanded="false" class="button tiny dropdown no-margin">Bevat niet labels:</button>
+            <ul id="notSelectedLabels" data-dropdown-content class="f-dropdown" aria-hidden="true" tabindex="-1">
+              <% for label in labels: %>
+              <li>
+                <a href="#" data-filter="notlabel:'${label.Name}'">
+                  <% if notSelectedLabels.Contains(label.Name): %>
+                  <i class="fa fa-check"></i>
+                  <% end %>
+                  <span class="label no-margin<% if label.VisibleForCustomer: %> radius<% end %>" title="${label.Name}" style="background-color: #${label.Color} ;">${label.Name}</span>
+                </a>
+              </li>
+              <% end %>
+            </ul>
+            <% else: %>
+            <a href="#" class="button tiny secondary disabled">Geen labels om te filteren</a>
+            <% end %>
+          </div>
+          <div class="large-1 columns">
+            
+          </div>
+          <div class="large-5 columns">
+            <div class="row" id="group-actions">
+              <input type="hidden" name="issues" />
+              <div class="large-4 small-12 columns text-right small-text-left">
+                <label>Geselecteerde taken:</label>
+              </div>
+              <div class="large-5 small-7 columns">
+                <button href="#" data-dropdown="addLabels" aria-controls="addLabels" aria-expanded="false" class="button tiny dropdown expand success no-margin">Label toevoegen</button>
+                <ul id="addLabels" data-dropdown-content class="f-dropdown" aria-hidden="true" tabindex="-1">
+                  <% for label in customerLabels: %>
+                  <li>
+                    <a href="/project/${project.Slug}/addlabel?label=${label.Name}" data-group-action>
+                      <span class="label no-margin<% if label.VisibleForCustomer: %> radius<% end %>" title="${label.Name}" style="background-color: #${label.Color} ;">${label.Name}</span>
+                    </a>
+                  </li>
+                  <% end %>
+                </ul>
+              </div>
+              <div class="large-3 small-5 columns">
+                <a href="/project/${project.Slug}/changestate?state=2" data-group-action class="button tiny no-margin expand alert">Sluiten</a>
+              </div>
             </div>
           </div>
-        </form>
+        </div>
       </div>
     </div>
     <% OutputSubView("_issuetable", {"actions": true}) %>
   </div>
 </div>
-<ol class="joyride-list" data-joyride>
-  <li data-id="issue-table" data-text="Volgende" data-options="tip_location: top">
-    <p>Dit zijn alle taken die in het project zitten.</p>
-  </li>
-  <li data-id="issue-id" data-text="Volgende" data-options="tip_location: top">
-    <p>Dit zijn de identifiers van de taken, deze kunnen als referentie gebruikt worden.</p>
-  </li>
-  <li data-id="issue-name" data-text="Volgende" data-options="tip_location: top">
-    <p>Dit zijn de korte beschrijvingen van de taken, als je een taak opent kun je de uitgebreide omschrijving zien.</p>
-  </li>
-  <li data-id="issue-hours" data-text="Volgende" data-options="tip_location: top">
-    <p>Dit zijn de uren die Auxilium verwacht nodig te hebben om een taak te voltooien.</p>
-  </li>
-  <li data-id="issue-comments" data-text="Volgende" data-options="tip_location: top">
-    <p>Dit geeft aan hoeveel reacties er op een taak gegeven zijn.</p>
-  </li>
-  <li data-id="issue-accepted" data-text="Volgende" data-options="tip_location: top">
-    <p>Dit geeft aan of de taken door de klant als volledig en correct gemarkeerd zijn.</p>
-  </li>
-  <li data-id="issue-state" data-text="Volgende" data-options="tip_location: top">
-    <p>Dit geeft aan of de taken door Auxilium voltooid zijn, dit wil echter niet zeggen dat de functionaliteit al opgeleverd is.</p>
-  </li>
-  <li data-id="issue-actions" data-text="Klaar" data-options="tip_location: top">
-    <p>Met 'open' kun je de details van de taak bekijken, met 'akkoord' kun je akkoord gaan met de beschreven functionaliteit.</p>
-  </li>
-</ol>
+<div id="newFilterPreset" class="reveal-modal small" data-reveal>
+  <div class="row">
+    <div class="small-12 columns">
+      <h2>Nieuwe filter preset</h2>
+    </div>
+  </div>
+  <form action="/filterpreset/new">
+    <div class="row">
+      <div class="small-3 columns">
+        <label for="item_FilterString">Filter: </label>
+      </div>
+      <div class="small-9 columns">
+        <input type="text" id="item_FilterString" name="item.FilterString"/>
+      </div>
+    </div>
+    <div class="row">
+      <div class="small-3 columns">
+        <label for="item_Name">Naam: </label>
+      </div>
+      <div class="small-9 columns">
+        <input type="text" id="item_Name" name="item.Name"/>
+      </div>
+    </div>
+    <div class="row">
+      <div class="small-12 columns text-right">
+        <input type="submit" class="button small" value="Nieuw"/>
+      </div>
+    </div>
+  </form>
+  <a class="close-reveal-modal">&#215;</a>
+</div>
+<script>
+  $(function () {
+    $('a[data-filter]').click(function (e) {
+      e.preventDefault();
+      var filter = $(this).data('filter');
+      var query = $('#query').val();
+      if ($(this).is('[data-filter-clear]')) query = '';
+      if (query.indexOf(filter) != -1) {
+        $('#query').val(query.replace(filter, ""));
+      } else {
+        $('#query').val(query + " " + filter);
+      }
+      $('#query-form').submit();
+    });
+    $('#query-form .submit').click(function (e) {
+      e.preventDefault();
+      $('#query-form').submit();
+    });
+    $(document).on('open.fndtn.reveal', '#newFilterPreset', function () {
+      $('#newFilterPreset #item_FilterString').val($('#query').val());
+    });
+  });
+</script>

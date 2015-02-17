@@ -26,6 +26,7 @@
         public virtual string FullName { get; set; }
         public virtual string EmailAddress { get; set; }
         public virtual IList<UserProject> Projects { get; set; }
+        public virtual IList<FilterPreset> FilterPresets { get; set; }
         public virtual bool IsAdmin { get; set; }
         public virtual string Phone { get; set; }
         public virtual string GitHubUsername { get; set; }

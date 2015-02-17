@@ -19,7 +19,7 @@ html[xmlns] .clearfix {
   height: 1%;
 }
 
-.row {
+body > .row {
   max-width: 90%;
   width: 1200px;
   padding-top: 10px;
@@ -30,6 +30,20 @@ html[xmlns] .clearfix {
   margin-bottom: 0;
 }
 
+span.split.button {
+  background-color: #008CBA;
+  padding-right: 3.5em;
+}
+
+span.split a {
+  color: #fff;
+  display: block;
+}
+
+ul.f-dropdown .divider {
+  border-bottom: 1px solid #ccc;
+}
+
 .footer {
   position: fixed;
   bottom: 0;
@@ -38,6 +52,7 @@ html[xmlns] .clearfix {
   width: 100%;
   height: 80px;
   padding-top: 10px;
+  z-index: -1;
 }
 
 .footer .row {
@@ -173,9 +188,55 @@ a.quickview-delay {
   margin: 0.5rem 0;
 }
 
+.quickview h1 {
+  font-size: 2em;
+}
+
+.quickview h2 {
+  font-size: 1.8em;
+}
+
 .quickview p, .quickview ul, .quickview ol {
   font-size: 14px;
   margin-bottom: 0;
+}
+
+.quickview #timeline {
+  margin-top: 2em;
+}
+
+.quickview #timeline .panel {
+  padding: 0.5em;
+  margin-left: 1em;
+  background-color: #fff;
+}
+
+.quickview #timeline .panel small {
+  float: none !important;
+  font-size: 1em;
+  font-weight: bold;
+}
+
+.quickview #timeline .panel small:before {
+  content: 'Op ';
+  font-weight: normal;
+}
+
+.quickview #timeline .panel small:after {
+  content: ' is er een reactie geplaatst';
+  font-weight: normal;
+}
+
+.quickview #timeline .panel strong {
+}
+
+.quickview #timeline .panel strong:before {
+  content: ' door ';
+  font-weight: normal;
+}
+
+.quickview #timeline .panel strong:after {
+  font-weight: normal;
 }
 
 #timeline {
@@ -544,6 +605,20 @@ table.row-clickable tbody td:hover {
 
 .colorpicker-popup ul li a:hover {
   border-color: #000;
+}
+
+.row.filters {
+  margin-bottom: 1em;
+}
+
+#group-actions select {
+  height: 2.0625rem;
+  font-size: 0.775rem;
+}
+
+#group-actions label {
+  font-size: 0.8em;
+  margin-top: 0.5em;
 }
 
 body.admin table#issue-table th#issue-hours {

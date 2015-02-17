@@ -47,7 +47,7 @@
       <div class="row">
         <div class="large-3 columns">Default filtering</div>
         <div class="large-9 columns">
-          ${Form.Select("item.DefaultState", {"0": "Alle taken", "1": "Open taken", "2": "Voltooide taken"}, {"value": "Key", "text": "Value", "class": "no-margin"})}
+          ${Form.Select("item.DefaultState", {"0": "Alle taken", "1": "Open taken", "2": "Voltooide taken"}, {"value": "Key", "text": "Value"})}
         </div>
       </div>
       <div class="row">

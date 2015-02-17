@@ -26,7 +26,35 @@
       <div class="row">
         <div class="large-3 columns">Default filtering</div>
         <div class="large-9 columns">
-          ${Form.Select("item.DefaultState", {"open,closed": "Alle taken", "open": "Open taken", "closed": "Voltooide taken"}, {"value": "Key", "text": "Value", "class": "no-margin"})}
+          ${Form.Select("item.DefaultState", {"0": "Alle taken", "1": "Open taken", "2": "Voltooide taken"}, {"value": "Key", "text": "Value"})}
+        </div>
+      </div>
+      <div class="row">
+        <div class="large-3 columns">Filter presets</div>
+        <div class="large-9 columns">
+          <table id="filterpresets">
+            <thead>
+              <tr>
+                <th>Verwijder</th>
+                <th>Naam</th>
+                <th>FilterString</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% count = 0 %>
+              <% for filterPreset in item.FilterPresets: %>
+              <tr>
+                <td>
+                  <input type="hidden" name="filterpresets[${count}]" value="${filterPreset.Id}"/>
+                  <a href="#" class="button tiny no-margin alert delete">Verwijder</a>
+                </td>
+                <td>${filterPreset.Name}</td>
+                <td>${filterPreset.FilterString}</td>
+              </tr>
+              <% count++ %>
+              <% end %>
+            </tbody>
+          </table>
         </div>
       </div>
       <div class="row projects">
@@ -36,6 +64,7 @@
             <thead>
               <tr>
                 <th title="Notificaties ontvangen"><i class="fa fa-bell"></i></th>
+                <th title="Alleen van zelf aangemaakt tickets"><i class="fa fa-street-view"></i></th>
                 <th>Project</th>
               </tr>
             </thead>
@@ -47,6 +76,13 @@
                   <input type="checkbox" name="notificationprojects" value="${project.Id}" checked/>
                   <% else: %>             
                   <input type="checkbox" name="notificationprojects" value="${project.Id}"/>
+                  <% end %>
+                </td>
+                <td class="checkbox">
+                  <% if ownnotificationprojects.Contains(project): %>
+                  <input type="checkbox" name="ownnotificationprojects" value="${project.Id}" checked/>
+                  <% else: %>             
+                  <input type="checkbox" name="ownnotificationprojects" value="${project.Id}"/>
                   <% end %>
                 </td>
                 <td>${project.Name}</td>
@@ -82,3 +118,11 @@
     <p>Geef hier aan voor welke projecten je notificaties in je emailbox wilt ontvangen.</p>
   </li>
 </ol>
+<script>
+  $(function () {
+    $('#filterpresets .delete').click(function (e) {
+      e.preventDefault();
+      $(this).parents('tr').remove();
+    });
+  });
+</script>

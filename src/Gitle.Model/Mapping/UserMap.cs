@@ -21,6 +21,7 @@
             Map(x => x.FreckleEmail);
             Map(x => x.DefaultState);
             HasMany(x => x.Projects).Cascade.AllDeleteOrphan();
+            HasMany(x => x.FilterPresets);
         }
     }
 }

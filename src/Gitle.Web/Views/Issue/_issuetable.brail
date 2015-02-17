@@ -33,7 +33,7 @@
           <td class="labels">
             <% for label in labels: %>
             <%  if issue.CheckLabel(label.Name): %>
-            <span title="${label.Name}" class="label no-margin radius" style="background-color: #${label.Color};">${label.Name}</span>
+            <span title="${label.Name}" class="label no-margin<% if label.VisibleForCustomer: %> radius<% end %>" style="background-color: #${label.Color};">${label.Name}</span>
             <%  end %>
             <% end %>
           </td>

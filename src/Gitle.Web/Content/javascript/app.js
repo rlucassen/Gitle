@@ -213,10 +213,11 @@ Application.prototype = {
       $('#group-actions [name=issues]').val(values.join(','));
     }).change();
 
-    $('#exportselection a').click(function (e) {
+    $('[data-group-action]').click(function (e) {
       e.preventDefault();
       var issues = $('#group-actions input[name=issues]').val();
-      location.href = $(this).prop('href') + '?issues=' + issues;
+      var href = $(this).prop('href');
+      location.href = href + (href.indexOf('?') == -1 ? '?' : '&') + 'issues=' + issues;
     });
 
     $('table#issue-table tbody tr').click(function () {

@@ -48,9 +48,10 @@
             PropertyBag.Add("item", CurrentUser);
             PropertyBag.Add("projects", CurrentUser.Projects.Select(up => up.Project).ToList());
             PropertyBag.Add("notificationprojects", CurrentUser.Projects.Where(up => up.Notifications).Select(up => up.Project).ToList());
+            PropertyBag.Add("ownnotificationprojects", CurrentUser.Projects.Where(up => up.Notifications && up.OnlyOwnIssues).Select(up => up.Project).ToList());
         }
 
-        public void SaveProfile(string password, int[] notificationprojects)
+        public void SaveProfile(string password, int[] notificationprojects, int[] ownnotificationprojects, long[] filterpresets)
         {
             var item = CurrentUser;
             if (item != null)
@@ -65,10 +66,22 @@
             {
                 item.Password = new Password(password);
             }
+
             item.Projects.Each(up => up.Notifications = false);
             notificationprojects.Each(i => item.Projects.First(up => up.Project.Id == i).Notifications = true);
+
+            item.Projects.Each(up => up.OnlyOwnIssues = false);
+            ownnotificationprojects.Each(i => item.Projects.First(up => up.Project.Id == i).OnlyOwnIssues = true);
+
+            var filterPresetsToDelete = item.FilterPresets.Where(l => !filterpresets.Contains(l.Id)).ToList();
+
             using (var tx = session.BeginTransaction())
             {
+                foreach (var filterPreset in filterPresetsToDelete)
+                {
+                    item.FilterPresets.Remove(filterPreset);
+                    session.Delete(filterPreset);
+                }
                 session.SaveOrUpdate(item);
                 tx.Commit();
             }

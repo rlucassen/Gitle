@@ -7,6 +7,7 @@
     using FluentNHibernate.Utils;
     using Model;
     using Helpers;
+    using Model.Enum;
     using NHibernate;
     using NHibernate.Linq;
 
@@ -134,13 +135,42 @@
                 return;
             }
 
-            foreach (var issueId in issueIds.Select(id => int.Parse(id)))
+            using (var transaction = session.BeginTransaction())
             {
-                var issue = session.Query<Issue>().FirstOrDefault(x => x.Number == issueId);
-                issue.Labels.Add(realLabel);
+                foreach (var issueId in issueIds.Select(int.Parse))
+                {
+                    var issue = session.Query<Issue>().FirstOrDefault(x => x.Number == issueId);
+                    if(!issue.Labels.Contains(realLabel)) issue.Labels.Add(realLabel);
+                    session.SaveOrUpdate(issue);
+                }
+
+                transaction.Commit();
             }
 
             RedirectToReferrer();
         }
+
+        [MustHaveProject]
+        public void ChangeState(string projectSlug, string issues, IssueState state)
+        {
+            var project = session.Query<Project>().FirstOrDefault(p => p.Slug == projectSlug);
+            var issueIds = issues.Split(',');
+
+            using (var transaction = session.BeginTransaction())
+            {
+                foreach (var issueId in issueIds.Select(int.Parse))
+                {
+                    var issue = session.Query<Issue>().FirstOrDefault(i => i.Number == issueId && i.Project == project);
+                    issue.ChangeState(CurrentUser, state);
+                    session.SaveOrUpdate(issue);
+                }
+
+                transaction.Commit();
+            }
+
+            RedirectToReferrer();
+        }
+
+
     }
 }

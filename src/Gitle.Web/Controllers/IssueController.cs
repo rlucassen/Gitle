@@ -34,35 +34,7 @@
         }
 
         [MustHaveProject]
-        public void Index(string projectSlug, string[] selectedLabels, string[] notSelectedLabels, IssueState state)
-        {
-            if (Request.Params["state"] == null) state = CurrentUser.DefaultState;
-
-            var project = session.Query<Project>().FirstOrDefault(p => p.Slug == projectSlug);
-
-            var itemsQuery =
-                session.Query<Issue>().Where(
-                    x =>
-                    x.Project == project &&
-                    x.Labels.Count(l => selectedLabels.Contains(l.Name)) == selectedLabels.Length &&
-                    !x.Labels.Any(l => notSelectedLabels.Contains(l.Name))).OrderByDescending(x => x.Number).ToList();
-
-            if (state != IssueState.Unknown)
-            {
-                itemsQuery = itemsQuery.Where(x => x.State == state).ToList();
-            }
-
-            PropertyBag.Add("items", itemsQuery.OrderBy(x => x.State).ToList());
-            PropertyBag.Add("project", project);
-            PropertyBag.Add("selectedLabels", selectedLabels);
-            PropertyBag.Add("notSelectedLabels", notSelectedLabels);
-            PropertyBag.Add("labels", CurrentUser.IsAdmin ? project.Labels : project.Labels.Where(l => l.VisibleForCustomer));
-            PropertyBag.Add("customerLabels", CurrentUser.IsAdmin ? project.Labels : project.Labels.Where(l => l.ApplicableByCustomer));
-            PropertyBag.Add("state", state);
-        }
-
-        [MustHaveProject]
-        public void Index2(string projectSlug, string query)
+        public void Index(string projectSlug, string query)
         {
             query = query ?? string.Empty;
 
@@ -97,13 +69,13 @@
                         ids = value.Split(',').Select(long.Parse).ToList();
                         break;
                     case "involved":
-                        involveds.Add(value);
+                        involveds.Add(value == "me" ? CurrentUser.Name : value);
                         break;
                     case "opened":
-                        openedbys.Add(value);
+                        openedbys.Add(value == "me" ? CurrentUser.Name : value);
                         break;
                     case "closed":
-                        closedbys.Add(value);
+                        closedbys.Add(value == "me" ? CurrentUser.Name : value);
                         break;
                 }
             }
@@ -160,14 +132,19 @@
                 items = items.Where(x => states.Contains(x.State)).ToList();
             }
 
+            var filterPresets = session.Query<FilterPreset>().Where(x => x.User == CurrentUser).ToList();
+            var globalFilterPresets = session.Query<FilterPreset>().Where(x => x.User == null).ToList();
+
             PropertyBag.Add("items", items.OrderBy(x => x.State).ToList());
             PropertyBag.Add("project", project);
             PropertyBag.Add("selectedLabels", selectedLabels);
             PropertyBag.Add("notSelectedLabels", notSelectedLabels);
-            PropertyBag.Add("labels", CurrentUser.IsAdmin ? project.Labels : project.Labels.Where(l => l.VisibleForCustomer));
-            PropertyBag.Add("customerLabels", CurrentUser.IsAdmin ? project.Labels : project.Labels.Where(l => l.ApplicableByCustomer));
+            PropertyBag.Add("labels", CurrentUser.IsAdmin ? project.Labels : project.Labels.Where(l => l.VisibleForCustomer).ToList());
+            PropertyBag.Add("customerLabels", CurrentUser.IsAdmin ? project.Labels : project.Labels.Where(l => l.ApplicableByCustomer).ToList());
             PropertyBag.Add("states", states);
             PropertyBag.Add("query", query);
+            PropertyBag.Add("filterPresets", filterPresets);
+            PropertyBag.Add("globalFilterPresets", globalFilterPresets);
         }
 
         [MustHaveProject]

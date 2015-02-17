@@ -76,6 +76,7 @@
     <Content Include="Global.asax" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\FilterPresetController.cs" />
     <Compile Include="Controllers\ImportController.cs" />
     <Compile Include="Controllers\SlugController.cs" />
     <Compile Include="Controllers\UploadController.cs" />
@@ -219,7 +220,7 @@
     <None Include="Content\fonts\FontAwesome.otf" />
     <None Include="Views\Authentication\changepassword.brail" />
     <None Include="Views\Authentication\requestreset.brail" />
-    <None Include="Views\Issue\index2.brail" />
+    <None Include="Views\Issue\index.brail" />
     <None Include="Views\Issue\exportimport.brail" />
     <None Include="Views\Issue\quickview.brail" />
     <None Include="Views\Issue\readjson.brail" />
@@ -239,7 +240,6 @@
     <None Include="Views\User\index.brail" />
     <None Include="Views\Issue\edit.brail" />
     <None Include="Views\Issue\invoice.brail" />
-    <None Include="Views\Issue\index.brail" />
     <None Include="Views\Issue\view.brail" />
     <None Include="Views\Project\edit.brail" />
     <None Include="Views\Project\index.brail" />

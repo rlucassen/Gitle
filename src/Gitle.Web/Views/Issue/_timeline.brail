@@ -1,0 +1,36 @@
+﻿        <div id="timeline">
+          <h2>Tijdlijn</h2>
+          <% for action in item.Actions: %>
+          <% if action.GetType().Name == "ChangeState": %>
+          <div class="row ${action.GetType().Name}">
+            <div class="small-1 columns ${action.IssueState}">
+              <% if action.IssueState.ToString() == "Open": %>
+              <i class="fa fa-exclamation-circle"></i>
+              <% elif action.IssueState.ToString() == "Closed": %>
+              <i class="fa fa-ban"></i>
+              <% end %>
+            </div>
+            <div class="small-11 columns">
+              ${action.HtmlText}
+            </div>
+          </div>
+          <% elif action.GetType().Name == "Change": %>
+          <div class="row ${action.GetType().Name}">
+            <div class="small-1 columns">
+              <i class="fa fa-edit"></i>
+            </div>
+            <div class="small-11 columns">
+              ${action.HtmlText}
+            </div>
+          </div>
+          <% else: %>
+          <div class="panel ${action.GetType().Name}">
+            <small class="right">${Helpers.DateTimeHelper.Readable(action.CreatedAt)}</small>
+            <% if action.User != null: %>
+            <strong>${action.User.FullName}</strong> 
+            <% end %>
+            <div class="">${action.HtmlText}</div>
+          </div>
+          <% end %>
+          <% end %>
+        </div>
