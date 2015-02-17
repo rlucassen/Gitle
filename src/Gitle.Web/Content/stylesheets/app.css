@@ -161,7 +161,7 @@ a.quickview-delay {
 }
 
 .quickview {
-  max-width: 40em;
+  width: 60em;
   color: #666;
   background-color: #f3f3f3;
   border: 1px solid #ddd;
@@ -635,6 +635,15 @@ table#issue-table th#issue-estimate {
 }
 table#issue-table td.estimate {
   display: none;
+}
+
+table td.name {
+  padding: 0;
+}
+
+table td.name a {
+  padding: 0.8;
+  display: block;
 }
 
 @media only screen and (max-width: 64em)  
