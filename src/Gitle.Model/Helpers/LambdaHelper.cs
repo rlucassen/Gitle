@@ -23,7 +23,7 @@
                 for (int i = 1; i < childProperties.Length; i++)
                 {
                     PropertyInfo tempProp = property;
-                    property = tempProp.PropertyType.GetProperty(childProperties[i], BindingFlags.FlattenHierarchy | BindingFlags.Instance);
+                    property = tempProp.PropertyType.GetProperty(childProperties[i]);
                     if (property == null)
                         property =
                             tempProp.PropertyType.GetInterfaces().Select(x => x.GetProperty(childProperties[i])).
