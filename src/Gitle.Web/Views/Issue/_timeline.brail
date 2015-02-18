@@ -1,8 +1,9 @@
 ﻿<div id="timeline">
   <h2>Tijdlijn</h2>
   <% for action in item.Actions: %>
-  <% if action.GetType().Name == "ChangeState": %>
-  <div class="row ${action.GetType().Name}">
+  <div class="issueaction ${action.GetType().Name.Replace("Proxy", "")}<% if CurrentUser.TouchedBefore(action, datetime): %> touched<% end %>">
+  <% if action.GetType().Name.Replace("Proxy", "") == "ChangeState": %>
+  <div class="row">
     <div class="small-1 columns ${action.IssueState}">
       <% if action.IssueState.ToString() == "Open": %>
       <i class="fa fa-exclamation-circle green"></i>
@@ -32,5 +33,6 @@
     <div class="">${action.HtmlText}</div>
   </div>
   <% end %>
+  </div>
   <% end %>
 </div>

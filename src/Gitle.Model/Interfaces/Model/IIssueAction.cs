@@ -2,7 +2,7 @@
 {
     using System;
 
-    public interface IIssueAction
+    public interface IIssueAction : ITouchable
     {
         Issue Issue { get; set; } 
         User User { get; set; }

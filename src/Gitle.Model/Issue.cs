@@ -7,7 +7,7 @@
     using Helpers;
     using Interfaces.Model;
 
-    public class Issue : ModelBase
+    public class Issue : ModelBase, ITouchable
     {
         public Issue()
         {
@@ -105,7 +105,7 @@
                 var actions = new List<IIssueAction>(Comments);
                 actions.AddRange(ChangeStates);
                 actions.AddRange(Changes);
-                return actions.OrderBy(x => x.CreatedAt).ToList();
+                return actions.OrderByDescending(x => x.CreatedAt).ToList();
             }
         }
 

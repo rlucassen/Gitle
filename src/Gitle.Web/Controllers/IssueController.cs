@@ -229,6 +229,15 @@
             PropertyBag.Add("item", item);
             PropertyBag.Add("comments", item.Comments);
             PropertyBag.Add("days", DayHelper.GetPastDaysList());
+            PropertyBag.Add("datetime", DateTime.Now);
+
+            CurrentUser.Touch(item);
+            CurrentUser.Touch(item.Actions);
+            using (var transaction = session.BeginTransaction())
+            {
+                session.SaveOrUpdate(CurrentUser);
+                transaction.Commit();
+            }
         }
 
         [MustHaveProject]

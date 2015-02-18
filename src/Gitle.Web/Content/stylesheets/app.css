@@ -621,6 +621,11 @@ table.row-clickable tbody td:hover {
 .issue {
   padding: 1em 1em 0.2em;
   border-bottom: 1px solid #ccc;
+  border-left: 3px solid #008CBA;
+}
+
+.issue.touched {
+  border-left-color: transparent;
 }
 
 .issue:hover {
@@ -650,6 +655,22 @@ table.row-clickable tbody td:hover {
 
 .issue .comments i {
   font-size: 1.4em;
+}
+
+.issueaction:not(.Comment) {
+  border-left: 3px solid #008CBA;
+}
+
+.issueaction.Comment .panel {
+  border-left: 3px solid #008CBA;
+}
+
+.issueaction.touched:not(.Comment) {
+  border-left-color: transparent;
+}
+
+.issueaction.touched.Comment .panel {
+  border-left: 1px solid #d8d8d8;
 }
 
 #group-actions select {

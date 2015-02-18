@@ -85,6 +85,7 @@
     <Compile Include="Helpers\StringHelper.cs" />
     <Compile Include="Interfaces\Model\IIssueAction.cs" />
     <Compile Include="Interfaces\Model\IPassword.cs" />
+    <Compile Include="Interfaces\Model\ISeeable.cs" />
     <Compile Include="Interfaces\Service\IEmailService.cs" />
     <Compile Include="Issue.cs" />
     <Compile Include="Label.cs" />
@@ -97,12 +98,14 @@
     <Compile Include="Mapping\LabelMap.cs" />
     <Compile Include="Mapping\ModelBaseMap.cs" />
     <Compile Include="Mapping\ProjectMap.cs" />
+    <Compile Include="Mapping\TouchMap.cs" />
     <Compile Include="Mapping\UserMap.cs" />
     <Compile Include="Mapping\UserProjectMap.cs" />
     <Compile Include="ModelBase.cs" />
     <Compile Include="Nested\Password.cs" />
     <Compile Include="Project.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Touch.cs" />
     <Compile Include="User.cs" />
     <Compile Include="UserProject.cs" />
   </ItemGroup>
