@@ -13,7 +13,7 @@
 
     #endregion
 
-    public class User : ModelBase, IPrincipal, IIdentity
+    public class User : ModelBase, IPrincipal, IIdentity, IComparable
     {
         public User()
         {
@@ -79,6 +79,16 @@
             {
                 get { return new Password(); }
             }
+        }
+
+        public virtual int CompareTo(object obj)
+        {
+            if (obj == null) return 1;
+
+            var otherUser = obj as User;
+            if (otherUser != null)
+                return FullName.CompareTo(otherUser.FullName);
+            throw new ArgumentException("Object is not a User");
         }
     }
 }

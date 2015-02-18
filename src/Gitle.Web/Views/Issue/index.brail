@@ -47,7 +47,7 @@
           <div class="large-3 columns">
             <% if labels.Count > 0: %>
             <button href="#" data-dropdown="selectedLabels" aria-controls="selectedLabels" aria-expanded="false" class="button tiny dropdown no-margin">Bevat labels:</button>
-            <ul id="selectedLabels" data-dropdown-content class="f-dropdown" aria-hidden="true" tabindex="-1">
+            <ul id="selectedLabels" data-dropdown-content class="f-dropdown labels" aria-hidden="true" tabindex="-1">
               <% for label in labels: %>
               <li>
                 <a href="#" data-filter="label:'${label.Name}'">
@@ -60,7 +60,7 @@
               <% end %>
             </ul>
             <button href="#" data-dropdown="notSelectedLabels" aria-controls="notSelectedLabels" aria-expanded="false" class="button tiny dropdown no-margin">Bevat niet labels:</button>
-            <ul id="notSelectedLabels" data-dropdown-content class="f-dropdown" aria-hidden="true" tabindex="-1">
+            <ul id="notSelectedLabels" data-dropdown-content class="f-dropdown labels" aria-hidden="true" tabindex="-1">
               <% for label in labels: %>
               <li>
                 <a href="#" data-filter="notlabel:'${label.Name}'">
@@ -76,8 +76,29 @@
             <a href="#" class="button tiny secondary disabled">Geen labels om te filteren</a>
             <% end %>
           </div>
-          <div class="large-1 columns">
-            
+          <div class="large-2 columns">
+            <button href="#" data-dropdown="sorts" aria-controls="sorts" aria-expanded="false" class="button tiny dropdown no-margin">Sorteren:</button>
+            <ul id="sorts" data-dropdown-content class="f-dropdown" aria-hidden="true" tabindex="-1">
+              <% for sort in allSorts: %>
+              <% isSorted = selectedSorts.ContainsKey(sort.Key) %>
+              <li>
+                <a href="#" data-filter="sort<% if not isSorted or (isSorted and not selectedSorts[sort.Key]): %>desc<% end %>:${sort.Key}" data-filter-opposite="sort<% if isSorted and selectedSorts[sort.Key]: %>desc<% end %>:${sort.Key}">
+                  <% if isSorted and selectedSorts[sort.Key]: %>
+                  <i class="fa fa-chevron-down"></i>
+                  <% end %>
+                  <% if isSorted and not selectedSorts[sort.Key]: %>
+                  <i class="fa fa-chevron-up"></i>
+                  <% end %>
+                  ${sort.Value}
+                </a>
+                <% if isSorted: %>
+                <a href="#" class="remove-filter" data-filter="sort<% if not isSorted or (isSorted and selectedSorts[sort.Key]): %>desc<% end %>:${sort.Key}">
+                  <i class="fa fa-close red"></i>
+                </a>
+                <% end %>
+              </li>
+              <% end %>
+            </ul>
           </div>
           <div class="large-5 columns">
             <div class="row" id="group-actions">
@@ -144,13 +165,18 @@
     $('a[data-filter]').click(function (e) {
       e.preventDefault();
       var filter = $(this).data('filter');
+      var oppositeFilter = $(this).data('filter-opposite');
       var query = $('#query').val();
       if ($(this).is('[data-filter-clear]')) query = '';
-      if (query.indexOf(filter) != -1) {
-        $('#query').val(query.replace(filter, ""));
-      } else {
-        $('#query').val(query + " " + filter);
+      if (query.indexOf(oppositeFilter) != -1) {
+        query = query.replace(oppositeFilter, "");
       }
+      if (query.indexOf(filter) != -1) {
+        query = query.replace(filter, "");
+      } else {
+        query = query + " " + filter;
+      }
+      $('#query').val(query.replace(/ +(?= )/g,''));
       $('#query-form').submit();
     });
     $('#query-form .submit').click(function (e) {
