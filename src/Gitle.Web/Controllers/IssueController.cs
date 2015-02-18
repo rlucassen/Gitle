@@ -50,7 +50,8 @@
                                 {"CreatedAt", "Aanmaakdatum"},
                                 {"Number", "Nummer"},
                                 {"Name", "Naam"},
-                                {"TotalHours", "Inspanning"}
+                                {"TotalHours", "Inspanning"},
+                                {"Comments.Count", "Aantal reacties"}
                             };
 
             IList<string> selectedLabels = new List<string>();

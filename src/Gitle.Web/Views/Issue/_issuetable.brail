@@ -21,7 +21,7 @@
           </div>
           <div class="large-9 columns">
             <div class="row namerow">
-              <div class="large-12 columns">
+              <div class="large-11 columns">
                 <a href="/project/${project.Slug}/issue/${issue.Number}/view" data-quickview="/project/${project.Slug}/issue/${issue.Number}/quickview">${issue.Name}</a>
                 <% for label in labels: %>
                 <%  if issue.CheckLabel(label.Name): %>
@@ -29,12 +29,16 @@
                 <%  end %>
                 <% end %>
               </div>
+              <div class="large-1 columns text-right comments">
+                <% if issue.Comments.Count > 0: %><i class="fa fa-comments-o"></i> ${issue.Comments.Count}<% end %>
+              </div>
             </div>
             <div class="row detailsrow">
-              <div class="large-6 columns">
-                geopend op <strong>${Helpers.DateTimeHelper.Readable(issue.CreatedAt)}</strong> <% if issue.CreatedBy: %>door <strong>${issue.CreatedBy.FullName}</strong><% end %>
+              <div class="large-9 columns">
+                geopend op <strong>${Helpers.DateTimeHelper.Readable(issue.CreatedAt)}</strong><% if issue.CreatedBy: %> door <strong>${issue.CreatedBy.FullName}</strong><% end %>,
+                <% if issue.ClosedAt != null: %>gesloten op <strong>${Helpers.DateTimeHelper.Readable(issue.ClosedAt)}</strong><% if issue.ClosedBy != null: %> door <strong>${issue.ClosedBy.FullName}</strong><% end %><% end %>
               </div>
-              <div class="large-6 columns text-right">
+              <div class="large-3 columns text-right">
                 <% if issue.Devvers > 0 and issue.Hours > 0: %>
                 ${issue.EstimateString} (${issue.CostString(project.HourPrice)})
                 <% end %>

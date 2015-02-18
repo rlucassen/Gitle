@@ -77,6 +77,17 @@
             }
         }
 
+        public virtual User ClosedBy
+        {
+            get
+            {
+                var state =
+                    ChangeStates.OrderByDescending(x => x.CreatedAt).FirstOrDefault(
+                        x => x.IssueState == IssueState.Closed);
+                return state != null ? state.User : null;
+            }
+        }
+
         public virtual DateTime? UpdatedAt
         {
             get

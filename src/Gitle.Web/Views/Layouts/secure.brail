@@ -9,7 +9,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
-    <title><% if IsDefined("issueId"): %>#${issueId}<% end %><% if IsDefined("project"): %> - ${project.Name}<% end %> - ${t.AppName}</title>
+    <title><% if IsDefined("issueId"): %>#${issueId} - <% end %><% if IsDefined("project"): %>${project.Name} - <% end %>${t.AppName}</title>
 
     <link rel="shortcut icon" href="/Content/images/favicon.ico"/>
 

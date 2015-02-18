@@ -633,15 +633,23 @@ table.row-clickable tbody td:hover {
 }
 
 .issue .issuestate i {
-  font-size: 2em;
+  font-size: 1.6em;
 }
 
 .issue .namerow a {
-  margin-right: 1em;
+  margin-right: 0.5em;
 }
 
 .issue .detailsrow {
   font-size: 0.8em;
+}
+
+.issue .comments {
+  font-size: 0.8em;
+}
+
+.issue .comments i {
+  font-size: 1.4em;
 }
 
 #group-actions select {
@@ -668,15 +676,6 @@ table#issue-table th#issue-estimate {
 }
 table#issue-table td.estimate {
   display: none;
-}
-
-table td.name {
-  padding: 0;
-}
-
-table td.name a {
-  padding: 0.8;
-  display: block;
 }
 
 @media only screen and (max-width: 64em)  
