@@ -22,7 +22,12 @@
                 propertyAccess = Expression.MakeMemberAccess(parameter, property);
                 for (int i = 1; i < childProperties.Length; i++)
                 {
-                    property = property.PropertyType.GetProperty(childProperties[i]);
+                    PropertyInfo tempProp = property;
+                    property = tempProp.PropertyType.GetProperty(childProperties[i], BindingFlags.FlattenHierarchy | BindingFlags.Instance);
+                    if (property == null)
+                        property =
+                            tempProp.PropertyType.GetInterfaces().Select(x => x.GetProperty(childProperties[i])).
+                                FirstOrDefault(x => x != null);
                     propertyAccess = Expression.MakeMemberAccess(propertyAccess, property);
                 }
             }

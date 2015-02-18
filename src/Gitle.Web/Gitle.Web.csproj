@@ -226,9 +226,6 @@
     <None Include="Content\fonts\FontAwesome.otf" />
     <None Include="Views\Authentication\changepassword.brail" />
     <None Include="Views\Authentication\requestreset.brail" />
-    <None Include="Views\Issue\Copy of _issuetable.brail">
-      <SubType>Designer</SubType>
-    </None>
     <None Include="Views\Issue\index.brail" />
     <None Include="Views\Issue\exportimport.brail" />
     <None Include="Views\Issue\quickview.brail" />
