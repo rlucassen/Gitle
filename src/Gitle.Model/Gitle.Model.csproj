@@ -78,6 +78,10 @@
     <Compile Include="Helpers\DateTimeHelper.cs" />
     <Compile Include="Helpers\EnumHelper.cs" />
     <Compile Include="Helpers\HashHelper.cs" />
+    <Compile Include="Helpers\IQueryableExtension.cs" />
+    <Compile Include="Helpers\LambdaHelper.cs" />
+    <Compile Include="Helpers\ListHelper.cs" />
+    <Compile Include="Helpers\NHibernateMetadataHelper.cs" />
     <Compile Include="Helpers\StringHelper.cs" />
     <Compile Include="Interfaces\Model\IIssueAction.cs" />
     <Compile Include="Interfaces\Model\IPassword.cs" />

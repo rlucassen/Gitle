@@ -503,15 +503,25 @@ table.row-clickable tbody td:hover {
   color: #333;
 }
 
+.filters .f-dropdown li {
+  position: relative;
+}
+
 .filters .f-dropdown a {
   position: relative;
   height: 2.5em;
 }
 
-.filters .f-dropdown a i {
+.filters .f-dropdown.labels a i {
   position: absolute;
   left: 0.7em;
   top: 0.7em;
+}
+
+.filters .f-dropdown .remove-filter {
+  position: absolute;
+  top: 0;
+  right: 0;
 }
 
 .filters .f-dropdown a span {

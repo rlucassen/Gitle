@@ -24,11 +24,13 @@
 
     public class IssueController : SecureController
     {
+        private readonly ISessionFactory sessionFactory;
         private readonly ISession session;
         private readonly IEntryClient entryClient;
 
         public IssueController(ISessionFactory sessionFactory, IEntryClient entryClient)
         {
+            this.sessionFactory = sessionFactory;
             this.session = sessionFactory.GetCurrentSession();
             this.entryClient = entryClient;
         }
@@ -40,7 +42,16 @@
 
             var project = session.Query<Project>().FirstOrDefault(p => p.Slug == projectSlug);
 
-            var matches = Regex.Matches(query, @"[a-zA-Z0-9_]+:(([a-zA-Z0-9_,]+)|('[a-zA-Z0-9_, ]+'))");
+            var matches = Regex.Matches(query, @"[a-zA-Z0-9_]+:(([a-zA-Z0-9_,.]+)|('[a-zA-Z0-9_,. ]+'))");
+
+            var allSorts = new Dictionary<string, string>()
+                            {
+                                {"CreatedBy", "Aanmelder"}, 
+                                {"CreatedAt", "Aanmaakdatum"},
+                                {"Number", "Nummer"},
+                                {"Name", "Naam"},
+                                {"TotalHours", "Inspanning"}
+                            };
 
             IList<string> selectedLabels = new List<string>();
             IList<string> notSelectedLabels = new List<string>();
@@ -49,14 +60,16 @@
             IList<string> involveds = new List<string>();
             IList<string> openedbys = new List<string>();
             IList<string> closedbys = new List<string>();
+            IDictionary<string, bool> querySorts = new Dictionary<string, bool>();
+            IDictionary<string, bool> linqSorts = new Dictionary<string, bool>();
+            IDictionary<string, bool> selectedSorts = new Dictionary<string, bool>();
             var searchQuery = query;
-
 
             foreach (Match match in matches)
             {
                 var parts = match.Value.Split(':');
                 var value = parts[1].Replace("'", "");
-                searchQuery = searchQuery.Replace(match.Value, "").Trim();
+                searchQuery = searchQuery.Replace(match.Value, "");
                 switch (parts[0])
                 {
                     case "label":
@@ -80,8 +93,23 @@
                     case "closed":
                         closedbys.Add(value == "me" ? CurrentUser.Name : value);
                         break;
+                    case "sort":
+                        selectedSorts.Add(value, false);
+                        if (NHibernateMetadataHelper.IsMapped<Issue>(sessionFactory, value))
+                            querySorts.Add(value, false);
+                        else
+                            linqSorts.Add(value, false);
+                        break;
+                    case "sortdesc":
+                        selectedSorts.Add(value, true);
+                        if (NHibernateMetadataHelper.IsMapped<Issue>(sessionFactory, value))
+                            querySorts.Add(value, true);
+                        else
+                            linqSorts.Add(value, true);
+                        break;
                 }
             }
+
 
             var itemsQuery =
                 session.Query<Issue>().Where(
@@ -91,7 +119,14 @@
                     !x.Labels.Any(l => notSelectedLabels.Contains(l.Name)));
 
             if (!string.IsNullOrWhiteSpace(searchQuery))
-                itemsQuery = itemsQuery.Where(x => x.Name.Contains(searchQuery) || x.Body.Contains(searchQuery));
+            {
+                var searchQueryParts = searchQuery.Split(' ').Where(x => !string.IsNullOrWhiteSpace(x));
+                foreach (var searchQueryPart in searchQueryParts)
+                {
+                    var trimmedSearchQueryPart = searchQueryPart.Trim();
+                    itemsQuery = itemsQuery.Where(x => x.Name.Contains(trimmedSearchQueryPart) || x.Body.Contains(trimmedSearchQueryPart));
+                }
+            }
 
             if (ids.Any())
                 itemsQuery = itemsQuery.Where(x => ids.Contains(x.Number));
@@ -126,13 +161,34 @@
                         (a.User.Name == closedby || a.User.FullName == closedby)));
             }
 
+            if (querySorts.Count > 0)
+            {
+                foreach (var sort in querySorts)
+                {
+                    itemsQuery = itemsQuery.OrderByProperty(sort.Key, sort.Value);
+                }
+            }
+
+            var items = itemsQuery.ToList();
+
+            if (linqSorts.Count > 0)
+            {
+                foreach (var sort in linqSorts)
+                {
+                    items = items.OrderByProperty(sort.Key, sort.Value).ToList();
+                }
+            }
+
+            if(querySorts.Count == 0 && linqSorts.Count == 0) 
+            {
+                items = items.OrderByDescending(x => x.Number).OrderBy(x => x.State).ToList();
+            }
+
+            // TODO: dit moet eigenlijk verder naar boven in de query
             //if (states.Any())
             //{
             //    itemsQuery = itemsQuery.Where(x => states.Contains(x.ChangeStates.Single().IssueState));
             //}
-
-            var items = itemsQuery.OrderByDescending(x => x.Number).ToList();
-
             if (states.Any())
             {
                 items = items.Where(x => states.Contains(x.State)).ToList();
@@ -141,7 +197,7 @@
             var filterPresets = session.Query<FilterPreset>().Where(x => x.User == CurrentUser).ToList();
             var globalFilterPresets = session.Query<FilterPreset>().Where(x => x.User == null).ToList();
 
-            PropertyBag.Add("items", items.OrderBy(x => x.State).ToList());
+            PropertyBag.Add("items", items.ToList());
             PropertyBag.Add("project", project);
             PropertyBag.Add("selectedLabels", selectedLabels);
             PropertyBag.Add("notSelectedLabels", notSelectedLabels);
@@ -151,6 +207,8 @@
             PropertyBag.Add("query", query);
             PropertyBag.Add("filterPresets", filterPresets);
             PropertyBag.Add("globalFilterPresets", globalFilterPresets);
+            PropertyBag.Add("selectedSorts", selectedSorts);
+            PropertyBag.Add("allSorts", allSorts);
         }
 
         [MustHaveProject]
