@@ -9,12 +9,12 @@
 
     <link rel="shortcut icon" href="/Content/images/favicon.ico"/>
 
-    <link rel="stylesheet" href="/content/stylesheets/normalize.css" />
-    <link rel="stylesheet" href="/content/stylesheets/foundation.min.css" />
-    <link rel="stylesheet" href="/Content/stylesheets/font-awesome.min.css">
+    <link rel="stylesheet" href="/content/stylesheets/vendor/normalize.css" />
+    <link rel="stylesheet" href="/content/stylesheets/vendor/foundation.min.css" />
+    <link rel="stylesheet" href="/Content/stylesheets/vendor/fontawesome/font-awesome.min.css">
     <link rel="stylesheet" href="/Content/stylesheets/app.css">
 
-    <script src="/Content/javascript/vendor/custom.modernizr.js"> </script>
+    <script src="/Content/javascript/vendor/custom.modernizr.js"></script>
     <script src="/Content/javascript/vendor/jquery.js"> </script>
   </head>
   <body>
@@ -44,7 +44,7 @@
       </div>
     </div>
 
-    <script src="/Content/javascript/foundation.min.js"> </script>
+    <script src="/Content/javascript/vendor/foundation.min.js"> </script>
     <script>
       $(document).foundation();
     </script>
