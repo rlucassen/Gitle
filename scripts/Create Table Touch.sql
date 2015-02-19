@@ -1,0 +1,64 @@
+/****** Object:  Table [dbo].[Touch]    Script Date: 2/19/2015 11:09:46 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[Touch](
+	[Id] [bigint] IDENTITY(1,1) NOT NULL,
+	[Guid] [uniqueidentifier] NULL,
+	[IsActive] [bit] NULL,
+	[User_id] [bigint] NULL,
+	[Seeable_type] [nvarchar](255) NULL,
+	[Seeable_id] [bigint] NULL,
+	[DateTime] [datetime] NULL,
+	[Touchable_id] [bigint] NULL,
+	[Change_id] [bigint] NULL,
+	[ChangeState_id] [bigint] NULL,
+	[Comment_id] [bigint] NULL,
+	[Issue_id] [bigint] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+ALTER TABLE [dbo].[Touch]  WITH CHECK ADD  CONSTRAINT [FKBE6435FB2303E129] FOREIGN KEY([User_id])
+REFERENCES [dbo].[User] ([Id])
+GO
+
+ALTER TABLE [dbo].[Touch] CHECK CONSTRAINT [FKBE6435FB2303E129]
+GO
+
+ALTER TABLE [dbo].[Touch]  WITH CHECK ADD  CONSTRAINT [FKBE6435FB4507DC57] FOREIGN KEY([ChangeState_id])
+REFERENCES [dbo].[ChangeState] ([Id])
+GO
+
+ALTER TABLE [dbo].[Touch] CHECK CONSTRAINT [FKBE6435FB4507DC57]
+GO
+
+ALTER TABLE [dbo].[Touch]  WITH CHECK ADD  CONSTRAINT [FKBE6435FB4F2A65BC] FOREIGN KEY([Comment_id])
+REFERENCES [dbo].[Comment] ([Id])
+GO
+
+ALTER TABLE [dbo].[Touch] CHECK CONSTRAINT [FKBE6435FB4F2A65BC]
+GO
+
+ALTER TABLE [dbo].[Touch]  WITH CHECK ADD  CONSTRAINT [FKBE6435FB91F7CAB3] FOREIGN KEY([Issue_id])
+REFERENCES [dbo].[Issue] ([Id])
+GO
+
+ALTER TABLE [dbo].[Touch] CHECK CONSTRAINT [FKBE6435FB91F7CAB3]
+GO
+
+ALTER TABLE [dbo].[Touch]  WITH CHECK ADD  CONSTRAINT [FKBE6435FBE1A26B7C] FOREIGN KEY([Change_id])
+REFERENCES [dbo].[Change] ([Id])
+GO
+
+ALTER TABLE [dbo].[Touch] CHECK CONSTRAINT [FKBE6435FBE1A26B7C]
+GO
+
+
