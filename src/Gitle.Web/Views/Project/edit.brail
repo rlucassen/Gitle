@@ -70,25 +70,6 @@
               </tr>
               <% count++ %>
               <% end %>
-              <tr>
-                <td>
-                  <input type="hidden" name="label[${count}].Project.Id" value="${item.Id}"/>
-                  <input type="text" name="label[${count}].Name"/>
-                </td>
-                <td>
-                  <div class="row collapse">
-                    <div class="small-10 columns">
-                      <input type="text" name="label[${count}].Color" class="colorpicker"/>
-                    </div>
-                    <div class="small-2 columns">
-                      <a class="colorpicker-open button secondary postfix" rel="label[${count}].Color" href="#" title="Open kleurenpalet"><i class="fa fa-th"></i></a>
-                    </div>
-                  </div>
-                </td>
-                <td><input type="checkbox" name="label[${count}].VisibleForCustomer" value="true"/></td>
-                <td><input type="checkbox" name="label[${count}].ApplicableByCustomer" value="true"/></td>
-                <td><input type="checkbox" name="label[${count}].ToFreckle" value="true"/></td>
-              </tr>
             </tbody>
           </table>
         </div>

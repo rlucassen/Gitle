@@ -22,6 +22,10 @@
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <OldToolsVersion>4.0</OldToolsVersion>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -64,6 +68,7 @@
     <Content Include="Content\javascript\foundation\foundation.topbar.js" />
     <Content Include="Content\javascript\jquery.ajaxupload.js" />
     <Content Include="Content\javascript\jquery.colorpicker.js" />
+    <Content Include="Content\javascript\jquery.cookie.js" />
     <Content Include="Content\javascript\jquery.metadata.js" />
     <Content Include="Content\javascript\jquery.tablesorter.js" />
     <Content Include="Content\javascript\jquery.tablesorter.min.js" />
@@ -72,6 +77,7 @@
     <Content Include="Content\javascript\vendor\jquery.cookie.js" />
     <Content Include="Content\javascript\vendor\jquery.js" />
     <Content Include="Content\stylesheets\app.css" />
+    <Content Include="Content\stylesheets\chosen.css" />
     <Content Include="Content\stylesheets\chosen.min.css" />
     <Content Include="Content\stylesheets\font-awesome-ie7.min.css" />
     <Content Include="Content\stylesheets\font-awesome.css" />
@@ -223,6 +229,7 @@
     <None Include="Content\fonts\fontawesome-webfont.eot" />
     <None Include="Content\fonts\fontawesome-webfont.ttf" />
     <None Include="Content\fonts\fontawesome-webfont.woff" />
+    <Content Include="Content\fonts\fontawesome-webfont.woff2" />
     <None Include="Content\fonts\FontAwesome.otf" />
     <None Include="Views\Authentication\changepassword.brail" />
     <None Include="Views\Authentication\requestreset.brail" />

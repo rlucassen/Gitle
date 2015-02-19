@@ -44,8 +44,20 @@ ul.f-dropdown .divider {
   border-bottom: 1px solid #ccc;
 }
 
+.large-0 {
+  width: auto;
+}
+
+.large-0[class*="column"]+[class*="column"]:last-child {
+  float: left;
+}
+
+.button-group {
+  margin-left: 2px;
+}
+
 span.button.three-state-checker {
-  font-size: 1.2em;
+  font-size: 1.1em;
   padding: 0.36rem 1.25rem;
 }
 
@@ -724,6 +736,15 @@ table#issue-table td.estimate {
 
 @media only screen and (max-width: 64em)  
 {
+  .large-0.small-12 {
+    width: 100% !important;
+    margin-bottom: 0.5em;
+  }
+
+  .large-0.small-12 > * {
+    width: 100%;
+  }
+
   table.small-blocks, table.small-blocks thead, table.small-blocks tbody, table.small-blocks tbody tr, table.small-blocks thead tr th, table.small-blocks tbody tr td {
     display: block;
   }

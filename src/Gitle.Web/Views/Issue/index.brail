@@ -38,95 +38,87 @@
           </div>
         </div>
         <div class="row filters">
-          <div class="large-7 columns">
-            <div class="row collapse">
-              <div class="large-5 columns">
-                <div class="row collapse">
-                  <div class="large-3 columns">
-                    <span class="three-state-checker button tiny" data-state="none" data-selector=".issues .issuestate input[type=checkbox]"></span>
-                  </div>
-                  <div class="large-9 columns">
-                    <ul class="button-group">
-                      <li>
-                        <a href="#" data-filter="state:Open" class="button tiny no-margin secondary<% if states.Contains(Gitle.Model.Enum.IssueState.Open): %> active<% end %>">Open</a>
-                      </li>
-                      <li>
-                        <a href="#" data-filter="state:Closed" class="button tiny no-margin secondary<% if states.Contains(Gitle.Model.Enum.IssueState.Closed): %> active<% end %>">Gesloten</a>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-              <div class="large-5 columns">
-                <% if labels.Count > 0: %>
-                <button href="#" data-dropdown="selectedLabels" aria-controls="selectedLabels" aria-expanded="false" class="button tiny dropdown no-margin">Bevat labels:</button>
-                <ul id="selectedLabels" data-dropdown-content="" class="f-dropdown labels" aria-hidden="true" tabindex="-1">
-                  <% for label in labels: %>
-                  <li>
-                    <a href="#" data-filter="label:'${label.Name}'">
-                      <% if selectedLabels.Contains(label.Name): %>
-                      <i class="fa fa-check"></i>
-                      <% end %>
-                      <span class="label no-margin"
-                        <% if label.VisibleForCustomer: %> radius<% end %>" title="${label.Name}" style="background-color: #${label.Color} ;">${label.Name}</span>
-                    </a>
-                  </li>
-                  <% end %>
-                </ul>
-                <button href="#" data-dropdown="notSelectedLabels" aria-controls="notSelectedLabels" aria-expanded="false" class="button tiny dropdown no-margin">Bevat niet labels:</button>
-                <ul id="notSelectedLabels" data-dropdown-content="" class="f-dropdown labels" aria-hidden="true" tabindex="-1">
-                  <% for label in labels: %>
-                  <li>
-                    <a href="#" data-filter="notlabel:'${label.Name}'">
-                      <% if notSelectedLabels.Contains(label.Name): %>
-                      <i class="fa fa-check"></i>
-                      <% end %>
-                      <span class="label no-margin"
-                        <% if label.VisibleForCustomer: %> radius<% end %>" title="${label.Name}" style="background-color: #${label.Color} ;">${label.Name}</span>
-                    </a>
-                  </li>
-                  <% end %>
-                </ul>
-                <% else: %>
-                <a href="#" class="button tiny secondary disabled">Geen labels om te filteren</a>
-                <% end %>
-              </div>
-              <div class="large-2 columns">
-                <button href="#" data-dropdown="sorts" aria-controls="sorts" aria-expanded="false" class="button tiny dropdown no-margin">Sorteren:</button>
-                <ul id="sorts" data-dropdown-content="" class="f-dropdown" aria-hidden="true" tabindex="-1">
-                  <% for sort in allSorts: %>
-                  <% isSorted = selectedSorts.ContainsKey(sort.Key) %>
-                  <li>
-                    <a href="#" data-filter="sort"
-                      <% if not isSorted or (isSorted and not selectedSorts[sort.Key]): %>desc<% end %>:${sort.Key}" data-filter-opposite="sort<% if isSorted and selectedSorts[sort.Key]: %>desc<% end %>:${sort.Key}">
-                      <% if isSorted and selectedSorts[sort.Key]: %>
-                      <i class="fa fa-chevron-down"></i>
-                      <% end %>
-                      <% if isSorted and not selectedSorts[sort.Key]: %>
-                      <i class="fa fa-chevron-up"></i>
-                      <% end %>
-                  ${sort.Value}
-                    </a>
-                    <% if isSorted: %>
-                    <a href="#" class="remove-filter" data-filter="sort"
-                      <% if not isSorted or (isSorted and selectedSorts[sort.Key]): %>desc<% end %>:${sort.Key}">
-                      <i class="fa fa-close red"></i>
-                    </a>
-                    <% end %>
-                  </li>
-                  <% end %>
-                </ul>
-              </div>
-            </div>
+          <div class="large-0 small-12 columns">
+            <span class="three-state-checker button tiny no-margin" data-state="none" data-selector=".issues .issuestate input[type=checkbox]"></span>
           </div>
-          <div class="large-5 columns">
+          <div class="large-0 columns">
+            <ul class="button-group">
+              <li>
+                <a href="#" data-filter="state:Open" class="button tiny no-margin secondary<% if states.Contains(Gitle.Model.Enum.IssueState.Open): %> active<% end %>">Open</a>
+              </li>
+              <li>
+                <a href="#" data-filter="state:Closed" class="button tiny no-margin secondary<% if states.Contains(Gitle.Model.Enum.IssueState.Closed): %> active<% end %>">Gesloten</a>
+              </li>
+            </ul>
+          </div>
+          <div class="large-0 small-12 columns">
+            <% if labels.Count > 0: %>
+            <button href="#" data-dropdown="selectedLabels" aria-controls="selectedLabels" aria-expanded="false" class="button tiny dropdown no-margin">Bevat labels:</button>
+            <ul id="selectedLabels" data-dropdown-content="" class="f-dropdown labels" aria-hidden="true" tabindex="-1">
+              <% for label in labels: %>
+              <li>
+                <a href="#" data-filter="label:'${label.Name}'">
+                  <% if selectedLabels.Contains(label.Name): %>
+                  <i class="fa fa-check"></i>
+                  <% end %>
+                  <span class="label no-margin"
+                    <% if label.VisibleForCustomer: %> radius<% end %>" title="${label.Name}" style="background-color: #${label.Color} ;">${label.Name}</span>
+                </a>
+              </li>
+              <% end %>
+            </ul>
+            <button href="#" data-dropdown="notSelectedLabels" aria-controls="notSelectedLabels" aria-expanded="false" class="button tiny dropdown no-margin">Bevat niet labels:</button>
+            <ul id="notSelectedLabels" data-dropdown-content="" class="f-dropdown labels" aria-hidden="true" tabindex="-1">
+              <% for label in labels: %>
+              <li>
+                <a href="#" data-filter="notlabel:'${label.Name}'">
+                  <% if notSelectedLabels.Contains(label.Name): %>
+                  <i class="fa fa-check"></i>
+                  <% end %>
+                  <span class="label no-margin"
+                    <% if label.VisibleForCustomer: %> radius<% end %>" title="${label.Name}" style="background-color: #${label.Color} ;">${label.Name}</span>
+                </a>
+              </li>
+              <% end %>
+            </ul>
+            <% else: %>
+            <a href="#" class="button tiny secondary disabled">Geen labels om te filteren</a>
+            <% end %>
+          </div>
+          <div class="large-0 small-12 columns">
+            <button href="#" data-dropdown="sorts" aria-controls="sorts" aria-expanded="false" class="button tiny dropdown no-margin">Sorteren:</button>
+            <ul id="sorts" data-dropdown-content="" class="f-dropdown" aria-hidden="true" tabindex="-1">
+              <% for sort in allSorts: %>
+              <% isSorted = selectedSorts.ContainsKey(sort.Key) %>
+              <li>
+                <a href="#" data-filter="sort"
+                  <% if not isSorted or (isSorted and not selectedSorts[sort.Key]): %>desc<% end %>:${sort.Key}" data-filter-opposite="sort<% if isSorted and selectedSorts[sort.Key]: %>desc<% end %>:${sort.Key}">
+                  <% if isSorted and selectedSorts[sort.Key]: %>
+                  <i class="fa fa-chevron-down"></i>
+                  <% end %>
+                  <% if isSorted and not selectedSorts[sort.Key]: %>
+                  <i class="fa fa-chevron-up"></i>
+                  <% end %>
+              ${sort.Value}
+                </a>
+                <% if isSorted: %>
+                <a href="#" class="remove-filter" data-filter="sort"
+                  <% if not isSorted or (isSorted and selectedSorts[sort.Key]): %>desc<% end %>:${sort.Key}">
+                  <i class="fa fa-close red"></i>
+                </a>
+                <% end %>
+              </li>
+              <% end %>
+            </ul>
+          </div>
+          <div class="large-0 small-12 columns">
             <div class="row" id="group-actions">
               <input type="hidden" name="issues" />
-              <div class="large-4 small-12 columns text-right small-text-left">
+              <div class="large-0 small-12 columns text-right small-text-left">
                 <label>Geselecteerde taken:</label>
               </div>
-              <div class="large-5 small-7 columns">
-                <button href="#" data-dropdown="addLabels" aria-controls="addLabels" aria-expanded="false" class="button tiny dropdown expand success no-margin">Label toevoegen</button>
+              <div class="large-0 small-12 columns">
+                <button href="#" data-dropdown="addLabels" aria-controls="addLabels" aria-expanded="false" class="button tiny dropdown success no-margin">Label toevoegen</button>
                 <ul id="addLabels" data-dropdown-content class="f-dropdown" aria-hidden="true" tabindex="-1">
                   <% for label in customerLabels: %>
                   <li>
@@ -137,8 +129,8 @@
                   <% end %>
                 </ul>
               </div>
-              <div class="large-3 small-5 columns">
-                <a href="/project/${project.Slug}/changestate?state=2" data-group-action class="button tiny no-margin expand alert">Sluiten</a>
+              <div class="large-0 small-12 columns">
+                <a href="/project/${project.Slug}/changestate?state=2" data-group-action class="button tiny no-margin alert">Sluiten</a>
               </div>
             </div>
           </div>
