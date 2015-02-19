@@ -17,7 +17,7 @@
             <form id="query-form" method="GET">
               <div class="row collapse">
                 <div class="large-10 small-7 columns">
-                  <input type="text" id="query" name="query" value="${query}"/>
+                  <input type="text" id="query" name="query" data-remember="filter-${project.Slug}" value="${query}"/>
                 </div>
                 <div class="large-2 small-5 columns">
                   <span class="button split postfix"><a href="#" class="submit">Filter</a> <span data-dropdown="drop"></span></span>
@@ -43,11 +43,7 @@
               <div class="large-5 columns">
                 <div class="row collapse">
                   <div class="large-3 columns">
-                    <span class="three-state-checker button tiny" data-state="none" data-selector=".issues .issuestate input[type=checkbox]">
-                      <i class="fa fa-square-o none"></i>
-                      <i class="fa fa-check-square-o all"></i>
-                      <i class="fa fa-minus-square-o some"></i>
-                    </span>
+                    <span class="three-state-checker button tiny" data-state="none" data-selector=".issues .issuestate input[type=checkbox]"></span>
                   </div>
                   <div class="large-9 columns">
                     <ul class="button-group">

@@ -27,6 +27,7 @@
     <script src="/Content/javascript/jquery.ajaxupload.js"> </script>
     <script src="/Content/javascript/jquery.tablesorter.min.js"> </script>
     <script src="/Content/javascript/jquery.colorpicker.js"> </script>
+	<script src="/Content/javascript/jquery.cookie.js"> </script>
     <script src="/Content/javascript/chosen.jquery.min.js"> </script>
   </head>
   <body class="<% if CurrentUser.IsAdmin: %>admin<% end %>">

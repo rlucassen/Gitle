@@ -130,8 +130,19 @@ var slugify = function (origin, target) {
 
 function Application() {}
 Application.prototype = {
+  queryString: {},
   init: function () {
     var self = this;
+
+    var match,
+        pl = /\+/g,  // Regex for replacing addition symbol with a space
+        search = /([^&=]+)=?([^&]*)/g,
+        decode = function (s) { return decodeURIComponent(s.replace(pl, " ")); },
+        query = window.location.search.substring(1);
+
+    while (match = search.exec(query))
+      self.queryString[decode(match[1])] = decode(match[2]);
+
 
     $(document.body).addClass("js-enabled");
 
@@ -180,6 +191,7 @@ Application.prototype = {
     $('.uploadarea').upload();
 
     $('.colorpicker').colorPicker();
+
     $('table.nested').nestedTable({
       afterAdd: function (row) {
         row.find('.colorpicker-open').prop('rel', row.find('.colorpicker').prop('name'));
@@ -189,6 +201,7 @@ Application.prototype = {
 
     $('.three-state-checker').each(function () {
       var checker = $(this);
+      checker.append('<i class="fa fa-square-o none"></i><i class="fa fa-check-square-o all"></i><i class="fa fa-minus-square-o some"></i>');
       var selector = $(this).data('selector');
       var checkboxes = $(selector);
       checkboxes.click(function () {
@@ -215,6 +228,17 @@ Application.prototype = {
           break;
       }
       checkboxes.change();
+    });
+
+    $('input[data-remember]').each(function () {
+      var name = $(this).data('remember');
+      if ($.cookie(name) && self.queryString['query'] == '') {
+        $(this).val($.cookie(name));
+      }
+      $.cookie(name, $(this).val());
+    }).change(function () {
+      var name = $(this).data('remember');
+      $.cookie(name, $(this).val());
     });
 
     $('#group-actions').hide();
