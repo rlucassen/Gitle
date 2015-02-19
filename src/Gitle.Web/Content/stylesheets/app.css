@@ -44,6 +44,27 @@ ul.f-dropdown .divider {
   border-bottom: 1px solid #ccc;
 }
 
+span.button.three-state-checker {
+  font-size: 1.2em;
+  padding: 0.36rem 1.25rem;
+}
+
+span.three-state-checker i {
+  display: none;
+}
+
+span.three-state-checker[data-state=all] i.all {
+  display: inline;
+}
+
+span.three-state-checker[data-state=none] i.none {
+  display: inline;
+}
+
+span.three-state-checker[data-state=some] i.some {
+  display: inline;
+}
+
 .footer {
   position: fixed;
   bottom: 0;

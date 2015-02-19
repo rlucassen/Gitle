@@ -187,20 +187,39 @@ Application.prototype = {
       }
     });
 
-    $('table thead input[type=checkbox]').change(function () {
-      var thIndex = $(this).parents('tr').find('th').index($(this).parent('th'));
-      var checkboxes = $(this).parents('table').find('tbody tr td:nth-child(' + (thIndex + 1) + ') input[type=checkbox]');
-      if ($(this).is(':checked')) {
-        checkboxes.attr('checked', 'checked');
-      } else {
-        checkboxes.removeAttr('checked');
+    $('.three-state-checker').each(function () {
+      var checker = $(this);
+      var selector = $(this).data('selector');
+      var checkboxes = $(selector);
+      checkboxes.click(function () {
+        if(checkboxes.length == checkboxes.filter(':checked').length) {
+          checker.attr('data-state', 'all');
+        } else if (checkboxes.filter(':checked').length == 0) {
+          checker.attr('data-state', 'none');
+        } else {
+          checker.attr('data-state', 'some');
+        }
+      });
+    }).click(function () {
+      var selector = $(this).data('selector');
+      var state = $(this).attr('data-state');
+      var checkboxes = $(selector);
+      switch (state) {
+        case "none":
+          checkboxes.attr('checked', 'checked');
+          $(this).attr('data-state', 'all');
+          break;
+        default:
+          checkboxes.removeAttr('checked');
+          $(this).attr('data-state', 'none');
+          break;
       }
       checkboxes.change();
     });
 
     $('#group-actions').hide();
-    $('table tbody .check input[type=checkbox]').change(function () {
-      var checkedBoxes = $('table .check input[type=checkbox]:checked');
+    $('.issues input[type=checkbox][name=issue]').change(function () {
+      var checkedBoxes = $('.issues input[type=checkbox][name=issue]:checked');
       if (checkedBoxes.length > 0) {
         $('#group-actions, #exportselection').show();
       } else {
@@ -220,7 +239,7 @@ Application.prototype = {
       location.href = href + (href.indexOf('?') == -1 ? '?' : '&') + 'issues=' + issues;
     });
 
-    $('table#issue-table tbody tr').click(function () {
+    $('.issue').click(function () {
       var checkbox = $(this).find('input[type=checkbox]');
       checkbox.prop('checked', !checkbox.is(':checked')).change();
     }).on('click', 'a, input', function (e) {
