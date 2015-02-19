@@ -45,51 +45,51 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Content Include="Content\fonts\fontawesome-webfont.svg" />
+    <Content Include="Content\images\chosen-sprite%402x.png" />
+    <Content Include="Content\images\chosen-sprite.png" />
+    <Content Include="Content\stylesheets\vendor\fonts\fontawesome-webfont.svg" />
     <Content Include="Content\images\favicon.ico" />
     <Content Include="Content\images\logo.png" />
-    <Content Include="Content\javascript\chosen.jquery.min.js" />
-    <Content Include="Content\javascript\foundation.min.js" />
-    <Content Include="Content\javascript\foundation\foundation.abide.js" />
-    <Content Include="Content\javascript\foundation\foundation.accordion.js" />
-    <Content Include="Content\javascript\foundation\foundation.alert.js" />
-    <Content Include="Content\javascript\foundation\foundation.clearing.js" />
-    <Content Include="Content\javascript\foundation\foundation.dropdown.js" />
-    <Content Include="Content\javascript\foundation\foundation.interchange.js" />
-    <Content Include="Content\javascript\foundation\foundation.joyride.js" />
-    <Content Include="Content\javascript\foundation\foundation.js" />
-    <Content Include="Content\javascript\foundation\foundation.magellan.js" />
-    <Content Include="Content\javascript\foundation\foundation.offcanvas.js" />
-    <Content Include="Content\javascript\foundation\foundation.orbit.js" />
-    <Content Include="Content\javascript\foundation\foundation.reveal.js" />
-    <Content Include="Content\javascript\foundation\foundation.tab.js" />
-    <Content Include="Content\javascript\foundation\foundation.tooltip.js" />
-    <Content Include="Content\javascript\foundation\foundation.topbar.js" />
-    <Content Include="Content\javascript\jquery.ajaxupload.js" />
-    <Content Include="Content\javascript\jquery.colorpicker.js" />
-    <Content Include="Content\javascript\jquery.cookie.js" />
-    <Content Include="Content\javascript\jquery.metadata.js" />
-    <Content Include="Content\javascript\jquery.tablesorter.js" />
-    <Content Include="Content\javascript\jquery.tablesorter.min.js" />
-    <Content Include="Content\javascript\marked.js" />
-    <Content Include="Content\javascript\app.css">
+    <Content Include="Content\javascript\app.js" />
+    <Content Include="Content\javascript\vendor\chosen.jquery.min.js" />
+    <Content Include="Content\javascript\vendor\foundation.min.js" />
+    <Content Include="Content\javascript\vendor\foundation\foundation.abide.js" />
+    <Content Include="Content\javascript\vendor\foundation\foundation.accordion.js" />
+    <Content Include="Content\javascript\vendor\foundation\foundation.alert.js" />
+    <Content Include="Content\javascript\vendor\foundation\foundation.clearing.js" />
+    <Content Include="Content\javascript\vendor\foundation\foundation.dropdown.js" />
+    <Content Include="Content\javascript\vendor\foundation\foundation.interchange.js" />
+    <Content Include="Content\javascript\vendor\foundation\foundation.joyride.js" />
+    <Content Include="Content\javascript\vendor\foundation\foundation.js" />
+    <Content Include="Content\javascript\vendor\foundation\foundation.magellan.js" />
+    <Content Include="Content\javascript\vendor\foundation\foundation.offcanvas.js" />
+    <Content Include="Content\javascript\vendor\foundation\foundation.orbit.js" />
+    <Content Include="Content\javascript\vendor\foundation\foundation.reveal.js" />
+    <Content Include="Content\javascript\vendor\foundation\foundation.tab.js" />
+    <Content Include="Content\javascript\vendor\foundation\foundation.tooltip.js" />
+    <Content Include="Content\javascript\vendor\foundation\foundation.topbar.js" />
+    <Content Include="Content\javascript\vendor\jquery.ajaxupload.js" />
+    <Content Include="Content\javascript\vendor\jquery.colorpicker.js" />
+    <Content Include="Content\javascript\vendor\jquery.cookie.js" />
+    <Content Include="Content\javascript\vendor\jquery.metadata.js" />
+    <Content Include="Content\javascript\vendor\jquery.tablesorter.js" />
+    <Content Include="Content\javascript\vendor\jquery.tablesorter.min.js" />
+    <Content Include="Content\javascript\vendor\marked.js" />
+    <Content Include="Content\stylesheets\app.css">
       <DependentUpon>app.scss</DependentUpon>
     </Content>
-    <Content Include="Content\javascript\app.min.css">
+    <Content Include="Content\stylesheets\app.min.css">
       <DependentUpon>app.css</DependentUpon>
     </Content>
     <Content Include="Content\javascript\vendor\custom.modernizr.js" />
-    <Content Include="Content\javascript\vendor\jquery.cookie.js" />
     <Content Include="Content\javascript\vendor\jquery.js" />
-    <Content Include="Content\stylesheets\app.css" />
     <Content Include="Content\stylesheets\chosen.css" />
-    <Content Include="Content\stylesheets\chosen.min.css" />
-    <Content Include="Content\stylesheets\font-awesome-ie7.min.css" />
-    <Content Include="Content\stylesheets\font-awesome.css" />
-    <Content Include="Content\stylesheets\font-awesome.min.css" />
-    <Content Include="Content\stylesheets\foundation.css" />
-    <Content Include="Content\stylesheets\foundation.min.css" />
-    <Content Include="Content\stylesheets\normalize.css" />
+    <Content Include="Content\stylesheets\vendor\fontawesome\font-awesome-ie7.min.css" />
+    <Content Include="Content\stylesheets\vendor\fontawesome\font-awesome.css" />
+    <Content Include="Content\stylesheets\vendor\fontawesome\font-awesome.min.css" />
+    <Content Include="Content\stylesheets\vendor\foundation.css" />
+    <Content Include="Content\stylesheets\vendor\foundation.min.css" />
+    <Content Include="Content\stylesheets\vendor\normalize.css" />
     <Content Include="Global.asax" />
   </ItemGroup>
   <ItemGroup>
@@ -227,17 +227,19 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="castle.config" />
+    <Content Include="castle.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="log4net.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Content\fonts\fontawesome-webfont.eot" />
-    <None Include="Content\fonts\fontawesome-webfont.ttf" />
-    <None Include="Content\fonts\fontawesome-webfont.woff" />
-    <Content Include="Content\fonts\fontawesome-webfont.woff2" />
-    <None Include="Content\fonts\FontAwesome.otf" />
-    <Content Include="Content\javascript\app.scss" />
-    <Content Include="Content\javascript\app.css.map">
+    <None Include="Content\stylesheets\vendor\fonts\fontawesome-webfont.eot" />
+    <None Include="Content\stylesheets\vendor\fonts\fontawesome-webfont.ttf" />
+    <None Include="Content\stylesheets\vendor\fonts\fontawesome-webfont.woff" />
+    <Content Include="Content\stylesheets\vendor\fonts\fontawesome-webfont.woff2" />
+    <None Include="Content\stylesheets\vendor\fonts\FontAwesome.otf" />
+    <Content Include="Content\stylesheets\app.scss" />
+    <Content Include="Content\stylesheets\app.css.map">
       <DependentUpon>app.css</DependentUpon>
     </Content>
     <None Include="Views\Authentication\changepassword.brail" />
