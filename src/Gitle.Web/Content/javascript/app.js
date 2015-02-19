@@ -94,6 +94,7 @@ $.fn.nestedTable = function (conf) {
       });
 
       newRow.find('[type=text]').val(''); // set all values to nothing
+      newRow.find('[data-nested-remove]').remove();
       newRow.find('[type=checkbox]').removeProp('checked'); // uncheck checkbox
       newRow.find('.button.alert').click(deleteRow); // set delete action on delete button
 

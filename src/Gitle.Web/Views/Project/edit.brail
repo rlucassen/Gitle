@@ -50,7 +50,7 @@
               <% for label in item.Labels: %>
               <tr>
                 <td>
-                  <input type="hidden" name="label[${count}].Id" value="${label.Id}"/>
+                  <input type="hidden" name="label[${count}].Id" value="${label.Id}" data-nested-remove/>
                   <input type="hidden" name="label[${count}].Project.Id" value="${label.Project.Id}"/>
                   <input type="text" name="label[${count}].Name" value="${label.Name}"/>
                 </td>
