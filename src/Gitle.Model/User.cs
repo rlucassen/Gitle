@@ -27,36 +27,11 @@
         public virtual string EmailAddress { get; set; }
         public virtual IList<UserProject> Projects { get; set; }
         public virtual IList<FilterPreset> FilterPresets { get; set; }
-        public virtual IList<Touch> Touches { get; set; }
         public virtual bool IsAdmin { get; set; }
         public virtual string Phone { get; set; }
         public virtual string GitHubUsername { get; set; }
         public virtual string GitHubAccessToken { get; set; }
         public virtual string FreckleEmail { get; set; }
-
-        public virtual void Touch(ITouchable touchable)
-        {
-            if(!Touches.Any(x => x.Touchable == touchable))
-                Touches.Add(new Touch(this, touchable));
-        }
-
-        public virtual void Touch(IEnumerable<ITouchable> touchables)
-        {
-            foreach (var touchable in touchables)
-            {
-                Touch(touchable);
-            }
-        }
-
-        public virtual bool Touched(ITouchable touchable)
-        {
-            return Touches.Any(x => x.Touchable == touchable);
-        }
-
-        public virtual bool TouchedBefore(ITouchable touchable, DateTime datetime)
-        {
-            return Touches.Any(x => x.Touchable == touchable && x.DateTime < datetime);
-        }
 
         public virtual IssueState DefaultState { get; set; }
 

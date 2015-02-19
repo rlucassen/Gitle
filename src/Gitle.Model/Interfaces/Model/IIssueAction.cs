@@ -10,5 +10,10 @@
         string Text { get; }
         string HtmlText { get; }
         string EmailSubject { get; }
+
+        void Touch(User user);
+        bool Touched(User user);
+        bool TouchedBefore(User user, DateTime datetime);
+
     }
 }

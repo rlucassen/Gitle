@@ -2,7 +2,7 @@
 {
     using FluentNHibernate.Mapping;
 
-    public class IssueMap : ModelBaseMap<Issue>
+    public class IssueMap : TouchableMap<Issue>
     {
          public IssueMap()
          {

@@ -2,7 +2,7 @@
 {
     using FluentNHibernate.Mapping;
 
-    public class ChangeStateMap : ModelBaseMap<ChangeState>
+    public class ChangeStateMap : TouchableMap<ChangeState>
     {
         public ChangeStateMap()
          {

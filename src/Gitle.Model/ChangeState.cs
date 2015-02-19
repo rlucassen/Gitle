@@ -6,7 +6,7 @@
     using Helpers;
     using Interfaces.Model;
 
-    public class ChangeState : ModelBase, IIssueAction
+    public class ChangeState : Touchable, IIssueAction
     {
         public virtual IssueState IssueState { get; set; }
         public virtual Issue Issue { get; set; }

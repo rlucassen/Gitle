@@ -2,7 +2,7 @@
 {
     using FluentNHibernate.Mapping;
 
-    public class CommentMap : ModelBaseMap<Comment>
+    public class CommentMap : TouchableMap<Comment>
     {
          public CommentMap()
          {

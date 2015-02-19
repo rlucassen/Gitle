@@ -2,7 +2,7 @@
   <% for issue in items: %>
   <div class="row">
     <div class="large-12 columns">
-      <div class="issue<% if CurrentUser.Touched(issue): %> touched<% end %>">
+      <div class="issue<% if issue.Touched(CurrentUser): %> touched<% end %>">
         <div class="row">
           <div class="large-1 columns issuestate">
             <div class="row">

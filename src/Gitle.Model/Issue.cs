@@ -7,7 +7,7 @@
     using Helpers;
     using Interfaces.Model;
 
-    public class Issue : ModelBase, ITouchable
+    public class Issue : Touchable
     {
         public Issue()
         {

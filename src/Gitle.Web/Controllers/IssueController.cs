@@ -231,11 +231,14 @@
             PropertyBag.Add("days", DayHelper.GetPastDaysList());
             PropertyBag.Add("datetime", DateTime.Now);
 
-            CurrentUser.Touch(item);
-            CurrentUser.Touch(item.Actions);
+            item.Touch(CurrentUser);
+            foreach(var action in item.Actions)
+            {
+                action.Touch(CurrentUser);
+            }
             using (var transaction = session.BeginTransaction())
             {
-                session.SaveOrUpdate(CurrentUser);
+                session.SaveOrUpdate(item);
                 transaction.Commit();
             }
         }
@@ -248,6 +251,7 @@
             var item = session.Query<Issue>().FirstOrDefault(i => i.Number == issueId && i.Project == project);
             PropertyBag.Add("item", item);
             PropertyBag.Add("comments", item.Comments);
+            PropertyBag.Add("datetime", DateTime.Now);
             CancelLayout();
         }
 

@@ -4,7 +4,7 @@
     using Helpers;
     using Interfaces.Model;
 
-    public class Change : ModelBase, IIssueAction
+    public class Change : Touchable, IIssueAction
     {
         public virtual Issue Issue { get; set; }
         public virtual User User { get; set; }

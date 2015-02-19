@@ -4,7 +4,7 @@
     using Helpers;
     using Interfaces.Model;
 
-    public class Comment : ModelBase, IIssueAction
+    public class Comment : Touchable, IIssueAction
     {
         public virtual string Text { get; set; }
 

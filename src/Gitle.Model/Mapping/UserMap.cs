@@ -22,7 +22,6 @@
             Map(x => x.DefaultState);
             HasMany(x => x.Projects).Cascade.AllDeleteOrphan();
             HasMany(x => x.FilterPresets);
-            HasMany(x => x.Touches).Cascade.All();
         }
     }
 }

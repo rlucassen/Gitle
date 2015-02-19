@@ -208,7 +208,6 @@ a.quickview-delay {
 
 .quickview #timeline .panel {
   padding: 0.5em;
-  margin-left: 1em;
   background-color: #fff;
 }
 
@@ -245,8 +244,11 @@ a.quickview-delay {
   margin-bottom: 1em;
 }
 
-#timeline .panel {
+#timeline .issueaction {
   margin: 1em 0 0;
+}
+
+#timeline .panel {
   padding: 1.25rem;
 }
 
