@@ -13,24 +13,24 @@
 
     <link rel="shortcut icon" href="/Content/images/favicon.ico"/>
 
-    <link rel="stylesheet" href="/content/stylesheets/normalize.css" />
-    <link rel="stylesheet" href="/content/stylesheets/foundation.min.css" />
-    <link rel="stylesheet" href="/Content/stylesheets/font-awesome.min.css">
+    <link rel="stylesheet" href="/content/stylesheets/vendor/normalize.css" />
+    <link rel="stylesheet" href="/content/stylesheets/vendor/foundation.min.css" />
+    <link rel="stylesheet" href="/Content/stylesheets/vendor/fontawesome/font-awesome.min.css">
     <link rel="stylesheet" href="/Content/stylesheets/app.css">
-    <link rel="stylesheet" href="/Content/stylesheets/chosen.min.css">
+    <link rel="stylesheet" href="/Content/stylesheets/chosen.css">
 	
     <script src="http://code.jquery.com/jquery-1.8.3.min.js"> </script>
     <script src="http://code.jquery.com/jquery-migrate-1.2.1.js"></script>
     <script src="/Content/javascript/vendor/custom.modernizr.js"> </script>
-    <script src="/Content/javascript/marked.js"> </script>
-    <script src="/Content/javascript/jquery.metadata.js"> </script>
-    <script src="/Content/javascript/jquery.ajaxupload.js"> </script>
-    <script src="/Content/javascript/jquery.tablesorter.min.js"> </script>
-    <script src="/Content/javascript/jquery.colorpicker.js"> </script>
-	<script src="/Content/javascript/jquery.cookie.js"> </script>
-    <script src="/Content/javascript/chosen.jquery.min.js"> </script>
+    <script src="/Content/javascript/vendor/marked.js"> </script>
+    <script src="/Content/javascript/vendor/jquery.metadata.js"> </script>
+    <script src="/Content/javascript/vendor/jquery.ajaxupload.js"> </script>
+    <script src="/Content/javascript/vendor/jquery.tablesorter.min.js"> </script>
+    <script src="/Content/javascript/vendor/jquery.colorpicker.js"> </script>
+	<script src="/Content/javascript/vendor/jquery.cookie.js"> </script>
+    <script src="/Content/javascript/vendor/chosen.jquery.min.js"> </script>
   </head>
-  <body class="<% if CurrentUser.IsAdmin: %>admin<% end %>">
+  <body class="<% if CurrentUser.IsAdmin: %>admin<% end %> scroll">
     <nav class="top-bar" data-topbar>
       <ul class="title-area">
         <li class="name">
@@ -89,10 +89,9 @@
       </div>
     </div>
 
-    <script src="/Content/javascript/foundation.min.js"> </script>
-    <script src="/Content/javascript/foundation/foundation.abide.js"> </script>
-    <script src="/Content/javascript/foundation/foundation.joyride.js"> </script>
-    <script src="/Content/javascript/vendor/jquery.cookie.js"> </script>
+    <script src="/Content/javascript/vendor/foundation.min.js"> </script>
+    <script src="/Content/javascript/vendor/foundation/foundation.abide.js"> </script>
+    <script src="/Content/javascript/vendor/foundation/foundation.joyride.js"> </script>
     <script>
       $(document).foundation()
                  .foundation('abide', {

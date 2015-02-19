@@ -48,7 +48,6 @@
     <Content Include="Content\fonts\fontawesome-webfont.svg" />
     <Content Include="Content\images\favicon.ico" />
     <Content Include="Content\images\logo.png" />
-    <Content Include="Content\javascript\app.js" />
     <Content Include="Content\javascript\chosen.jquery.min.js" />
     <Content Include="Content\javascript\foundation.min.js" />
     <Content Include="Content\javascript\foundation\foundation.abide.js" />
@@ -73,6 +72,12 @@
     <Content Include="Content\javascript\jquery.tablesorter.js" />
     <Content Include="Content\javascript\jquery.tablesorter.min.js" />
     <Content Include="Content\javascript\marked.js" />
+    <Content Include="Content\javascript\app.css">
+      <DependentUpon>app.scss</DependentUpon>
+    </Content>
+    <Content Include="Content\javascript\app.min.css">
+      <DependentUpon>app.css</DependentUpon>
+    </Content>
     <Content Include="Content\javascript\vendor\custom.modernizr.js" />
     <Content Include="Content\javascript\vendor\jquery.cookie.js" />
     <Content Include="Content\javascript\vendor\jquery.js" />
@@ -231,6 +236,10 @@
     <None Include="Content\fonts\fontawesome-webfont.woff" />
     <Content Include="Content\fonts\fontawesome-webfont.woff2" />
     <None Include="Content\fonts\FontAwesome.otf" />
+    <Content Include="Content\javascript\app.scss" />
+    <Content Include="Content\javascript\app.css.map">
+      <DependentUpon>app.css</DependentUpon>
+    </Content>
     <None Include="Views\Authentication\changepassword.brail" />
     <None Include="Views\Authentication\requestreset.brail" />
     <None Include="Views\Issue\index.brail" />
