@@ -381,7 +381,7 @@
             RedirectToReferrer();
         }
 
-        [Admin]
+        [MustHaveProject]
         public void Close(string projectSlug, int issueId)
         {
             var project = session.Query<Project>().FirstOrDefault(p => p.Slug == projectSlug);
@@ -395,7 +395,7 @@
             RedirectToReferrer();
         }
 
-        [Admin]
+        [MustHaveProject]
         public void Reopen(string projectSlug, int issueId, string state)
         {
             var project = session.Query<Project>().FirstOrDefault(p => p.Slug == projectSlug);
