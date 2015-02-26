@@ -233,7 +233,7 @@ Application.prototype = {
 
     $('input[data-remember]').each(function () {
       var name = $(this).data('remember');
-      if ($.cookie(name) && !self.queryString['query']) {
+      if ($.cookie(name) && self.queryString['query'] == undefined) {
         $(this).val($.cookie(name)).parents('form').submit();
       }
       $.cookie(name, $(this).val());

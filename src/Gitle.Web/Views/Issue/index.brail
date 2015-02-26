@@ -16,8 +16,13 @@
           <div class="large-12 columns">
             <form id="query-form" method="GET">
               <div class="row collapse">
-                <div class="large-10 small-7 columns">
+                <div class="large-9 small-1 columns">
                   <input type="text" id="query" name="query" data-remember="filter-${project.Slug}" value="${query}"/>
+                </div>
+                <div class="large-1 small-1 columns">
+                  <a href="#" data-filter="" data-filter-clear="" class="button postfix alert">
+                    <i class="fa fa-close"></i>
+                  </a>
                 </div>
                 <div class="large-2 small-5 columns">
                   <span class="button split postfix"><a href="#" class="submit">Filter</a> <span data-dropdown="drop"></span></span>
@@ -173,7 +178,7 @@
 </div>
 <script>
   $(function () {
-    $('a[data-filter]').click(function (e) {
+    $('a[data-filter], a[data-filter-clear]').click(function (e) {
       e.preventDefault();
       var filter = $(this).data('filter');
       var oppositeFilter = $(this).data('filter-opposite');
