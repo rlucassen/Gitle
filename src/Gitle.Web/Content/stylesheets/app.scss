@@ -620,6 +620,12 @@ table {
   &.touched {
     border-left-color: transparent;
   }
+  &.Archived {
+    opacity: 0.2;
+    &:hover {
+        opacity: 1;
+    }
+  }
   &:hover {
     background-color: #efefef;
   }

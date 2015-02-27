@@ -16,7 +16,7 @@
         <p class="created no-margin"><strong>Gesloten op:</strong> <span title="${Helpers.DateTimeHelper.Readable(item.ClosedAt)}">${Helpers.DateTimeHelper.Readable(item.ClosedAt)}</span></p>
         <% end %>
         <p class="hours no-margin"><strong>Geschatte tijd:</strong> ${item.EstimateString}</p>
-        <p class="state no-margin"><strong>Status:</strong> <% if item.IsOpen: %>open<% else: %>gesloten<% end %></p>
+        <p class="state no-margin"><strong>Status:</strong> ${item.StateString}</p>
         <p class="labels no-margin">
           <strong>Labels:</strong>
         </p>
@@ -29,6 +29,7 @@
           <%   end %>
           <% end %>
         </ul>
+        <% if not item.IsArchived: %>
         <p class="labels no-margin">
           <a href="#" data-dropdown="addlabels" class="small button dropdown secondary radius"><strong>Labels toevoegen</strong></a>
         </p>
@@ -46,8 +47,8 @@
           <li><a href="#">Allen toegevoegd</a></li>
           <% end %>
         </ul>
+        <hr />
         <% if CurrentUser.IsAdmin: %>
-        <hr/>
         <form action="booktime" method="POST">
           <h2>Uren boeken</h2>
           <% if not string.IsNullOrEmpty(CurrentUser.FreckleEmail) and project.FreckleId > 0: %>
@@ -76,12 +77,16 @@
           <%   end %>
           <% end %>
         </form>
-        <% end %>
         <hr />
-        <% if item.IsOpen: %>
+        <% end %>
+        <% end %>
+        <% if item.State.ToString() == "Open": %>
         <a href="close" class="button alert large-12">Sluit taak</a>
-        <% else: %>
+        <% elif item.State.ToString() == "Closed": %>
         <a href="reopen" class="button success large-12">Heropen taak</a>
+        <% if CurrentUser.IsAdmin: %>
+        <a href="archive" class="button alert large-12">Archiveer taak</a>
+        <% end %>
         <% end %>
       </div>
       <div class="large-9 columns">
@@ -92,6 +97,7 @@
           <div class="">${item.BodyHtml}</div>
         </div>
         <% OutputSubView("_timeline") %>
+        <% if not item.IsArchived: %>
         <div class="panel">
           <small class="right capitalize">${Helpers.DateTimeHelper.Readable(DateTime.Now)}</small>
           <h3>Nieuwe reactie</h3>
@@ -100,6 +106,7 @@
             <input type="submit" value="Plaats reactie" class="button no-margin"/>
           </form>
         </div>
+        <% end %>
       </div>
     </div>
   </div>

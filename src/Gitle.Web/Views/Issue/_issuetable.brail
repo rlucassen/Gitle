@@ -2,7 +2,7 @@
   <% for issue in items: %>
   <div class="row">
     <div class="large-12 columns">
-      <div class="issue<% if issue.Touched(CurrentUser): %> touched<% end %>">
+      <div class="issue<% if issue.Touched(CurrentUser): %> touched<% end %> ${issue.State.ToString()}">
         <div class="row">
           <div class="large-1 columns issuestate">
             <div class="row">
@@ -13,6 +13,8 @@
               <div class="large-6 columns">
                 <% if issue.IsOpen: %>
                 <i class="fa fa-exclamation-circle green" title="open"></i>
+                <% elif issue.IsArchived: %>
+                <i class="fa fa-trash red" title="${Helpers.DateTimeHelper.Readable(issue.ArchivedAt)}" title="gearchiveerd"></i>
                 <% else: %>
                 <i class="fa fa-ban red" title="${Helpers.DateTimeHelper.Readable(issue.ClosedAt)}" title="gesloten"></i>
                 <% end %>
@@ -48,7 +50,7 @@
           <div class="large-2 columns text-right">
             <ul class="button-group">
               <li><a class="button tiny no-margin" href="/project/${project.Slug}/issue/${issue.Number}/view">Open</a></li>
-              <% if CurrentUser.IsAdmin: %><li><a class="button tiny success no-margin" href="/project/${project.Slug}/issue/${issue.Number}/edit">Bewerk</a></li><% end %>
+              <% if CurrentUser.IsAdmin and not issue.IsArchived: %><li><a class="button tiny success no-margin" href="/project/${project.Slug}/issue/${issue.Number}/edit">Bewerk</a></li><% end %>
             </ul>
           </div>
         </div>

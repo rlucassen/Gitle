@@ -43,7 +43,12 @@
 
         public virtual bool IsOpen
         {
-            get { return State != IssueState.Closed; }
+            get { return State == IssueState.Open; }
+        }
+
+        public virtual bool IsArchived
+        {
+            get { return State == IssueState.Archived; }
         }
 
         public virtual IssueState State
@@ -51,6 +56,14 @@
             get
             {
                 return ChangeStates.Any() ? ChangeStates.OrderByDescending(x => x.CreatedAt).First().IssueState : IssueState.Unknown;
+            }
+        }
+
+        public virtual string StateString
+        {
+            get
+            {
+                return State.GetDescription();
             }
         }
 
@@ -94,6 +107,28 @@
                 var state =
                     ChangeStates.OrderByDescending(x => x.CreatedAt).FirstOrDefault(
                         x => x.IssueState == IssueState.Closed);
+                return state != null ? state.User : null;
+            }
+        }
+
+        public virtual DateTime? ArchivedAt
+        {
+            get
+            {
+                var state =
+                    ChangeStates.OrderByDescending(x => x.CreatedAt).FirstOrDefault(
+                        x => x.IssueState == IssueState.Archived);
+                return state != null ? state.CreatedAt : (DateTime?)null;
+            }
+        }
+
+        public virtual User ArchivedBy
+        {
+            get
+            {
+                var state =
+                    ChangeStates.OrderByDescending(x => x.CreatedAt).FirstOrDefault(
+                        x => x.IssueState == IssueState.Archived);
                 return state != null ? state.User : null;
             }
         }
@@ -162,12 +197,19 @@
 
         public virtual void Open(User user)
         {
-            ChangeState(user, IssueState.Open);
+            if(State != IssueState.Archived)
+                ChangeState(user, IssueState.Open);
         }
 
         public virtual void Close(User user)
         {
-            ChangeState(user, IssueState.Closed);
+            if(State != IssueState.Archived)
+                ChangeState(user, IssueState.Closed);
+        }
+
+        public virtual void Archive(User user)
+        {
+            ChangeState(user, IssueState.Archived);
         }
 
         public virtual void Change(User user)

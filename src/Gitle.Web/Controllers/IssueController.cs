@@ -307,8 +307,10 @@
         [MustHaveProject]
         public void AddComment(string projectSlug, int issueId, string body)
         {
+            RedirectToReferrer();
             var project = session.Query<Project>().FirstOrDefault(p => p.Slug == projectSlug);
             var issue = session.Query<Issue>().FirstOrDefault(i => i.Number == issueId && i.Project == project);
+            if (issue.IsArchived) return;
             var comment = new Comment
                               {
                                   Text = body,
@@ -321,14 +323,15 @@
                 session.SaveOrUpdate(comment);
                 transaction.Commit();
             }
-            RedirectToReferrer();
         }
 
         [MustHaveProject]
         public void AddLabel(string projectSlug, int issueId, int param)
         {
+            RedirectToReferrer();
             var project = session.Query<Project>().FirstOrDefault(p => p.Slug == projectSlug);
             var issue = session.Query<Issue>().FirstOrDefault(i => i.Number == issueId && i.Project == project);
+            if (issue.IsArchived) return;
             var label = project.Labels.First(l => l.Id == param);
             issue.Labels.Add(label);
 
@@ -337,13 +340,12 @@
                 session.SaveOrUpdate(issue);
                 transaction.Commit();
             }
-
-            RedirectToReferrer();
         }
 
         [Admin]
         public void BookTime(string projectSlug, int issueId, string date, double hours, bool close)
         {
+            RedirectToReferrer();
             if (hours <= 0.0)
             {
                 Flash.Add("error", "Geen uren ingevuld, niets geboekt naar Freckle");
@@ -352,6 +354,7 @@
             }
             var project = session.Query<Project>().FirstOrDefault(p => p.Slug == projectSlug);
             var issue = session.Query<Issue>().FirstOrDefault(i => i.Number == issueId && i.Project == project);
+            if (issue.IsArchived) return;
             var labels = project.Labels.Where(l => l.ToFreckle && issue.Labels.Select(label => label.Name).Contains(l.Name)).Select(l => l.Name).ToList();
             var description = string.Format("{0}, !!#{1} - {2}", string.Join(",", labels), issue.Number, issue.Name);
             var entry = new Entry()
@@ -378,26 +381,29 @@
             else
                 Flash.Add("error", "Er is iets mis gegaan met boeken in Freckle");
 
-            RedirectToReferrer();
         }
 
         [MustHaveProject]
         public void Close(string projectSlug, int issueId)
         {
+            RedirectToReferrer();
             var project = session.Query<Project>().FirstOrDefault(p => p.Slug == projectSlug);
             var issue = session.Query<Issue>().FirstOrDefault(i => i.Number == issueId && i.Project == project);
-            issue.Close(CurrentUser);
-            using (var tx = session.BeginTransaction())
+            if (issue.State == IssueState.Closed || issue.State == IssueState.Unknown)
             {
-                session.SaveOrUpdate(issue);
-                tx.Commit();
+                issue.Close(CurrentUser);
+                using (var tx = session.BeginTransaction())
+                {
+                    session.SaveOrUpdate(issue);
+                    tx.Commit();
+                }
             }
-            RedirectToReferrer();
         }
 
         [MustHaveProject]
-        public void Reopen(string projectSlug, int issueId, string state)
+        public void Reopen(string projectSlug, int issueId)
         {
+            RedirectToReferrer();
             var project = session.Query<Project>().FirstOrDefault(p => p.Slug == projectSlug);
             var issue = session.Query<Issue>().FirstOrDefault(i => i.Number == issueId && i.Project == project);
             if (issue.State == IssueState.Closed || issue.State == IssueState.Unknown)
@@ -408,7 +414,21 @@
                     session.SaveOrUpdate(issue);
                     tx.Commit();
                 }
-                RedirectToReferrer();
+            }
+        }
+
+        [Admin]
+        public void Archive(string projectSlug, int issueId)
+        {
+            RedirectToReferrer();
+            if (!CurrentUser.IsAdmin) return;
+            var project = session.Query<Project>().FirstOrDefault(p => p.Slug == projectSlug);
+            var issue = session.Query<Issue>().FirstOrDefault(i => i.Number == issueId && i.Project == project);
+            issue.Archive(CurrentUser);
+            using (var tx = session.BeginTransaction())
+            {
+                session.SaveOrUpdate(issue);
+                tx.Commit();
             }
         }
 
@@ -456,40 +476,6 @@
             var stream = new MemoryStream(byteArray);
             Response.BinaryWrite(stream);
         }
-
-        //[Admin]
-        //public void ReadJson(string projectSlug, HttpPostedFile import)
-        //{
-        //    var project = session.Query<Project>().FirstOrDefault(p => p.Slug == projectSlug);
-
-        //    var json = new StreamReader(import.InputStream).ReadToEnd();
-        //    var issues = JsonConvert.DeserializeObject<List<Issue>>(json);
-
-        //    var seskey = string.Format("{0:yyyyMMdd_hhmmss}", DateTime.Now);
-        //    Session.Add(seskey, issues);
-
-        //    PropertyBag.Add("seskey", seskey);
-        //    PropertyBag.Add("milestone", milestone);
-        //    PropertyBag.Add("items", issues);
-        //    PropertyBag.Add("project", project);
-        //    PropertyBag.Add("labels", CurrentUser.IsAdmin ? project.Labels : project.Labels.Where(l => l.VisibleForCustomer));
-        //}
-
-
-        //[Admin]
-        //public void ImportJson(string projectSlug, string seskey)
-        //{
-        //    var project = repository.FindBySlug(projectSlug);
-        //    var issues = (List<Issue>) Session[seskey];
-
-        //    foreach (var issue in issues)
-        //    {
-        //        client.Post(project.Repository, issue);
-        //    }
-
-        //    RedirectUsingNamedRoute("issues", new {projectSlug = project.Slug});
-        //}
-
 
         [Admin]
         public void ExportCsv(string projectSlug, string[] selectedLabels, IssueState state, string issues)

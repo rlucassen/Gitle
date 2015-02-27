@@ -136,6 +136,9 @@
               </div>
               <div class="large-0 small-12 columns">
                 <a href="/project/${project.Slug}/changestate?state=2" data-group-action class="button tiny no-margin alert">Sluiten</a>
+                <% if CurrentUser.IsAdmin: %>
+                <a href="/project/${project.Slug}/changestate?state=3" data-group-action class="button tiny no-margin alert">Archiveren</a>
+                <% end %>
               </div>
             </div>
           </div>

@@ -436,6 +436,10 @@ table {
   border-left: 3px solid #008CBA; }
   .issue.touched {
     border-left-color: transparent; }
+  .issue.Archived {
+    opacity: 0.2; }
+    .issue.Archived:hover {
+      opacity: 1; }
   .issue:hover {
     background-color: #efefef; }
   .issue .issuestate .number {
