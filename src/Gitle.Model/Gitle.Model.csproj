@@ -69,6 +69,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Booking.cs" />
     <Compile Include="Change.cs" />
     <Compile Include="ChangeState.cs" />
     <Compile Include="Comment.cs" />
@@ -85,7 +86,7 @@
     <Compile Include="Helpers\StringHelper.cs" />
     <Compile Include="Interfaces\Model\IIssueAction.cs" />
     <Compile Include="Interfaces\Model\IPassword.cs" />
-    <Compile Include="Interfaces\Model\ISeeable.cs" />
+    <Compile Include="Interfaces\Model\ITouchable.cs" />
     <Compile Include="Interfaces\Service\IEmailService.cs" />
     <Compile Include="Issue.cs" />
     <Compile Include="Label.cs" />
@@ -94,6 +95,7 @@
     <Compile Include="Mapping\ChangeStateMap.cs" />
     <Compile Include="Mapping\ChangeMap.cs" />
     <Compile Include="Mapping\FilterPresetMap.cs" />
+    <Compile Include="Mapping\BookingMap.cs" />
     <Compile Include="Mapping\IssueMap.cs" />
     <Compile Include="Mapping\LabelMap.cs" />
     <Compile Include="Mapping\ModelBaseMap.cs" />

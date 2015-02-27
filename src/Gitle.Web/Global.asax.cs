@@ -167,6 +167,7 @@
             RoutingModuleEx.Engine.Add<SlugController>();
             RoutingModuleEx.Engine.Add<DatabaseController>();
             RoutingModuleEx.Engine.Add<OAuthController>();
+            RoutingModuleEx.Engine.Add<BookingController>();
         }
 
         protected void Application_End(object sender, EventArgs e)

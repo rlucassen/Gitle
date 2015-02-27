@@ -171,6 +171,14 @@
             RedirectToReferrer();
         }
 
+        [return: JSONReturnBinder]
+        public dynamic AutoComplete(string query)
+        {
+            var projects = session.Query<Project>().Where(x => x.Name.Contains(query)).ToList();
+            var suggestions = projects.Select(x => new { value = x.Name, data = x.Id }).ToList();
+            return projects.FirstOrDefault();
+        }
+
 
     }
 }

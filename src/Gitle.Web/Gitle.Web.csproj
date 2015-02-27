@@ -47,6 +47,8 @@
   <ItemGroup>
     <Content Include="Content\images\chosen-sprite%402x.png" />
     <Content Include="Content\images\chosen-sprite.png" />
+    <Content Include="Content\javascript\vendor\jquery.autocomplete.js" />
+    <Content Include="Content\javascript\vendor\jquery.autocomplete.min.js" />
     <Content Include="Content\stylesheets\vendor\fonts\fontawesome-webfont.svg" />
     <Content Include="Content\images\favicon.ico" />
     <Content Include="Content\images\logo.png" />
@@ -93,6 +95,7 @@
     <Content Include="Global.asax" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\BookingController.cs" />
     <Compile Include="Controllers\FilterPresetController.cs" />
     <Compile Include="Controllers\ImportController.cs" />
     <Compile Include="Controllers\SlugController.cs" />
@@ -244,6 +247,7 @@
     </Content>
     <None Include="Views\Authentication\changepassword.brail" />
     <None Include="Views\Authentication\requestreset.brail" />
+    <Content Include="Views\Booking\index.brail" />
     <None Include="Views\Issue\index.brail" />
     <None Include="Views\Issue\exportimport.brail" />
     <None Include="Views\Issue\quickview.brail" />

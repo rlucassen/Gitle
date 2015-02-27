@@ -1,0 +1,24 @@
+﻿<div class="row">
+  <div class="large-12 columns">
+    <form id="booking" action="save" method="POST">
+      <div class="row collapse">
+        <div class="large-2 columns">
+          <input type="text" name="booking.Hours" id="booking_Hours" class="time-parser" />
+        </div>
+        <div class="large-4 columns">
+          <input type="text" name="booking.Project.Id" id="booking_Project_Id" />
+        </div>
+        <div class="large-6 columns">
+          <input type="text" name="booking.Comment" id="booking_Comment" />
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<script>
+  $(function () {
+    $('#booking_Project_Id').autocomplete({
+      serviceUrl: '/project/autocomplete'
+    })
+  });
+</script>
