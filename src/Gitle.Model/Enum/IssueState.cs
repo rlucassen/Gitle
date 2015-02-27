@@ -9,5 +9,7 @@
         Open = 1,
         [Description("gesloten")]
         Closed = 2,
+        [Description("gearchiveerd")]
+        Archived = 3,
     }
 }

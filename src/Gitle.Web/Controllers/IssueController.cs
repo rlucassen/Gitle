@@ -400,13 +400,16 @@
         {
             var project = session.Query<Project>().FirstOrDefault(p => p.Slug == projectSlug);
             var issue = session.Query<Issue>().FirstOrDefault(i => i.Number == issueId && i.Project == project);
-            issue.Open(CurrentUser);
-            using (var tx = session.BeginTransaction())
+            if (issue.State == IssueState.Closed || issue.State == IssueState.Unknown)
             {
-                session.SaveOrUpdate(issue);
-                tx.Commit();
+                issue.Open(CurrentUser);
+                using (var tx = session.BeginTransaction())
+                {
+                    session.SaveOrUpdate(issue);
+                    tx.Commit();
+                }
+                RedirectToReferrer();
             }
-            RedirectToReferrer();
         }
 
 
