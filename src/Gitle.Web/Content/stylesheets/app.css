@@ -477,6 +477,17 @@ body.admin table#issue-table th#issue-cost {
 body.admin table#issue-table th#issue-actions {
   width: 170px; }
 
+#booking [data-dayshift] {
+  border: 1px solid #ccc; }
+  #booking [data-dayshift].active {
+    background-color: #b9b9b9; }
+
+#createinvoice {
+  font-size: 0.875rem; }
+  #createinvoice .totals {
+    border-top: 2px solid #666;
+    padding-top: 1em; }
+
 table#issue-table th#issue-estimate, table#issue-table td.estimate {
   display: none; }
 

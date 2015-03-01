@@ -10,9 +10,8 @@ namespace Gitle.Model
     {
         public Booking()
         {
-            Date = DateTime.Now;
+            CreatedAt = DateTime.Now;
         }
-
 
         public virtual User User { get; set; }
         public virtual Project Project { get; set; }
@@ -20,7 +19,9 @@ namespace Gitle.Model
 
         public virtual DateTime CreatedAt { get; set; }
         public virtual DateTime Date { get; set; }
-        public virtual double Hours { get; set; }
+        public virtual double Minutes { get; set; }
         public virtual string Comment { get; set; }
+
+        public virtual double Hours { get { return Minutes / 60; } }
     }
 }

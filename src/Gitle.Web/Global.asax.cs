@@ -163,11 +163,13 @@
 
             RoutingModuleEx.Engine.Add<FilterPresetController>();
             RoutingModuleEx.Engine.Add<ImportController>();
+            RoutingModuleEx.Engine.Add<IssueController>();
             RoutingModuleEx.Engine.Add<UploadController>();
             RoutingModuleEx.Engine.Add<SlugController>();
             RoutingModuleEx.Engine.Add<DatabaseController>();
             RoutingModuleEx.Engine.Add<OAuthController>();
             RoutingModuleEx.Engine.Add<BookingController>();
+            RoutingModuleEx.Engine.Add<InvoiceController>();
         }
 
         protected void Application_End(object sender, EventArgs e)

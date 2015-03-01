@@ -21,6 +21,7 @@
     using Newtonsoft.Json;
     using Issue = Model.Issue;
     using Project = Model.Project;
+using Castle.MonoRail.Framework;
 
     public class IssueController : SecureController
     {
@@ -510,6 +511,14 @@
             var byteArray = Encoding.Default.GetBytes(csv);
             var stream = new MemoryStream(byteArray);
             Response.BinaryWrite(stream);
+        }
+
+        [return: JSONReturnBinder]
+        public object Autocomplete(long projectId, string query)
+        {
+            var issues = session.Query<Issue>().Where(i => i.Project.Id == projectId && (i.Number.ToString().Contains(query) || i.Name.Contains(query)));
+            var suggestions = issues.Select(x => new { value = x.Id, label = string.Format("#{0} - {1}", x.Number, x.Name) }).ToList();
+            return suggestions;
         }
     }
 }

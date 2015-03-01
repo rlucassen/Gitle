@@ -1,0 +1,41 @@
+﻿<h1>Nieuwe factuur maken</h1>
+<form action="create" method="POST">
+  <div class="row">
+    <div class="large-12 columns">
+      <input type="hidden" name="projectId" id="projectId" />
+      <input type="text" class="" id="project-chooser" placeholder="Project" />
+    </div>
+  </div>
+  <div class="row">
+    <div class="large-3 columns">
+      <input type="text" name="startDate" id="startDate" class="date" placeholder="Startdatum" />
+    </div>
+    <div class="large-3 columns end">
+      <input type="text" name="endDate" id="endDate" class="date" placeholder="Einddatum" />
+    </div>
+  </div>
+  <div class="row">
+    <div class="large-12 columns">
+      <input type="submit" class="button" value="Aanmaken" />
+    </div>
+  </div>
+</form>
+<script>
+  $(function () {
+    $('#project-chooser').autocomplete({
+      autoFocus: true,
+      source: '/project/autocomplete',
+      select: function (event, ui) {
+        event.preventDefault();
+        $('#projectId').val(ui.item.value);
+        $('#project-chooser').val(ui.item.label);
+      }
+    });
+
+    $('.date').fdatepicker({
+      format: 'dd-mm-yyyy',
+      weekStart: 1
+    });
+
+  });
+</script>

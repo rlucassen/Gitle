@@ -37,7 +37,7 @@
                 return null;
             }
 
-            base.InvokeMethod(method, request, extraArgs);
+            return base.InvokeMethod(method, request, extraArgs);
             return null;
         }
         

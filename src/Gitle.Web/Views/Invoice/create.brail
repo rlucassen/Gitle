@@ -1,0 +1,235 @@
+﻿<h1>Nieuwe factuur maken</h1>
+<form id="createinvoice" action="save" method="POST">
+  <div class="row">
+    <div class="large-12 columns">
+      <div class="row collapse">
+        <div class="large-2 columns">
+          <input type="hidden" name="invoice.Project.Id" id="invoice_Project_Id" value="${project.Id}">
+          <input type="text" name="invoice.Number" id="invoice_Number" placeholder="Factuurnummer" />
+        </div>
+        <div class="large-10 columns">
+          <input type="text" name="invoice.Title" id="invoice_Title" value="${project.Name} (${startDate.ToString("dd-MM-yyyy")} tot ${enddate.ToString("dd-MM-yyyy")})" />
+        </div>
+      </div>
+      <div class="row">
+        <div class="large-1 large-offset-9 columns">
+          <label for="invoice_HourPrice">Uurprijs:</label>
+        </div>
+        <div class="large-2 columns">
+          <div class="row collapse">
+            <div class="large-3 columns">
+              <span class="prefix"><i class="fa fa-euro"></i></span>
+            </div>
+            <div class="large-9 columns">
+              <input type="text" name="invoice.HourPrice" id="invoice_HourPrice" value="${project.HourPrice}" />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="large-8 columns">
+          <strong>Omschrijving</strong>
+        </div>
+        <div class="large-1 columns">
+          <strong>Schatting</strong>
+        </div>
+        <div class="large-1 columns">
+          <strong>Uren</strong>
+        </div>
+        <div class="large-2 columns">
+          <strong>Prijs</strong>
+        </div>
+      </div>
+      <% count = 0 %>
+      <% for booking in projectBookings: %>
+      <div class="row invoiceline invoiceline-booking">
+        <div class="large-8 columns">
+          <input type="text" name="lines[${count}].Description" id="lines_${count}_Description" value="${booking.Comment}" />
+        </div>
+        <div class="large-1 large-offset-1 columns">
+          <input type="text" name="lines[${count}].Hours" id="lines_${count}_Hours" class="invoiceline-hours text-right" value="${booking.Hours}" />
+        </div>
+        <div class="large-2 columns">
+          <div class="row collapse">
+            <div class="large-3 columns">
+              <span class="prefix"><i class="fa fa-euro"></i></span>
+            </div>
+            <div class="large-9 columns">
+              <input type="text" name="invoiceline[${count}].Price" class="invoiceline-price" disabled />
+            </div>
+          </div>
+        </div>
+      </div>
+      <% count = count + 1 %>
+      <% end %>
+      <% for keyvalue in issueBookings: %>
+      <% issue = keyvalue.Key %>
+      <% bookings = keyvalue.Value %>
+      <div class="row invoiceline invoiceline-issue" data-issue="${issue.Number}">
+        <input type="hidden" name="lines[${count}].Issue.Id" id="lines_${count}_Issue_Id" value="${issue.Id}" />
+        <div class="large-8 columns">
+          <input type="text" name="lines[${count}].Description" id="lines_${count}_Description" value="#${issue.Number} ${issue.Name}" />
+        </div>
+        <div class="large-1 columns">
+          <a href="#" class="button tiny secondary invoiceline-estimate expand">${issue.Hours}</a>
+        </div>
+        <div class="large-1 columns">
+          <input type="text" name="lines[${count}].Hours" id="lines_${count}_Hours" class="invoiceline-hours text-right" />
+        </div>
+        <div class="large-2 columns">
+          <div class="row collapse">
+            <div class="large-3 columns">
+              <span class="prefix"><i class="fa fa-euro"></i></span>
+            </div>
+            <div class="large-9 columns">
+              <input type="text" class="invoiceline-price" disabled />
+            </div>
+          </div>
+        </div>
+      </div>
+      <% for booking in bookings: %>
+      <div class="row booking" data-issue="${issue.Number}">
+        <input type="hidden" name="bookings[${booking.Id}]" id="bookings_${booking.Id}" value="${booking.Id}" />
+        <div class="large-7 large-offset-1 columns">
+          <span class="booking-info">${booking.Date.ToString("dd-MM-yyyy")} ${booking.User.FullName}</span>: 
+          <span class="booking-comment">${booking.Comment}</span>
+        </div>
+        <div class="large-1 large-offset-1 columns end text-right">
+          <input type="text" class="booking-hours text-right" value="${booking.Hours}" disabled/>
+        </div>
+      </div>
+      <% end %>
+      <% count = count + 1 %>
+      <% end %>
+      <div class="totals">
+        <div class="row">
+          <div class="large-10 columns text-right">
+            <strong>Subtotaal:</strong>
+          </div>
+          <div class="large-2 columns">
+            <div class="row collapse">
+              <div class="large-3 columns">
+                <span class="prefix"><i class="fa fa-euro"></i></span>
+              </div>
+              <div class="large-9 columns">
+                <input type="text" name="invoice.Subtotal" id="invoice_Subtotal" disabled />
+              </div>
+            </div>
+          </div>
+        </div>
+        <% for i in [0,1,2]: %>
+        <div class="row correctionline">
+          <div class="large-10 columns">
+            <input type="text" placeholder="Korting, extra kosten e.d." class="text-right" />
+          </div>
+          <div class="large-2 columns">
+            <div class="row collapse">
+              <div class="large-3 columns">
+                <span class="prefix"><i class="fa fa-euro"></i></span>
+              </div>
+              <div class="large-9 columns">
+                <input type="text" name="corrections[${i}].Price" id="corrections_${i}_Price" class="correctionline-price" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <% end %>
+      </div>
+      <div class="totals">
+        <div class="row">
+          <div class="large-10 columns text-right">
+            <strong>Totaal:</strong>
+          </div>
+          <div class="large-2 columns">
+            <div class="row collapse">
+              <div class="large-3 columns">
+                <span class="prefix"><i class="fa fa-euro"></i></span>
+              </div>
+              <div class="large-9 columns">
+                <input type="text" name="invoice.Total" id="invoice_Total" disabled />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="large-12 columns text-right">
+          <input type="submit" class="button success" value="Factuur opslaan" />
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+
+<script>
+  $(function () {
+    var computeHoursForIssue = function (issueNumber) {
+      var issueLine = $('.invoiceline[data-issue=' + issueNumber + ']');
+      var hours = 0.0;
+      $('.booking[data-issue=' + issueNumber + ']').each(function () {
+        hours += parseFloat($(this).find('.booking-hours').val().replace(',', '.'));
+      });
+      issueLine.find('.invoiceline-hours').val(hours.toString().replace('.', ','));
+      var estimateButton = issueLine.find('.invoiceline-estimate');
+      var estimate = parseFloat(estimateButton.text());
+      if (hours < estimate) {
+        estimateButton.addClass('success');
+      } else {
+        estimateButton.addClass('alert');
+      }
+    }
+
+    var computePriceForInvoiceLine = function (invoiceLine) {
+      var hourPrice = parseInt($('#invoice_HourPrice').val());
+      var hours = parseFloat(invoiceLine.find('.invoiceline-hours').val().replace(',', '.'));
+      var price = hours * hourPrice;
+      invoiceLine .find('.invoiceline-price').val(price.toString().replace('.', ','));
+      calculateTotals();
+    }
+
+    var calculateTotals = function () {
+      var subtotalPrice = 0.0;
+      $('.invoiceline').each(function () {
+        subtotalPrice += parseFloat($(this).find('.invoiceline-price').val().replace(',', '.'));
+      });
+      $('#invoice_Subtotal').val(subtotalPrice.toString().replace('.', ','));
+      var correctionTotalPrice = 0.0;
+      $('.correctionline').each(function () {
+        var correctionValue = $(this).find('.correctionline-price').val();
+        if(correctionValue)
+          correctionTotalPrice += parseFloat(correctionValue.replace(',', '.'));
+      });
+      var totalPrice = subtotalPrice + correctionTotalPrice;
+      $('#invoice_Total').val(totalPrice.toString().replace('.', ','));
+    }
+
+    $('.invoiceline-issue').each(function() {
+      computeHoursForIssue($(this).data('issue'));
+    });
+
+    $('#invoice_HourPrice').change(function () {
+      $('.invoiceline').each(function () {
+        computePriceForInvoiceLine($(this));
+      });
+    }).change();
+
+    calculateTotals();
+
+    $('.invoiceline-hours').change(function () {
+      var invoiceLine = $(this).parents('.invoiceline');
+      computePriceForInvoiceLine(invoiceLine);
+    });
+
+    $('.correctionline-price').change(function () {
+      calculateTotals();
+    });
+
+    $('.invoiceline-estimate').click(function (e) {
+      e.preventDefault();
+      var estimate = $(this).text();
+      var invoiceLine = $(this).parents('.invoiceline');
+      invoiceLine.find('.invoiceline-hours').val(estimate).change();
+      $(this).removeClass('success').removeClass('alert');
+    });
+  });
+</script>

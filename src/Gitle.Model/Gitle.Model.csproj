@@ -88,8 +88,13 @@
     <Compile Include="Interfaces\Model\IPassword.cs" />
     <Compile Include="Interfaces\Model\ITouchable.cs" />
     <Compile Include="Interfaces\Service\IEmailService.cs" />
+    <Compile Include="Invoice.cs" />
+    <Compile Include="InvoiceLine.cs" />
     <Compile Include="Issue.cs" />
     <Compile Include="Label.cs" />
+    <Compile Include="Mapping\CorrectionMap.cs" />
+    <Compile Include="Mapping\InvoiceLineMap.cs" />
+    <Compile Include="Mapping\InvoiceMap.cs" />
     <Compile Include="Mapping\Component\PasswordComponentMap.cs" />
     <Compile Include="Mapping\CommentMap.cs" />
     <Compile Include="Mapping\ChangeStateMap.cs" />

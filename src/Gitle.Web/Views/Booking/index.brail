@@ -1,24 +1,171 @@
 ﻿<div class="row">
   <div class="large-12 columns">
-    <form id="booking" action="save" method="POST">
-      <div class="row collapse">
-        <div class="large-2 columns">
-          <input type="text" name="booking.Hours" id="booking_Hours" class="time-parser" />
+    <div class="panel">
+      <form id="booking" action="save" method="POST">
+        <div class="row collapse">
+          <div class="large-1 columns">
+            <a href="#" data-dayshift="0" class="button secondary prefix"></a>
+          </div>
+          <div class="large-1 columns">
+            <a href="#" data-dayshift="-1" class="button secondary prefix"></a>
+          </div>
+          <div class="large-1 columns">
+            <a href="#" data-dayshift="-2" class="button secondary prefix"></a>
+          </div>
+          <div class="large-1 columns">
+            <a href="#" data-dayshift="-3" class="button secondary prefix"></a>
+          </div>
+          <div class="large-1 columns">
+            <a href="#" data-dayshift="-4" class="button secondary prefix"></a>
+          </div>
+          <div class="large-1 columns">
+            <a href="#" data-dayshift="-5" class="button secondary prefix"></a>
+          </div>
+          <div class="large-1 columns">
+            <a href="#" data-dayshift="-6" class="button secondary prefix"></a>
+          </div>
+          <div class="large-1 columns">
+            <a href="#" data-dayshift="-7" class="button secondary prefix"></a>
+          </div>
+          <div class="large-1 columns">
+            <a href="#" data-dayshift="-8" class="button secondary prefix"></a>
+          </div>
+          <div class="large-1 columns">
+            <a href="#" data-dayshift="-9" class="button secondary prefix"></a>
+          </div>
+          <div class="large-1 columns">
+            <a href="#" data-dayshift="-10" class="button secondary prefix"></a>
+          </div>
+          <div class="large-1 columns">
+            <input type="text" name="booking.Date" id="booking_Date" class="date" placeholder="Eerder" />
+          </div>
         </div>
-        <div class="large-4 columns">
-          <input type="text" name="booking.Project.Id" id="booking_Project_Id" />
+        <div class="row collapse">
+          <div class="large-1 columns">
+            <input type="hidden" name="booking.Minutes" id="booking_Minutes" />
+            <input type="text" class="booking-parser no-margin" placeholder="Uren" />
+          </div>
+          <div class="large-4 columns">
+            <input type="hidden" name="booking.Project.Id" id="booking_Project_Id" />
+            <input type="text" class="no-margin" id="project-chooser" placeholder="Project" />
+          </div>
+          <div class="large-1 columns">
+            <input type="hidden" name="booking.Issue.Id" id="booking_Issue_Id" />
+            <input type="text" class="no-margin" id="issue-chooser" placeholder="Taak" />
+          </div>
+          <div class="large-5 columns">
+            <input type="text" class="no-margin" name="booking.Comment" id="booking_Comment" placeholder="Opmerking" />
+          </div>
+          <div class="large-1 columns">
+            <input type="submit" class="button postfix no-margin" value="Boeken"/>
+          </div>
         </div>
-        <div class="large-6 columns">
-          <input type="text" name="booking.Comment" id="booking_Comment" />
-        </div>
-      </div>
-    </form>
+      </form>
+    </div>
   </div>
 </div>
 <script>
   $(function () {
-    $('#booking_Project_Id').autocomplete({
-      serviceUrl: '/project/autocomplete'
-    })
+    $('#project-chooser').autocomplete({
+      autoFocus: true,
+      source: '/project/autocomplete',
+      select: function (event, ui) {
+        event.preventDefault();
+        $('#booking_Project_Id').val(ui.item.value);
+        $('#project-chooser').val(ui.item.label);
+      }
+    });
+
+    $('#issue-chooser').autocomplete({
+      autoFocus: true,
+      source: function (request, response){
+        var projectId = $('#booking_Project_Id').val();
+        if (projectId) {
+          $.ajax({
+            method: 'GET',
+            data: {
+              projectId: projectId,
+              query: request.term
+            },
+            url: '/issue/autocomplete',
+            success: function (data) {
+              response(data);
+            }
+          });
+        }
+      },
+      select: function (event, ui) {
+        event.preventDefault();
+        $('#booking_Issue_Id').val(ui.item.value);
+        $('#issue-chooser').val(ui.item.label);
+      }
+    });
+
+    $('.date').fdatepicker({
+      format: 'dd-mm-yyyy',
+      weekStart: 1
+    }).on('show', function () {
+        $('[data-dayshift]').removeClass('active');
+    });
+    
+    
+    $('[data-dayshift]').each(function() {
+      var shift = $(this).data('dayshift');
+      var label = '';
+      switch(shift){
+        case 0:
+          label = 'Vandaag';
+          break;
+        case -1:
+          label = 'Gisteren';
+          break;
+        default:
+          label = Date.today().add(shift).days().toString('ddd dd MMM');
+      }
+      $(this).text(label);
+    }).click(function (e) {
+      e.preventDefault();
+      var today = Date.today();
+      var shift = $(this).data('dayshift');
+      var date = today.add(shift).days();
+      $('#booking_Date').val(date.toString('dd-MM-yyyy'));
+      $('[data-dayshift]').removeClass('active');
+      $(this).addClass('active');
+    });
+    
+    var bookingInput = $('#booking_Minutes');
+    $('.booking-parser').change(function(e) {      
+      var value = $(this).val().replace(',', '.');
+
+      var timeRegex = /([0-9]+):([0-9]{2})/i;
+      var decimalRegex = /([0-9]+)\.([0-9]+)/i;
+      var numberRegex = /[0-9]+/i;
+      
+      if(numberRegex.test(value)) {
+        var number = parseInt(value);
+        var value = number > 9 ? '0:' + number : number + ':00';
+      }
+      
+      var visualOutput = value;
+      var hoursOutput = value;
+
+      if(timeRegex.test(value)){
+        var parts = value.split(':');
+        var hours = parseFloat(parts[0]);
+        var minutes = parseFloat(parts[1]);
+        hoursOutput = (hours*60 + minutes);
+      } 
+      if(decimalRegex.test(value)) {
+        var hours = parseFloat(value);
+        hoursOutput = (hours * 60);
+        var fullhours = parseInt(value);
+        var fullminutes = (hours - fullhours) * 60;
+        visualOutput = fullhours + ':' + fullminutes;
+      }      
+      
+      $(this).val(visualOutput);
+      bookingInput.val(hoursOutput);
+    });
+
   });
 </script>

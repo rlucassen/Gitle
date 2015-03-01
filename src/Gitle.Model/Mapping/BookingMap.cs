@@ -9,7 +9,7 @@
              Map(x => x.CreatedAt);
              Map(x => x.Date);
              Map(x => x.Comment);
-             Map(x => x.Hours);
+             Map(x => x.Minutes);
 
              References(x => x.Project).Column("Project_id");
              References(x => x.User).Column("User_id");

@@ -15,6 +15,7 @@
             Comments = new List<Comment>();
             ChangeStates = new List<ChangeState>();
             Changes = new List<Change>();
+            Bookings = new List<Booking>();
         }
 
         public virtual int Number { get; set; }
@@ -28,6 +29,7 @@
         public virtual IList<Comment> Comments { get; set; }
         public virtual IList<ChangeState> ChangeStates { get; set; }
         public virtual IList<Change> Changes { get; set; }
+        public virtual IList<Booking> Bookings { get; set; }
 
         public virtual string BodyHtml { get { return Body.Markdown(Project); } }
 

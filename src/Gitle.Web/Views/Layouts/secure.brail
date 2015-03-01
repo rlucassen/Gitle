@@ -16,6 +16,8 @@
     <link rel="stylesheet" href="/content/stylesheets/vendor/normalize.css" />
     <link rel="stylesheet" href="/content/stylesheets/vendor/foundation.min.css" />
     <link rel="stylesheet" href="/Content/stylesheets/vendor/fontawesome/font-awesome.min.css">
+    <link rel="stylesheet" href="/Content/stylesheets/vendor/jquery-ui-1.10.3.custom.min.css">
+    <link rel="stylesheet" href="/Content/stylesheets/vendor/foundation.datepicker.css">
     <link rel="stylesheet" href="/Content/stylesheets/app.css">
     <link rel="stylesheet" href="/Content/stylesheets/chosen.css">
 	
@@ -27,9 +29,11 @@
     <script src="/Content/javascript/vendor/jquery.ajaxupload.js"> </script>
     <script src="/Content/javascript/vendor/jquery.tablesorter.min.js"> </script>
     <script src="/Content/javascript/vendor/jquery.colorpicker.js"> </script>
-	  <script src="/Content/javascript/vendor/jquery.cookie.js"> </script>
+	<script src="/Content/javascript/vendor/jquery.cookie.js"> </script>
     <script src="/Content/javascript/vendor/chosen.jquery.min.js"> </script>
-    <script src="/Content/javascript/vendor/jquery.autocomplete.min.js"> </script>
+    <script src="/Content/javascript/vendor/jquery-ui-autocomplete.min.js"> </script>
+    <script src="/Content/javascript/vendor/foundation.datepicker.js"> </script>
+    <script src="/Content/javascript/vendor/date.js"> </script>
   </head>
   <body class="<% if CurrentUser.IsAdmin: %>admin<% end %> scroll">
     <nav class="top-bar" data-topbar>

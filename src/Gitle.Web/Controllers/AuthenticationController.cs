@@ -11,6 +11,8 @@
     using Model.Interfaces.Service;
     using Model.Nested;
     using NHibernate;
+    using Castle.MonoRail.Framework;
+    using NHibernate.Linq;
 
     #endregion
 
