@@ -2,10 +2,10 @@
 <form id="createinvoice" action="save" method="POST">
   <div class="row">
     <div class="large-12 columns">
-      <div class="row collapse">
+      <div class="row collapse invoice-title">
         <div class="large-2 columns">
           <input type="hidden" name="invoice.Project.Id" id="invoice_Project_Id" value="${project.Id}">
-          <input type="text" name="invoice.Number" id="invoice_Number" placeholder="Factuurnummer" />
+          <input type="text" name="invoice.Number" id="invoice_Number" placeholder="Factuurnr." />
         </div>
         <div class="large-10 columns">
           <input type="text" name="invoice.Title" id="invoice_Title" value="${project.Name} (${startDate.ToString("dd-MM-yyyy")} tot ${enddate.ToString("dd-MM-yyyy")})" />
@@ -71,7 +71,7 @@
           <input type="text" name="lines[${count}].Description" id="lines_${count}_Description" value="#${issue.Number} ${issue.Name}" />
         </div>
         <div class="large-1 columns">
-          <a href="#" class="button tiny secondary invoiceline-estimate expand">${issue.Hours}</a>
+          <a href="#" class="button tiny secondary invoiceline-estimate expand">${issue.TotalHours}</a>
         </div>
         <div class="large-1 columns">
           <input type="text" name="lines[${count}].Hours" id="lines_${count}_Hours" class="invoiceline-hours text-right" />
@@ -87,18 +87,21 @@
           </div>
         </div>
       </div>
-      <% for booking in bookings: %>
-      <div class="row booking" data-issue="${issue.Number}">
-        <input type="hidden" name="bookings[${booking.Id}]" id="bookings_${booking.Id}" value="${booking.Id}" />
-        <div class="large-7 large-offset-1 columns">
-          <span class="booking-info">${booking.Date.ToString("dd-MM-yyyy")} ${booking.User.FullName}</span>: 
-          <span class="booking-comment">${booking.Comment}</span>
+      <div class="bookings">
+        <% for booking in bookings: %>
+        <div class="row booking" data-issue="${issue.Number}">
+          <input type="hidden" name="bookings[${booking.Id}]" id="bookings_${booking.Id}" value="${booking.Id}" />
+          <div class="large-7 large-offset-1 columns">
+            <span class="booking-info">${booking.Date.ToString("dd-MM-yyyy")} ${booking.User.FullName}</span>:
+            <span class="booking-comment">${booking.Comment}</span>
+          </div>
+          <div class="large-1 large-offset-1 columns end text-right">
+            <input type="hidden" class="booking-hours text-right" value="${booking.Hours}" disabled />
+            <span class="booking-hours-span">${booking.Hours}</span>
+          </div>
         </div>
-        <div class="large-1 large-offset-1 columns end text-right">
-          <input type="text" class="booking-hours text-right" value="${booking.Hours}" disabled/>
-        </div>
+        <% end %>
       </div>
-      <% end %>
       <% count = count + 1 %>
       <% end %>
       <div class="totals">
@@ -153,8 +156,8 @@
         </div>
       </div>
       <div class="row">
-        <div class="large-12 columns text-right">
-          <input type="submit" class="button success" value="Factuur opslaan" />
+        <div class="large-2 large-offset-10 columns text-right">
+          <input type="submit" class="button success expand" value="Factuur opslaan" />
         </div>
       </div>
     </div>

@@ -19,13 +19,19 @@ namespace Gitle.Web.Controllers
 
         public void Index()
         {
-            PropertyBag.Add("projects", session.Query<Project>().ToList());
+            var bookings = session.Query<Booking>().Where(x => x.User == CurrentUser && x.Date > DateTime.Today.AddDays(-7));
+            PropertyBag.Add("bookings", bookings);
         }
 
         public void Save()
         {
             var booking = BindObject<Booking>("booking");
+            
             booking.User = CurrentUser;
+            if (booking.Issue.Id == 0)
+            {
+                booking.Issue = null;
+            }
 
             using (var transaction = session.BeginTransaction())
             {

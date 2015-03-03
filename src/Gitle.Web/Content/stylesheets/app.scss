@@ -698,6 +698,18 @@ body.admin table#issue-table th {
 
 #createinvoice {
   font-size: 0.875rem;
+  .invoice-title {
+    input {
+      font-size: 2em;
+      padding: 01em;
+    }
+  }
+  .bookings {
+    margin-bottom: 1em;
+    .booking-hours-span {
+      padding: 0 0.5rem;
+    }
+  }
   .totals {
     border-top: 2px solid #666;
     padding-top: 1em;

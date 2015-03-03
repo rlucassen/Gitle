@@ -484,6 +484,13 @@ body.admin table#issue-table th#issue-actions {
 
 #createinvoice {
   font-size: 0.875rem; }
+  #createinvoice .invoice-title input {
+    font-size: 2em;
+    padding: 1em; }
+  #createinvoice .bookings {
+    margin-bottom: 1em; }
+    #createinvoice .bookings .booking-hours-span {
+      padding: 0 0.5rem; }
   #createinvoice .totals {
     border-top: 2px solid #666;
     padding-top: 1em; }
