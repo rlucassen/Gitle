@@ -209,6 +209,14 @@
         </div>
       </div>
       <div class="row">
+        <div class="large-2 columns">
+          <label for="invoice_Remarks">Opmerkingen</label>
+        </div>
+        <div class="large-10 columns">
+          <textarea name="invoice.Remarks" id="invoice_Remarks" placeholder="Ruimte voor verdere opmerkingen, deze komen onderaan de factuur"></textarea>
+        </div>
+      </div>
+      <div class="row">
         <div class="large-2 large-offset-10 columns text-right">
           <input type="submit" class="button success expand" value="Factuur opslaan" />
         </div>

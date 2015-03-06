@@ -17,6 +17,7 @@ namespace Gitle.Model
         public virtual int HourPrice { get; set; }
         public virtual DateTime CreatedAt { get; set; }
         public virtual bool VAT { get; set; }
+        public virtual string Remarks { get; set; }
 
         public virtual User CreatedBy { get; set; }
         public virtual Project Project { get; set; }
