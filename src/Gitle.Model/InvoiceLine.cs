@@ -11,7 +11,8 @@ namespace Gitle.Model
         public virtual Issue Issue { get; set; }
         public virtual string Description { get; set; }
         public virtual double Hours { get; set; }
-        public virtual double Price { get { return Hours * Invoice.HourPrice; } }
+        public virtual double Price { get { return Null ? 0 : Hours * Invoice.HourPrice; } }
+        public virtual bool Null { get; set; }
     }
 
     public class Correction : ModelBase

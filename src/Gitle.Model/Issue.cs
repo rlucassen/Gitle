@@ -16,6 +16,7 @@
             ChangeStates = new List<ChangeState>();
             Changes = new List<Change>();
             Bookings = new List<Booking>();
+            InvoiceLines = new List<InvoiceLine>();
         }
 
         public virtual int Number { get; set; }
@@ -30,6 +31,7 @@
         public virtual IList<ChangeState> ChangeStates { get; set; }
         public virtual IList<Change> Changes { get; set; }
         public virtual IList<Booking> Bookings { get; set; }
+        public virtual IList<InvoiceLine> InvoiceLines { get; set; }
 
         public virtual string BodyHtml { get { return Body.Markdown(Project); } }
 
@@ -218,5 +220,11 @@
         {
             Changes.Add(new Change() { CreatedAt = DateTime.Now, User = user, Issue = this});
         }
+
+        public virtual double BookingHours(DateTime startDate, DateTime endDate)
+        {
+            return Bookings.Where(x => x.Date >= startDate && x.Date <= endDate).Sum(x => x.Hours);
+        }
+
     }
 }

@@ -17,6 +17,7 @@
              HasMany(x => x.Changes).Cascade.AllDeleteOrphan();
              HasMany(x => x.Bookings).Cascade.AllDeleteOrphan();
              HasManyToMany(x => x.Labels).Table("IssueLabel").ParentKeyColumn("Issue_id").ChildKeyColumn("Label_id").Cascade.SaveUpdate();
+             HasMany(x => x.InvoiceLines).Cascade.None();
          }
     }
 }

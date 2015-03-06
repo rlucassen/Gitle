@@ -76,6 +76,12 @@ body.scroll .footer {
 .no-margin {
   margin: 0 !important; }
 
+.no-top-margin {
+  margin-top: 0 !important; }
+
+.no-bottom-margin {
+  margin-bottom: 0 !important; }
+
 .no-padding {
   padding: 0 !important; }
 
@@ -482,15 +488,32 @@ body.admin table#issue-table th#issue-actions {
   #booking [data-dayshift].active {
     background-color: #b9b9b9; }
 
+.booking h3 {
+  text-transform: capitalize;
+  color: #008CBA; }
+.booking .totalrow {
+  border-top: 2px solid #ccc;
+  margin-top: 0.5em;
+  padding-top: 0.5em; }
+
 #createinvoice {
   font-size: 0.875rem; }
   #createinvoice .invoice-title input {
     font-size: 2em;
     padding: 1em; }
+  #createinvoice .invoiceline .null {
+    color: #ccc; }
+  #createinvoice .invoiceline .button.tiny {
+    font-size: 0.875rem; }
+  #createinvoice .invoiceline .button.active {
+    font-weight: bold;
+    text-shadow: 2px 2px 0 #666; }
   #createinvoice .bookings {
     margin-bottom: 1em; }
     #createinvoice .bookings .booking-hours-span {
       padding: 0 0.5rem; }
+  #createinvoice .vatline .vat {
+    color: #ccc; }
   #createinvoice .totals {
     border-top: 2px solid #666;
     padding-top: 1em; }

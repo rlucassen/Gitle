@@ -58,7 +58,7 @@
             <input type="text" class="no-margin" name="booking.Comment" id="booking_Comment" placeholder="Opmerking" />
           </div>
           <div class="large-1 columns">
-            <input type="submit" class="button postfix no-margin" value="Boeken" />
+            <input type="submit" class="button postfix no-margin success" value="Boeken" />
           </div>
         </div>
       </form>
@@ -68,19 +68,40 @@
 <div class="row">
   <div class="large-12 columns">
     <h1>Uren geschreven</h1>
-    <% for booking in bookings: %>
-    <div class="row">
-      <div class="large-1 columns">
-        <span class="booking-minutes">${booking.Minutes}</span>
+    <% for keyvalue in bookings: %>
+    <% date = keyvalue.Key %>
+    <% datebookings = keyvalue.Value %>
+    <div class="panel booking">
+      <div class="row">
+        <div class="large-12 columns">
+          <h3>${date.date.ToString("dddd d MMMM yyyy")}</h3>
+        </div>
       </div>
-      <div class="large-3 columns">
-        <strong>${booking.Project.Name}</strong>
+      <% for booking in datebookings: %>
+      <div class="row">
+        <div class="large-1 columns">
+          <span class="booking-minutes">${booking.Time}</span>
+        </div>
+        <div class="large-3 columns">
+          <div class="booking-project">${booking.Project.Name}</div>
+        </div>
+        <div class="large-1 columns">
+          <% if booking.Issue: %>
+          <div class="booking-issue" title="#${booking.Issue.Number} - ${booking.Issue.Name}">#${booking.Issue.Number}</div>
+          <% end %>
+        </div>
+        <div class="large-7 columns">
+          <div class="booking-comment">${booking.Comment}</div>
+        </div>
       </div>
-      <div class="large-4 columns end">
-        <% if booking.Issue: %>
-        <div class="booking-issue">#${booking.Issue.Number} - ${booking.Issue.Name}</div>
-        <% end %>
-        <div class="booking-comment">${booking.Comment}</div>
+      <% end %>
+      <div class="row totalrow">
+        <div class="large-1 columns">
+          ${Helpers.DateTimeHelper.MinutesToTime(date.total)}
+        </div>
+        <div class="large-11 columns">
+          <strong>Totaal</strong>
+        </div>
       </div>
     </div>
     <% end %>

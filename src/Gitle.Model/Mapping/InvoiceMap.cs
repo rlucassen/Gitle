@@ -10,6 +10,7 @@
             Map(x => x.HourPrice);
             Map(x => x.Title);
             Map(x => x.Number);
+            Map(x => x.VAT);
 
             References(x => x.Project).Column("Project_id");
             References(x => x.CreatedBy).Column("CreatedBy_id");

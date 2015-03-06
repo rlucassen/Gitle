@@ -83,5 +83,10 @@
         {
             return dateTime.Value.ToString("MMM d, yyyy HH:mm").ToCamelCase();
         }
+
+        public static string MinutesToTime(int minutes)
+        {
+            return string.Format("{0}:{1:00}", Math.Floor(minutes/60.0), minutes - (Math.Floor(minutes/60.0) * 60));
+        }
     }
 }

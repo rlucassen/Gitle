@@ -22,6 +22,13 @@ namespace Gitle.Model
         public virtual double Minutes { get; set; }
         public virtual string Comment { get; set; }
 
-        public virtual double Hours { get { return Minutes / 60; } }
+        public virtual double Hours { get { return Minutes / 60.0; } }
+        public virtual string Time
+        {
+            get
+            {
+                return string.Format("{0}:{1:00}", Math.Floor(Hours), Minutes - (Math.Floor(Hours) * 60));
+            }
+        }
     }
 }

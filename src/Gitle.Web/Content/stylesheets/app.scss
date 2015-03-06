@@ -104,6 +104,14 @@ body.scroll .footer {
   margin: 0 !important;
 }
 
+.no-top-margin {
+  margin-top: 0 !important;
+}
+
+.no-bottom-margin {
+  margin-bottom: 0 !important;
+}
+
 .no-padding {
   padding: 0 !important;
 }
@@ -696,6 +704,18 @@ body.admin table#issue-table th {
   }
 }
 
+.booking  {
+  h3 {
+    text-transform: capitalize;
+    color: #008CBA;
+  }
+  .totalrow {
+    border-top: 2px solid #ccc;
+    margin-top: 0.5em;
+    padding-top: 0.5em;
+  }
+}
+
 #createinvoice {
   font-size: 0.875rem;
   .invoice-title {
@@ -704,10 +724,29 @@ body.admin table#issue-table th {
       padding: 01em;
     }
   }
+  .invoiceline {
+    .null {
+      color: #ccc;
+    }
+    .button {
+      &.tiny {
+        font-size: 0.875rem;
+      }
+      &.active {
+        font-weight: bold;
+        text-shadow: 2px 2px 0 #666;
+      }
+    }
+  }
   .bookings {
     margin-bottom: 1em;
     .booking-hours-span {
       padding: 0 0.5rem;
+    }
+  }
+  .vatline {
+    .vat {
+      color: #ccc;
     }
   }
   .totals {

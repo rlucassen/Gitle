@@ -31,7 +31,7 @@
           <strong>Omschrijving</strong>
         </div>
         <div class="large-1 columns">
-          <strong>Schatting</strong>
+          <strong>Schat/Boek</strong>
         </div>
         <div class="large-1 columns">
           <strong>Uren</strong>
@@ -44,22 +44,31 @@
       <% for booking in projectBookings: %>
       <div class="row invoiceline invoiceline-booking">
         <div class="large-8 columns">
-          <input type="text" name="lines[${count}].Description" id="lines_${count}_Description" value="${booking.Comment}" />
+          <div class="row collapse">
+            <div class="small-1 columns">
+              <a href="#" class="button prefix secondary remove-line"><i class="fa fa-close red"></i></a>
+            </div>
+            <div class="small-11 columns">
+              <input type="text" name="lines[${count}].Description" id="lines_${count}_Description" value="${booking.Comment}" />
+            </div>
+          </div>
         </div>
         <div class="large-1 large-offset-1 columns">
-          <input type="text" name="lines[${count}].Hours" id="lines_${count}_Hours" class="invoiceline-hours text-right" value="${booking.Hours}" />
+          <input type="text" name="lines[${count}].Hours" id="lines_${count}_Hours" class="invoiceline-hours-input text-right" value="${booking.Hours}" />
         </div>
         <div class="large-2 columns">
+          <input type="hidden" name="lines[${count}].Null" class="invoiceline-null" value="0" />
           <div class="row collapse">
             <div class="large-3 columns">
-              <span class="prefix"><i class="fa fa-euro"></i></span>
+              <a href="#" class="prefix invoiceline-null-toggle"><i class="fa fa-euro"></i></a>
             </div>
             <div class="large-9 columns">
-              <input type="text" name="invoiceline[${count}].Price" class="invoiceline-price" disabled />
+              <input type="text" class="invoiceline-price" disabled />
             </div>
           </div>
         </div>
       </div>
+      <hr class="no-top-margin"/>
       <% count = count + 1 %>
       <% end %>
       <% for keyvalue in issueBookings: %>
@@ -68,18 +77,44 @@
       <div class="row invoiceline invoiceline-issue" data-issue="${issue.Number}">
         <input type="hidden" name="lines[${count}].Issue.Id" id="lines_${count}_Issue_Id" value="${issue.Id}" />
         <div class="large-8 columns">
-          <input type="text" name="lines[${count}].Description" id="lines_${count}_Description" value="#${issue.Number} ${issue.Name}" />
+          <div class="row collapse">
+            <div class="small-1 columns">
+              <a href="#" class="button prefix secondary remove-line"><i class="fa fa-close red"></i></a>
+            </div>
+            <div class="small-1 columns">
+              <span class="prefix secondary">
+                <% if issue.IsOpen: %>
+                <i class="fa fa-exclamation-circle green" title="open"></i>
+                <% elif issue.IsArchived: %>
+                <i class="fa fa-trash red" title="${Helpers.DateTimeHelper.Readable(issue.ArchivedAt)}" title="gearchiveerd"></i>
+                <% else: %>
+                <i class="fa fa-ban red" title="${Helpers.DateTimeHelper.Readable(issue.ClosedAt)}" title="gesloten"></i>
+                <% end %>
+              </span>
+            </div>
+            <div class="small-10 columns">
+              <input type="text" name="lines[${count}].Description" id="lines_${count}_Description" value="#${issue.Number} ${issue.Name}" />
+            </div>
+          </div>
         </div>
         <div class="large-1 columns">
-          <a href="#" class="button tiny secondary invoiceline-estimate expand">${issue.TotalHours}</a>
+          <div class="row collapse estimate-hours">
+            <div class="large-6 columns">
+              <a href="#" class="button tiny invoiceline-estimate expand" title="Schatting">${issue.TotalHours}</a>
+            </div>
+            <div class="large-6 columns">
+              <a href="#" class="button tiny invoiceline-hours expand active" title="Geboekte uren">${issue.BookingHours(startDate, endDate)}</a>
+            </div>
+          </div>
         </div>
         <div class="large-1 columns">
-          <input type="text" name="lines[${count}].Hours" id="lines_${count}_Hours" class="invoiceline-hours text-right" />
+          <input type="text" name="lines[${count}].Hours" id="lines_${count}_Hours" class="invoiceline-hours-input text-right" value="${issue.BookingHours(startDate, endDate)}" />
         </div>
         <div class="large-2 columns">
+          <input type="hidden" name="lines[${count}].Null" class="invoiceline-null" value="0" />
           <div class="row collapse">
             <div class="large-3 columns">
-              <span class="prefix"><i class="fa fa-euro"></i></span>
+              <a href="#" class="prefix invoiceline-null-toggle"><i class="fa fa-euro"></i></a>
             </div>
             <div class="large-9 columns">
               <input type="text" class="invoiceline-price" disabled />
@@ -139,6 +174,24 @@
         <% end %>
       </div>
       <div class="totals">
+        <div class="row vatline">
+          <div class="large-10 columns text-right">
+            <strong>BTW 21%:</strong>
+          </div>
+          <div class="large-2 columns">
+            <input type="hidden" name="invoice.VAT" class="vatline-vat" value="1" />
+            <div class="row collapse">
+              <div class="large-3 columns">
+                <a href="#" class="prefix vatline-toggle"><i class="fa fa-euro"></i></a>
+              </div>
+              <div class="large-9 columns">
+                <input type="text" class="vatline-price" disabled />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="totals">
         <div class="row">
           <div class="large-10 columns text-right">
             <strong>Totaal:</strong>
@@ -168,32 +221,33 @@
   $(function () {
     var computeHoursForIssue = function (issueNumber) {
       var issueLine = $('.invoiceline[data-issue=' + issueNumber + ']');
-      var hours = 0.0;
-      $('.booking[data-issue=' + issueNumber + ']').each(function () {
-        hours += parseFloat($(this).find('.booking-hours').val().replace(',', '.'));
-      });
-      issueLine.find('.invoiceline-hours').val(hours.toString().replace('.', ','));
+      var hoursButton = issueLine.find('.invoiceline-hours');
+      var hours = parseFloat(hoursButton.text());
       var estimateButton = issueLine.find('.invoiceline-estimate');
       var estimate = parseFloat(estimateButton.text());
       if (hours < estimate) {
         estimateButton.addClass('success');
+        hoursButton.addClass('alert');
       } else {
         estimateButton.addClass('alert');
+        hoursButton.addClass('success');
       }
     }
 
     var computePriceForInvoiceLine = function (invoiceLine) {
       var hourPrice = parseInt($('#invoice_HourPrice').val());
-      var hours = parseFloat(invoiceLine.find('.invoiceline-hours').val().replace(',', '.'));
-      var price = hours * hourPrice;
-      invoiceLine .find('.invoiceline-price').val(price.toString().replace('.', ','));
+      var hours = parseFloat(invoiceLine.find('.invoiceline-hours-input').val().replace(',', '.'));
+      var nill = parseInt(invoiceLine.find('.invoiceline-null').val());
+      var price = hours * hourPrice * (1-nill);
+      invoiceLine.find('.invoiceline-price').val(price.toString().replace('.', ','));
       calculateTotals();
     }
 
     var calculateTotals = function () {
       var subtotalPrice = 0.0;
       $('.invoiceline').each(function () {
-        subtotalPrice += parseFloat($(this).find('.invoiceline-price').val().replace(',', '.'));
+        var linePrice = parseFloat($(this).find('.invoiceline-price').val().replace(',', '.')) * (1 - parseInt($(this).find('.invoiceline-null').val()));
+        subtotalPrice += linePrice;
       });
       $('#invoice_Subtotal').val(subtotalPrice.toString().replace('.', ','));
       var correctionTotalPrice = 0.0;
@@ -202,7 +256,10 @@
         if(correctionValue)
           correctionTotalPrice += parseFloat(correctionValue.replace(',', '.'));
       });
-      var totalPrice = subtotalPrice + correctionTotalPrice;
+      var vat = parseInt($('.vatline .vatline-vat').val());
+      var vatPrice = (subtotalPrice + correctionTotalPrice) * vat * 0.21;
+      $('.vatline-price').val(vatPrice.toString().replace('.', ','));
+      var totalPrice = subtotalPrice + correctionTotalPrice + vatPrice;
       $('#invoice_Total').val(totalPrice.toString().replace('.', ','));
     }
 
@@ -218,7 +275,7 @@
 
     calculateTotals();
 
-    $('.invoiceline-hours').change(function () {
+    $('.invoiceline-hours-input').change(function () {
       var invoiceLine = $(this).parents('.invoiceline');
       computePriceForInvoiceLine(invoiceLine);
     });
@@ -227,12 +284,54 @@
       calculateTotals();
     });
 
-    $('.invoiceline-estimate').click(function (e) {
+    $('.invoiceline-estimate, .invoiceline-hours').click(function (e) {
       e.preventDefault();
       var estimate = $(this).text();
       var invoiceLine = $(this).parents('.invoiceline');
-      invoiceLine.find('.invoiceline-hours').val(estimate).change();
-      $(this).removeClass('success').removeClass('alert');
+      invoiceLine.find('.invoiceline-hours-input').val(estimate).change();
+      invoiceLine.find('.invoiceline-estimate, .invoiceline-hours').removeClass('active');
+      $(this).addClass('active');
+    });
+
+    $('.remove-line').click(function (e) {
+      e.preventDefault();
+      var line = $(this).parents('.invoiceline');
+      if (line.data('issue')) {
+        $('.booking[data-issue=' + line.data('issue') + ']').remove();
+      }
+      line.remove();
+      calculateTotals();
+    });
+
+    $('.invoiceline-null-toggle').click(function (e) {
+      e.preventDefault();
+      var line = $(this).parents('.invoiceline');
+      if ($(this).hasClass('null')) {
+        $(this).removeClass('null');
+        line.find('.invoiceline-null').val(0);
+        line.find('.invoiceline-price').removeClass('null');
+      } else {
+        $(this).addClass('null');
+        line.find('.invoiceline-null').val(1);
+        line.find('.invoiceline-price').addClass('null');
+      }
+      computePriceForInvoiceLine(line);
+      calculateTotals();
+    });
+
+    $('.vatline-toggle').click(function (e) {
+      e.preventDefault();
+      var line = $(this).parents('.vatline');
+      if ($(this).hasClass('vat')) {
+        $(this).removeClass('vat');
+        line.find('.vatline-vat').val(1);
+        line.find('.vatline-price').removeClass('null');
+      } else {
+        $(this).addClass('vat');
+        line.find('.vatline-vat').val(0);
+        line.find('.vatline-price').addClass('null');
+      }
+      calculateTotals();
     });
   });
 </script>
