@@ -12,6 +12,9 @@
             Map(x => x.Number);
             Map(x => x.VAT);
             Map(x => x.Remarks);
+            Map(x => x.State);
+            Map(x => x.StartDate);
+            Map(x => x.EndDate);
 
             References(x => x.Project).Column("Project_id");
             References(x => x.CreatedBy).Column("CreatedBy_id");

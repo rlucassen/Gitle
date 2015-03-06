@@ -183,6 +183,11 @@
             get { return Hours * Devvers; }
         }
 
+        public virtual IList<Invoice> Invoices
+        {
+            get { return InvoiceLines.Select(x => x.Invoice).ToList(); }
+        }
+
         public virtual string CostString(double hourPrice)
         {
             return TotalHours > 0 ? (TotalHours * hourPrice).ToString("C") : "n.n.b.";

@@ -22,6 +22,8 @@ namespace Gitle.Model
         public virtual double Minutes { get; set; }
         public virtual string Comment { get; set; }
 
+        public virtual IList<Invoice> Invoices { get; set; }
+
         public virtual double Hours { get { return Minutes / 60.0; } }
         public virtual string Time
         {

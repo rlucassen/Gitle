@@ -91,7 +91,10 @@
           <% end %>
         </div>
         <div class="large-7 columns">
-          <div class="booking-comment">${booking.Comment}</div>
+          <span class="booking-comment">${booking.Comment}</span>
+          <% for invoice in booking.Invoices: %>
+          <span class="label round right" title="${invoice.Title}">${invoice.Number}</span>
+          <% end %>
         </div>
       </div>
       <% end %>

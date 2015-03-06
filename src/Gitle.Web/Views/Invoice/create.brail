@@ -4,11 +4,13 @@
     <div class="large-12 columns">
       <div class="row collapse invoice-title">
         <div class="large-2 columns">
-          <input type="hidden" name="invoice.Project.Id" id="invoice_Project_Id" value="${project.Id}">
-          <input type="text" name="invoice.Number" id="invoice_Number" placeholder="Factuurnr." />
+          <input type="hidden" name="invoice.Project.Id" id="invoice_Project_Id" value="${invoice.Project.Id}">
+          <input type="hidden" name="invoice.StartDate" id="invoice_StartDate" value="${invoice.StartDate}">
+          <input type="hidden" name="invoice.EndDate" id="invoice_EndDate" value="${invoice.EndDate}">
+          <input type="text" name="invoice.Number" id="invoice_Number" value="${invoice.Number}" placeholder="Factuurnr." />
         </div>
         <div class="large-10 columns">
-          <input type="text" name="invoice.Title" id="invoice_Title" value="${project.Name} (${startDate.ToString("dd-MM-yyyy")} tot ${enddate.ToString("dd-MM-yyyy")})" />
+          <input type="text" name="invoice.Title" id="invoice_Title" value="${invoice.Title}" />
         </div>
       </div>
       <div class="row">
@@ -21,7 +23,7 @@
               <span class="prefix"><i class="fa fa-euro"></i></span>
             </div>
             <div class="large-9 columns">
-              <input type="text" name="invoice.HourPrice" id="invoice_HourPrice" value="${project.HourPrice}" />
+              <input type="text" name="invoice.HourPrice" id="invoice_HourPrice" value="${invoice.HourPrice}" />
             </div>
           </div>
         </div>
@@ -41,7 +43,7 @@
         </div>
       </div>
       <% count = 0 %>
-      <% for booking in projectBookings: %>
+      <% for line in invoice.ProjectLines: %>
       <div class="row invoiceline invoiceline-booking">
         <div class="large-8 columns">
           <div class="row collapse">
@@ -49,15 +51,15 @@
               <a href="#" class="button prefix secondary remove-line"><i class="fa fa-close red"></i></a>
             </div>
             <div class="small-11 columns">
-              <input type="text" name="lines[${count}].Description" id="lines_${count}_Description" value="${booking.Comment}" />
+              <input type="text" name="lines[${count}].Description" id="lines_${count}_Description" value="${line.Description}" />
             </div>
           </div>
         </div>
         <div class="large-1 large-offset-1 columns">
-          <input type="text" name="lines[${count}].Hours" id="lines_${count}_Hours" class="invoiceline-hours-input text-right" value="${booking.Hours}" />
+          <input type="text" name="lines[${count}].Hours" id="lines_${count}_Hours" class="invoiceline-hours-input text-right" value="${line.Hours}" />
         </div>
         <div class="large-2 columns">
-          <input type="hidden" name="lines[${count}].Null" class="invoiceline-null" value="0" />
+          <input type="hidden" name="lines[${count}].Null" class="invoiceline-null" value="<% if line.Null: %>1<% else: %>0<% end %>" />
           <div class="row collapse">
             <div class="large-3 columns">
               <a href="#" class="prefix invoiceline-null-toggle"><i class="fa fa-euro"></i></a>
@@ -71,11 +73,9 @@
       <hr class="no-top-margin"/>
       <% count = count + 1 %>
       <% end %>
-      <% for keyvalue in issueBookings: %>
-      <% issue = keyvalue.Key %>
-      <% bookings = keyvalue.Value %>
-      <div class="row invoiceline invoiceline-issue" data-issue="${issue.Number}">
-        <input type="hidden" name="lines[${count}].Issue.Id" id="lines_${count}_Issue_Id" value="${issue.Id}" />
+      <% for line in invoice.IssueLines: %>
+      <div class="row invoiceline invoiceline-issue" data-issue="${line.Issue.Number}">
+        <input type="hidden" name="lines[${count}].Issue.Id" id="lines_${count}_Issue_Id" value="${line.Issue.Id}" />
         <div class="large-8 columns">
           <div class="row collapse">
             <div class="small-1 columns">
@@ -83,35 +83,35 @@
             </div>
             <div class="small-1 columns">
               <span class="prefix secondary">
-                <% if issue.IsOpen: %>
+                <% if line.Issue.IsOpen: %>
                 <i class="fa fa-exclamation-circle green" title="open"></i>
-                <% elif issue.IsArchived: %>
-                <i class="fa fa-trash red" title="${Helpers.DateTimeHelper.Readable(issue.ArchivedAt)}" title="gearchiveerd"></i>
+                <% elif line.Issue.IsArchived: %>
+                <i class="fa fa-trash red" title="${Helpers.DateTimeHelper.Readable(line.Issue.ArchivedAt)}" title="gearchiveerd"></i>
                 <% else: %>
-                <i class="fa fa-ban red" title="${Helpers.DateTimeHelper.Readable(issue.ClosedAt)}" title="gesloten"></i>
+                <i class="fa fa-ban red" title="${Helpers.DateTimeHelper.Readable(line.Issue.ClosedAt)}" title="gesloten"></i>
                 <% end %>
               </span>
             </div>
             <div class="small-10 columns">
-              <input type="text" name="lines[${count}].Description" id="lines_${count}_Description" value="#${issue.Number} ${issue.Name}" />
+              <input type="text" name="lines[${count}].Description" id="lines_${count}_Description" value="${line.Description}" />
             </div>
           </div>
         </div>
         <div class="large-1 columns">
           <div class="row collapse estimate-hours">
             <div class="large-6 columns">
-              <a href="#" class="button tiny invoiceline-estimate expand" title="Schatting">${issue.TotalHours}</a>
+              <a href="#" class="button tiny invoiceline-estimate expand <% if line.EstimateHours == line.Hours: %>active<% end %>" title="Schatting">${line.EstimateHours}</a>
             </div>
             <div class="large-6 columns">
-              <a href="#" class="button tiny invoiceline-hours expand active" title="Geboekte uren">${issue.BookingHours(startDate, endDate)}</a>
+              <a href="#" class="button tiny invoiceline-hours expand <% if line.BookingHours == line.Hours: %>active<% end %>" title="Geboekte uren">${line.BookingHours}</a>
             </div>
           </div>
         </div>
         <div class="large-1 columns">
-          <input type="text" name="lines[${count}].Hours" id="lines_${count}_Hours" class="invoiceline-hours-input text-right" value="${issue.BookingHours(startDate, endDate)}" />
+          <input type="text" name="lines[${count}].Hours" id="lines_${count}_Hours" class="invoiceline-hours-input text-right" value="${line.Hours}" />
         </div>
         <div class="large-2 columns">
-          <input type="hidden" name="lines[${count}].Null" class="invoiceline-null" value="0" />
+          <input type="hidden" name="lines[${count}].Null" class="invoiceline-null" value="<% if line.Null: %>1<% else: %>0<% end %>" />
           <div class="row collapse">
             <div class="large-3 columns">
               <a href="#" class="prefix invoiceline-null-toggle"><i class="fa fa-euro"></i></a>
@@ -123,8 +123,8 @@
         </div>
       </div>
       <div class="bookings">
-        <% for booking in bookings: %>
-        <div class="row booking" data-issue="${issue.Number}">
+        <% for booking in line.Bookings: %>
+        <div class="row booking" data-issue="${line.Issue.Number}">
           <input type="hidden" name="bookings[${booking.Id}]" id="bookings_${booking.Id}" value="${booking.Id}" />
           <div class="large-7 large-offset-1 columns">
             <span class="booking-info">${booking.Date.ToString("dd-MM-yyyy")} ${booking.User.FullName}</span>:
@@ -155,10 +155,11 @@
             </div>
           </div>
         </div>
-        <% for i in [0,1,2]: %>
+        <% correctionCount = 0 %>
+        <% for correction in invoice.FiveCorrections: %>
         <div class="row correctionline">
           <div class="large-10 columns">
-            <input type="text" placeholder="Korting, extra kosten e.d." class="text-right" />
+            <input type="text" placeholder="Korting, extra kosten e.d." class="text-right" value="${correction.Description}" />
           </div>
           <div class="large-2 columns">
             <div class="row collapse">
@@ -166,11 +167,12 @@
                 <span class="prefix"><i class="fa fa-euro"></i></span>
               </div>
               <div class="large-9 columns">
-                <input type="text" name="corrections[${i}].Price" id="corrections_${i}_Price" class="correctionline-price" />
+                <input type="text" name="corrections[${correctionCount}].Price" id="corrections_${correctionCount}_Price" value="${correction.Price}" class="correctionline-price" />
               </div>
             </div>
           </div>
         </div>
+        <% correctionCount = correctionCount + 1 %>
         <% end %>
       </div>
       <div class="totals">
@@ -179,7 +181,7 @@
             <strong>BTW 21%:</strong>
           </div>
           <div class="large-2 columns">
-            <input type="hidden" name="invoice.VAT" class="vatline-vat" value="1" />
+            <input type="hidden" name="invoice.VAT" class="vatline-vat" value="<% if invoice.VAT: %>1<% else: %>0<% end %>" />
             <div class="row collapse">
               <div class="large-3 columns">
                 <a href="#" class="prefix vatline-toggle"><i class="fa fa-euro"></i></a>
@@ -213,7 +215,7 @@
           <label for="invoice_Remarks">Opmerkingen</label>
         </div>
         <div class="large-10 columns">
-          <textarea name="invoice.Remarks" id="invoice_Remarks" placeholder="Ruimte voor verdere opmerkingen, deze komen onderaan de factuur"></textarea>
+          <textarea name="invoice.Remarks" id="invoice_Remarks" placeholder="Ruimte voor verdere opmerkingen, deze komen onderaan de factuur">${invoice.Remarks}</textarea>
         </div>
       </div>
       <div class="row">
@@ -243,7 +245,7 @@
     }
 
     var computePriceForInvoiceLine = function (invoiceLine) {
-      var hourPrice = parseInt($('#invoice_HourPrice').val());
+      var hourPrice = parseFloat($('#invoice_HourPrice').val());
       var hours = parseFloat(invoiceLine.find('.invoiceline-hours-input').val().replace(',', '.'));
       var nill = parseInt(invoiceLine.find('.invoiceline-null').val());
       var price = hours * hourPrice * (1-nill);
@@ -275,20 +277,29 @@
       computeHoursForIssue($(this).data('issue'));
     });
 
-    $('#invoice_HourPrice').change(function () {
+    $('#invoice_HourPrice').keyup(function () {
       $('.invoiceline').each(function () {
         computePriceForInvoiceLine($(this));
       });
-    }).change();
+    }).keyup();
 
     calculateTotals();
 
-    $('.invoiceline-hours-input').change(function () {
+    $('.invoiceline-hours-input').on('change keyup', function () {
       var invoiceLine = $(this).parents('.invoiceline');
       computePriceForInvoiceLine(invoiceLine);
+      invoiceLine.find('.invoiceline-estimate, .invoiceline-hours').removeClass('active');
+      var hours = parseFloat($(this).val().replace(',', '.'));
+      var estimateHours = parseFloat(invoiceLine.find('.invoiceline-estimate').text().replace(',', '.'));
+      var bookingHours = parseFloat(invoiceLine.find('.invoiceline-hours').text().replace(',', '.'));
+      if (hours == estimateHours) {
+        invoiceLine.find('.invoiceline-estimate').addClass('active');
+      } else if (hours == bookingHours) {
+        invoiceLine.find('.invoiceline-hours').addClass('active');
+      }
     });
 
-    $('.correctionline-price').change(function () {
+    $('.correctionline-price').keyup(function () {
       calculateTotals();
     });
 

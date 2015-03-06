@@ -46,6 +46,15 @@
                 <% end %>
               </div>
             </div>
+            <% if CurrentUser.IsDanielle: %>
+            <div class="row">
+              <div class="large-12 columns">
+                <% for invoice in issue.Invoices: %>
+                <span class="label round" title="${invoice.Title}">${invoice.Number}</span>
+                <% end %>
+              </div>
+            </div>
+            <% end %>
           </div>
           <div class="large-2 columns text-right">
             <ul class="button-group">

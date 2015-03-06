@@ -73,6 +73,7 @@
     <Compile Include="Change.cs" />
     <Compile Include="ChangeState.cs" />
     <Compile Include="Comment.cs" />
+    <Compile Include="Enum\InvoiceState.cs" />
     <Compile Include="Enum\IssueState.cs" />
     <Compile Include="FilterPreset.cs" />
     <Compile Include="Helpers\CsvHelper.cs" />

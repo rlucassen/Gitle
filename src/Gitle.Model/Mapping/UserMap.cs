@@ -15,6 +15,7 @@
             Map(x => x.FullName);
             Map(x => x.EmailAddress);
             Map(x => x.IsAdmin);
+            Map(x => x.IsDanielle);
             Map(x => x.Phone);
             Map(x => x.GitHubUsername);
             Map(x => x.GitHubAccessToken);

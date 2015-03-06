@@ -148,9 +148,6 @@
             RoutingModuleEx.Engine.Add(new PatternRoute("issues", "/project/<projectSlug>/issues")
                                            .DefaultForController().Is<IssueController>()
                                            .DefaultForAction().Is("index"));
-            RoutingModuleEx.Engine.Add(new PatternRoute("issues2", "/project/<projectSlug>/issues2/<query>")
-                                           .DefaultForController().Is<IssueController>()
-                                           .DefaultForAction().Is("index2"));
             RoutingModuleEx.Engine.Add(new PatternRoute("/project/<projectSlug>/issue/<action>")
                                            .DefaultForController().Is<IssueController>()
                                            .DefaultForAction().Is("index"));
@@ -159,6 +156,15 @@
                                            .DefaultForAction().Is("index"));
             RoutingModuleEx.Engine.Add(new PatternRoute("/project/<projectSlug>/issue/<issueId>/<action>/<param>")
                                            .DefaultForController().Is<IssueController>()
+                                           .DefaultForAction().Is("index"));
+            RoutingModuleEx.Engine.Add(new PatternRoute("/invoices")
+                                           .DefaultForController().Is<InvoiceController>()
+                                           .DefaultForAction().Is("index"));
+            RoutingModuleEx.Engine.Add(new PatternRoute("/project/<projectSlug>/invoice/<action>")
+                                           .DefaultForController().Is<InvoiceController>()
+                                           .DefaultForAction().Is("index"));
+            RoutingModuleEx.Engine.Add(new PatternRoute("/project/<projectSlug>/invoice/<invoiceId>/<action>")
+                                           .DefaultForController().Is<InvoiceController>()
                                            .DefaultForAction().Is("index"));
 
             RoutingModuleEx.Engine.Add<FilterPresetController>();

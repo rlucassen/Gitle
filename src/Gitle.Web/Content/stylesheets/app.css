@@ -91,6 +91,9 @@ body.scroll .footer {
 .green {
   color: #3c9a5f; }
 
+.blue {
+  color: #008CBA; }
+
 .small-text {
   font-size: 0.9rem; }
   .small-text p {
@@ -517,6 +520,20 @@ body.admin table#issue-table th#issue-actions {
   #createinvoice .totals {
     border-top: 2px solid #666;
     padding-top: 1em; }
+
+.invoices {
+  border-top: 1px solid #ccc; }
+  .invoices .invoice {
+    padding: 1em 1em 0.2em;
+    border-bottom: 1px solid #ccc; }
+    .invoices .invoice:hover {
+      background-color: #efefef; }
+    .invoices .invoice .number {
+      font-size: 1.2em; }
+    .invoices .invoice .state {
+      font-size: 1.6em; }
+    .invoices .invoice .detailrow {
+      font-size: 0.8em; }
 
 table#issue-table th#issue-estimate, table#issue-table td.estimate {
   display: none; }

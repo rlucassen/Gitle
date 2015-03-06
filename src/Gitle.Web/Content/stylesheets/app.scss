@@ -124,6 +124,10 @@ body.scroll .footer {
   color: #3c9a5f;
 }
 
+.blue {
+  color: #008CBA;
+}
+
 .small-text {
   font-size: 0.9rem;
   p {
@@ -752,6 +756,26 @@ body.admin table#issue-table th {
   .totals {
     border-top: 2px solid #666;
     padding-top: 1em;
+  }
+}
+
+.invoices {
+  border-top: 1px solid #ccc;
+  .invoice {
+    padding: 1em 1em 0.2em;
+    border-bottom: 1px solid #ccc;
+    &:hover{
+      background-color: #efefef;
+    }
+    .number {
+      font-size: 1.2em;
+    }
+    .state {
+      font-size: 1.6em;
+    }
+    .detailrow {
+      font-size: 0.8em;
+    }
   }
 }
 

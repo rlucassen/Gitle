@@ -20,6 +20,60 @@
     </div>
   </div>
 </form>
+
+<h1>Facturen</h1>
+<div class="invoices">
+  <% for invoice in invoices: %>
+  <div class="invoice">
+    <div class="row">
+      <div class="large-2 columns">
+        <div class="row">
+          <div class="large-8 columns">
+            <span class="label round number">${invoice.Number}</span>
+          </div>
+          <div class="large-4 columns">
+            <span class="state">
+              <% if invoice.IsConcept: %>
+              <i class="fa fa-lightbulb-o blue" title="Concept"></i>
+              <% elif invoice.IsDefinitive: %>
+              <i class="fa fa-money green" title="Definitief"></i>
+              <% elif invoice.IsArchived: %>
+              <i class="fa fa-trash red" title="Gearchiveerd"></i>
+              <% end %>
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="large-8 columns">
+        <div class="row titlerow">
+          <div class="large-10 columns">
+            <a class="title" href="#">${invoice.Title}</a>
+          </div>
+        </div>
+        <div class="row detailrow">
+          <div class="large-4 columns">
+            <strong>${invoice.Project.Name}</strong>
+          </div>
+          <div class="large-5 columns">
+            Totaal: ${invoice.Total.ToString("C")} (${invoice.TotalExclVat.ToString("C")} excl. BTW)
+          </div>
+          <div class="large-2 columns text-right">
+            <i class="fa fa-list-ol"></i> ${invoice.IssueCount} issues
+          </div>
+        </div>
+      </div>
+      <div class="large-2 columns text-right">
+        <ul class="button-group">
+          <li><a class="button tiny no-margin" href="/project/${invoice.Project.Slug}/invoice/${invoice.Number}/view">Open</a></li>
+          <li><a class="button tiny no-margin" href="/project/${invoice.Project.Slug}/invoice/${invoice.Number}/copy">Kopie</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <% end %>
+</div>
+
+
 <script>
   $(function () {
     $('#project-chooser').autocomplete({

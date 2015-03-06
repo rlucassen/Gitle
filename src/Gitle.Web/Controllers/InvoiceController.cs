@@ -1,4 +1,5 @@
 ﻿using Gitle.Model;
+using Gitle.Model.Enum;
 using Gitle.Web.Helpers;
 using NHibernate;
 using NHibernate.Linq;
@@ -21,7 +22,8 @@ namespace Gitle.Web.Controllers
         [Admin]
         public void Index()
         {
-
+            var invoices = session.Query<Invoice>();
+            PropertyBag.Add("invoices", invoices);
         }
 
         [Admin]
@@ -31,22 +33,22 @@ namespace Gitle.Web.Controllers
 
             var bookings = session.Query<Booking>().Where(x => x.Date >= startDate && x.Date <= endDate).ToList();
 
-            var projectBookings = bookings.Where(x => x.Issue == null);
-            var issueBookings = new Dictionary<Issue, List<Booking>>();
-            foreach (var booking in bookings.Where(x => x.Issue != null))
-            {
-                if (!issueBookings.ContainsKey(booking.Issue))
-                {
-                    issueBookings.Add(booking.Issue, new List<Booking>());
-                }
-                issueBookings[booking.Issue].Add(booking);
-            }
-
+            var invoice = new Invoice(project, startDate, endDate, bookings);
+            
+            PropertyBag.Add("invoice", invoice);
             PropertyBag.Add("project", project);
-            PropertyBag.Add("projectBookings", projectBookings);
-            PropertyBag.Add("issueBookings", issueBookings);
-            PropertyBag.Add("startDate", startDate);
-            PropertyBag.Add("endDate", endDate);
+        }
+
+        [Admin]
+        public void Copy(string projectSlug, string invoiceId)
+        {
+            var project = session.Query<Project>().FirstOrDefault(p => p.Slug == projectSlug);
+            var invoice = session.Query<Invoice>().FirstOrDefault(i => i.Number == invoiceId && i.Project == project);
+
+            PropertyBag.Add("invoice", invoice);
+            PropertyBag.Add("project", project);
+
+            RenderView("create");
         }
 
         [Admin]
@@ -61,6 +63,7 @@ namespace Gitle.Web.Controllers
             invoice.Bookings = bookings;
             invoice.CreatedBy = CurrentUser;
             invoice.CreatedAt = DateTime.Now;
+            invoice.State = InvoiceState.Concept;
 
             using (var tx = session.BeginTransaction())
             {

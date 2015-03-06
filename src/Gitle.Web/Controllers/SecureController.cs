@@ -30,6 +30,12 @@
                 RenderView("/shared/forbidden");
                 return null;
             }
+            var danielleAttributes = (DanielleAttribute[])method.GetCustomAttributes(typeof(DanielleAttribute), false);
+            if (danielleAttributes.Length > 0 && !CurrentUser.IsDanielle)
+            {
+                RenderView("/shared/forbidden");
+                return null;
+            }
             var projectAttributes = (MustHaveProjectAttribute[])method.GetCustomAttributes(typeof(MustHaveProjectAttribute), false);
             if (!CurrentUser.IsAdmin && extraArgs.ContainsKey("projectSlug") && projectAttributes.Length > 0 && CurrentUser.Projects.Select(p => p.Project).All(p => p.Slug != extraArgs["projectSlug"].ToString()))
             {

@@ -118,6 +118,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\DanielleAttribute.cs" />
     <Compile Include="Helpers\AdminAttribute.cs" />
     <Compile Include="Helpers\DayHelper.cs" />
     <Compile Include="Helpers\FileBinderAttribute.cs" />
