@@ -41,6 +41,8 @@
             return Projects.FirstOrDefault(x => x.Project == project) ?? new UserProject();
         }
 
+        public virtual bool IsCustomer { get { return !IsAdmin && !IsDanielle; } }
+
         #region Implementation of IPrincipal
 
         public virtual bool IsInRole(string role)

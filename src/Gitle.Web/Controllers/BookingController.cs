@@ -20,7 +20,7 @@ namespace Gitle.Web.Controllers
         public void Index()
         {
             var bookings = session.Query<Booking>()
-                .Where(x => x.User == CurrentUser && x.Date > DateTime.Today.AddDays(-7))
+                .Where(x => x.User == CurrentUser && x.Date > DateTime.Today.AddDays(-14))
                 .OrderByDescending(x => x.Date)
                 .GroupBy(x => x.Date.Date)
                 .ToDictionary(g => new { date = g.Key, total = g.ToList().Sum(x => x.Minutes) }, g => g.ToList());

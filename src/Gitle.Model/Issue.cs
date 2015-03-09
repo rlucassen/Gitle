@@ -188,6 +188,11 @@
             get { return InvoiceLines.Select(x => x.Invoice).ToList(); }
         }
 
+        public virtual IList<Invoice> DefinitiveInvoices
+        {
+            get { return InvoiceLines.Select(x => x.Invoice).Where(i => i.IsDefinitive).ToList(); }
+        }
+
         public virtual string CostString(double hourPrice)
         {
             return TotalHours > 0 ? (TotalHours * hourPrice).ToString("C") : "n.n.b.";
