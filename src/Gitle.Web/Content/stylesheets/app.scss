@@ -769,6 +769,13 @@ body.admin table#issue-table th {
     }
     .number {
       font-size: 1.2em;
+      &.Concept {
+        background-color: #e7e7e7;
+        color: #333;
+      }
+      &.Gearchiveerd {
+        background-color: #f04124;
+      }
     }
     .state {
       font-size: 1.6em;

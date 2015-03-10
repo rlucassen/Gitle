@@ -5,11 +5,11 @@
     public enum InvoiceState
     {
         Unknown = 0,
-        [Description("concept")]
+        [Description("Concept")]
         Concept = 1,
-        [Description("definitief")]
+        [Description("Definitief")]
         Definitive = 2,
-        [Description("gearchiveerd")]
+        [Description("Gearchiveerd")]
         Archived = 3,
     }
 }

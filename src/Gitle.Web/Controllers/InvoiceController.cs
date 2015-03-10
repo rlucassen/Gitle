@@ -84,5 +84,33 @@ namespace Gitle.Web.Controllers
 
             RedirectToAction("index");
         }
+
+        [Admin]
+        public void Definitive(string projectSlug, string invoiceId)
+        {
+            ChangeState(projectSlug, invoiceId, InvoiceState.Definitive);
+        }
+
+        [Admin]
+        public void Archive(string projectSlug, string invoiceId)
+        {
+            ChangeState(projectSlug, invoiceId, InvoiceState.Archived);
+        }
+
+        private void ChangeState(string projectSlug, string invoiceId, InvoiceState state)
+        {
+            var project = session.Query<Project>().FirstOrDefault(p => p.Slug == projectSlug);
+            var invoice = session.Query<Invoice>().FirstOrDefault(i => i.Number == invoiceId && i.Project == project);
+
+            invoice.State = state;
+
+            using (var tx = session.BeginTransaction())
+            {
+                session.SaveOrUpdate(invoice);
+                tx.Commit();
+            }
+
+            RedirectToReferrer();
+        }
     }
 }

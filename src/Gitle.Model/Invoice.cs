@@ -1,5 +1,6 @@
 ﻿using Gitle.Model.Enum;
 using System;
+using Gitle.Model.Helpers;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -77,6 +78,7 @@ namespace Gitle.Model
         public virtual bool IsConcept { get { return State == InvoiceState.Concept; } }
         public virtual bool IsDefinitive { get { return State == InvoiceState.Definitive; } }
         public virtual bool IsArchived { get { return State == InvoiceState.Archived; } }
+        public virtual string StateString { get { return State.GetDescription(); } }
 
         public virtual double TotalExclVat { get { return Lines.Sum(x => x.Price) + Corrections.Sum(x => x.Price); } }
         public virtual double Total { get { return TotalExclVat * (VAT ? 1.21 : 1); } }
