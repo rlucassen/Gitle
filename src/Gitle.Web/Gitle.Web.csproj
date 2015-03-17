@@ -269,6 +269,7 @@
     <None Include="Views\OAuth\stateincorrect.brail" />
     <None Include="Views\OAuth\nogitleuser.brail" />
     <None Include="Views\Project\view.brail" />
+    <Content Include="Views\Template\invoice.brail" />
     <None Include="Views\User\profile.brail" />
     <None Include="Views\User\edit.brail" />
     <None Include="Views\User\index.brail" />

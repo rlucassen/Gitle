@@ -89,6 +89,8 @@
     <Compile Include="Interfaces\Model\IPassword.cs" />
     <Compile Include="Interfaces\Model\ITouchable.cs" />
     <Compile Include="Interfaces\Service\IEmailService.cs" />
+    <Compile Include="Interfaces\Service\IPdfExportService.cs" />
+    <Compile Include="Interfaces\Service\ITemplateParserService.cs" />
     <Compile Include="Invoice.cs" />
     <Compile Include="InvoiceLine.cs" />
     <Compile Include="Issue.cs" />

@@ -744,6 +744,10 @@ body.admin table#issue-table th {
   }
   .bookings {
     margin-bottom: 1em;
+    .booking-date.old {
+      color: #cf2a0e;
+      font-weight: bold;
+    }
     .booking-hours-span {
       padding: 0 0.5rem;
     }

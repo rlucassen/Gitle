@@ -127,7 +127,7 @@
         <div class="row booking" data-issue="${line.Issue.Number}">
           <input type="hidden" name="bookings[${booking.Id}]" id="bookings_${booking.Id}" value="${booking.Id}" />
           <div class="large-7 large-offset-1 columns">
-            <span class="booking-info">${booking.Date.ToString("dd-MM-yyyy")} ${booking.User.FullName}</span>:
+            <span class="booking-date <% if invoice.StartDate > booking.Date: %>old<% end %>">${booking.Date.ToString("dd-MM-yyyy")}</span> <span class="booking-info">${booking.User.FullName}</span>:
             <span class="booking-comment">${booking.Comment}</span>
           </div>
           <div class="large-1 large-offset-1 columns end text-right">
@@ -140,21 +140,6 @@
       <% count = count + 1 %>
       <% end %>
       <div class="totals">
-        <div class="row">
-          <div class="large-10 columns text-right">
-            <strong>Subtotaal:</strong>
-          </div>
-          <div class="large-2 columns">
-            <div class="row collapse">
-              <div class="large-3 columns">
-                <span class="prefix"><i class="fa fa-euro"></i></span>
-              </div>
-              <div class="large-9 columns">
-                <input type="text" name="invoice.Subtotal" id="invoice_Subtotal" disabled />
-              </div>
-            </div>
-          </div>
-        </div>
         <% correctionCount = 0 %>
         <% for correction in invoice.FiveCorrections: %>
         <div class="row correctionline">
@@ -176,6 +161,21 @@
         <% end %>
       </div>
       <div class="totals">
+        <div class="row">
+          <div class="large-10 columns text-right">
+            <strong>Subtotaal:</strong>
+          </div>
+          <div class="large-2 columns">
+            <div class="row collapse">
+              <div class="large-3 columns">
+                <span class="prefix"><i class="fa fa-euro"></i></span>
+              </div>
+              <div class="large-9 columns">
+                <input type="text" name="invoice.Subtotal" id="invoice_Subtotal" disabled />
+              </div>
+            </div>
+          </div>
+        </div>
         <div class="row vatline">
           <div class="large-10 columns text-right">
             <strong>BTW 21%:</strong>

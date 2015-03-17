@@ -16,6 +16,11 @@
   </div>
   <div class="row">
     <div class="large-12 columns">
+      ${Form.CheckboxField("oldBookings")} Neem oudere boekingen mee die nog niet op een definitieve factuur staan
+    </div>
+  </div>
+  <div class="row">
+    <div class="large-12 columns">
       <input type="submit" class="button" value="Aanmaken" />
     </div>
   </div>
@@ -31,7 +36,7 @@
           <span class="label round number ${invoice.StateString}" title="${invoice.StateString}">${invoice.Number}</span>
         </div>
       </div>
-      <div class="large-7 columns">
+      <div class="large-8 columns">
         <div class="row titlerow">
           <div class="large-9 columns">
             <a class="title" href="#">${invoice.Title}</a>
@@ -52,16 +57,20 @@
           </div>
         </div>
       </div>
-      <div class="large-4 columns">
+      <div class="large-3 columns text-right">
         <ul class="button-group">
           <li><a class="button tiny no-margin" href="/project/${invoice.Project.Slug}/invoice/${invoice.Number}/download"><i class="fa fa-file-pdf-o"></i></a></li>
           <li><a class="button tiny no-margin success" href="/project/${invoice.Project.Slug}/invoice/${invoice.Number}/copy">Kopie</a></li>
-          <% if invoice.IsConcept: %>
-          <li><a class="button tiny no-margin" href="/project/${invoice.Project.Slug}/invoice/${invoice.Number}/definitive">Definitief</a></li>
-          <% end %>
-          <% if not invoice.IsArchived: %>
-          <li><a class="button tiny no-margin alert" href="/project/${invoice.Project.Slug}/invoice/${invoice.Number}/archive">Archiveer</a></li>
-          <% end %>
+          <button href="#" data-dropdown="more${invoice.Id}" aria-controls="more${invoice.Id}" aria-expanded="false" class="button tiny dropdown secondary">Meer..</button>
+          <ul id="more${invoice.Id}" data-dropdown-content="" class="f-dropdown text-left" aria-hidden="true" tabindex="-1">
+            <% if invoice.IsConcept: %>
+            <li><a href="/project/${invoice.Project.Slug}/invoice/${invoice.Number}/definitive">Definitief maken</a></li>
+            <% end %>
+            <% if not invoice.IsArchived: %>
+            <li><a href="/project/${invoice.Project.Slug}/invoice/${invoice.Number}/archive">Archiveren</a></li>
+            <% end %>
+            <li><a href="/project/${invoice.Project.Slug}/invoice/${invoice.Number}/archiveissues">Taken archiveren</a></li>
+          </ul>
         </ul>
       </div>
     </div>

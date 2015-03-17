@@ -81,12 +81,14 @@ namespace Gitle.Model
         public virtual string StateString { get { return State.GetDescription(); } }
 
         public virtual double TotalExclVat { get { return Lines.Sum(x => x.Price) + Corrections.Sum(x => x.Price); } }
-        public virtual double Total { get { return TotalExclVat * (VAT ? 1.21 : 1); } }
+        public virtual double TotalVat { get { return TotalExclVat * (VAT ? 0.21 : 0); } }
+        public virtual double Total { get { return TotalExclVat + TotalVat; } }
 
         public virtual int IssueCount { get { return Lines.Count(x => x.Issue != null); } }
 
         public virtual IList<InvoiceLine> ProjectLines { get { return Lines.Where(x => x.Issue == null).ToList(); } }
         public virtual IList<InvoiceLine> IssueLines { get { return Lines.Where(x => x.Issue != null).ToList(); } }
+        public virtual IList<Issue> Issues { get { return Lines.Where(x => x.Issue != null).Select(x => x.Issue).ToList(); } }
 
         public virtual IList<Correction> FiveCorrections
         {
