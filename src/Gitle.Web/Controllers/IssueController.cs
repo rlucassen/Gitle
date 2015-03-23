@@ -389,7 +389,7 @@
             RedirectToReferrer();
             var project = session.Query<Project>().FirstOrDefault(p => p.Slug == projectSlug);
             var issue = session.Query<Issue>().FirstOrDefault(i => i.Number == issueId && i.Project == project);
-            if (issue.State == IssueState.Closed || issue.State == IssueState.Unknown)
+            if (issue.State == IssueState.Open || issue.State == IssueState.Unknown)
             {
                 issue.Close(CurrentUser);
                 using (var tx = session.BeginTransaction())
