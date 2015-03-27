@@ -47,15 +47,13 @@
             if (action is ChangeState)
                 action = session.Get<ChangeState>(((ChangeState)action).Id);
             var project = action.Issue.Project;
-            IList<User> users = (from userProject in project.Users where userProject.Notifications && (!userProject.OnlyOwnIssues || action.Issue.CreatedBy == userProject.User) && userProject.User != action.User select userProject.User).ToList();
+            IList<User> users = (from userProject in project.Users where userProject.Notifications && (!userProject.OnlyOwnIssues || action.Issue.CreatedBy == userProject.User) && (userProject.User != action.User) || (userProject.User == action.User && userProject.ConfirmOwnEntries) select userProject.User).ToList();
 
             foreach (var user in users)
             {
                 var message = new MailMessage(sourceAddress, user.EmailAddress)
                 {
-                    Subject =
-                        string.Format("Gitle: {0} - {1}",
-                                        action.EmailSubject, action.Issue.Project.Name),
+                    Subject = string.Format("Gitle: {0} - {1}", action.EmailSubject, action.Issue.Project.Name),
                     IsBodyHtml = true
                 };
 

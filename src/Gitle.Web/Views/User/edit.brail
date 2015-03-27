@@ -5,19 +5,19 @@
     <% else: %>
     <h1>Nieuwe gebruiker</h1>
     <% end %>
-    <form action="/user/${?item.Id}/save" method="POST" data-abide>
+    <form action="/user/${?item.Id}/save" method="POST" data-abide="">
       ${Form.HiddenField("item.Id")}
       <div class="row">
         <div class="large-3 columns">Naam</div>
         <div class="large-9 columns">
-          <input type="text" name="item.FullName" value="${?item.FullName}" required />
+          <input type="text" name="item.FullName" value="${?item.FullName}" required="" />
           <small class="error">Geef een naam op</small>
         </div>
       </div>
       <div class="row">
         <div class="large-3 columns">Inlog</div>
         <div class="large-9 columns">
-          <input type="text" name="item.Name" value="${?item.Name}" required />
+          <input type="text" name="item.Name" value="${?item.Name}" required="" />
           <small class="error">Geef een inlognaam op</small>
         </div>
       </div>
@@ -27,12 +27,14 @@
       </div>
       <div class="row">
         <div class="large-3 columns">Telefoonnummer</div>
-        <div class="large-9 columns"><input type="tel" name="item.Phone" value="${?item.Phone}" /></div>
+        <div class="large-9 columns">
+          <input type="tel" name="item.Phone" value="${?item.Phone}" />
+        </div>
       </div>
       <div class="row">
         <div class="large-3 columns">Emailadres</div>
         <div class="large-9 columns">
-          <input type="text" name="item.Emailaddress" value="${?item.EmailAddress}" required />
+          <input type="text" name="item.Emailaddress" value="${?item.EmailAddress}" required="" />
           <small class="error">Geef een emailadres op</small>
         </div>
       </div>
@@ -67,9 +69,18 @@
                 <input type="hidden" name="userProject[${count}].Project.Id" value="${project.Id}"/>
                 <input type="hidden" name="userProject[${count}].User.Id" value="${item.Id}"/>
                 <h3>${project.Name}</h3>
-                <div class="inline-checkbox"><input type="checkbox" name="userProject[${count}].Subscribed" value="true" <% if selectedprojects.Contains(project): %>checked<% end %>/> Project is zichtbaar</div>
-                <div class="inline-checkbox"><input type="checkbox" name="userProject[${count}].Notifications" value="true" <% if userProject.Notifications: %>checked<% end %>/> Notificaties ontvangen</div>
-                <div class="inline-checkbox"><input type="checkbox" name="userProject[${count}].OnlyOwnIssues" value="true" <% if userProject.OnlyOwnIssues: %>checked<% end %>/> Alleen van zelf aangemaakte tickets</div>
+                <div class="inline-checkbox">
+                  <input type="checkbox" name="userProject[${count}].Subscribed" value="true"
+                  <% if selectedprojects.Contains(project): %>checked<% end %>/> Project is zichtbaar</div>
+                <div class="inline-checkbox">
+                  <input type="checkbox" name="userProject[${count}].Notifications" value="true"
+                  <% if userProject.Notifications: %>checked<% end %>/> Notificaties ontvangen</div>
+                <div class="inline-checkbox">
+                  <input type="checkbox" name="userProject[${count}].OnlyOwnIssues" value="true"
+                  <% if userProject.OnlyOwnIssues: %>checked<% end %>/> Alleen van zelf aangemaakte tickets</div>
+                <div class="inline-checkbox">
+                  <input type="checkbox" name="userProject[${count}].ConfirmOwnEntries" value="true"
+                  <% if userProject.ConfirmOwnEntries: %>checked<% end %>/> Bevestiging van eigen wijzigingen</div>
               </div>
             </div>
           </div>
@@ -78,7 +89,9 @@
         </div>
       </div>
       <div class="row">
-        <div class="large-12 columns"><input type="submit" class="button" value="Opslaan"/></div>
+        <div class="large-12 columns">
+          <input type="submit" class="button" value="Opslaan"/>
+        </div>
       </div>
     </form>
   </div>
