@@ -5,19 +5,19 @@
     <% else: %>
     <h1>Nieuwe gebruiker</h1>
     <% end %>
-    <form action="/user/${?item.Id}/save" method="POST" data-abide="">
+    <form action="/user/${?item.Id}/save" method="POST" data-abide>
       ${Form.HiddenField("item.Id")}
       <div class="row">
         <div class="large-3 columns">Naam</div>
         <div class="large-9 columns">
-          <input type="text" name="item.FullName" value="${?item.FullName}" required="" />
+          <input type="text" name="item.FullName" value="${?item.FullName}" required />
           <small class="error">Geef een naam op</small>
         </div>
       </div>
       <div class="row">
         <div class="large-3 columns">Inlog</div>
         <div class="large-9 columns">
-          <input type="text" name="item.Name" value="${?item.Name}" required="" />
+          <input type="text" name="item.Name" value="${?item.Name}" required />
           <small class="error">Geef een inlognaam op</small>
         </div>
       </div>
@@ -34,7 +34,7 @@
       <div class="row">
         <div class="large-3 columns">Emailadres</div>
         <div class="large-9 columns">
-          <input type="text" name="item.Emailaddress" value="${?item.EmailAddress}" required="" />
+          <input type="text" name="item.Emailaddress" value="${?item.EmailAddress}" required />
           <small class="error">Geef een emailadres op</small>
         </div>
       </div>
