@@ -7,7 +7,6 @@
         <tr>
           <th>Project</th>
           <% if CurrentUser.IsAdmin: %>
-          <th>Repository</th>
           <th>Milestone</th>
           <th>Freckle project</th>
           <% end %>
@@ -19,7 +18,6 @@
         <tr>
           <td class="name">${item.Name}</td>
           <% if CurrentUser.IsAdmin: %>
-          <td class="repository">${item.Repository}</td>
           <td class="milestone">${item.MilestoneName}</td>
           <td class="freckle">${item.FreckleName}</td>
           <% end %>
