@@ -3,11 +3,15 @@
     <h1>Projecten</h1>
     <% if CurrentUser.IsAdmin: %><a class="button" href="/project/new">Nieuw</a><% end %>
     <table id="project-table" class="tablesorter small-blocks">
+      <colgroup>
+        <col style="width: 240px;"/>
+        <col/>
+        <col style="width: 350px;"/>
+      </colgroup>
       <thead>
         <tr>
           <th>Project</th>
           <% if CurrentUser.IsAdmin: %>
-          <th>Milestone</th>
           <th>Freckle project</th>
           <% end %>
           <th id="project-actions" class="{sorter: false}"></th>
@@ -18,7 +22,6 @@
         <tr>
           <td class="name">${item.Name}</td>
           <% if CurrentUser.IsAdmin: %>
-          <td class="milestone">${item.MilestoneName}</td>
           <td class="freckle">${item.FreckleName}</td>
           <% end %>
           <td class="actions">

@@ -165,7 +165,7 @@ Application.prototype = {
       $(document).foundation('joyride', 'start');
     });
 
-    $('.tablesorter').tablesorter({});
+    $('.tablesorter').tablesorter({ sortList: [[0, 0]] });
 
     $(".chosen-select").chosen({ no_results_text: "Oops, nothing found!", width: '100%' });
 
