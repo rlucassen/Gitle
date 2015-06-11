@@ -11,6 +11,7 @@
     using Model.Interfaces.Service;
     using Model.Nested;
     using NHibernate;
+    using NHibernate.Linq;
 
     #endregion
 
@@ -66,18 +67,23 @@
 
         public void RequestReset(string email)
         {
-            var users = session.QueryOver<User>().Where(x => x.IsActive).And(x => x.EmailAddress == email).List();
-            
-            if (users.Count > 0 && !string.IsNullOrEmpty(email))
-            {
-                users[0].Password.GenerateHash();
+            var users = session.Query<User>().Where(x => !string.IsNullOrWhiteSpace(email) && x.IsActive && x.EmailAddress == email).ToList();
 
-                emailService.SendPasswordLink(users[0]);
-                using (var tx = session.BeginTransaction())
-                {
-                    session.SaveOrUpdate(users[0]);
-                    tx.Commit();
-                }
+            if (users.Any())
+            {
+                users.ForEach(
+                    user =>
+                    {
+                        if (user.Password == null) user.Password = new Password();
+                        user.Password.GenerateHash();
+
+                        emailService.SendPasswordLink(user);
+                        using (var tx = session.BeginTransaction())
+                        {
+                            session.SaveOrUpdate(user);
+                            tx.Commit();
+                        }
+                    });
             }
             else
             {

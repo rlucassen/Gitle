@@ -21,7 +21,7 @@
         [Admin]
         public void Index()
         {
-            PropertyBag.Add("items", session.Query<User>().ToList());
+            PropertyBag.Add("items", session.Query<User>().Where(user => user.IsActive).ToList());
         }
 
         [Admin]
@@ -62,7 +62,8 @@
             {
                 item = BindObject<User>("item");
             }
-            if (!string.IsNullOrEmpty(password))
+            
+            if (!string.IsNullOrWhiteSpace(password) || item.Password == null)
             {
                 item.Password = new Password(password);
             }
@@ -89,7 +90,7 @@
         }
 
         [Admin]
-        public void Delete(int userId)
+        public void Delete(long userId)
         {
             var user = session.Get<User>(userId);
             user.Deactivate();
@@ -113,27 +114,33 @@
             {
                 item = BindObject<User>("item");
             }
-            if (!string.IsNullOrEmpty(password))
+
+            if (!string.IsNullOrWhiteSpace(password) || item.Password == null)
             {
                 item.Password = new Password(password);
             }
 
             var userProjects = BindObject<UserProject[]>("userProject");
 
-            var userProjectsToDelete = item.Projects.Where(l => !userProjects.Where(x => x.Subscribed).Select(x => x.Id).Contains(l.Id)).ToList();
+            var subscriptions = userProjects.Where(x => x.Subscribed).ToList();
+
+            var userProjectsToAdd = subscriptions.Where(subscription => item.Projects.All(project => project.Id != subscription.Id)).ToList();
+            var userProjectsToDelete = item.Projects.Where(project => subscriptions.All(subscription => subscription.Id != project.Id)).ToList();
 
             using (var tx = session.BeginTransaction())
             {
-                foreach (var userProject in userProjects.Where(x => x.Subscribed))
+                session.SaveOrUpdate(item);
+
+                foreach (var userProject in userProjectsToAdd)
                 {
-                    session.Merge(userProject);
+                    userProject.User = item;
+                    item.Projects.Add(userProject);
                 }
                 foreach (var userProject in userProjectsToDelete)
                 {
+                    userProject.User = null;
                     item.Projects.Remove(userProject);
-                    session.Delete(userProject);
                 }
-                session.SaveOrUpdate(item);
                 tx.Commit();
             }
 
