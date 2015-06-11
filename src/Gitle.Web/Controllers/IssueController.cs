@@ -334,6 +334,7 @@
             if (issue.IsArchived) return;
             var label = project.Labels.First(l => l.Id == param);
             issue.Labels.Add(label);
+            issue.Change(CurrentUser);
 
             using (var transaction = session.BeginTransaction())
             {
