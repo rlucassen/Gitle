@@ -30,7 +30,7 @@
   <div class="panel ${action.GetType().Name}">
     <small class="right">${Helpers.DateTimeHelper.Readable(action.CreatedAt)}</small>
     <% if action.User != null: %>
-    <strong>${action.User.FullName}</strong> 
+    <strong>${action.User.FullName} <% if action.User.IsAdmin: %> <span class="label warning">Developer</span> <% end %></strong> 
     <% end %>
     <div class="">${action.HtmlText}</div>
   </div>
