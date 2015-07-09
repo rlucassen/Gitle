@@ -6,6 +6,9 @@
     <div class="row">
       <div class="large-3 columns small-text">
         <p class="project no-margin"><strong>Project:</strong> ${project.Name}</p>
+        <% if item.PickedUpBy != null: %>
+        <p class="created no-margin"><strong>Behandelaar:</strong> <span>${item.PickedUpBy.FullName}</span></p>
+        <% end %>
         <% if item.CreatedAt != null: %>
         <p class="created no-margin"><strong>Aangemaakt op:</strong> <span title="${Helpers.DateTimeHelper.Readable(item.CreatedAt)}">${Helpers.DateTimeHelper.Readable(item.CreatedAt)}</span></p>
         <% end %>
@@ -48,6 +51,10 @@
           <% end %>
         </ul>
         <hr />
+        <% if not item.IsArchived and CurrentUser.IsAdmin: %>
+        <a href="pickup" class="button success large-12 no-margin">Taak oppakken</a>
+        <hr/>
+        <% end %>
         <% if CurrentUser.IsAdmin: %>
         <form action="booktime" method="POST">
           <h2>Uren boeken</h2>

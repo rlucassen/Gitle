@@ -89,6 +89,7 @@
     <Compile Include="Interfaces\Service\IEmailService.cs" />
     <Compile Include="Issue.cs" />
     <Compile Include="Label.cs" />
+    <Compile Include="Mapping\PickupMap.cs" />
     <Compile Include="Mapping\Component\PasswordComponentMap.cs" />
     <Compile Include="Mapping\CommentMap.cs" />
     <Compile Include="Mapping\ChangeStateMap.cs" />
@@ -104,6 +105,7 @@
     <Compile Include="Mapping\UserProjectMap.cs" />
     <Compile Include="ModelBase.cs" />
     <Compile Include="Nested\Password.cs" />
+    <Compile Include="Pickup.cs" />
     <Compile Include="Project.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Touch.cs" />

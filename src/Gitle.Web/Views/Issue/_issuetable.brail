@@ -21,7 +21,7 @@
               </div>
             </div>
           </div>
-          <div class="large-9 columns">
+          <div class="large-8 columns">
             <div class="row namerow">
               <div class="large-11 columns">
                 <a href="/project/${project.Slug}/issue/${issue.Number}/view" data-quickview="/project/${project.Slug}/issue/${issue.Number}/quickview">${issue.Name}</a>
@@ -36,20 +36,30 @@
               </div>
             </div>
             <div class="row detailsrow">
-              <div class="large-9 columns">
+              <div class="large-12 columns">
                 geopend op <strong>${Helpers.DateTimeHelper.Readable(issue.CreatedAt)}</strong><% if issue.CreatedBy: %> door <strong>${issue.CreatedBy.FullName}</strong><% end %>,
                 <% if issue.ClosedAt != null: %>gesloten op <strong>${Helpers.DateTimeHelper.Readable(issue.ClosedAt)}</strong><% if issue.ClosedBy != null: %> door <strong>${issue.ClosedBy.FullName}</strong><% end %><% end %>
               </div>
-              <div class="large-3 columns text-right">
+            </div>
+            <div class="row detailsrow">
+              <div class="large-8 columns">
+                <% if issue.PickedUpBy != null: %>
+                behandelaar: <strong>${?issue.PickedUpBy.FullName}</strong> <% if issue.PickedUpAt != null: %>(opgepakt op ${Helpers.DateTimeHelper.Readable(issue.PickedUpAt)})<% end %>
+                <% end %>
+              </div>
+              <div class="large-4 columns text-right">
                 <% if issue.Devvers > 0 and issue.Hours > 0: %>
                 ${issue.EstimateString} (${issue.CostString(project.HourPrice)})
                 <% end %>
               </div>
             </div>
           </div>
-          <div class="large-2 columns text-right">
+          <div class="large-3 columns text-right">
             <ul class="button-group">
               <li><a class="button tiny no-margin" href="/project/${project.Slug}/issue/${issue.Number}/view">Open</a></li>
+              <li>
+                <a class="button tiny success no-margin" href="/project/${project.Slug}/issue/${issue.Number}/pickup">Oppakken</a>
+              </li>
               <% if CurrentUser.IsAdmin and not issue.IsArchived: %><li><a class="button tiny success no-margin" href="/project/${project.Slug}/issue/${issue.Number}/edit">Bewerk</a></li><% end %>
             </ul>
           </div>

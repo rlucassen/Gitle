@@ -270,14 +270,14 @@ a.quickview-delay {
   .panel {
     padding: 1.25rem;
   }
-  .ChangeState i, .Change i {
+  .ChangeState i, .Change i, .Pickup i {
     font-size: 2em;
     margin: 0.3em 0.6em;
   }
   .ChangeState .small-11 {
     margin-top: 1.1em;
   }
-  .Change {
+  .Change, .Pickup {
     .small-11 {
       margin-top: 1.1em;
     }

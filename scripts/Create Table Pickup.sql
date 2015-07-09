@@ -1,0 +1,40 @@
+USE [Gitle]
+GO
+
+/****** Object:  Table [dbo].[Pickup]    Script Date: 7/8/2015 4:30:21 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[Pickup](
+	[Id] [bigint] IDENTITY(1,1) NOT NULL,
+	[Guid] [uniqueidentifier] NULL,
+	[IsActive] [bit] NULL,
+	[CreatedAt] [datetime] NULL,
+	[User_id] [bigint] NULL,
+	[Issue_id] [bigint] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+ALTER TABLE [dbo].[Pickup]  WITH CHECK ADD  CONSTRAINT [FKFFAA970C2303E129] FOREIGN KEY([User_id])
+REFERENCES [dbo].[User] ([Id])
+GO
+
+ALTER TABLE [dbo].[Pickup] CHECK CONSTRAINT [FKFFAA970C2303E129]
+GO
+
+ALTER TABLE [dbo].[Pickup]  WITH CHECK ADD  CONSTRAINT [FKFFAA970C91F7CAB3] FOREIGN KEY([Issue_id])
+REFERENCES [dbo].[Issue] ([Id])
+GO
+
+ALTER TABLE [dbo].[Pickup] CHECK CONSTRAINT [FKFFAA970C91F7CAB3]
+GO
+
+
