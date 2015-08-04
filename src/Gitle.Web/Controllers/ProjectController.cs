@@ -127,6 +127,7 @@
         [MustHaveProject]
         public void AddLabel(string projectSlug, string issues, string label)
         {
+            var project = session.Query<Project>().FirstOrDefault(x => x.IsActive && x.Slug == projectSlug);
             var issueIds = issues.Split(',');
             var realLabel = session.Query<Label>().FirstOrDefault(x => x.Name == label);
             if (!realLabel.ApplicableByCustomer && !CurrentUser.IsAdmin)
@@ -139,7 +140,7 @@
             {
                 foreach (var issueId in issueIds.Select(int.Parse))
                 {
-                    var issue = session.Query<Issue>().FirstOrDefault(x => x.Number == issueId);
+                    var issue = session.Query<Issue>().FirstOrDefault(x => x.Number == issueId && x.Project == project);
                     if(!issue.Labels.Contains(realLabel)) issue.Labels.Add(realLabel);
                     session.SaveOrUpdate(issue);
                 }
