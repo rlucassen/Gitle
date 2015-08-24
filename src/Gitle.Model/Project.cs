@@ -29,6 +29,6 @@
 
         public virtual int NotifiedUsers { get { return Users.Count(u => u.Notifications); } }
 
-        public virtual int NewIssueNumber { get { return Issues.Max(x => x.Number) + 1; } }
+        public virtual int NewIssueNumber { get { return (Issues.Any() ? Issues.Max(x => x.Number) : 0) + 1; } }
     }
 }
