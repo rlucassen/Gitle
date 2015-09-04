@@ -170,6 +170,13 @@
                                            .DefaultForController().Is<IssueController>()
                                            .DefaultForAction().Is("index"));
 
+            RoutingModuleEx.Engine.Add(new PatternRoute("/search")
+                                           .DefaultForController().Is<SearchController>()
+                                           .DefaultForAction().Is("index"));
+            RoutingModuleEx.Engine.Add(new PatternRoute("/search/<query>")
+                                           .DefaultForController().Is<SearchController>()
+                                           .DefaultForAction().Is("index"));
+
             RoutingModuleEx.Engine.Add<FilterPresetController>();
             RoutingModuleEx.Engine.Add<ImportController>();
             RoutingModuleEx.Engine.Add<UploadController>();

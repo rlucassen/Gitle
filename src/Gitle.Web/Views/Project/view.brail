@@ -4,7 +4,7 @@
     <% if CurrentUser.IsAdmin: %>
     <div class="row">
       <div class="large-2 columns">Klant</div>
-      <div class="large-10 columns"><a href="/customer/${project.Customer.Slug}/view">${project.Customer.Name}</a></div>
+      <div class="large-10 columns"><a href="/customer/${?project.Customer.Slug}/view">${?project.Customer.Name}</a></div>
     </div>
     <div class="row">
       <div class="large-2 columns">Github</div>

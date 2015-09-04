@@ -39,6 +39,7 @@ body > .row {
 span.split.button {
   background-color: #008CBA;
   padding-right: 3.5em; }
+
 span.split a {
   color: #fff;
   display: block; }
@@ -57,8 +58,10 @@ ul.f-dropdown .divider {
 span.button.three-state-checker {
   font-size: 1.1em;
   padding: 0.36rem 1.25rem; }
+
 span.three-state-checker i {
   display: none; }
+
 span.three-state-checker[data-state=all] i.all, span.three-state-checker[data-state=none] i.none, span.three-state-checker[data-state=some] i.some {
   display: inline; }
 
@@ -146,6 +149,9 @@ ul.no-style {
     margin-top: 0;
     font-size: 1em;
     font-weight: bold; }
+
+#search {
+  width: 300px; }
 
 a.quickview-delay {
   cursor: progress; }
@@ -277,9 +283,11 @@ table {
     top: 8px; }
   .lt-ie9 .top-bar.expanded {
     background: #111111; }
+
 .lt-ie9 .contain-to-grid .top-bar {
   margin: 0 auto;
   max-width: 57.5em; }
+
 .lt-ie9 .top-bar-section {
   -moz-transition: none 0 0;
   -webkit-transition: none 0 0;
@@ -358,27 +366,34 @@ table {
 
 .filter-row .chosen-container {
   margin-bottom: 0; }
+
 .filter-row .filter-labels span {
   margin-left: 0.6em; }
+
 .filter-row .button {
   font-size: 0.8em; }
 
 .filters .button.active {
   background-color: #b9b9b9;
   color: #333; }
+
 .filters .f-dropdown li {
   position: relative; }
+
 .filters .f-dropdown a {
   position: relative;
   height: 2.5em; }
+
 .filters .f-dropdown.labels a i {
   position: absolute;
   left: 0.7em;
   top: 0.7em; }
+
 .filters .f-dropdown .remove-filter {
   position: absolute;
   top: 0;
   right: 0; }
+
 .filters .f-dropdown a span {
   position: absolute;
   left: 3em; }
@@ -471,22 +486,27 @@ table {
 
 .issueaction:not(.Comment), .issueaction.Comment .panel {
   border-left: 3px solid #008CBA; }
+
 .issueaction.touched:not(.Comment) {
   border-left-color: transparent; }
+
 .issueaction.touched.Comment .panel {
   border-left: 1px solid #d8d8d8; }
 
 #group-actions select {
   height: 2.0625rem;
   font-size: 0.775rem; }
+
 #group-actions label {
   font-size: 0.8em;
   margin-top: 0.5em; }
 
 body.admin table#issue-table th#issue-hours {
   width: 50px; }
+
 body.admin table#issue-table th#issue-cost {
   width: 90px; }
+
 body.admin table#issue-table th#issue-actions {
   width: 170px; }
 
@@ -499,7 +519,6 @@ table#issue-table th#issue-estimate, table#issue-table td.estimate {
     margin-bottom: 0.5em; }
     .large-0.small-12 > * {
       width: 100%; }
-
   table.small-blocks {
     display: block;
     border: none; }
@@ -536,7 +555,7 @@ table#issue-table th#issue-estimate, table#issue-table td.estimate {
       z-index: 9;
       top: 1em; }
     table.small-blocks td.name {
-      font-family: "Open Sans", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+      font-family: "Open Sans","Helvetica Neue","Helvetica",Helvetica,Arial,sans-serif;
       font-size: 1.5em;
       padding-right: 0;
       padding-top: 0.375em;
@@ -579,7 +598,5 @@ table#issue-table th#issue-estimate, table#issue-table td.estimate {
   table.small-blocks td.freckle:before {
     content: "Freckle project: "; }
   table.small-blocks td.login:before {
-    content: "Username: "; }
- }
+    content: "Username: "; } }
 
-/*# sourceMappingURL=app.css.map */

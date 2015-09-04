@@ -152,6 +152,19 @@ Application.prototype = {
       self.windowResize();
     }).resize();
 
+    $('#search').autocomplete({
+      serviceUrl: '/search',
+      autoSelectFirst: true,
+      onSelect: function(suggestion) {
+        window.location = suggestion.data;
+      }
+    });
+    $(document).keydown(function (e) {
+      if (e.which == 70 && e.ctrlKey && e.shiftKey) {
+        $('#search').focus();
+      }
+    });
+
     $('form .focus[value=]').focus();
 
     $("table.row-clickable tr").click(function () {

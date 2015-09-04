@@ -24,8 +24,7 @@
   display: inline-block;
 }
 
-html[xmlns] .clearfix {
-  display: block;
+html[xmlns] .clearfix {display: block;
 }
 
 * html .clearfix {
@@ -189,6 +188,10 @@ ul.no-style {
     font-size: 1em;
     font-weight: bold;
   }
+}
+
+#search {
+  width: 300px;
 }
 
 a.quickview-delay {

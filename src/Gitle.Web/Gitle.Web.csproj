@@ -48,6 +48,7 @@
   <ItemGroup>
     <Content Include="Content\images\chosen-sprite%402x.png" />
     <Content Include="Content\images\chosen-sprite.png" />
+    <Content Include="Content\javascript\vendor\jquery.autocomplete.js" />
     <Content Include="Content\stylesheets\vendor\fonts\fontawesome-webfont.svg" />
     <Content Include="Content\images\favicon.ico" />
     <Content Include="Content\images\logo.png" />
@@ -90,6 +91,7 @@
     <Content Include="Content\stylesheets\vendor\fontawesome\font-awesome.min.css" />
     <Content Include="Content\stylesheets\vendor\foundation.css" />
     <Content Include="Content\stylesheets\vendor\foundation.min.css" />
+    <Content Include="Content\stylesheets\vendor\jquery.autocomplete.css" />
     <Content Include="Content\stylesheets\vendor\normalize.css" />
     <Content Include="Global.asax" />
   </ItemGroup>
@@ -97,6 +99,7 @@
     <Compile Include="Controllers\FilterPresetController.cs" />
     <Compile Include="Controllers\ImportController.cs" />
     <Compile Include="Controllers\CustomerController.cs" />
+    <Compile Include="Controllers\SearchController.cs" />
     <Compile Include="Controllers\SlugController.cs" />
     <Compile Include="Controllers\UploadController.cs" />
     <Compile Include="Controllers\UserController.cs" />
