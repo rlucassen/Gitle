@@ -3,6 +3,10 @@
     <h1>${project.Name}</h1>
     <% if CurrentUser.IsAdmin: %>
     <div class="row">
+      <div class="large-2 columns">Klant</div>
+      <div class="large-10 columns"><a href="/customer/${project.Customer.Slug}/view">${project.Customer.Name}</a></div>
+    </div>
+    <div class="row">
       <div class="large-2 columns">Github</div>
       <div class="large-10 columns"><a href="http://github.com/${project.Repository}">http://github.com/${project.Repository}</a></div>
     </div>
@@ -55,6 +59,12 @@
     <% end %>
     <div class="row">
       <div class="large-12 columns">
+        <h2>Projectinformatie</h2>
+        <div class="marked">${project.Information}</div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="large-12 columns">
         <h2>Klantcontacten</h2>
         <table class="small-blocks" id="customers">
           <thead>
@@ -68,7 +78,7 @@
           <tbody>
             <% for customer in customers: %>
             <tr>
-              <td class="name">${customer.User.FullName}</td>
+              <td class="name"><a href="/user/${customer.User.Id}/view">${customer.User.FullName}</a></td>
               <td class="phone">${customer.User.Phone}</td>
               <td class="email"><a href="mailto:${customer.User.EmailAddress}">${customer.User.EmailAddress}</a></td>
               <td class="notifications"><% if customer.Notifications: %><i class="fa fa-check green"></i><% else: %><i class="fa fa-times red"></i><% end %></td>
@@ -101,12 +111,6 @@
             <% end %>
           </tbody>
         </table>
-      </div>
-    </div>
-    <div class="row">
-      <div class="large-12 columns">
-        <h2>Projectinformatie</h2>
-        <div class="marked">${project.Information}</div>
       </div>
     </div>
   </div>

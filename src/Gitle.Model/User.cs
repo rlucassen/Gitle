@@ -33,6 +33,8 @@
         public virtual string GitHubAccessToken { get; set; }
         public virtual string FreckleEmail { get; set; }
 
+        public virtual Customer Customer { get; set; }
+
         public virtual IssueState DefaultState { get; set; }
 
         public virtual UserProject GetUserProject(Project project)

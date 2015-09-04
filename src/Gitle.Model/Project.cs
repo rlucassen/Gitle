@@ -23,6 +23,8 @@
         public virtual string FreckleName { get; set; }
         public virtual string Information { get; set; }
 
+        public virtual Customer Customer { get; set; }
+
         public virtual IList<UserProject> Users { get; set; }
         public virtual IList<Label> Labels { get; set; }
         public virtual IList<Issue> Issues { get; set; }

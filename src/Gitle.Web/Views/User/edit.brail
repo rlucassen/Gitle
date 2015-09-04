@@ -15,6 +15,12 @@
         </div>
       </div>
       <div class="row">
+        <div class="large-3 columns">Klant</div>
+        <div class="large-9 columns">
+          ${Form.Select("item.Customer.Id", customers, {"class": "chosen-select", "value": "Id", "text": "Name", "firstoption": "Kies een klant"})}
+        </div>
+      </div>
+      <div class="row">
         <div class="large-3 columns">Inlog</div>
         <div class="large-9 columns">
           <input type="text" name="item.Name" value="${?item.Name}" required />

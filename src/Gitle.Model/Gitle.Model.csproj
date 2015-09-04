@@ -72,6 +72,7 @@
     <Compile Include="Change.cs" />
     <Compile Include="ChangeState.cs" />
     <Compile Include="Comment.cs" />
+    <Compile Include="Customer.cs" />
     <Compile Include="Enum\IssueState.cs" />
     <Compile Include="FilterPreset.cs" />
     <Compile Include="Helpers\CsvHelper.cs" />
@@ -89,6 +90,7 @@
     <Compile Include="Interfaces\Service\IEmailService.cs" />
     <Compile Include="Issue.cs" />
     <Compile Include="Label.cs" />
+    <Compile Include="Mapping\CustomerMap.cs" />
     <Compile Include="Mapping\PickupMap.cs" />
     <Compile Include="Mapping\Component\PasswordComponentMap.cs" />
     <Compile Include="Mapping\CommentMap.cs" />

@@ -64,6 +64,7 @@
         public void New()
         {
             PropertyBag.Add("freckleProjects", projectClient.List().Where(x => x.Enabled));
+            PropertyBag.Add("customers", session.Query<Customer>().Where(x => x.IsActive).ToList());
             PropertyBag.Add("item", new Project());
             RenderView("edit");
         }
@@ -73,6 +74,7 @@
         {
             var project = session.Query<Project>().FirstOrDefault(x => x.IsActive && x.Slug == projectSlug);
             PropertyBag.Add("freckleProjects", projectClient.List().Where(x => x.Enabled));
+            PropertyBag.Add("customers", session.Query<Customer>().Where(x => x.IsActive).ToList());
             PropertyBag.Add("item", project);
         }
 

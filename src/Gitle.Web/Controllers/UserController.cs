@@ -29,6 +29,7 @@
         {
             PropertyBag.Add("item", new User());
             PropertyBag.Add("selectedprojects", new List<Project>());
+            PropertyBag.Add("customers", session.Query<Customer>().Where(x => x.IsActive).ToList());
             PropertyBag.Add("notificationprojects", new List<Project>());
             PropertyBag.Add("projects", session.Query<Project>().ToList());
             RenderView("edit");
@@ -40,7 +41,15 @@
             var user = session.Get<User>(userId);
             PropertyBag.Add("item", user);
             PropertyBag.Add("selectedprojects", user.Projects.Select(x => x.Project).ToList());
-            PropertyBag.Add("projects", session.Query<Project>().ToList());
+            PropertyBag.Add("customers", session.Query<Customer>().Where(x => x.IsActive).ToList());
+            PropertyBag.Add("projects", session.Query<Project>().OrderBy(x => x.Name).ToList());
+        }
+
+        [Admin]
+        public void View(long userId)
+        {
+            var user = session.Get<User>(userId);
+            PropertyBag.Add("item", user);
         }
 
         public void Profile()
