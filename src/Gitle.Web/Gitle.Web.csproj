@@ -48,6 +48,9 @@
   <ItemGroup>
     <Content Include="Content\images\chosen-sprite%402x.png" />
     <Content Include="Content\images\chosen-sprite.png" />
+    <Content Include="Content\javascript\app.min.js">
+      <DependentUpon>app.js</DependentUpon>
+    </Content>
     <Content Include="Content\javascript\vendor\jquery.autocomplete.js" />
     <Content Include="Content\stylesheets\vendor\fonts\fontawesome-webfont.svg" />
     <Content Include="Content\images\favicon.ico" />
@@ -238,6 +241,11 @@
     <Content Include="log4net.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="bundleconfig.json" />
+    <None Include="compilerconfig.json" />
+    <Content Include="compilerconfig.json.defaults">
+      <DependentUpon>compilerconfig.json</DependentUpon>
+    </Content>
     <None Include="Content\stylesheets\vendor\fonts\fontawesome-webfont.eot" />
     <None Include="Content\stylesheets\vendor\fonts\fontawesome-webfont.ttf" />
     <None Include="Content\stylesheets\vendor\fonts\fontawesome-webfont.woff" />
