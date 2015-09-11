@@ -174,6 +174,21 @@
             RedirectToReferrer();
         }
 
+        [Admin]
+        public void Comments(string projectSlug, string comment)
+        {
+            var item = session.Query<Project>().FirstOrDefault(p => p.Slug == projectSlug);
+
+            item.Comments = comment;
+
+            using (var tx = session.BeginTransaction())
+            {
+                session.SaveOrUpdate(item);
+                tx.Commit();
+            }
+
+            RenderText(comment);
+        }
 
     }
 }

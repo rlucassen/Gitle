@@ -22,6 +22,7 @@
         public virtual int FreckleId { get; set; }
         public virtual string FreckleName { get; set; }
         public virtual string Information { get; set; }
+        public virtual string Comments { get; set; }
 
         public virtual Customer Customer { get; set; }
 

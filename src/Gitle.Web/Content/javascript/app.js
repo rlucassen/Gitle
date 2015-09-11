@@ -200,6 +200,7 @@ Application.prototype = {
 
     self.initFreckleSelect();
     self.initCtrlS();
+    self.initComments();
 
     slugify('#item_Name', '#item_Slug');
 
@@ -321,6 +322,35 @@ Application.prototype = {
       $('.quickview').hide();
     });
 
+  },
+
+  initComments: function() {
+    $('.comments-container').each(function () {
+      var container = $(this);
+      var staticComments = container.find('.comments');
+      var textarea = container.find('textarea');
+      staticComments.click(function () {
+        container.addClass('edit');
+        textarea.focus();
+      });
+      textarea.blur(function () {
+        $.ajax({
+          url: container.data('url'),
+          method: 'POST',
+          dataType: 'text',
+          data: {
+            comment: textarea.val()
+          },
+          success: function (data) {
+            staticComments.html(marked(data));
+            container.removeClass('edit');
+          },
+          error: function () {
+            console.log('niet opgeslagen');
+          }
+        });
+      });
+    });
   },
 
   windowResize: function () {

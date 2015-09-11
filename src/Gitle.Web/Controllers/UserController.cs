@@ -155,5 +155,23 @@
 
             RedirectToUrl("/users");
         }
+
+        [Admin]
+        public void Comments(long userId, string comment)
+        {
+            var item = session.Get<User>(userId);
+
+            item.Comments = comment;
+
+            using (var tx = session.BeginTransaction())
+            {
+                session.SaveOrUpdate(item);
+                tx.Commit();
+            }
+
+            RenderText(comment);
+        }
+
+
     }
 }

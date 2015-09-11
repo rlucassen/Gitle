@@ -1,6 +1,14 @@
 ﻿<div class="row">
   <div class="large-12 columns">
     <h1>${project.Name}</h1>
+
+    <span>Comments</span>
+    <div class="comments-container" data-url="/project/${project.Slug}/comments">
+      <div class="comments marked">${project.Comments}</div>
+      <textarea name="comment">${project.Comments}
+      </textarea>
+    </div>
+
     <% if CurrentUser.IsAdmin: %>
     <div class="row">
       <div class="large-2 columns">Klant</div>

@@ -82,5 +82,21 @@
 
             RedirectToUrl("/customers");
         }
+
+        [Admin]
+        public void Comments(string customerSlug, string comment)
+        {
+            var item = session.Query<Customer>().FirstOrDefault(x => x.IsActive && x.Slug == customerSlug);
+
+            item.Comments = comment;
+
+            using (var tx = session.BeginTransaction())
+            {
+                session.SaveOrUpdate(item);
+                tx.Commit();
+            }
+
+            RenderText(comment);
+        }
     }
 }

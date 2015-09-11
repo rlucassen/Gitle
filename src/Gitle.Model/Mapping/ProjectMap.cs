@@ -13,6 +13,7 @@
             Map(x => x.FreckleId);
             Map(x => x.FreckleName);
             Map(x => x.Information).CustomSqlType("nvarchar(max)");
+            Map(x => x.Comments).CustomSqlType("nvarchar(max)");
             HasMany(x => x.Users).Cascade.All();
             HasMany(x => x.Labels).Cascade.AllDeleteOrphan();
             HasMany(x => x.Issues).Cascade.AllDeleteOrphan();

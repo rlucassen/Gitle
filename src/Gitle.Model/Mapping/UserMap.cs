@@ -20,6 +20,7 @@
             Map(x => x.GitHubAccessToken);
             Map(x => x.FreckleEmail);
             Map(x => x.DefaultState);
+            Map(x => x.Comments).CustomSqlType("nvarchar(max)");
             HasMany(x => x.Projects).Cascade.AllDeleteOrphan();
             HasMany(x => x.FilterPresets);
             References(x => x.Customer);
