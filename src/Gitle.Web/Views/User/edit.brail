@@ -21,17 +21,6 @@
         </div>
       </div>
       <div class="row">
-        <div class="large-3 columns">Inlog</div>
-        <div class="large-9 columns">
-          <input type="text" name="item.Name" value="${?item.Name}" required />
-          <small class="error">Geef een inlognaam op</small>
-        </div>
-      </div>
-      <div class="row">
-        <div class="large-3 columns">Wachtwoord</div>
-        <div class="large-9 columns">${Form.TextField("password")}</div>
-      </div>
-      <div class="row">
         <div class="large-3 columns">Telefoonnummer</div>
         <div class="large-9 columns"><input type="tel" name="item.Phone" value="${?item.Phone}" /></div>
       </div>
@@ -42,47 +31,72 @@
           <small class="error">Geef een emailadres op</small>
         </div>
       </div>
-      <div class="row">
-        <div class="large-3 columns">GitHub username</div>
-        <div class="large-9 columns">${Form.TextField("item.GitHubUsername")}</div>
-      </div>
-      <div class="row">
-        <div class="large-3 columns">Freckle emailadres</div>
-        <div class="large-9 columns">${Form.TextField("item.FreckleEmail")}</div>
-      </div>
-      <div class="row">
-        <div class="large-3 columns">Default filtering</div>
-        <div class="large-9 columns">
-          ${Form.Select("item.DefaultState", {"0": "Alle taken", "1": "Open taken", "2": "Voltooide taken"}, {"value": "Key", "text": "Value"})}
+      <div class="panel">
+        <h3>Logingegevens</h3>
+        <div class="row">
+          <div class="large-3 columns">Inlog</div>
+          <div class="large-9 columns">
+            <input type="text" name="item.Name" value="${?item.Name}" />
+            <small class="error">Geef een inlognaam op</small>
+          </div>
+        </div>
+        <div class="row">
+          <div class="large-3 columns">Wachtwoord</div>
+          <div class="large-9 columns">${Form.TextField("password")}</div>
+        </div>
+        <div class="row">
+          <div class="large-3 columns">GitHub username</div>
+          <div class="large-9 columns">${Form.TextField("item.GitHubUsername")}</div>
+        </div>
+        <div class="row">
+          <div class="large-3 columns">Freckle emailadres</div>
+          <div class="large-9 columns">${Form.TextField("item.FreckleEmail")}</div>
+        </div>
+        <div class="row">
+          <div class="large-3 columns">Default filtering</div>
+          <div class="large-9 columns">
+            ${Form.Select("item.DefaultState", {"0": "Alle taken", "1": "Open taken", "2": "Voltooide taken"}, {"value": "Key", "text": "Value"})}
+          </div>
+        </div>
+        <div class="row">
+          <div class="large-3 small-6 columns">Heeft adminrechten</div>
+          <div class="large-9 small-6 columns">${Form.CheckboxField("item.IsAdmin")}</div>
         </div>
       </div>
-      <div class="row">
-        <div class="large-3 small-6 columns">Heeft adminrechten</div>
-        <div class="large-9 small-6 columns">${Form.CheckboxField("item.IsAdmin")}</div>
-      </div>
-      <div class="row projects">
-        <div class="large-3 columns">Projecten</div>
-        <div class="large-9 columns">
+      <table class="datatable">
+        <thead>
+          <tr>
+            <th>Project</th>
+            <th>Project zichtbaar</th>
+            <th>Notificaties ontvangen</th>
+            <th>Alleen notificatie van eigen tickets</th>
+          </tr>
+        </thead>
+        <tbody>
           <% count = 0 %>
           <% for project in projects: %>
           <% userProject = item.GetUserProject(project) %>
-          <div class="panel">
-            <div class="row">
-              <div class="large-12 columns">
-                <input type="hidden" name="userProject[${count}].Id" value="${userProject.Id}"/>
-                <input type="hidden" name="userProject[${count}].Project.Id" value="${project.Id}"/>
-                <input type="hidden" name="userProject[${count}].User.Id" value="${item.Id}"/>
-                <h3>${project.Name}</h3>
-                <div class="inline-checkbox"><input type="checkbox" name="userProject[${count}].Subscribed" value="true" <% if selectedprojects.Contains(project): %>checked<% end %>/> Project is zichtbaar</div>
-                <div class="inline-checkbox"><input type="checkbox" name="userProject[${count}].Notifications" value="true" <% if userProject.Notifications: %>checked<% end %>/> Notificaties ontvangen</div>
-                <div class="inline-checkbox"><input type="checkbox" name="userProject[${count}].OnlyOwnIssues" value="true" <% if userProject.OnlyOwnIssues: %>checked<% end %>/> Alleen van zelf aangemaakte tickets</div>
-              </div>
-            </div>
-          </div>
+          <tr>
+            <td>
+              <input type="hidden" name="userProject[${count}].Id" value="${userProject.Id}" />
+              <input type="hidden" name="userProject[${count}].Project.Id" value="${project.Id}" />
+              <input type="hidden" name="userProject[${count}].User.Id" value="${item.Id}" />
+              ${project.Name}
+            </td>
+            <td>
+              <div class="inline-checkbox"><input type="checkbox" name="userProject[${count}].Subscribed" value="true" <% if selectedprojects.Contains(project): %>checked<% end %>/> Project is zichtbaar</div>
+            </td>
+            <td>
+              <div class="inline-checkbox"><input type="checkbox" name="userProject[${count}].Notifications" value="true" <% if userProject.Notifications: %>checked<% end %>/> Notificaties ontvangen</div>
+            </td>
+            <td>
+              <div class="inline-checkbox"><input type="checkbox" name="userProject[${count}].OnlyOwnIssues" value="true" <% if userProject.OnlyOwnIssues: %>checked<% end %>/> Alleen van zelf aangemaakte tickets</div>
+            </td>
+          </tr>
           <% count++ %>
           <% end %>
-        </div>
-      </div>
+        </tbody>
+      </table>
       <div class="row">
         <div class="large-12 columns"><input type="submit" class="button" value="Opslaan"/></div>
       </div>

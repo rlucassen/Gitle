@@ -31,7 +31,7 @@
             PropertyBag.Add("selectedprojects", new List<Project>());
             PropertyBag.Add("customers", session.Query<Customer>().Where(x => x.IsActive).ToList());
             PropertyBag.Add("notificationprojects", new List<Project>());
-            PropertyBag.Add("projects", session.Query<Project>().ToList());
+            PropertyBag.Add("projects", session.Query<Project>().OrderBy(x => x.Name).ToList());
             RenderView("edit");
         }
 
