@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Linq;
+    using System.Web.UI;
     using FluentNHibernate.Utils;
     using Helpers;
     using Model;
@@ -43,6 +44,7 @@
             PropertyBag.Add("selectedprojects", user.Projects.Select(x => x.Project).ToList());
             PropertyBag.Add("customers", session.Query<Customer>().Where(x => x.IsActive).ToList());
             PropertyBag.Add("projects", session.Query<Project>().OrderBy(x => x.Name).ToList());
+            PropertyBag.Add("customerId", user.Customer?.Id ?? 0);
         }
 
         [Admin]
@@ -60,7 +62,7 @@
             PropertyBag.Add("ownnotificationprojects", CurrentUser.Projects.Where(up => up.Notifications && up.OnlyOwnIssues).Select(up => up.Project).ToList());
         }
 
-        public void SaveProfile(string password, int[] notificationprojects, int[] ownnotificationprojects, long[] filterpresets)
+        public void SaveProfile(string password, int[] notificationprojects, int[] ownnotificationprojects, long[] filterpresets, long customerId)
         {
             var item = CurrentUser;
             if (item != null)
@@ -76,6 +78,8 @@
             {
                 item.Password = new Password(password);
             }
+
+            item.Customer = session.Get<Customer>(customerId);
 
             item.Projects.Each(up => up.Notifications = false);
             notificationprojects.Each(i => item.Projects.First(up => up.Project.Id == i).Notifications = true);
