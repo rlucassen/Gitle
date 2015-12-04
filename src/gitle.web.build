@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+  <Import Project="..\buildtasks\Auxilium.Targets" />
+
+  <PropertyGroup>
+    <EnableTests>False</EnableTests>
+    <SolutionName>Gitle</SolutionName>
+    <ProjectToPublish>Gitle.Web</ProjectToPublish>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectSpecificExcludes Include="**\Public\**" Exclude="*" />
+  </ItemGroup>
+
+</Project>
