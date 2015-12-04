@@ -70,6 +70,7 @@
                 <div class="inline-checkbox"><input type="checkbox" name="userProject[${count}].Subscribed" value="true" <% if selectedprojects.Contains(project): %>checked<% end %>/> Project is zichtbaar</div>
                 <div class="inline-checkbox"><input type="checkbox" name="userProject[${count}].Notifications" value="true" <% if userProject.Notifications: %>checked<% end %>/> Notificaties ontvangen</div>
                 <div class="inline-checkbox"><input type="checkbox" name="userProject[${count}].OnlyOwnIssues" value="true" <% if userProject.OnlyOwnIssues: %>checked<% end %>/> Alleen van zelf aangemaakte tickets</div>
+                <div class="inline-checkbox"><input type="checkbox" name="userProject[${count}].ConfirmOwnEntries" value="true" <% if userProject.ConfirmOwnEntries: %>checked<% end %>/> Bevestiging van eigen wijzigingen</div>
               </div>
             </div>
           </div>
