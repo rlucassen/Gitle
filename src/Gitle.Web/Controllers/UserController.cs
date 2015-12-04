@@ -116,7 +116,7 @@
         }
 
         [Admin]
-        public void Save(long userId, string password)
+        public void Save(long userId, string password, long customerId)
         {
             var item = session.Get<User>(userId);
             if (item != null)
@@ -132,6 +132,8 @@
             {
                 item.Password = new Password(password);
             }
+
+            item.Customer = session.Get<Customer>(customerId);
 
             var userProjects = BindObject<UserProject[]>("userProject");
 

@@ -15,6 +15,16 @@
     </div>
 
     <div class="row">
+      <div class="large-2 columns">Telefoonnummer</div>
+      <div class="large-10 columns">${?item.Phone}</div>
+    </div>
+
+    <div class="row">
+      <div class="large-2 columns">Emailadres</div>
+      <div class="large-10 columns"><a href="mailto:${?item.EmailAddress}">${?item.EmailAddress}</a></div>
+    </div>
+
+    <div class="row">
       <div class="large-12 columns">
         <h2>Projecten</h2>
         <table class="small-blocks" id="customers">
