@@ -1,6 +1,6 @@
 ﻿<div id="timeline">
   <h2>Tijdlijn</h2>
-  <% for action in item.Actions: %>
+  <% for action in item.ActionsReverse: %>
   <div class="issueaction ${action.GetType().Name.Replace("Proxy", "")}<% if action.TouchedBefore(CurrentUser, datetime): %> touched<% end %>">
   <% if action.GetType().Name.Replace("Proxy", "") == "ChangeState": %>
   <div class="row">
@@ -17,20 +17,29 @@
       ${action.HtmlText}
     </div>
   </div>
-  <% elif action.GetType().Name == "Change": %>
-  <div class="row ${action.GetType().Name}">
-    <div class="small-1 columns">
-      <i class="fa fa-edit"></i>
+    <% elif action.GetType().Name == "Change": %>
+    <div class="row ${action.GetType().Name}">
+      <div class="small-1 columns">
+        <i class="fa fa-edit"></i>
+      </div>
+      <div class="small-11 columns">
+        ${action.HtmlText}
+      </div>
     </div>
-    <div class="small-11 columns">
-      ${action.HtmlText}
+    <% elif action.GetType().Name == "Pickup": %>
+    <div class="row ${action.GetType().Name}">
+      <div class="small-1 columns">
+        <i class="fa fa-sign-out"></i>
+      </div>
+      <div class="small-11 columns">
+        ${action.HtmlText}
+      </div>
     </div>
-  </div>
-  <% else: %>
+    <% else: %>
   <div class="panel ${action.GetType().Name}">
     <small class="right">${Helpers.DateTimeHelper.Readable(action.CreatedAt)}</small>
     <% if action.User != null: %>
-    <strong>${action.User.FullName}</strong> 
+    <strong>${action.User.FullName} <% if action.User.IsAdmin: %> <span class="label no-margin radius">Developer</span> <% end %></strong> 
     <% end %>
     <div class="">${action.HtmlText}</div>
   </div>

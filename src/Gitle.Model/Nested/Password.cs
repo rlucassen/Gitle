@@ -13,13 +13,16 @@
 
     public class Password : IPassword
     {
-        public Password(string password)
+        public Password(string password = null)
             : this()
         {
+            if (string.IsNullOrWhiteSpace(password))
+                password = GeneratePassword();
+            
             EncryptPassword(password);
         }
 
-        public Password()
+        protected Password()
         {
         }
 

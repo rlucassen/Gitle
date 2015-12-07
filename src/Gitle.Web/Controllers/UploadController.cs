@@ -4,17 +4,14 @@
     using System.Collections.Generic;
     using System.Configuration;
     using System.IO;
-    using System.Runtime.Serialization.Json;
     using System.Web;
     using System.Web.Script.Serialization;
-    using Castle.MonoRail.Framework;
     using Helpers;
-    using Model;
 
     public class UploadController : SecureController
     {
         private readonly IList<string> ImageExtensions = new List<string> {".jpg", ".png", ".gif"};
-        private readonly IList<string> DocumentExtensions = new List<string> {".doc", ".docx", ".xls", ".xlsx", ".pdf", ".json", ".txt"};
+        private readonly IList<string> DocumentExtensions = new List<string> {".doc", ".docx", ".xls", ".xlsx", ".pdf", ".json", ".txt", ".xml", ".xsd", ".msg"};
 
         public void File([FileBinder] IEnumerable<HttpPostedFile> uploads)
         {

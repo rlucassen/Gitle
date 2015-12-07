@@ -22,6 +22,9 @@
         public virtual int FreckleId { get; set; }
         public virtual string FreckleName { get; set; }
         public virtual string Information { get; set; }
+        public virtual string Comments { get; set; }
+
+        public virtual Customer Customer { get; set; }
 
         public virtual IList<UserProject> Users { get; set; }
         public virtual IList<Label> Labels { get; set; }
@@ -29,6 +32,6 @@
 
         public virtual int NotifiedUsers { get { return Users.Count(u => u.Notifications); } }
 
-        public virtual int NewIssueNumber { get { return Issues.Count > 0 ? Issues.Max(x => x.Number) + 1 : 1; } }
+        public virtual int NewIssueNumber { get { return (Issues.Any() ? Issues.Max(x => x.Number) : 0) + 1; } }
     }
 }

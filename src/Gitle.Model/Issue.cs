@@ -15,6 +15,7 @@
             Comments = new List<Comment>();
             ChangeStates = new List<ChangeState>();
             Changes = new List<Change>();
+            Pickups = new List<Pickup>();
             Bookings = new List<Booking>();
             InvoiceLines = new List<InvoiceLine>();
         }
@@ -30,8 +31,10 @@
         public virtual IList<Comment> Comments { get; set; }
         public virtual IList<ChangeState> ChangeStates { get; set; }
         public virtual IList<Change> Changes { get; set; }
+        public virtual IList<Pickup> Pickups { get; set; }
         public virtual IList<Booking> Bookings { get; set; }
         public virtual IList<InvoiceLine> InvoiceLines { get; set; }
+
 
         public virtual string BodyHtml { get { return Body.Markdown(Project); } }
 
@@ -68,6 +71,26 @@
             get
             {
                 return State.GetDescription();
+            }
+        }
+
+        public virtual User PickedUpBy
+        {
+            get
+            {
+                var pickup =
+                    Pickups.OrderByDescending(x => x.CreatedAt).LastOrDefault();
+                return pickup != null ? pickup.User : null;
+            }
+        }
+
+        public virtual DateTime? PickedUpAt
+        {
+            get
+            {
+                var pickup =
+                    Pickups.OrderByDescending(x => x.CreatedAt).LastOrDefault();
+                return pickup != null ? pickup.CreatedAt : (DateTime?)null;
             }
         }
 
@@ -154,6 +177,7 @@
                 var actions = new List<IIssueAction>(Comments);
                 actions.AddRange(ChangeStates);
                 actions.AddRange(Changes);
+                actions.AddRange(Pickups);
                 return actions.OrderByDescending(x => x.CreatedAt).ToList();
             }
         }
@@ -231,10 +255,14 @@
             Changes.Add(new Change() { CreatedAt = DateTime.Now, User = user, Issue = this});
         }
 
+        public virtual void Pickup(User user)
+        {
+            Pickups.Add(new Pickup() { CreatedAt = DateTime.Now, User = user, Issue = this });
+        }
+
         public virtual double BookingHours(DateTime startDate, DateTime endDate)
         {
             return Bookings.Where(x => x.Date >= startDate && x.Date <= endDate).Sum(x => x.Hours);
         }
-
     }
 }

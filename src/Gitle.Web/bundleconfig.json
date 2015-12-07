@@ -1,0 +1,17 @@
+[
+  {
+    "outputFileName": "Content/javascript/app.js",
+    "inputFiles": [
+      "Content/javascript/app.js"
+    ]
+  },
+  {
+    "outputFileName": "Content/stylesheets/vendor/bundle.css",
+    "inputFiles": [
+      "Content/stylesheets/vendor/foundation.css",
+      "Content/stylesheets/vendor/foundation.min.css",
+      "Content/stylesheets/vendor/jquery.autocomplete.css",
+      "Content/stylesheets/vendor/normalize.css"
+    ]
+  }
+]

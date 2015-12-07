@@ -305,6 +305,23 @@ using Castle.MonoRail.Framework;
             RedirectToUrl(string.Format("/project/{0}/issue/index", project.Slug));
         }
 
+        [Admin]
+        public void Pickup(string projectSlug, int issueId)
+        {
+            var project = session.Query<Project>().FirstOrDefault(p => p.Slug == projectSlug);
+            var issue = session.Query<Issue>().FirstOrDefault(i => i.Number == issueId && i.Project == project);
+            if (!issue.IsArchived && issue.PickedUpBy != CurrentUser)
+            {
+                issue.Pickup(CurrentUser);
+                using (var transaction = session.BeginTransaction())
+                {
+                    session.SaveOrUpdate(issue);
+                    transaction.Commit();
+                }
+            }
+            RedirectToReferrer();
+        }
+
         [MustHaveProject]
         public void AddComment(string projectSlug, int issueId, string body)
         {
@@ -335,6 +352,7 @@ using Castle.MonoRail.Framework;
             if (issue.IsArchived) return;
             var label = project.Labels.First(l => l.Id == param);
             issue.Labels.Add(label);
+            issue.Change(CurrentUser);
 
             using (var transaction = session.BeginTransaction())
             {

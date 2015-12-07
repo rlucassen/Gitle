@@ -152,6 +152,19 @@ Application.prototype = {
       self.windowResize();
     }).resize();
 
+    $('#search').autocomplete({
+      serviceUrl: '/search',
+      autoSelectFirst: true,
+      onSelect: function(suggestion) {
+        window.location = suggestion.data;
+      }
+    });
+    $(document).keydown(function (e) {
+      if (e.which == 70 && e.ctrlKey && e.shiftKey) {
+        $('#search').focus();
+      }
+    });
+
     $('form .focus[value=]').focus();
 
     $("table.row-clickable tr").click(function () {
@@ -171,6 +184,7 @@ Application.prototype = {
 
     $('.time-parser').blur(function () {
       var value = $(this).val();
+      if (value === "" || value === "0") return;
       value = value.replace(/[A-Za-z$-]/g, "");
       value = value.replace(",", ".");
       value = parseFloat(value);
@@ -187,6 +201,7 @@ Application.prototype = {
 
     self.initFreckleSelect();
     self.initCtrlS();
+    self.initComments();
 
     slugify('#item_Name', '#item_Slug');
 
@@ -308,6 +323,35 @@ Application.prototype = {
       $('.quickview').hide();
     });
 
+  },
+
+  initComments: function() {
+    $('.comments-container').each(function () {
+      var container = $(this);
+      var staticComments = container.find('.comments');
+      var textarea = container.find('textarea');
+      staticComments.click(function () {
+        container.addClass('edit');
+        textarea.focus();
+      });
+      textarea.blur(function () {
+        $.ajax({
+          url: container.data('url'),
+          method: 'POST',
+          dataType: 'text',
+          data: {
+            comment: textarea.val()
+          },
+          success: function (data) {
+            staticComments.html(marked(data));
+            container.removeClass('edit');
+          },
+          error: function () {
+            console.log('niet opgeslagen');
+          }
+        });
+      });
+    });
   },
 
   windowResize: function () {

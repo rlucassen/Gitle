@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Linq;
+    using System.Web.UI;
     using FluentNHibernate.Utils;
     using Helpers;
     using Model;
@@ -21,7 +22,7 @@
         [Admin]
         public void Index()
         {
-            PropertyBag.Add("items", session.Query<User>().ToList());
+            PropertyBag.Add("items", session.Query<User>().Where(user => user.IsActive).ToList());
         }
 
         [Admin]
@@ -29,8 +30,9 @@
         {
             PropertyBag.Add("item", new User());
             PropertyBag.Add("selectedprojects", new List<Project>());
+            PropertyBag.Add("customers", session.Query<Customer>().Where(x => x.IsActive).ToList());
             PropertyBag.Add("notificationprojects", new List<Project>());
-            PropertyBag.Add("projects", session.Query<Project>().ToList());
+            PropertyBag.Add("projects", session.Query<Project>().OrderBy(x => x.Name).ToList());
             RenderView("edit");
         }
 
@@ -40,7 +42,16 @@
             var user = session.Get<User>(userId);
             PropertyBag.Add("item", user);
             PropertyBag.Add("selectedprojects", user.Projects.Select(x => x.Project).ToList());
-            PropertyBag.Add("projects", session.Query<Project>().ToList());
+            PropertyBag.Add("customers", session.Query<Customer>().Where(x => x.IsActive).ToList());
+            PropertyBag.Add("projects", session.Query<Project>().OrderBy(x => x.Name).ToList());
+            PropertyBag.Add("customerId", user.Customer?.Id ?? 0);
+        }
+
+        [Admin]
+        public void View(long userId)
+        {
+            var user = session.Get<User>(userId);
+            PropertyBag.Add("item", user);
         }
 
         public void Profile()
@@ -51,7 +62,7 @@
             PropertyBag.Add("ownnotificationprojects", CurrentUser.Projects.Where(up => up.Notifications && up.OnlyOwnIssues).Select(up => up.Project).ToList());
         }
 
-        public void SaveProfile(string password, int[] notificationprojects, int[] ownnotificationprojects, long[] filterpresets)
+        public void SaveProfile(string password, int[] notificationprojects, int[] ownnotificationprojects, long[] filterpresets, long customerId)
         {
             var item = CurrentUser;
             if (item != null)
@@ -62,10 +73,13 @@
             {
                 item = BindObject<User>("item");
             }
-            if (!string.IsNullOrEmpty(password))
+            
+            if (!string.IsNullOrWhiteSpace(password) || item.Password == null)
             {
                 item.Password = new Password(password);
             }
+
+            item.Customer = session.Get<Customer>(customerId);
 
             item.Projects.Each(up => up.Notifications = false);
             notificationprojects.Each(i => item.Projects.First(up => up.Project.Id == i).Notifications = true);
@@ -89,7 +103,7 @@
         }
 
         [Admin]
-        public void Delete(int userId)
+        public void Delete(long userId)
         {
             var user = session.Get<User>(userId);
             user.Deactivate();
@@ -102,7 +116,7 @@
         }
 
         [Admin]
-        public void Save(long userId, string password)
+        public void Save(long userId, string password, long customerId)
         {
             var item = session.Get<User>(userId);
             if (item != null)
@@ -113,31 +127,57 @@
             {
                 item = BindObject<User>("item");
             }
-            if (!string.IsNullOrEmpty(password))
+
+            if (!string.IsNullOrWhiteSpace(password) || item.Password == null)
             {
                 item.Password = new Password(password);
             }
 
+            item.Customer = session.Get<Customer>(customerId);
+
             var userProjects = BindObject<UserProject[]>("userProject");
 
-            var userProjectsToDelete = item.Projects.Where(l => !userProjects.Where(x => x.Subscribed).Select(x => x.Id).Contains(l.Id)).ToList();
+            var subscriptions = userProjects.Where(x => x.Subscribed).ToList();
+
+            var userProjectsToAdd = subscriptions.Where(subscription => item.Projects.All(project => project.Id != subscription.Id)).ToList();
+            var userProjectsToDelete = item.Projects.Where(project => subscriptions.All(subscription => subscription.Id != project.Id)).ToList();
 
             using (var tx = session.BeginTransaction())
             {
-                foreach (var userProject in userProjects.Where(x => x.Subscribed))
+                session.SaveOrUpdate(item);
+
+                foreach (var userProject in userProjectsToAdd)
                 {
-                    session.Merge(userProject);
+                    userProject.User = item;
+                    item.Projects.Add(userProject);
                 }
                 foreach (var userProject in userProjectsToDelete)
                 {
+                    userProject.User = null;
                     item.Projects.Remove(userProject);
-                    session.Delete(userProject);
                 }
-                session.SaveOrUpdate(item);
                 tx.Commit();
             }
 
             RedirectToUrl("/users");
         }
+
+        [Admin]
+        public void Comments(long userId, string comment)
+        {
+            var item = session.Get<User>(userId);
+
+            item.Comments = comment;
+
+            using (var tx = session.BeginTransaction())
+            {
+                session.SaveOrUpdate(item);
+                tx.Commit();
+            }
+
+            RenderText(comment);
+        }
+
+
     }
 }

@@ -74,6 +74,7 @@
     <Compile Include="ChangeState.cs" />
     <Compile Include="Comment.cs" />
     <Compile Include="Enum\InvoiceState.cs" />
+    <Compile Include="Customer.cs" />
     <Compile Include="Enum\IssueState.cs" />
     <Compile Include="FilterPreset.cs" />
     <Compile Include="Helpers\CsvHelper.cs" />
@@ -98,6 +99,8 @@
     <Compile Include="Mapping\CorrectionMap.cs" />
     <Compile Include="Mapping\InvoiceLineMap.cs" />
     <Compile Include="Mapping\InvoiceMap.cs" />
+    <Compile Include="Mapping\CustomerMap.cs" />
+    <Compile Include="Mapping\PickupMap.cs" />
     <Compile Include="Mapping\Component\PasswordComponentMap.cs" />
     <Compile Include="Mapping\CommentMap.cs" />
     <Compile Include="Mapping\ChangeStateMap.cs" />
@@ -114,6 +117,7 @@
     <Compile Include="Mapping\UserProjectMap.cs" />
     <Compile Include="ModelBase.cs" />
     <Compile Include="Nested\Password.cs" />
+    <Compile Include="Pickup.cs" />
     <Compile Include="Project.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Touch.cs" />

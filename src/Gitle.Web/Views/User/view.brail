@@ -1,0 +1,50 @@
+﻿<div class="row">
+  <div class="large-12 columns">
+    <h1>${item.FullName}</h1>
+
+    <span>Comments</span>
+    <div class="comments-container" data-url="/user/${item.Id}/comments">
+      <div class="comments marked">${item.Comments}</div>
+      <textarea name="comment">${item.Comments}
+      </textarea>
+    </div>
+
+    <div class="row">
+      <div class="large-2 columns">Klant</div>
+      <div class="large-10 columns"><a href="/customer/${?item.Customer.Slug}/view">${?item.Customer.Name}</a></div>
+    </div>
+
+    <div class="row">
+      <div class="large-2 columns">Telefoonnummer</div>
+      <div class="large-10 columns">${?item.Phone}</div>
+    </div>
+
+    <div class="row">
+      <div class="large-2 columns">Emailadres</div>
+      <div class="large-10 columns"><a href="mailto:${?item.EmailAddress}">${?item.EmailAddress}</a></div>
+    </div>
+
+    <div class="row">
+      <div class="large-12 columns">
+        <h2>Projecten</h2>
+        <table class="small-blocks" id="customers">
+          <thead>
+            <tr>
+              <th>Naam</th>
+              <th>Freckleproject</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% for project in item.Projects: %>
+            <tr>
+              <td class="name"><a href="/project/${project.Project.Slug}/view">${project.Project.Name}</a></td>
+              <td class="phone">${project.Project.FreckleName}</td>
+            </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>

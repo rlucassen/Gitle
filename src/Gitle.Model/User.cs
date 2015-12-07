@@ -33,6 +33,9 @@
         public virtual string GitHubUsername { get; set; }
         public virtual string GitHubAccessToken { get; set; }
         public virtual string FreckleEmail { get; set; }
+        public virtual string Comments { get; set; }
+
+        public virtual Customer Customer { get; set; }
 
         public virtual IssueState DefaultState { get; set; }
 

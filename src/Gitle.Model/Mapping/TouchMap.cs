@@ -15,6 +15,7 @@ namespace Gitle.Model.Mapping
                 .AddMetaValue<Change>(typeof(Change).Name)
                 .AddMetaValue<ChangeState>(typeof(ChangeState).Name)
                 .AddMetaValue<Comment>(typeof(Comment).Name)
+                .AddMetaValue<Pickup>(typeof(Pickup).Name)
                 .EntityTypeColumn("Seeable_type")
                 .EntityIdentifierColumn("Seeable_id")
                 .IdentityType<long>();

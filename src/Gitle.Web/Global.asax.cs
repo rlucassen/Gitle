@@ -136,6 +136,15 @@
             RoutingModuleEx.Engine.Add(new PatternRoute("/user/<userId>/<action>")
                                            .DefaultForController().Is<UserController>()
                                            .DefaultForAction().Is("index"));
+            RoutingModuleEx.Engine.Add(new PatternRoute("/customers")
+                                           .DefaultForController().Is<CustomerController>()
+                                           .DefaultForAction().Is("index"));
+            RoutingModuleEx.Engine.Add(new PatternRoute("/customer/<action>")
+                                           .DefaultForController().Is<CustomerController>()
+                                           .DefaultForAction().Is("index"));
+            RoutingModuleEx.Engine.Add(new PatternRoute("/customer/<customerSlug>/<action>")
+                                           .DefaultForController().Is<CustomerController>()
+                                           .DefaultForAction().Is("index"));
             RoutingModuleEx.Engine.Add(new PatternRoute("/projects")
                                            .DefaultForController().Is<ProjectController>()
                                            .DefaultForAction().Is("index"));
@@ -165,6 +174,13 @@
                                            .DefaultForAction().Is("index"));
             RoutingModuleEx.Engine.Add(new PatternRoute("/project/<projectSlug>/invoice/<invoiceId>/<action>")
                                            .DefaultForController().Is<InvoiceController>()
+                                           .DefaultForAction().Is("index"));
+
+            RoutingModuleEx.Engine.Add(new PatternRoute("/search")
+                                           .DefaultForController().Is<SearchController>()
+                                           .DefaultForAction().Is("index"));
+            RoutingModuleEx.Engine.Add(new PatternRoute("/search/<query>")
+                                           .DefaultForController().Is<SearchController>()
                                            .DefaultForAction().Is("index"));
 
             RoutingModuleEx.Engine.Add<FilterPresetController>();

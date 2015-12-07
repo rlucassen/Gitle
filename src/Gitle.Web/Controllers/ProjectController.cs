@@ -64,6 +64,7 @@
         public void New()
         {
             PropertyBag.Add("freckleProjects", projectClient.List().Where(x => x.Enabled));
+            PropertyBag.Add("customers", session.Query<Customer>().Where(x => x.IsActive).ToList());
             PropertyBag.Add("item", new Project());
             RenderView("edit");
         }
@@ -73,7 +74,9 @@
         {
             var project = session.Query<Project>().FirstOrDefault(x => x.IsActive && x.Slug == projectSlug);
             PropertyBag.Add("freckleProjects", projectClient.List().Where(x => x.Enabled));
+            PropertyBag.Add("customers", session.Query<Customer>().Where(x => x.IsActive).ToList());
             PropertyBag.Add("item", project);
+            PropertyBag.Add("customerId", project.Customer?.Id);
         }
 
         [Admin]
@@ -90,7 +93,7 @@
         }
 
         [Admin]
-        public void Save(string projectSlug)
+        public void Save(string projectSlug, long customerId)
         {
             var item = session.Query<Project>().FirstOrDefault(x => x.IsActive && x.Slug == projectSlug);
             if (item != null)
@@ -102,14 +105,18 @@
                 item = BindObject<Project>("item");
             }
 
+            item.Customer = session.Get<Customer>(customerId);
+
             var labels = BindObject<Label[]>("label");
 
             var labelsToDelete = item.Labels.Where(l => !labels.Select(x => x.Id).Contains(l.Id)).ToList();
 
             using (var tx = session.BeginTransaction())
             {
+                session.SaveOrUpdate(item);
                 foreach (var label in labels.Where(x => !string.IsNullOrWhiteSpace(x.Name)))
                 {
+                    label.Project = item;
                     session.Merge(label);
                 }
                 foreach (var label in labelsToDelete)
@@ -117,7 +124,6 @@
                     item.Labels.Remove(label);
                     session.Delete(label);
                 }
-                session.SaveOrUpdate(item);
                 tx.Commit();
             }
 
@@ -127,6 +133,7 @@
         [MustHaveProject]
         public void AddLabel(string projectSlug, string issues, string label)
         {
+            var project = session.Query<Project>().FirstOrDefault(x => x.IsActive && x.Slug == projectSlug);
             var issueIds = issues.Split(',');
             var realLabel = session.Query<Label>().FirstOrDefault(x => x.Name == label);
             if (!realLabel.ApplicableByCustomer && !CurrentUser.IsAdmin)
@@ -139,7 +146,7 @@
             {
                 foreach (var issueId in issueIds.Select(int.Parse))
                 {
-                    var issue = session.Query<Issue>().FirstOrDefault(x => x.Number == issueId);
+                    var issue = session.Query<Issue>().FirstOrDefault(x => x.Number == issueId && x.Project == project);
                     if(!issue.Labels.Contains(realLabel)) issue.Labels.Add(realLabel);
                     session.SaveOrUpdate(issue);
                 }
@@ -171,14 +178,21 @@
             RedirectToReferrer();
         }
 
-        [return: JSONReturnBinder]
-        public object AutoComplete(string term)
+        [Admin]
+        public void Comments(string projectSlug, string comment)
         {
-            var projects = session.Query<Project>().Where(x => x.Name.Contains(term)).ToList();
-            var suggestions = projects.Select(x => new { value = x.Id, label = x.Name }).ToList();
-            return suggestions;
-        }
+            var item = session.Query<Project>().FirstOrDefault(p => p.Slug == projectSlug);
 
+            item.Comments = comment;
+
+            using (var tx = session.BeginTransaction())
+            {
+                session.SaveOrUpdate(item);
+                tx.Commit();
+    }
+
+            RenderText(comment);
+        }
 
     }
 }

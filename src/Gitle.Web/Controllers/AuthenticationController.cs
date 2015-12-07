@@ -68,18 +68,23 @@
 
         public void RequestReset(string email)
         {
-            var users = session.QueryOver<User>().Where(x => x.IsActive).And(x => x.EmailAddress == email).List();
+            var users = session.Query<User>().Where(x => !string.IsNullOrWhiteSpace(email) && x.IsActive && x.EmailAddress == email).ToList();
             
-            if (users.Count > 0 && !string.IsNullOrEmpty(email))
+            if (users.Any())
             {
-                users[0].Password.GenerateHash();
+                users.ForEach(
+                    user =>
+                    {
+                        if (user.Password == null) user.Password = new Password();
+                        user.Password.GenerateHash();
 
-                emailService.SendPasswordLink(users[0]);
+                        emailService.SendPasswordLink(user);
                 using (var tx = session.BeginTransaction())
                 {
-                    session.SaveOrUpdate(users[0]);
+                            session.SaveOrUpdate(user);
                     tx.Commit();
                 }
+                    });
             }
             else
             {

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+
+  <UsingTask TaskName="NUnit" AssemblyFile="$(teamcity_dotnet_nunitlauncher_msbuild_task)" Condition="$(TeamCity)" />
+
+  <!--settings-->
+  
+  <PropertyGroup>
+    <Configuration>Release</Configuration>
+	<Platform Condition="$(Platform) == ''">Any CPU</Platform>
+    <EnableTests>True</EnableTests>
+    <OutputDir>Artifacts</OutputDir>
+    <NUnitConsoleDir>.</NUnitConsoleDir>
+    <DebugSymbols Condition="$(Configuration) == 'Debug'">True</DebugSymbols>
+    <DebugSymbols Condition="$(Configuration) != 'Debug'">False</DebugSymbols>
+    <TeamCity Condition="'$(TEAMCITY_VERSION)' != ''">True</TeamCity>
+    <TeamCity Condition="'$(TEAMCITY_VERSION)' == ''">False</TeamCity>
+    <ProgramFiles32 Condition="Exists('$(PROGRAMFILES) (x86)')">$(PROGRAMFILES) (x86)</ProgramFiles32>
+    <ProgramFiles32 Condition="$(ProgramFiles32) == ''">$(PROGRAMFILES)</ProgramFiles32>
+	<MSBuildCommunityTasksPath>.</MSBuildCommunityTasksPath>
+  </PropertyGroup>
+
+  <!--settings end -->
+  
+  <ItemGroup>
+	<ProjectSpecificExcludes Include="*" Exclude="*" />
+  </ItemGroup>
+
+  <Target Name="Clean">
+    <RemoveDir Directories="$(OutputDir);" />
+    <RemoveDir Directories="$(SetupDir)\Setup;" />
+    <RemoveDir Directories="$(ProjectToPublish)\bin;$(ProjectToPublish)\obj" />
+    <MSBuild Projects="$(SolutionName).sln" Targets="Clean" Properties="Configuration=$(Configuration); Platform=$(Platform)" />
+  </Target>
+
+  
+  
+  <Target Name="Build" DependsOnTargets="Clean">
+    <MSBuild Projects="$(SolutionName).sln" Targets="Build" Properties="Configuration=$(Configuration); Platform=$(Platform); DebugSymbols=$(DebugSymbols);" />
+  </Target>
+
+
+
+  <Target Name="Test" DependsOnTargets="Build" Condition="$(EnableTests)">
+    <CreateItem Condition="$(Platform) == 'Any CPU'" Include="$(MSBuildProjectDirectory)\**\bin\$(Configuration)\*Test.dll; $(MSBuildProjectDirectory)\**\bin\$(Configuration)\*Tests.dll">
+      <Output TaskParameter="Include" ItemName="TestAssemblies" />
+    </CreateItem>
+    <CreateItem Condition="$(Platform) != 'Any CPU'" Include="$(MSBuildProjectDirectory)\**\bin\$(Platform)\$(Configuration)\*Test.dll; $(MSBuildProjectDirectory)\**\bin\$(Platform)\$(Configuration)\*Tests.dll">
+      <Output TaskParameter="Include" ItemName="TestAssemblies" />
+    </CreateItem>
+    <NUnit Assemblies="@(TestAssemblies)" ContinueOnError="false" Condition="$(TeamCity)" Platform="x86" />
+    <NUnit Assemblies="@(TestAssemblies)" ContinueOnError="false" Condition="!$(TeamCity)" ToolPath="$(NUnitConsoleDir)" OutputXmlFile="%(RelativeDir)\TestResult-%(Filename).xml" />
+    <Message Text="Tests ran successfully!" />
+  </Target>
+  
+
+
+  <Target Name="Zip" DependsOnTargets="Build; Test">
+    <MakeDir Directories="$(OutputDir)" />
+    <Time Format="yyyy-MM-dd-HH-mm">
+      <Output TaskParameter="FormattedTime" PropertyName="DateTime" />
+    </Time>
+    <CreateProperty Value="$(OutputDir)\$(SolutionName)-$(DateTime)-$(Configuration).zip">
+      <Output TaskParameter="Value" PropertyName="ZipFileName" />
+    </CreateProperty>
+    <CreateProperty Value="$(OutputDir)\$(DateTime)">
+      <Output TaskParameter="Value" PropertyName="TempDir" />
+    </CreateProperty>
+    <MakeDir Directories="$(TempDir)" />
+    <CreateItem Include="$(ProjectToPublish)\**\*;" Exclude="$(ProjectToPublish)\*.config; $(ProjectToPublish)\*.boo; **\.svn\**; **\.git\**; **\*.gitignore; **\*.orig; **\*.bak; **\*.hbm.xml; **\Logs\**; **\obj\**; **\Web References\**; **\Properties\**; **\*.cvsignore; **\*.user; **\*.csproj; **\*.cs; **\*.resx; @(ProjectSpecificExcludes)">
+      <Output TaskParameter="Include" ItemName="Files" />
+    </CreateItem>
+    <CreateItem Include="$(ProjectToPublish)\*.config; $(ProjectToPublish)\*.boo" Exclude="$(ProjectToPublish)\packages.config">
+      <Output TaskParameter="Include" ItemName="Configs" />
+    </CreateItem>
+    <Copy SourceFiles="@(Files)" DestinationFiles="@(Files->'$(TempDir)\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <Copy SourceFiles="@(Configs)" DestinationFiles="@(Configs->'$(TempDir)\%(RecursiveDir)%(Filename)%(Extension).template')" />
+    <CreateItem Include="$(TempDir)\**\*" >
+      <Output TaskParameter="Include" ItemName="PackageFiles" />
+    </CreateItem>
+    <Zip Files="@(PackageFiles)" ZipFileName="$(ZipFileName)" ZipLevel="9" Flatten="false" WorkingDirectory="$(TempDir)" />
+    <RemoveDir Directories="$(TempDir)"/>
+  </Target>
+
+
+  
+  <!-- Setup projects should be in a Setup configuration!!! -->
+  <Target Name="Setup" DependsOnTargets="Build; Test">
+    <CreateItem Include="$(MSBuildProjectDirectory)\**\*.vdproj">
+      <Output TaskParameter="Include" ItemName="SetupProjects" />
+    </CreateItem>  
+    <Exec Command='"$(ProgramFiles32)\Microsoft Visual Studio 8\Common7\IDE\devenv" "%(SetupProjects.Identity)" /Build Setup' ContinueOnError="false" />
+    <Copy SourceFiles="%(SetupProjects.FileName)\Setup\%(SetupProjects.FileName).msi" DestinationFolder="$(OutputDir)" />
+  </Target>
+  
+  
+  
+  <Target Name="Package" DependsOnTargets="Zip" />
+  
+  <Import Project="MSBuild.Community.Tasks.Targets" />
+</Project>

@@ -1,0 +1,29 @@
+﻿<div class="row">
+  <div class="large-12 columns">
+    <% if item.Id > 0: %>
+    <h1>Klant bewerken</h1>
+    <% else: %>
+    <h1>Nieuwe klant</h1>
+    <% end %>
+    <form action="/customer/<% if item.Slug: %>${?item.Slug}<% else: %>0<% end %>/save" method="POST" data-abide>
+      ${Form.HiddenField("item.Id")}
+      ${Form.HiddenField("item.Slug")}
+      <div class="row">
+        <div class="large-3 columns">Naam</div>
+        <div class="large-9 columns">
+          <input type="text" id="item_Name" name="item.Name" value="${?item.Name}" class="focus" required />
+          <small class="error">Geef een naam op</small>
+        </div>
+      </div>
+      <div class="row">
+        <div class="large-3 columns">Comments</div>
+        <div class="large-9 columns">
+          <textarea type="text" id="item_Comments" name="item.Comments" value="" class="focus" >${?item.Comments}</textarea>
+        </div>
+      </div>
+      <div class="row">
+        <div class="large-12 columns"><input type="submit" class="button" value="Opslaan"/></div>
+      </div>
+    </form>
+  </div>
+</div>

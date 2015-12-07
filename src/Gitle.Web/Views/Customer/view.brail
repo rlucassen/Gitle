@@ -1,0 +1,64 @@
+﻿<div class="row">
+  <div class="large-12 columns">
+    <h1>${customer.Name}</h1>
+
+    <span>Comments</span>
+    <div class="comments-container" data-url="/customer/${customer.Slug}/comments">
+      <div class="comments marked">${customer.Comments}</div>
+      <textarea name="comment">${customer.Comments}
+      </textarea>
+    </div>
+
+    <div class="row">
+      <div class="large-12 columns">
+        <h2>Contactpersonen</h2>
+        <table class="small-blocks" id="customers">
+          <thead>
+            <tr>
+              <th>Naam</th>
+              <th>Telefoonnummer</th>
+              <th>Emailadres</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% for contact in customer.AllContacts: %>
+            <tr>
+              <td class="name">
+                <a href="/user/${contact.Id}/view">${contact.FullName}</a>
+              </td>
+              <td class="phone">${contact.Phone}</td>
+              <td class="email">
+                <a href="mailto:${contact.EmailAddress}">${contact.EmailAddress}</a>
+              </td>
+            </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    
+    <div class="row">
+      <div class="large-12 columns">
+        <h2>Projecten</h2>
+        <table class="small-blocks" id="customers">
+          <thead>
+            <tr>
+              <th>Naam</th>
+              <th>Freckleproject</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% for project in customer.Projects: %>
+            <tr>
+              <td class="name"><a href="/project/${project.Slug}/view">${project.Name}</a></td>
+              <td class="phone">${project.FreckleName}</td>
+            </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
