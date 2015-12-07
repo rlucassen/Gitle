@@ -184,6 +184,7 @@ Application.prototype = {
 
     $('.time-parser').blur(function () {
       var value = $(this).val();
+      if (value === "" || value === "0") return;
       value = value.replace(/[A-Za-z$-]/g, "");
       value = value.replace(",", ".");
       value = parseFloat(value);
