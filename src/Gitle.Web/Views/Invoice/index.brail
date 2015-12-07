@@ -16,7 +16,7 @@
   </div>
   <div class="row">
     <div class="large-12 columns">
-      ${Form.CheckboxField("oldBookings")} Neem oudere boekingen mee die nog niet op een definitieve factuur staan
+      ${Form.CheckboxField("oldBookings", {"class": "inline"})} Neem oudere boekingen mee die nog niet op een definitieve factuur staan
     </div>
   </div>
   <div class="row">

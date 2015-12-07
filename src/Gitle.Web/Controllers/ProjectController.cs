@@ -50,7 +50,7 @@
             var issues = session.Query<Issue>().Where(x => x.Project == project).ToList();
             var doneTime = issues.Where(i => !i.IsOpen).Sum(i => i.TotalHours);
             var totalIssueTime = issues.Sum(i => i.TotalHours);
-            var donePercentage = doneTime * 100.0 / totalIssueTime;
+            var donePercentage = doneTime*100.0/totalIssueTime;
 
             PropertyBag.Add("doneTime", doneTime);
             PropertyBag.Add("donePercentage", donePercentage);
@@ -147,7 +147,7 @@
                 foreach (var issueId in issueIds.Select(int.Parse))
                 {
                     var issue = session.Query<Issue>().FirstOrDefault(x => x.Number == issueId && x.Project == project);
-                    if(!issue.Labels.Contains(realLabel)) issue.Labels.Add(realLabel);
+                    if (!issue.Labels.Contains(realLabel)) issue.Labels.Add(realLabel);
                     session.SaveOrUpdate(issue);
                 }
 
@@ -189,10 +189,17 @@
             {
                 session.SaveOrUpdate(item);
                 tx.Commit();
-    }
+            }
 
             RenderText(comment);
         }
 
+        [return: JSONReturnBinder]
+        public object Autocomplete(string term)
+        {
+            var projects = session.Query<Project>().Where(p => p.Name.Contains(term));
+            var suggestions = projects.Select(x => new { value = x.Id, label = x.Name }).ToList();
+            return suggestions;
+        }
     }
 }
