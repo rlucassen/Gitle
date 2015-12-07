@@ -756,6 +756,10 @@ table#issue-table {
   }
 }
 
+input[type=checkbox].inline {
+  display: inline;
+}
+
 @media only screen and (max-width: 64em) {
   .large-0.small-12 {
     width: 100% !important;

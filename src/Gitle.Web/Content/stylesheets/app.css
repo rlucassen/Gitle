@@ -546,6 +546,9 @@ body.admin table#issue-table th#issue-actions {
 table#issue-table th#issue-estimate, table#issue-table td.estimate {
   display: none; }
 
+input[type=checkbox].inline {
+  display: inline; }
+
 @media only screen and (max-width: 64em) {
   .large-0.small-12 {
     width: 100% !important;
