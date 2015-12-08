@@ -1,7 +1,6 @@
 ﻿namespace Gitle.Web.Controllers
 {
     using Model;
-    using Model.Helpers;
     using NHibernate;
 
     public class FilterPresetController : SecureController
@@ -12,16 +11,18 @@
         {
             session = sessionFactory.GetCurrentSession();
         }
-         public void New()
-         {
-             var filterPreset = BindObject<FilterPreset>("item");
-             filterPreset.User = CurrentUser;
-             using (var transaction = session.BeginTransaction())
-             {
-                 session.SaveOrUpdate(filterPreset);
-                 transaction.Commit();
-             }
-             RedirectToReferrer();
-         }
+
+        public void New(long projectId)
+        {
+            var filterPreset = BindObject<FilterPreset>("item");
+            filterPreset.User = CurrentUser;
+            filterPreset.Project = session.Get<Project>(projectId);
+            using (var transaction = session.BeginTransaction())
+            {
+                session.SaveOrUpdate(filterPreset);
+                transaction.Commit();
+            }
+            RedirectToReferrer();
+        }
     }
 }
