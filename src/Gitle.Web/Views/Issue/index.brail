@@ -26,7 +26,7 @@
                 </div>
                 <div class="large-2 small-5 columns">
                   <span class="button split postfix"><a href="#" class="submit">Filter</a> <span data-dropdown="drop"></span></span>
-                  <ul id="drop" class="f-dropdown" data-dropdown-content>
+                  <ul id="drop" class="f-dropdown medium" data-dropdown-content>
                     <% for filterPreset in filterPresets: %>
                     <li><a class="filter-preset" data-filter="${filterPreset.FilterString}" data-filter-clear href="#">${filterPreset.Name}</a></li>
                     <% end %>
