@@ -49,6 +49,8 @@ using Castle.MonoRail.Framework;
                             {
                                 {"CreatedBy", "Aanmelder"}, 
                                 {"CreatedAt", "Aanmaakdatum"},
+                                {"PickedUpBy", "Behandelaar"},
+                                {"PickedUpAt", "Behandeldatum"},
                                 {"Number", "Nummer"},
                                 {"Name", "Naam"},
                                 {"TotalHours", "Inspanning"},
@@ -62,10 +64,14 @@ using Castle.MonoRail.Framework;
             IList<string> involveds = new List<string>();
             IList<string> openedbys = new List<string>();
             IList<string> closedbys = new List<string>();
+            IList<string> pickupbys = new List<string>();
+            IList<User> selectedPickupbys = new List<User>();
             IDictionary<string, bool> querySorts = new Dictionary<string, bool>();
             IDictionary<string, bool> linqSorts = new Dictionary<string, bool>();
             IDictionary<string, bool> selectedSorts = new Dictionary<string, bool>();
             var searchQuery = query;
+            bool pickupany = false;
+            bool pickupnone = false;
 
             foreach (Match match in matches)
             {
@@ -94,6 +100,19 @@ using Castle.MonoRail.Framework;
                         break;
                     case "closed":
                         closedbys.Add(value == "me" ? CurrentUser.Name : value);
+                        break;
+                    case "pickup":
+                        if (value == "any")
+                        {
+                            pickupany = true;
+                            break;
+                        }
+                        if (value == "none")
+                        {
+                            pickupnone = true;
+                            break;
+                        }
+                        pickupbys.Add(value == "me" ? CurrentUser.Name : value);
                         break;
                     case "sort":
                         selectedSorts.Add(value, false);
@@ -146,21 +165,39 @@ using Castle.MonoRail.Framework;
             foreach (var openedby in openedbys)
             {
                 itemsQuery = itemsQuery.Where(
-                    x =>
-                    x.ChangeStates.Any(
-                        a =>
-                        a.IssueState == IssueState.Open && a.User != null &&
-                        (a.User.Name == openedby || a.User.FullName == openedby)));
+                    x => x.ChangeStates.Any(
+                        a => a.IssueState == IssueState.Open && a.User != null &&
+                             (a.User.Name == openedby || a.User.FullName == openedby)));
             }
 
             foreach (var closedby in closedbys)
             {
                 itemsQuery = itemsQuery.Where(
-                    x =>
-                    x.ChangeStates.Any(
-                        a =>
-                        a.IssueState == IssueState.Closed && a.User != null &&
-                        (a.User.Name == closedby || a.User.FullName == closedby)));
+                    x => x.ChangeStates.Any(
+                        a => a.IssueState == IssueState.Closed && a.User != null &&
+                             (a.User.Name == closedby || a.User.FullName == closedby)));
+            }
+
+            foreach (var pickupby in pickupbys)
+            {
+                selectedPickupbys.Add(session.Query<User>().FirstOrDefault(x => x.Name == pickupby || x.FullName == pickupby));
+            }
+
+            if (pickupany)
+            {
+                itemsQuery = itemsQuery.Where(x => x.Pickups.Any());
+            }
+
+            if (pickupnone)
+            {
+                itemsQuery = itemsQuery.Where(x => x.Pickups.Count == 0);
+            }
+
+            if (pickupbys.Any())
+            {
+                itemsQuery = itemsQuery.Where(
+                    x => x.Pickups.Any(
+                        a => a.User != null && pickupbys.Contains(a.User.Name) || pickupbys.Contains(a.User.FullName)));
             }
 
             if (querySorts.Count > 0)
@@ -196,8 +233,8 @@ using Castle.MonoRail.Framework;
                 items = items.Where(x => states.Contains(x.State)).ToList();
             }
 
-            var filterPresets = session.Query<FilterPreset>().Where(x => x.User == CurrentUser).ToList();
-            var globalFilterPresets = session.Query<FilterPreset>().Where(x => x.User == null).ToList();
+            var filterPresets = session.Query<FilterPreset>().Where(x => x.User == CurrentUser && (x.Project == null || x.Project.Id == project.Id)).ToList();
+            var globalFilterPresets = session.Query<FilterPreset>().Where(x => x.User == null && (x.Project == null || x.Project.Id == project.Id)).ToList();
 
             PropertyBag.Add("items", items.ToList());
             PropertyBag.Add("project", project);
@@ -211,6 +248,10 @@ using Castle.MonoRail.Framework;
             PropertyBag.Add("globalFilterPresets", globalFilterPresets);
             PropertyBag.Add("selectedSorts", selectedSorts);
             PropertyBag.Add("allSorts", allSorts);
+            PropertyBag.Add("allAdmins", session.Query<User>().Where(x => x.IsAdmin).ToList());
+            PropertyBag.Add("selectedPickupbys", selectedPickupbys);
+            PropertyBag.Add("pickupany", pickupany);
+            PropertyBag.Add("pickupnone", pickupnone);
         }
 
         [MustHaveProject]

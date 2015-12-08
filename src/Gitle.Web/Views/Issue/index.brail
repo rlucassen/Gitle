@@ -96,8 +96,7 @@
               <% for sort in allSorts: %>
               <% isSorted = selectedSorts.ContainsKey(sort.Key) %>
               <li>
-                <a href="#" data-filter="sort"
-                  <% if not isSorted or (isSorted and not selectedSorts[sort.Key]): %>desc<% end %>:${sort.Key}" data-filter-opposite="sort<% if isSorted and selectedSorts[sort.Key]: %>desc<% end %>:${sort.Key}">
+                <a href="#" data-filter="sort<% if not isSorted or (isSorted and not selectedSorts[sort.Key]): %>desc<% end %>:${sort.Key}" data-filter-opposite="sort<% if isSorted and selectedSorts[sort.Key]: %>desc<% end %>:${sort.Key}">
                   <% if isSorted and selectedSorts[sort.Key]: %>
                   <i class="fa fa-chevron-down"></i>
                   <% end %>
@@ -107,8 +106,7 @@
               ${sort.Value}
                 </a>
                 <% if isSorted: %>
-                <a href="#" class="remove-filter" data-filter="sort"
-                  <% if not isSorted or (isSorted and selectedSorts[sort.Key]): %>desc<% end %>:${sort.Key}">
+                <a href="#" class="remove-filter" data-filter="sort<% if not isSorted or (isSorted and selectedSorts[sort.Key]): %>desc<% end %>:${sort.Key}">
                   <i class="fa fa-close red"></i>
                 </a>
                 <% end %>
@@ -116,6 +114,42 @@
               <% end %>
             </ul>
           </div>
+          <% if CurrentUser.IsAdmin: %>
+          <div class="large-0 small-12 columns">
+            <button href="#" data-dropdown="pickupbys" aria-controls="pickupbys" aria-expanded="false" class="button tiny dropdown no-margin">Behandelaar:</button>
+            <ul id="pickupbys" data-dropdown-content="" class="f-dropdown" aria-hidden="true" tabindex="-1">
+              <li>
+                <a href="#" data-filter="pickup:any" data-filter-opposite="pickup:none">
+                  <% if pickupany: %><i class="fa fa-check"></i><% end %>
+                  <strong>Opgepakt</strong>
+                </a>
+              </li>
+              <li>
+                <a href="#" data-filter="pickup:none" data-filter-opposite="pickup:any">
+                  <% if pickupnone: %><i class="fa fa-check"></i><% end %>
+                  <strong>Niet opgepakt</strong>
+                </a>
+              </li>
+              <li class="divider"></li>
+              <% for admin in allAdmins: %>
+              <% isSelected = selectedPickupbys.Contains(admin) %>
+              <li>
+                <a href="#" data-filter="pickup:${admin.Name}">
+                  <% if isSelected: %><i class="fa fa-check"></i><% end %>
+                  ${admin.FullName}
+                </a>
+                <% if isSelected: %>
+                <a href="#" class="remove-filter" data-filter="pickup:${admin.Name}">
+                  <i class="fa fa-close red"></i>
+                </a>
+                <% end %>
+              </li>
+              <% end %>
+            </ul>
+          </div>
+        </div>
+        <div class="row">
+          <% end %>
           <div class="large-0 small-12 columns">
             <div class="row" id="group-actions">
               <input type="hidden" name="issues" />
@@ -123,7 +157,7 @@
                 <label>Geselecteerde taken:</label>
               </div>
               <div class="large-0 small-12 columns">
-                <button href="#" data-dropdown="addLabels" aria-controls="addLabels" aria-expanded="false" class="button tiny dropdown success no-margin">Label toevoegen</button>
+                <button href="#" data-dropdown="addLabels" aria-controls="addLabels" aria-expanded="false" class="button tiny dropdown success">Label toevoegen</button>
                 <ul id="addLabels" data-dropdown-content class="f-dropdown" aria-hidden="true" tabindex="-1">
                   <% for label in customerLabels: %>
                   <li>
@@ -169,6 +203,14 @@
       </div>
       <div class="small-9 columns">
         <input type="text" id="item_Name" name="item.Name"/>
+      </div>
+    </div>
+    <div class="row">
+      <div class="small-3 columns">
+        <label for="">Project</label>
+      </div>
+      <div class="small-9 columns">
+        <input type="checkbox" name="projectId" value="${project.Id}"> Alleen huidige project
       </div>
     </div>
     <div class="row">

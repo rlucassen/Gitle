@@ -55,6 +55,10 @@
     <Content Include="Content\javascript\vendor\date.js" />
     <Content Include="Content\javascript\vendor\foundation.datepicker.js" />
     <Content Include="Content\javascript\vendor\jquery-ui-autocomplete.min.js" />
+    <Content Include="Content\stylesheets\vendor\bundle.css" />
+    <Content Include="Content\stylesheets\vendor\bundle.min.css">
+      <DependentUpon>bundle.css</DependentUpon>
+    </Content>
     <Content Include="Content\stylesheets\vendor\fonts\fontawesome-webfont.svg" />
     <Content Include="Content\images\favicon.ico" />
     <Content Include="Content\images\logo.png" />

@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 ﻿<h1>Nieuwe factuur maken</h1>
+=======
+﻿<h1>Nieuwe bijlage maken</h1>
+>>>>>>> master
 <form action="create" method="POST">
   <div class="row">
     <div class="large-12 columns">
@@ -26,7 +30,11 @@
   </div>
 </form>
 
+<<<<<<< HEAD
 <h1>Facturen</h1>
+=======
+<h1>Bijlages</h1>
+>>>>>>> master
 <div class="invoices">
   <% for invoice in invoices: %>
   <div class="invoice">

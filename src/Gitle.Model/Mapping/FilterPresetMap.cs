@@ -7,6 +7,7 @@
              Map(x => x.Name);
              Map(x => x.FilterString);
              References(x => x.User);
+             References(x => x.Project);
          }
     }
 }
