@@ -20,7 +20,7 @@ namespace Gitle.Web.Controllers
         public void Index()
         {
             var bookings = session.Query<Booking>()
-                .Where(x => x.User == CurrentUser && x.Date > DateTime.Today.AddDays(-14))
+                .Where(x => x.IsActive && x.User == CurrentUser && x.Date > DateTime.Today.AddDays(-14))
                 .OrderByDescending(x => x.Date)
                 .GroupBy(x => x.Date.Date)
                 .ToDictionary(g => new { date = g.Key, total = g.ToList().Sum(x => x.Minutes) }, g => g.ToList());
@@ -41,6 +41,22 @@ namespace Gitle.Web.Controllers
             {
                 session.SaveOrUpdate(booking);
                 transaction.Commit();
+            }
+            RedirectToReferrer();
+        }
+
+        public void Delete(int id)
+        {
+            var booking = session.Query<Booking>().FirstOrDefault(x => x.IsActive && x.Id == id && !x.Invoices.Any());
+            if (booking != null)
+            {
+                booking.Deactivate();
+
+                using (var transaction = session.BeginTransaction())
+                {
+                    session.SaveOrUpdate(booking);
+                    transaction.Commit();
+                }
             }
             RedirectToReferrer();
         }

@@ -78,7 +78,7 @@
         </div>
       </div>
       <% for booking in datebookings: %>
-      <div class="row">
+      <div class="row booking-row">
         <div class="large-1 columns">
           <span class="booking-minutes">${booking.Time}</span>
         </div>
@@ -90,12 +90,18 @@
           <div class="booking-issue" title="#${booking.Issue.Number} - ${booking.Issue.Name}">#${booking.Issue.Number}</div>
           <% end %>
         </div>
-        <div class="large-7 columns">
+        <div class="large-6 columns end">
           <span class="booking-comment">${booking.Comment}</span>
           <% for invoice in booking.Invoices: %>
           <span class="label round right <% if not invoice.IsDefinitive: %>secondary<% end %>" title="${invoice.Title}">${invoice.Number}</span>
           <% end %>
         </div>
+        <% if booking.Invoices.Count == 0: %>
+        <div class="large-1 columns no-padding booking-buttons">
+          <a href="#" class="button radius supertiny no-margin">Edit <i class="fa fa-pencil-square-o"></i></a>
+          <a href="/booking/${booking.Id}/delete" class="button radius alert supertiny no-margin">Delete <i class="fa fa-times"></i></a>
+        </div>
+        <% end %>
       </div>
       <% end %>
       <div class="row totalrow">
@@ -112,6 +118,16 @@
 </div>
 <script>
   $(function () {
+    $('.booking-buttons').hide();
+
+    $('.booking-row').hover(function () {
+      $(this).addClass('booking-highlight');
+      $(this).find('.booking-buttons').fadeIn(100);
+    }, function () {
+      $(this).removeClass('booking-highlight');
+      $(this).find('.booking-buttons').fadeOut(100);
+    });
+
     $('#project-chooser').autocomplete({
       autoFocus: true,
       source: '/project/autocomplete',
