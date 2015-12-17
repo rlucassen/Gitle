@@ -710,3 +710,11 @@ input[type=checkbox].inline {
 .booking-highlight {
   background-color: #E6E6E6; }
 
+.booking-row-edit {
+  background-color: #E8B087;
+  padding-left: 0.5rem; }
+
+.booking-edit-field {
+  height: 1rem !important;
+  margin: 0.15rem 0 0 0 !important; }
+

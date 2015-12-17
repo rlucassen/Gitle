@@ -30,7 +30,7 @@ namespace Gitle.Web.Controllers
         public void Save()
         {
             var booking = BindObject<Booking>("booking");
-            
+
             booking.User = CurrentUser;
             if (booking.Issue.Id == 0)
             {
@@ -60,5 +60,21 @@ namespace Gitle.Web.Controllers
             }
             RedirectToReferrer();
         }
+
+        public void Edit(int id)
+        {
+            var booking = session.Query<Booking>().FirstOrDefault(x => x.IsActive && x.Id == id && x.User == CurrentUser); //TODO: admin moet ook kunnen ophalen = andere user
+            if (booking == null)
+            {
+                RedirectToReferrer();
+            }
+            else
+            {
+                PropertyBag.Add("booking", booking);
+                RenderView("_row");
+                CancelLayout();
+            }
+        }
+
     }
 }

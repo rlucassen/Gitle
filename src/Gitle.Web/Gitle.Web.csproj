@@ -270,6 +270,7 @@
     <Content Include="Views\Booking\index.brail" />
     <Content Include="Views\Invoice\index.brail" />
     <Content Include="Views\Invoice\create.brail" />
+    <Content Include="Views\Booking\_row.brail" />
     <None Include="Views\Issue\index.brail" />
     <None Include="Views\Issue\exportimport.brail" />
     <None Include="Views\Issue\quickview.brail" />

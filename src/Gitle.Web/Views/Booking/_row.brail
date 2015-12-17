@@ -1,0 +1,20 @@
+﻿<div class="row booking-row-edit">
+  <div class="large-1 columns no-padding">
+    <input type="text" class="booking-minutes-edit booking-edit-field" value="${booking.Time}">
+  </div>
+  <div class="large-3 columns no-padding">
+    <input type="text" class="booking-project-edit booking-edit-field" value="${booking.Project.Name}">
+  </div>
+  <div class="large-1 columns no-padding">
+    <% if booking.Issue: %>
+    <input type="text" class="booking-issue-edit booking-edit-field" title="#${booking.Issue.Number} - ${booking.Issue.Name}" value="#${booking.Issue.Number}">
+    <% end %>
+  </div>
+  <div class="large-6 columns no-padding end">
+    <input type="text" class="booking-comment-edit booking-edit-field" value="${booking.Comment}">
+  </div>
+  <div class="large-1 columns no-padding">
+    <a href="#" class="button success radius supertiny no-margin booking-edit-save">Edit <i class="fa fa-check"></i></a>
+    <a href="#" class="button secondary radius supertiny no-margin booking-edit-cancel">Cancel <i class="fa fa-times"></i></a>
+  </div>
+</div>
