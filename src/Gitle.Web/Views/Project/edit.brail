@@ -17,9 +17,9 @@
         </div>
       </div>
       <div class="row">
-        <div class="large-3 columns">Klant</div>
+        <div class="large-3 columns">Applicatie</div>
         <div class="large-9 columns">
-          ${Form.Select("customerId", customers, {"class": "chosen-select", "value": "Id", "text": "Name", "firstoption": "Kies een klant"})}
+          ${Form.Select("applicationId", applications, {"class": "chosen-select", "value": "Id", "text": "Name", "firstoption": "Kies een applicatie"})}
         </div>
       </div>
       <div class="row">

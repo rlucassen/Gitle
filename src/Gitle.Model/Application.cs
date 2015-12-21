@@ -1,0 +1,12 @@
+﻿namespace Gitle.Model
+{
+    using System.Collections.Generic;
+
+    public class Application : ModelBase
+    {
+        public virtual string Name { get; set; }
+        public virtual  string Slug { get; set; }
+        public virtual  IList<Project> Project { get; set; }
+        public virtual  Customer Customer { get; set; }
+    }
+}

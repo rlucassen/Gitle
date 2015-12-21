@@ -44,14 +44,13 @@
           <thead>
             <tr>
               <th>Naam</th>
-              <th>Freckleproject</th>
             </tr>
           </thead>
           <tbody>
-            <% for project in customer.Projects: %>
+            <% for app in applications: %>
             <tr>
-              <td class="name"><a href="/project/${project.Slug}/view">${project.Name}</a></td>
-              <td class="phone">${project.FreckleName}</td>
+              <td class="name"><a href="/application/${app.Slug}/view">${app.Name}</a></td>
+             
             </tr>
             <% end %>
           </tbody>

@@ -51,6 +51,10 @@
           <li class="divider"></li>
           <li><a href="/customers">Klanten</a></li>
           <% end %>
+          <% if CurrentUser.IsAdmin: %>
+          <li class="divider"></li>
+          <li><a href="/applications">Applicatie</a></li>
+          <% end %>
           <% if CurrentUser.IsAdmin or CurrentUser.Projects.Count > 1: %>
           <li class="divider"></li>
           <li><a href="/projects">Projecten</a></li>

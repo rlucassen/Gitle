@@ -1,0 +1,26 @@
+﻿<div class="row">
+  <a href="/application/new" class="button tiny radius">Nieuwe applicatie</a>
+</div>
+
+<table>
+  <thead>
+    <tr>
+      <th>Naam</th>
+      <th>Klant</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% for item in item: %>
+    <tr>
+      <td class="name">${?item.Name}</td>
+      <td>${?item.Customer.Name}</td>
+
+      <td>
+        <a class="button tiny secondary no-margin" href="/application/${item.Slug}/view">Details</a>
+        <a class="button tiny success no-margin" href="/application/${item.Slug}/edit">Bewerk</a>
+      </td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>

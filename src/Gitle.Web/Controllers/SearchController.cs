@@ -30,6 +30,8 @@
             var projects = session.Query<Project>().Where(x => x.Name.Contains(query));
             suggestions.AddRange(projects.Select(x => new Suggestion($"Project: {x.Name}", $"/project/{x.Slug}/view")));
 
+            var applications = session.Query<Application>().Where(x => x.Name.Contains(query));
+            suggestions.AddRange(applications.Select(x => new Suggestion($"Application: {x.Name}", $"/application/{x.Slug}/view")));
 
             return new {query = query, suggestions = suggestions };
         }

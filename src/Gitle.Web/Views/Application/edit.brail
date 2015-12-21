@@ -1,0 +1,20 @@
+﻿<form action="/application/${?item.Id}/save" method="POST" data-abide>
+  ${Form.HiddenField("?item.Id")}
+  ${Form.HiddenField("item.Slug")}
+  <div class="row">
+    <div class="large-3 columns">Naam</div>
+    <div class="large-9 columns">
+      <input type="text" name="item.Name" value="${?item.Name}" required />
+      <small class="error">Geef een naam op</small>
+    </div>
+  </div>
+  <div class="row">
+    <div class="large-3 columns">Klant</div>
+    <div class="large-9 columns">
+      ${Form.Select("customerId", customers, {"class": "chosen-select", "value": "Id", "text": "Name", "firstoption": "Kies een klant"})}
+    </div>
+  </div>
+  <div class="row">
+    <div class="large-12 columns"><input type="submit" class="button" value="Opslaan" /></div>
+  </div>
+  </form>

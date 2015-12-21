@@ -1,0 +1,48 @@
+﻿<div class="row">
+  <div class="large-12 columns">
+    <h1>${?item.Name}</h1>
+    <div class="row">
+      <div class="large-12 columns">
+        <h2>Projecten</h2>
+        <table class="small-blocks" id="customers">
+          <thead>
+            <tr>
+              <th>Naam</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% for project in projects: %>
+            <tr>
+              <td class="name">
+                <a href="/project/${project.Slug}/view">${?project.Name}</a>
+              </td>
+            </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="large-12 columns">
+        <h2>Klant</h2>
+        <table class="small-blocks" id="customers">
+          <thead>
+            <tr>
+              <th>Naam</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% for ding in item: %>
+            <tr>
+              <td class="name"><a href="/Customer/$ding.Customer.Slug}/view">${?item.Customer.Name}</a></td>
+            </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+

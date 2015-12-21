@@ -65,6 +65,7 @@
         {
             PropertyBag.Add("freckleProjects", projectClient.List().Where(x => x.Enabled));
             PropertyBag.Add("customers", session.Query<Customer>().Where(x => x.IsActive).ToList());
+            PropertyBag.Add("applications", session.Query<Application>().Where(x => x.IsActive));
             PropertyBag.Add("item", new Project());
             RenderView("edit");
         }
@@ -75,6 +76,7 @@
             var project = session.Query<Project>().FirstOrDefault(x => x.IsActive && x.Slug == projectSlug);
             PropertyBag.Add("freckleProjects", projectClient.List().Where(x => x.Enabled));
             PropertyBag.Add("customers", session.Query<Customer>().Where(x => x.IsActive).ToList());
+            PropertyBag.Add("applications", session.Query<Application>().Where(x => x.IsActive));
             PropertyBag.Add("item", project);
             PropertyBag.Add("customerId", project.Customer?.Id);
         }
@@ -93,7 +95,7 @@
         }
 
         [Admin]
-        public void Save(string projectSlug, long customerId)
+        public void Save(string projectSlug, long applicationId)
         {
             var item = session.Query<Project>().FirstOrDefault(x => x.IsActive && x.Slug == projectSlug);
             if (item != null)
@@ -105,8 +107,9 @@
                 item = BindObject<Project>("item");
             }
 
-            item.Customer = session.Get<Customer>(customerId);
-
+            var application = session.Get<Application>(applicationId);
+            application.Project.Add(item);
+            session.SaveOrUpdate(application);
             var labels = BindObject<Label[]>("label");
 
             var labelsToDelete = item.Labels.Where(l => !labels.Select(x => x.Id).Contains(l.Id)).ToList();
