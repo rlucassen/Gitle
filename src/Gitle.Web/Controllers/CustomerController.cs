@@ -30,7 +30,7 @@
         public void View(string customerSlug)
         {
             var customer = session.Query<Customer>().FirstOrDefault(x => x.IsActive && x.Slug == customerSlug);
-            var applications = session.Query<Application>().Where(x => x.Customer == customer).OrderBy(x => x.Name);
+            var applications = session.Query<Application>().Where(x => x.Customer == customer && x.IsActive).OrderBy(x => x.Name);
             PropertyBag.Add("applications", applications);
             PropertyBag.Add("customer", customer);
 

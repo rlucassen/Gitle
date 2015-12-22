@@ -44,7 +44,6 @@
         public void View(string applicationSlug)
         {
             var application = session.Query<Application>().FirstOrDefault(x => x.Slug == applicationSlug);
-           
             PropertyBag.Add("item", application);
         }
 
@@ -72,6 +71,18 @@
             }
 
             RedirectToUrl("/application/index");
+        }
+
+        public void Delete(string applicationSlug)
+        {
+            var application = session.Query<Application>().FirstOrDefault(x => x.IsActive && x.Slug == applicationSlug);
+            application.Deactivate();
+            using (var tx = session.BeginTransaction())
+            {
+                session.SaveOrUpdate(application);
+                tx.Commit();
+            }
+            RedirectToReferrer();
         }
     }
 }
