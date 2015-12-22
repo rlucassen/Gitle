@@ -1,20 +1,24 @@
-﻿<div class="row booking-row-edit">
-  <div class="large-1 columns no-padding">
-    <input type="text" class="booking-minutes-edit booking-edit-field" value="${booking.Time}">
+﻿<form id="booking" action="save" method="POST">
+  <input type="hidden" name="id" value="${booking.Id}" />
+  <div class="row booking-row-edit">
+    <div class="large-1 columns no-padding">
+      <input type="hidden" name="booking.Minutes" class="booking_Minutes" />
+      <input type="text" class="booking-minutes-edit booking-edit-field booking-parser" value="${booking.Time}">
+    </div>
+    <div class="large-3 columns no-padding">
+      <input type="hidden" name="projectId" class="booking_Project_Id" />
+      <input type="text" class="booking-project-edit booking-edit-field project-chooser" value="${booking.Project.Name}">
+    </div>
+    <div class="large-1 columns no-padding">
+      <input type="hidden" name="issueId" class="booking_Issue_Id" />
+      <input type="text" class="booking-issue-edit booking-edit-field issue-chooser" title="#${?booking.Issue.Number} - ${?booking.Issue.Name}" value="#${?booking.Issue.Number}">
+    </div>
+    <div class="large-6 columns no-padding end">
+      <input type="text" class="booking-comment-edit booking-edit-field booking_Comment" value="${booking.Comment}">
+    </div>
+    <div class="large-1 columns no-padding">
+      <a href="#" class="button success radius supertiny no-margin booking-edit-save" onclick="$(this).parents('form').submit()">Edit <i class="fa fa-check"></i></a>
+      <a href="#" class="button secondary radius supertiny no-margin booking-edit-cancel">Cancel <i class="fa fa-times"></i></a>
+    </div>
   </div>
-  <div class="large-3 columns no-padding">
-    <input type="text" class="booking-project-edit booking-edit-field" value="${booking.Project.Name}">
-  </div>
-  <div class="large-1 columns no-padding">
-    <% if booking.Issue: %>
-    <input type="text" class="booking-issue-edit booking-edit-field" title="#${booking.Issue.Number} - ${booking.Issue.Name}" value="#${booking.Issue.Number}">
-    <% end %>
-  </div>
-  <div class="large-6 columns no-padding end">
-    <input type="text" class="booking-comment-edit booking-edit-field" value="${booking.Comment}">
-  </div>
-  <div class="large-1 columns no-padding">
-    <a href="#" class="button success radius supertiny no-margin booking-edit-save">Edit <i class="fa fa-check"></i></a>
-    <a href="#" class="button secondary radius supertiny no-margin booking-edit-cancel">Cancel <i class="fa fa-times"></i></a>
-  </div>
-</div>
+</form>
