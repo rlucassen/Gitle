@@ -147,9 +147,13 @@
         },
         url: '/booking/edit',
         success: function (data) {
-          row.find('.booking-row-content').hide();
-          row.prepend(data);
-          addEditListeners();
+          row.find('.booking-row-content').fadeOut(100, function () {
+            row.prepend(data);
+            row.find('.booking-row-edit').hide();
+            row.find('.booking-row-edit').fadeIn(100);
+            addEditListeners();
+          });
+
         }
       });
     });
@@ -170,39 +174,27 @@
     };
 
     $('#project-chooser').autocomplete({
-      autoFocus: true,
-      source: '/project/autocomplete',
-      select: function (event, ui) {
-        event.preventDefault();
-        $('#booking_Project_Id').val(ui.item.value);
-        $('#project-chooser').val(ui.item.label);
-        $('#issue-chooser').focus();
+      serviceUrl: '/project/autocomplete',
+      autoSelectFirst: true,
+      onSelect: function (suggestion) {
+        $('#booking_Project_Id').val(suggestion.data);
+        $('#project-chooser').val(suggestion.value);
+        $('#issue-chooser').val('');
+        $('#booking_Issue_Id').val('');
       }
     });
 
     $('#issue-chooser').autocomplete({
-      autoFocus: true,
-      source: function (request, response) {
-        var projectId = $('#booking_Project_Id').val();
-        if (projectId) {
-          $.ajax({
-            method: 'GET',
-            data: {
-              projectId: projectId,
-              query: request.term
-            },
-            url: '/issue/autocomplete',
-            success: function (data) {
-              response(data);
-            }
-          });
-        }
+      serviceUrl: '/issue/autocomplete',
+      width: $('#project-chooser').width(),
+      onSearchStart: function () {
+        $(this).autocomplete('setOptions', { params: { projectId: $('#booking_Project_Id').val() } });
       },
-      select: function (event, ui) {
-        event.preventDefault();
-        $('#booking_Issue_Id').val(ui.item.value);
-        $('#issue-chooser').val(ui.item.label);
-        $('#booking_Comment').focus();
+      noCache: true,
+      autoSelectFirst: true,
+      onSelect: function (suggestion) {
+        $('#booking_Issue_Id').val(suggestion.data);
+        $('#issue-chooser').val(suggestion.value);
       }
     });
 

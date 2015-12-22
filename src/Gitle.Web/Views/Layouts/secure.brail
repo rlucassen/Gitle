@@ -33,7 +33,6 @@
     <script src="/Content/javascript/vendor/jquery.autocomplete.js"> </script>
 	<script src="/Content/javascript/vendor/jquery.cookie.js"> </script>
     <script src="/Content/javascript/vendor/chosen.jquery.min.js"> </script>
-    <script src="/Content/javascript/vendor/jquery-ui-autocomplete.min.js"> </script>
     <script src="/Content/javascript/vendor/foundation.datepicker.js"> </script>
     <script src="/Content/javascript/vendor/date.js"> </script>
   </head>

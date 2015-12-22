@@ -198,11 +198,12 @@
         }
 
         [return: JSONReturnBinder]
-        public object Autocomplete(string term)
+        public object Autocomplete(string query)
         {
-            var projects = session.Query<Project>().Where(p => p.Name.Contains(term));
-            var suggestions = projects.Select(x => new { value = x.Id, label = x.Name }).ToList();
-            return suggestions;
+            var suggestions = new List<Suggestion>();
+            var projects = session.Query<Project>().Where(p => p.Name.Contains(query));
+            suggestions.AddRange(projects.Select(x => new Suggestion(x.Name, x.Id.ToString())));
+            return new { query = query, suggestions = suggestions };
         }
     }
 }
