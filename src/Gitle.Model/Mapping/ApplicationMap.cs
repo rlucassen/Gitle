@@ -7,7 +7,7 @@
             Map(x => x.Name);
             Map(x => x.Slug);
             References(x => x.Customer);
-            HasMany<Project>(x => x.Project);
+            HasMany<Project>(x => x.Projects);
         }
     }
 }

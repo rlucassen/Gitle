@@ -1,10 +1,12 @@
-﻿<form action="/application/${?item.Id}/save" method="POST" data-abide>
+﻿<h1>Nieuwe applicatie</h1>
+<br />
+<form action="/application/${?item.Slug}/save" method="POST" data-abide>
   ${Form.HiddenField("?item.Id")}
   ${Form.HiddenField("item.Slug")}
   <div class="row">
     <div class="large-3 columns">Naam</div>
     <div class="large-9 columns">
-      <input type="text" name="item.Name" value="${?item.Name}" required />
+      <input type="text" name="item.Name" id="item_Name" value="${?item.Name}" required />
       <small class="error">Geef een naam op</small>
     </div>
   </div>
