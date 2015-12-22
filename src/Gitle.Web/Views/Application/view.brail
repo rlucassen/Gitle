@@ -11,7 +11,7 @@
             </tr>
           </thead>
           <tbody>
-            <% for project in projects: %>
+            <% for project in item.Projects: %>
             <tr>
               <td class="name">
                 <a href="/project/${project.Slug}/view">${?project.Name}</a>
@@ -33,9 +33,9 @@
             </tr>
           </thead>
           <tbody>
-            <% for ding in item: %>
+            <% if item.Customer != 0: %>
             <tr>
-              <td class="name"><a href="/Customer/$ding.Customer.Slug}/view">${?item.Customer.Name}</a></td>
+              <td class="name"><a href="/Customer/${item.Customer.Slug}/view">${?item.Customer.Name}</a></td>
             </tr>
             <% end %>
           </tbody>

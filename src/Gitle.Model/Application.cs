@@ -5,8 +5,8 @@
     public class Application : ModelBase
     {
         public virtual string Name { get; set; }
-        public virtual  string Slug { get; set; }
-        public virtual  IList<Project> Project { get; set; }
-        public virtual  Customer Customer { get; set; }
+        public virtual string Slug { get; set; }
+        public virtual IList<Project> Projects { get; set; }
+        public virtual Customer Customer { get; set; }
     }
 }

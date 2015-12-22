@@ -108,7 +108,7 @@
             }
 
             var application = session.Get<Application>(applicationId);
-            application.Project.Add(item);
+            application.Projects.Add(item);
             session.SaveOrUpdate(application);
             var labels = BindObject<Label[]>("label");
 

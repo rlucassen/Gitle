@@ -44,11 +44,7 @@
         public void View(string applicationSlug)
         {
             var application = session.Query<Application>().FirstOrDefault(x => x.Slug == applicationSlug);
-            var projects = application.Project;
             PropertyBag.Add("item", application);
-            PropertyBag.Add("projects", projects);
-
-
         }
 
         public void Save(long applicationId, long customerId)

@@ -133,7 +133,7 @@
             RoutingModuleEx.Engine.Add(new PatternRoute("/application/<action>")
                                            .DefaultForController().Is<ApplicationController>()
                                            .DefaultForAction().Is("index"));
-            RoutingModuleEx.Engine.Add(new PatternRoute("/application/<applicationSlugS>/<action>")
+            RoutingModuleEx.Engine.Add(new PatternRoute("/application/<applicationSlug>/<action>")
                                            .DefaultForController().Is<ApplicationController>()
                                            .DefaultForAction().Is("index"));
 
