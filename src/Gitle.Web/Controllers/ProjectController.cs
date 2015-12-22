@@ -1,5 +1,6 @@
 ﻿namespace Gitle.Web.Controllers
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using Castle.MonoRail.Framework;
@@ -80,6 +81,7 @@
             PropertyBag.Add("freckleProjects", projectClient.List().Where(x => x.Enabled));
             PropertyBag.Add("customers", session.Query<Customer>().Where(x => x.IsActive).ToList());
             PropertyBag.Add("applications", session.Query<Application>().Where(x => x.IsActive));
+            PropertyBag.Add("applicationId", session.Query<Application>().Where(x => x.Projects.Contains(project)));
             PropertyBag.Add("item", project);
             PropertyBag.Add("customerId", project.Customer?.Id);
         }

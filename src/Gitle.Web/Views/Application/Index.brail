@@ -19,6 +19,7 @@
       <td>
         <a class="button tiny secondary no-margin" href="/application/${item.Slug}/view">Details</a>
         <a class="button tiny success no-margin" href="/application/${item.Slug}/edit">Bewerk</a>
+        <a class="button tiny alert no-margin" href="/application/${item.Slug}/delete">Verwijder</a>
       </td>
     </tr>
     <% end %>

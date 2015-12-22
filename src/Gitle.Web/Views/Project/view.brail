@@ -20,12 +20,12 @@
       <div class="large-10 columns"><a href="/application/${application.Slug}/view">${?application.Name}</a></div>
     </div>
     <% end %>
-
+    <% if project.Repository != null: %>
     <div class="row">
       <div class="large-2 columns">Github</div>
       <div class="large-10 columns"><a href="http://github.com/${project.Repository}">http://github.com/${project.Repository}</a></div>
     </div>
-  
+    <% end %>
     <% if project.MilestoneName != null: %>
     <div class="row">
       <div class="large-2 columns">Milestone</div>

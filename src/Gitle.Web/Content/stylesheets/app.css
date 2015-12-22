@@ -718,3 +718,6 @@ input[type=checkbox].inline {
   height: 1rem !important;
   margin: 0.15rem 0 0 0 !important; }
 
+.indent-td {
+  width: 25px; }
+

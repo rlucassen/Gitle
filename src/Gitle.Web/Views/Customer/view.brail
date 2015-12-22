@@ -43,15 +43,21 @@
         <table class="small-blocks" id="customers">
           <thead>
             <tr>
-              <th>Naam</th>
+              <th colspan="2">Naam</th>
+             
             </tr>
           </thead>
           <tbody>
             <% for app in applications: %>
             <tr>
-              <td class="name"><a href="/application/${app.Slug}/view">${app.Name}</a></td>
-             
+              <td colspan="2" class="name"><a href="/application/${app.Slug}/view">${app.Name}</a></td>
             </tr>
+            <% for project in app.Projects: %>
+            <tr>
+              <td class="indent-td"></td>
+              <td><a href="/project/${project.Slug}/view">${project.Name}</a></td>
+            </tr>
+            <% end %>
             <% end %>
           </tbody>
         </table>
