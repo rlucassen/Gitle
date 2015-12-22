@@ -34,6 +34,8 @@
             var project = session.Query<Project>().FirstOrDefault(x => x.IsActive && x.Slug == projectSlug);
             PropertyBag.Add("project", project);
 
+            var application = session.Query<Application>().FirstOrDefault(x => x.Projects.Contains(project));
+
             if (project.FreckleId > 0 && CurrentUser.IsAdmin)
             {
                 var freckleProject = projectClient.Show(project.FreckleId);
@@ -55,7 +57,8 @@
             PropertyBag.Add("doneTime", doneTime);
             PropertyBag.Add("donePercentage", donePercentage);
             PropertyBag.Add("totalIssueTime", totalIssueTime);
-
+           
+            PropertyBag.Add("application", application);
             PropertyBag.Add("customers", project.Users.Where(up => !up.User.IsAdmin));
             PropertyBag.Add("developers", project.Users.Where(up => up.User.IsAdmin));
         }

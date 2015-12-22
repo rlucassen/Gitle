@@ -1,4 +1,6 @@
-﻿<form action="/application/${?item.Id}/save" method="POST" data-abide>
+﻿<h1>Nieuwe applicatie</h1>
+<br />
+<form action="/application/${?item.Slug}/save" method="POST" data-abide>
   ${Form.HiddenField("?item.Id")}
   ${Form.HiddenField("item.Slug")}
   <div class="row">

@@ -12,20 +12,32 @@
     <% if CurrentUser.IsAdmin: %>
     <div class="row">
       <div class="large-2 columns">Klant</div>
-      <div class="large-10 columns"><a href="/customer/${?project.Customer.Slug}/view">${?project.Customer.Name}</a></div>
+      <div class="large-10 columns"><a href="/customer/${?application.Customer.Slug}/view">${?application.Customer.Name}</a></div>
     </div>
+    <% if application.Name != null: %>
+    <div class="row">
+      <div class="large-2 columns">Applicatie</div>
+      <div class="large-10 columns"><a href="/application/${application.Slug}/view">${?application.Name}</a></div>
+    </div>
+    <% end %>
+
     <div class="row">
       <div class="large-2 columns">Github</div>
       <div class="large-10 columns"><a href="http://github.com/${project.Repository}">http://github.com/${project.Repository}</a></div>
     </div>
+  
+    <% if project.MilestoneName != null: %>
     <div class="row">
       <div class="large-2 columns">Milestone</div>
       <div class="large-10 columns"><a href="https://github.com/${project.Repository}/issues?milestone=${project.MilestoneId}">${project.MilestoneName}</a></div>
     </div>
+    <% end %>
+    <% if project.FreckleName != null: %>
     <div class="row">
       <div class="large-2 columns">Freckle</div>
       <div class="large-10 columns"><a href="http://auxilium.letsfreckle.com/time/projects/${project.FreckleId}">${project.FreckleName}</a></div>
     </div>
+    <% end %>
     <% end %>
     <div class="row">
       <div class="large-2 columns">Voortgang taken</div>

@@ -44,12 +44,13 @@
         public void View(string applicationSlug)
         {
             var application = session.Query<Application>().FirstOrDefault(x => x.Slug == applicationSlug);
+           
             PropertyBag.Add("item", application);
         }
 
-        public void Save(long applicationId, long customerId)
+        public void Save(string applicationSlug, long customerId)
         {
-            var item = session.Query<Application>().FirstOrDefault(x => x.IsActive && x.Id == applicationId);
+            var item = session.Query<Application>().FirstOrDefault(x => x.IsActive && x.Slug == applicationSlug);
             var customer = session.Query<Customer>().FirstOrDefault(x => x.IsActive && x.Id == customerId);
          
 
