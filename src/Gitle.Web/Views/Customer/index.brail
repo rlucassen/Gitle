@@ -2,7 +2,7 @@
   <div class="large-12 columns">
     <h1>Klanten</h1>
     <% if CurrentUser.IsAdmin: %><a class="button" href="/customer/new">Nieuw</a><% end %>
-    <table id="project-table" class="tablesorter small-blocks">
+    <table id="customer-table" class="tablesorter small-blocks">
       <thead>
         <tr>
           <th>Klant</th>

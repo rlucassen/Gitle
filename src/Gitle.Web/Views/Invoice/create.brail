@@ -62,7 +62,7 @@
           <input type="hidden" name="lines[${count}].Null" class="invoiceline-null" value="<% if line.Null: %>1<% else: %>0<% end %>" />
           <div class="row collapse">
             <div class="large-3 columns">
-              <a href="#" class="prefix invoiceline-null-toggle"><i class="fa fa-euro"></i></a>
+              <a href="#" class="prefix invoiceline-null-toggle <% if line.Null: %>null<% end %>"><i class="fa fa-euro"></i></a>
             </div>
             <div class="large-9 columns">
               <input type="text" class="invoiceline-price" disabled />
@@ -114,7 +114,7 @@
           <input type="hidden" name="lines[${count}].Null" class="invoiceline-null" value="<% if line.Null: %>1<% else: %>0<% end %>" />
           <div class="row collapse">
             <div class="large-3 columns">
-              <a href="#" class="prefix invoiceline-null-toggle"><i class="fa fa-euro"></i></a>
+              <a href="#" class="prefix invoiceline-null-toggle <% if line.Null: %>null<% end %>"><i class="fa fa-euro"></i></a>
             </div>
             <div class="large-9 columns">
               <input type="text" class="invoiceline-price" disabled />

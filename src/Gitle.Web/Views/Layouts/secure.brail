@@ -48,6 +48,10 @@
         <ul class="left">
           <% if CurrentUser.IsAdmin: %>
           <li class="divider"></li>
+          <li><a href="/booking/index">Uren boeken</a></li>
+          <% end %>
+          <% if CurrentUser.IsAdmin: %>
+          <li class="divider"></li>
           <li><a href="/customers">Klanten</a></li>
           <% end %>
           <% if CurrentUser.IsAdmin: %>
@@ -64,6 +68,10 @@
           <% else: %>
           <li class="divider"></li>
           <li><a href="/user/profile">Gegevens wijzigen</a></li>
+          <% end %>
+          <% if CurrentUser.IsDanielle: %>
+          <li class="divider"></li>
+          <li><a href="/invoice/index">Facturen (bijlages)</a></li>
           <% end %>
         </ul>
         <ul class="right">

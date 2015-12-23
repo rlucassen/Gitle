@@ -1,22 +1,30 @@
-﻿<h1>Nieuwe applicatie</h1>
-<br />
-<form action="/application/${?item.Slug}/save" method="POST" data-abide>
-  ${Form.HiddenField("?item.Id")}
-  ${Form.HiddenField("item.Slug")}
-  <div class="row">
-    <div class="large-3 columns">Naam</div>
-    <div class="large-9 columns">
-      <input type="text" name="item.Name" id="item_Name" value="${?item.Name}" required />
-      <small class="error">Geef een naam op</small>
-    </div>
+﻿<div class="row">
+  <div class="large-12 columns">
+    <% if item.Id > 0: %>
+    <h1>Applicatie bewerken</h1>
+    <% else: %>
+    <h1>Nieuwe applicatie</h1>
+    <% end %>
+    <form action="/application/<% if item.Slug: %>${item.Slug}<% else: %>0<% end %>/save" method="POST" data-abide>
+      ${Form.HiddenField("?item.Id")}
+      ${Form.HiddenField("item.Slug")}
+      <div class="row">
+        <div class="large-3 columns">Naam</div>
+        <div class="large-9 columns">
+          <input type="text" name="item.Name" id="item_Name" value="${?item.Name}" required />
+          <small class="error">Geef een naam op</small>
+        </div>
+      </div>
+      <div class="row">
+        <div class="large-3 columns">Klant</div>
+        <div class="large-9 columns">
+          ${Form.Select("customerId", customers, {"class": "chosen-select", "value": "Id", "text": "Name", "firstoption": "Kies een klant"})}
+        </div>
+      </div>
+      <div class="row">
+        <div class="large-12 columns"><input type="submit" class="button" value="Opslaan" /></div>
+      </div>
+    </form>
+
   </div>
-  <div class="row">
-    <div class="large-3 columns">Klant</div>
-    <div class="large-9 columns">
-      ${Form.Select("customerId", customers, {"class": "chosen-select", "value": "Id", "text": "Name", "firstoption": "Kies een klant"})}
-    </div>
-  </div>
-  <div class="row">
-    <div class="large-12 columns"><input type="submit" class="button" value="Opslaan" /></div>
-  </div>
-  </form>
+</div>

@@ -10,11 +10,13 @@
     </div>
 
     <% if CurrentUser.IsAdmin: %>
+    <% if application != null: %>
+    <% if application.Customer != null: %>
     <div class="row">
       <div class="large-2 columns">Klant</div>
       <div class="large-10 columns"><a href="/customer/${?application.Customer.Slug}/view">${?application.Customer.Name}</a></div>
     </div>
-    <% if application.Name != null: %>
+    <% end %>
     <div class="row">
       <div class="large-2 columns">Applicatie</div>
       <div class="large-10 columns"><a href="/application/${application.Slug}/view">${?application.Name}</a></div>

@@ -82,12 +82,11 @@
 <script>
   $(function () {
     $('#project-chooser').autocomplete({
-      autoFocus: true,
-      source: '/project/autocomplete',
-      select: function (event, ui) {
-        event.preventDefault();
-        $('#projectId').val(ui.item.value);
-        $('#project-chooser').val(ui.item.label);
+      serviceUrl: '/project/autocomplete',
+      autoSelectFirst: true,
+      onSelect: function (suggestion) {
+        $('#projectId').val(suggestion.data);
+        $('#project-chooser').val(suggestion.value);
       }
     });
 

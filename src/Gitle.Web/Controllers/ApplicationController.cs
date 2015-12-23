@@ -23,7 +23,7 @@
 
         public void Index()
         {
-            PropertyBag.Add("item", session.Query<Application>().Where(x => x.IsActive).ToList());
+            PropertyBag.Add("items", session.Query<Application>().Where(x => x.IsActive).ToList());
         }
 
         public void New()
