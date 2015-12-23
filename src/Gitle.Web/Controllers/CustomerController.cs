@@ -13,11 +13,8 @@
 
     public class CustomerController : SecureController
     {
-        private ISession session;
-
-        public CustomerController(ISessionFactory sessionFactory)
+        public CustomerController(ISessionFactory sessionFactory) : base(sessionFactory)
         {
-            this.session = sessionFactory.GetCurrentSession();
         }
 
         [Admin]

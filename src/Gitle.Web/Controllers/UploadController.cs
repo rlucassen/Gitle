@@ -17,15 +17,9 @@
         private readonly IList<string> ImageExtensions = new List<string> { ".jpg", ".png", ".gif" };
         private readonly IList<string> DocumentExtensions = new List<string> { ".doc", ".docx", ".xls", ".xlsx", ".pdf", ".json", ".txt", ".xml", ".xsd", ".msg" };
 
-        private ISession session;
-
-
-        public UploadController(ISessionFactory sessionFactory)
+        public UploadController(ISessionFactory sessionFactory) : base(sessionFactory)
         {
-            this.session = sessionFactory.GetCurrentSession();
-
         }
-
 
         public void File([FileBinder] IEnumerable<HttpPostedFile> uploads)
         {

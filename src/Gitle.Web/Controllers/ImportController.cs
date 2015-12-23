@@ -15,13 +15,11 @@
     {
         private readonly ICommentClient commentClient;
         private readonly IIssueClient issueClient;
-        private readonly ISession session;
 
-        public ImportController(ISessionFactory sessionFactory, IIssueClient issueClient, ICommentClient commentClient)
+        public ImportController(ISessionFactory sessionFactory, IIssueClient issueClient, ICommentClient commentClient) : base(sessionFactory)
         {
             this.issueClient = issueClient;
             this.commentClient = commentClient;
-            session = sessionFactory.GetCurrentSession();
         }
 
         public void Index()

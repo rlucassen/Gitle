@@ -5,11 +5,8 @@
 
     public class FilterPresetController : SecureController
     {
-        private readonly ISession session;
-
-        public FilterPresetController(ISessionFactory sessionFactory)
+        public FilterPresetController(ISessionFactory sessionFactory) : base(sessionFactory)
         {
-            session = sessionFactory.GetCurrentSession();
         }
 
         public void New(long projectId)

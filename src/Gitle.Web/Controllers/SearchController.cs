@@ -9,11 +9,8 @@
 
     public class SearchController : BaseController
     {
-        private readonly ISession session;
-
-        public SearchController(ISessionFactory sessionFactory)
+        public SearchController(ISessionFactory sessionFactory) : base(sessionFactory)
         {
-            this.session = sessionFactory.GetCurrentSession();
         }
 
         [return: JSONReturnBinder]

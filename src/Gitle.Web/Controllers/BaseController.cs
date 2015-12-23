@@ -4,6 +4,7 @@
 
     using Castle.MonoRail.Framework;
     using Castle.MonoRail.Framework.Filters;
+    using NHibernate;
 
     #endregion
 
@@ -13,6 +14,13 @@
     [Filter(ExecuteWhen.BeforeAction, typeof(Filters.LocalizationFilter), ExecutionOrder = 1)]
     public abstract class BaseController : SmartDispatcherController
     {
+        protected ISession session;
+
+        protected BaseController(ISessionFactory sessionFactory)
+        {
+            session = sessionFactory.GetCurrentSession();
+        }
+
         protected void Error(string message, bool redirectToReferrer = false)
         {
             CreateMessage("error", message, redirectToReferrer);

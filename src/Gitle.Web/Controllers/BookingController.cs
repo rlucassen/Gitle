@@ -10,11 +10,8 @@ namespace Gitle.Web.Controllers
 {
     public class BookingController : SecureController
     {
-        private readonly ISession session;
-
-        public BookingController(ISessionFactory sessionFactory)
+        public BookingController(ISessionFactory sessionFactory) : base(sessionFactory)
         {
-            this.session = sessionFactory.GetCurrentSession();
         }
 
         public void Index()

@@ -14,12 +14,10 @@ namespace Gitle.Web.Controllers
 {
     public class InvoiceController : SecureController
     {
-        private readonly ISession session;
         private readonly IPdfExportService pdfExportService;
 
-        public InvoiceController(ISessionFactory sessionFactory, IPdfExportService pdfExportService)
+        public InvoiceController(ISessionFactory sessionFactory, IPdfExportService pdfExportService) : base(sessionFactory)
         {
-            this.session = sessionFactory.GetCurrentSession();
             this.pdfExportService = pdfExportService;
         }
 

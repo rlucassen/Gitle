@@ -18,12 +18,10 @@
 
     public class AuthenticationController : BaseController
     {
-        private readonly ISession session;
         private readonly IEmailService emailService;
 
-        public AuthenticationController(ISessionFactory sessionFactory, IEmailService emailService)
+        public AuthenticationController(ISessionFactory sessionFactory, IEmailService emailService) : base(sessionFactory)
         {
-            this.session = sessionFactory.GetCurrentSession();
             this.emailService = emailService;
         }
 

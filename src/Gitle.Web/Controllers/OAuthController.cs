@@ -7,13 +7,11 @@
 
     public class OAuthController : BaseController
     {
-        private readonly ISession session;
         private readonly IOAuthClient oauthClient;
         private readonly IUserClient userClient;
 
-        public OAuthController(ISessionFactory sessionFactory, IOAuthClient oauthClient, IUserClient userClient)
+        public OAuthController(ISessionFactory sessionFactory, IOAuthClient oauthClient, IUserClient userClient) : base(sessionFactory)
         {
-            this.session = sessionFactory.GetCurrentSession();
             this.userClient = userClient;
             this.oauthClient = oauthClient;
         }

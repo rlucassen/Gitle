@@ -12,13 +12,8 @@
 
     public class ApplicationController : SecureController
     {
-        private readonly ISession session;
-
-
-        public ApplicationController(ISessionFactory sessionFactory)
+        public ApplicationController(ISessionFactory sessionFactory) : base(sessionFactory)
         {
-            this.session = sessionFactory.GetCurrentSession();
-
         }
 
         public void Index()

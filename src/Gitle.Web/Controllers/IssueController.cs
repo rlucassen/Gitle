@@ -26,13 +26,11 @@ using Castle.MonoRail.Framework;
     public class IssueController : SecureController
     {
         private readonly ISessionFactory sessionFactory;
-        private readonly ISession session;
         private readonly IEntryClient entryClient;
 
-        public IssueController(ISessionFactory sessionFactory, IEntryClient entryClient)
+        public IssueController(ISessionFactory sessionFactory, IEntryClient entryClient) : base(sessionFactory)
         {
             this.sessionFactory = sessionFactory;
-            this.session = sessionFactory.GetCurrentSession();
             this.entryClient = entryClient;
         }
 

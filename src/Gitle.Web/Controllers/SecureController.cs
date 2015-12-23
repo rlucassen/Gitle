@@ -10,12 +10,17 @@
     using System.Linq;
     using System.Reflection;
     using Helpers;
+    using NHibernate;
 
     [Layout("secure")]
     [Filter(ExecuteWhen.BeforeAction, typeof (AuthorisationFilter), ExecutionOrder = 1)]
     [Filter(ExecuteWhen.BeforeAction, typeof (AuthenticationFilter), ExecutionOrder = 2)]
     public abstract class SecureController : BaseController
     {
+        protected SecureController(ISessionFactory sessionFactory) : base(sessionFactory)
+        {
+        }
+
         public User CurrentUser
         {
             get { return (User) Context.CurrentUser; }

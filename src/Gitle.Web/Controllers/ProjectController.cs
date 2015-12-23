@@ -14,12 +14,10 @@
 
     public class ProjectController : SecureController
     {
-        private ISession session;
         private IProjectClient projectClient;
 
-        public ProjectController(ISessionFactory sessionFactory, IProjectClient projectClient)
+        public ProjectController(ISessionFactory sessionFactory, IProjectClient projectClient) : base(sessionFactory)
         {
-            this.session = sessionFactory.GetCurrentSession();
             this.projectClient = projectClient;
         }
 
