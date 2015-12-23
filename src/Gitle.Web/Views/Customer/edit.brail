@@ -5,7 +5,7 @@
     <% else: %>
     <h1>Nieuwe klant</h1>
     <% end %>
-    <form action="/customer/<% if item.Slug: %>${?item.Slug}<% else: %>0<% end %>/save" method="POST" data-abide>
+    <form action="/customer/<% if item.Slug: %>${item.Slug}<% else: %>0<% end %>/save" method="POST" data-abide>
       ${Form.HiddenField("item.Id")}
       ${Form.HiddenField("item.Slug")}
       <div class="row">

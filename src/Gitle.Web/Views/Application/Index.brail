@@ -1,27 +1,28 @@
 ﻿<div class="row">
-  <a href="/application/new" class="button tiny radius">Nieuwe applicatie</a>
+  <div class="large-12 columns">
+    <h1>Applicatie</h1>
+    <% if CurrentUser.IsAdmin: %><a href="/application/new" class="button">Nieuw</a><% end %>
+    <table id="application-table" class="tablesorter small-blocks">
+      <thead>
+        <tr>
+          <th>Naam</th>
+          <th>Klant</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for item in items: %>
+        <tr>
+          <td class="name">${item.Name}</td>
+          <td>${?item.Customer.Name}</td>
+          <td>
+            <a class="button tiny secondary no-margin" href="/application/${item.Slug}/view">Details</a>
+            <a class="button tiny success no-margin" href="/application/${item.Slug}/edit">Bewerk</a>
+            <a class="button tiny alert no-margin" href="/application/${item.Slug}/delete">Verwijder</a>
+          </td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
 </div>
-
-<table>
-  <thead>
-    <tr>
-      <th>Naam</th>
-      <th>Klant</th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <% for item in item: %>
-    <tr>
-      <td class="name">${?item.Name}</td>
-      <td>${?item.Customer.Name}</td>
-
-      <td>
-        <a class="button tiny secondary no-margin" href="/application/${item.Slug}/view">Details</a>
-        <a class="button tiny success no-margin" href="/application/${item.Slug}/edit">Bewerk</a>
-        <a class="button tiny alert no-margin" href="/application/${item.Slug}/delete">Verwijder</a>
-      </td>
-    </tr>
-    <% end %>
-  </tbody>
-</table>

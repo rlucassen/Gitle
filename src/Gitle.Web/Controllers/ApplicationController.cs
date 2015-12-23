@@ -23,7 +23,7 @@
 
         public void Index()
         {
-            PropertyBag.Add("item", session.Query<Application>().Where(x => x.IsActive).ToList());
+            PropertyBag.Add("items", session.Query<Application>().Where(x => x.IsActive).ToList());
         }
 
         public void New()
@@ -83,6 +83,21 @@
                 tx.Commit();
             }
             RedirectToReferrer();
+        }
+
+        public void Comments(string applicationSlug, string comment)
+        {
+            var item = session.Query<Application>().FirstOrDefault(p => p.Slug == applicationSlug);
+
+            item.Comments = comment;
+
+            using (var tx = session.BeginTransaction())
+            {
+                session.SaveOrUpdate(item);
+                tx.Commit();
+            }
+
+            RenderText(comment);
         }
     }
 }
