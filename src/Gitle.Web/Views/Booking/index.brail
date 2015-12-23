@@ -194,6 +194,7 @@
         serviceUrl: '/issue/autocomplete',
         width: row.find('.project-chooser').width(),
         noCache: true,
+        params: { projectId: row.find('.booking_Project_Id').val() },
         autoSelectFirst: true,
         onSelect: function (suggestion) {
           row.find('.booking_Issue_Id').val(suggestion.data);
