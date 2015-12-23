@@ -17,7 +17,7 @@
       <input type="text" class="booking-comment-edit booking-edit-field booking_Comment" name="booking.Comment" value="${booking.Comment}">
     </div>
     <div class="large-1 columns no-padding end">
-      <input type="text" name="booking.Date" class="date booking-edit-field" placeholder="Eerder" value="${booking.Date}">
+      <input type="text" name="booking.Date" class="date booking-edit-field" placeholder="Eerder" value="${booking.Date.ToString("dd-MM-yyyy")}">
     </div>
     <div class="large-1 columns no-padding">
       <a href="#" class="button success radius supertiny no-margin booking-edit-save" onclick="$(this).parents('form').submit()">Edit <i class="fa fa-check"></i></a>

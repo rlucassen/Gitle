@@ -12,6 +12,9 @@
     <div class="row">
       <div class="large-12 columns">
         <h2>Contactpersonen</h2>
+        <% if customer.AllContacts.Count == 0: %>
+        <p>Geen contactpersonen gevonden</p>
+        <% else: %>
         <table class="small-blocks" id="customers">
           <thead>
             <tr>
@@ -34,33 +37,33 @@
             <% end %>
           </tbody>
         </table>
+        <% end %>
       </div>
     </div>
     
     <div class="row">
       <div class="large-12 columns">
-        <h2>Projecten</h2>
+        <h2>Applicaties / Projecten</h2>
+        <% for app in applications: %>
         <table class="small-blocks" id="customers">
           <thead>
             <tr>
-              <th colspan="2">Naam</th>
-             
+              <th>Applicatie: <a href="/application/${app.Slug}/view">${app.Name}</a></th>
             </tr>
           </thead>
           <tbody>
-            <% for app in applications: %>
-            <tr>
-              <td colspan="2" class="name"><a href="/application/${app.Slug}/view">${app.Name}</a></td>
-            </tr>
+            <% if app.Projects.Count == 0: %>
+            <tr><td>Geen projecten gevonden</td></tr>
+            <% else: %>
             <% for project in app.Projects: %>
             <tr>
-              <td class="indent-td"></td>
               <td><a href="/project/${project.Slug}/view">${project.Name}</a></td>
             </tr>
             <% end %>
             <% end %>
           </tbody>
         </table>
+        <% end %>
       </div>
     </div>
 

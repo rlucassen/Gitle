@@ -235,7 +235,8 @@ a.quickview-delay {
     color: #0079a1; }
 
 table {
-  width: 100%; }
+  width: 100%;
+  margin-bottom: 1em; }
   table input[type="text"] {
     margin-bottom: 0; }
   table thead {

@@ -89,6 +89,7 @@ $.fn.extend({
             templateHtml = templateHtml.replace(/{{name}}/g, document.Name);
             templateHtml = templateHtml.replace(/{{path}}/g, document.Path);
             templateHtml = templateHtml.replace(/{{date}}/g, document.DateString);
+            templateHtml = templateHtml.replace(/{{uploader}}/g, document.UserFullName);
             templateContainer.append(templateHtml);
           }
           for (var error in data.Errors) {

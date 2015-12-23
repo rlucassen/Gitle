@@ -14,5 +14,6 @@
         [ScriptIgnore]
         public virtual User User { get; set; }
         public virtual string DateString => DateUploaded.Readable();
+        public virtual string UserFullName => User.FullName;
     }
 }

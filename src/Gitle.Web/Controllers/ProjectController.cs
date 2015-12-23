@@ -42,8 +42,15 @@
                 var bookedTime = freckleProject.BillableMinutes/60.0;
                 var totalTime = freckleProject.BudgetMinutes/60.0;
 
+                var overbooked = false;
                 var bookedPercentage = bookedTime*100.0/totalTime;
+                if (bookedPercentage > 100)
+                {
+                    bookedPercentage = 100;
+                    overbooked = true;
+                }
 
+                PropertyBag.Add("overbooked", overbooked);
                 PropertyBag.Add("bookedTime", bookedTime);
                 PropertyBag.Add("bookedPercentage", bookedPercentage);
                 PropertyBag.Add("totalTime", totalTime);
@@ -57,8 +64,8 @@
             PropertyBag.Add("donePercentage", donePercentage);
             PropertyBag.Add("totalIssueTime", totalIssueTime);
             PropertyBag.Add("application", application);
-            PropertyBag.Add("customers", project.Users.Where(up => !up.User.IsAdmin));
-            PropertyBag.Add("developers", project.Users.Where(up => up.User.IsAdmin));
+            PropertyBag.Add("customers", project.Users.Where(up => !up.User.IsAdmin).ToList());
+            PropertyBag.Add("developers", project.Users.Where(up => up.User.IsAdmin).ToList());
         }
 
         [Admin]
