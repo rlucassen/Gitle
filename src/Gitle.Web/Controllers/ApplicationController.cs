@@ -84,5 +84,20 @@
             }
             RedirectToReferrer();
         }
+
+        public void Comments(string applicationSlug, string comment)
+        {
+            var item = session.Query<Application>().FirstOrDefault(p => p.Slug == applicationSlug);
+
+            item.Comments = comment;
+
+            using (var tx = session.BeginTransaction())
+            {
+                session.SaveOrUpdate(item);
+                tx.Commit();
+            }
+
+            RenderText(comment);
+        }
     }
 }

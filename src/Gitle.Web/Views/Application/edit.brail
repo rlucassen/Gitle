@@ -15,12 +15,22 @@
           <small class="error">Geef een naam op</small>
         </div>
       </div>
+
       <div class="row">
         <div class="large-3 columns">Klant</div>
         <div class="large-9 columns">
           ${Form.Select("customerId", customers, {"class": "chosen-select", "value": "Id", "text": "Name", "firstoption": "Kies een klant"})}
         </div>
       </div>
+
+      <span>Comments</span>
+      <div class="comments-container" data-url="/application/${item.Slug}/comments">
+        <div class="comments marked">${?item.Comments}</div>
+        <textarea name="comment">
+          ${?item.Comments}
+        </textarea>
+      </div>
+
       <div class="row">
         <div class="large-12 columns"><input type="submit" class="button" value="Opslaan" /></div>
       </div>
