@@ -41,21 +41,21 @@
             <input type="text" name="booking.Date" id="booking_Date" class="date" placeholder="Eerder" />
           </div>
         </div>
-        <div class="row collapse">
+        <div class="row collapse booking-row-new">
           <div class="large-1 columns">
-            <input type="hidden" name="booking.Minutes" id="booking_Minutes" />
+            <input type="hidden" name="booking.Minutes" class="booking_Minutes" />
             <input type="text" class="booking-parser no-margin" placeholder="Uren" />
           </div>
           <div class="large-4 columns">
-            <input type="hidden" name="booking.Project.Id" id="booking_Project_Id" />
-            <input type="text" class="no-margin" id="project-chooser" placeholder="Project" />
+            <input type="hidden" name="booking.Project.Id" class="booking_Project_Id" />
+            <input type="text" class="no-margin project-chooser" placeholder="Project" />
           </div>
           <div class="large-1 columns">
-            <input type="hidden" name="booking.Issue.Id" id="booking_Issue_Id" />
-            <input type="text" class="no-margin" id="issue-chooser" placeholder="Taak" />
+            <input type="hidden" name="booking.Issue.Id" class="booking_Issue_Id" />
+            <input type="text" class="no-margin issue-chooser" placeholder="Taak" />
           </div>
           <div class="large-5 columns">
-            <input type="text" class="no-margin" name="booking.Comment" id="booking_Comment" placeholder="Opmerking" />
+            <input type="text" class="no-margin booking_Comment" name="booking.Comment" placeholder="Opmerking" />
           </div>
           <div class="large-1 columns">
             <input type="submit" class="button postfix no-margin success" value="Boeken" />
@@ -152,6 +152,7 @@
             row.find('.booking-row-edit').hide();
             row.find('.booking-row-edit').fadeIn(100);
             addEditListeners();
+            bookingRowInit(row.find('.booking-row-edit'));
           });
 
         }
@@ -173,30 +174,78 @@
       });
     };
 
-    $('#project-chooser').autocomplete({
-      serviceUrl: '/project/autocomplete',
-      autoSelectFirst: true,
-      onSelect: function (suggestion) {
-        $('#booking_Project_Id').val(suggestion.data);
-        $('#project-chooser').val(suggestion.value);
-        $('#issue-chooser').val('');
-        $('#booking_Issue_Id').val('');
-      }
-    });
+    var bookingRowInit = function (row) {
 
-    $('#issue-chooser').autocomplete({
-      serviceUrl: '/issue/autocomplete',
-      width: $('#project-chooser').width(),
-      onSearchStart: function () {
-        $(this).autocomplete('setOptions', { params: { projectId: $('#booking_Project_Id').val() } });
-      },
-      noCache: true,
-      autoSelectFirst: true,
-      onSelect: function (suggestion) {
-        $('#booking_Issue_Id').val(suggestion.data);
-        $('#issue-chooser').val(suggestion.value);
-      }
-    });
+      row.find('.project-chooser').autocomplete({
+        serviceUrl: '/project/autocomplete',
+        autoSelectFirst: true,
+        onSelect: function (suggestion) {
+          row.find('.booking_Project_Id').val(suggestion.data);
+          row.find('.project-chooser').val(suggestion.value);
+          row.find('.issue-chooser').val('');
+          row.find('.booking_Issue_Id').val('');
+        }
+      });
+
+      row.find('.issue-chooser').autocomplete({
+        serviceUrl: '/issue/autocomplete',
+        width: row.find('.project-chooser').width(),
+        onSearchStart: function () {
+          $(this).autocomplete('setOptions', { params: { projectId: row.find('.booking_Project_Id').val() } });
+        },
+        noCache: true,
+        autoSelectFirst: true,
+        onSelect: function (suggestion) {
+          row.find('.booking_Issue_Id').val(suggestion.data);
+          row.find('.issue-chooser').val(suggestion.value);
+        }
+      });
+
+      var bookingInput = row.find('.booking_Minutes');
+      $('.booking-parser').change(function (e) {
+        var value = $(this).val().replace(',', '.');
+
+        var timeRegex = /^([0-9]+):([0-9]{2})$/i;
+        var decimalRegex = /^([0-9]+)\.([0-9]+)$/i;
+        var numberRegex = /^[0-9]+$/i;
+
+        var visualOutput = value;
+        var hoursOutput = value;
+
+        if (numberRegex.test(value)) {
+          var number = parseInt(value);
+          if (number > 9) {
+            var fullhours = parseInt(number / 60);
+            var fullminutes = number - (fullhours * 60);
+            visualOutput = fullhours + ':' + (fullminutes < 10 ? "0" + fullminutes : fullminutes);
+            hoursOutput = number;
+          } else {
+            visualOutput = number + ':00';
+            hoursOutput = number * 60;
+          }
+        }
+        if (timeRegex.test(value)) {
+          var parts = value.split(':');
+          var hours = parseFloat(parts[0]);
+          var minutes = parseFloat(parts[1]);
+          hoursOutput = (hours * 60 + minutes);
+        }
+        if (decimalRegex.test(value)) {
+          var hours = parseFloat(value);
+          hoursOutput = (hours * 60);
+          var fullhours = parseInt(value);
+          var fullminutes = (hours - fullhours) * 60;
+          visualOutput = fullhours + ':' + (fullminutes < 10 ? "0" + fullminutes : fullminutes);
+        }
+
+        $(this).val(visualOutput);
+        bookingInput.val(hoursOutput);
+      });
+
+
+    };
+
+    bookingRowInit($('.booking-row-new'));
 
     $('.date').fdatepicker({
       format: 'dd-mm-yyyy',
@@ -230,46 +279,7 @@
       $(this).addClass('active');
     }).filter('[data-dayshift=0]').click();
 
-    var bookingInput = $('#booking_Minutes');
-    $('.booking-parser').change(function (e) {
-      var value = $(this).val().replace(',', '.');
-
-      var timeRegex = /^([0-9]+):([0-9]{2})$/i;
-      var decimalRegex = /^([0-9]+)\.([0-9]+)$/i;
-      var numberRegex = /^[0-9]+$/i;
-
-      var visualOutput = value;
-      var hoursOutput = value;
-
-      if (numberRegex.test(value)) {
-        var number = parseInt(value);
-        if (number > 9) {
-          var fullhours = parseInt(number / 60);
-          var fullminutes = number - (fullhours * 60);
-          visualOutput = fullhours + ':' + (fullminutes < 10 ? "0" + fullminutes : fullminutes);
-          hoursOutput = number;
-        } else {
-          visualOutput = number + ':00';
-          hoursOutput = number * 60;
-        }
-      }
-      if (timeRegex.test(value)) {
-        var parts = value.split(':');
-        var hours = parseFloat(parts[0]);
-        var minutes = parseFloat(parts[1]);
-        hoursOutput = (hours * 60 + minutes);
-      }
-      if (decimalRegex.test(value)) {
-        var hours = parseFloat(value);
-        hoursOutput = (hours * 60);
-        var fullhours = parseInt(value);
-        var fullminutes = (hours - fullhours) * 60;
-        visualOutput = fullhours + ':' + (fullminutes < 10 ? "0" + fullminutes : fullminutes);
-      }
-
-      $(this).val(visualOutput);
-      bookingInput.val(hoursOutput);
-    });
+    
 
   });
 </script>

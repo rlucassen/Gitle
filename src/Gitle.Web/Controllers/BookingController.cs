@@ -45,6 +45,34 @@ namespace Gitle.Web.Controllers
             RedirectToReferrer();
         }
 
+        public void Save(int id, int projectId, int issueId)
+        {
+            var booking = session.Query<Booking>().FirstOrDefault(x => x.IsActive && x.Id == id);
+            
+            if (booking != null)
+            {
+                BindObjectInstance(booking, "booking");
+            }
+            if (issueId == 0)
+            {
+                booking.Issue = null;
+            }
+            else
+            {
+                booking.Issue = session.Query<Issue>().FirstOrDefault(x => x.IsActive && x.Id == issueId);
+            }
+
+            booking.Project = session.Query<Project>().FirstOrDefault(x => x.IsActive && x.Id == projectId);
+            
+
+            using (var transaction = session.BeginTransaction())
+            {
+                session.SaveOrUpdate(booking);
+                transaction.Commit();
+            }
+            RedirectToReferrer();
+        }
+
         public void Delete(int id)
         {
             var booking = session.Query<Booking>().FirstOrDefault(x => x.IsActive && x.Id == id && !x.Invoices.Any());
