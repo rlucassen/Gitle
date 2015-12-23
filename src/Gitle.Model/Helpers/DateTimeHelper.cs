@@ -81,7 +81,12 @@
 
         public static string Readable(this DateTime? dateTime)
         {
-            return dateTime.Value.ToString("MMM d, yyyy HH:mm").ToCamelCase();
+            return dateTime.Value != null ? Readable(dateTime.Value) : "";
+        }
+
+        public static string Readable(this DateTime dateTime)
+        {
+            return dateTime.ToString("MMM d, yyyy HH:mm").ToCamelCase();
         }
 
         public static string MinutesToTime(int minutes)

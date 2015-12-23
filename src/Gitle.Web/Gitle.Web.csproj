@@ -136,6 +136,7 @@
     <Compile Include="Helpers\FileBinderAttribute.cs" />
     <Compile Include="Helpers\ProjectAttribute.cs" />
     <Compile Include="Helpers\SaveFeedback.cs" />
+    <Compile Include="Helpers\DocumentUploadFeedback.cs" />
     <Compile Include="Helpers\UploadFeedback.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

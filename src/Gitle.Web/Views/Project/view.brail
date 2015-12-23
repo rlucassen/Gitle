@@ -135,8 +135,32 @@
         </table>
       </div>
     </div>
+    <div class="row">
+      <div class="large-12 columns">
+        <h2>Documenten</h2>
+        <table class="small-blocks uploadlist" id="documents" data-url="/upload/projectdocument?id=${project.Id}" data-template="#document-template" data-template-container="#documents-container">
+          <thead>
+            <tr>
+              <th>Naam</th>
+              <th>Datum geüpload</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="documents-container">
+            <% for document in project.Documents: %>
+            <tr>
+              <td class="name"><a href="${document.Path}">${document.Name}</a></td>
+              <td class="date">${document.DateString}</td>
+              <td><a class="button alert tiny no-margin" href="/project/${project.Slug}/deletedocument/${document.Id}">delete</a></td>
+            </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
 </div>
+
 <ol class="joyride-list" data-joyride>
   <% if CurrentUser.IsAdmin: %>
   <li data-id="issue-progress" data-text="Volgende">
@@ -155,3 +179,11 @@
     <p>Hier vind je de gegevens van alle contactpersonen vanuit Auxilium.</p>
   </li>
 </ol>
+
+<script id="document-template" type="text/template">
+  <tr>
+    <td class="name"><a href="{{path}}">{{name}}</a></td>
+    <td class="date">{{date}}</td>
+    <td><a class="button alert tiny no-margin" href="/project/${project.Slug}/deletedocument/{{id}}">delete</a></td>
+  </tr>
+</script>

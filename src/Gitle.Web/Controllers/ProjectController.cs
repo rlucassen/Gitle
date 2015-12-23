@@ -54,11 +54,10 @@
             var doneTime = issues.Where(i => !i.IsOpen).Sum(i => i.TotalHours);
             var totalIssueTime = issues.Sum(i => i.TotalHours);
             var donePercentage = doneTime*100.0/totalIssueTime;
-
+            
             PropertyBag.Add("doneTime", doneTime);
             PropertyBag.Add("donePercentage", donePercentage);
             PropertyBag.Add("totalIssueTime", totalIssueTime);
-           
             PropertyBag.Add("application", application);
             PropertyBag.Add("customers", project.Users.Where(up => !up.User.IsAdmin));
             PropertyBag.Add("developers", project.Users.Where(up => up.User.IsAdmin));
@@ -200,6 +199,22 @@
             }
 
             RenderText(comment);
+        }
+
+        public void DeleteDocument(string projectSlug, long id)
+        {
+            var item = session.Query<Project>().FirstOrDefault(p => p.Slug == projectSlug);
+            var document = session.Get<Document>(id);
+
+            item.Documents.Remove(document);
+
+
+            using (var tx = session.BeginTransaction())
+            {
+                session.SaveOrUpdate(item);
+                tx.Commit();
+            }
+            RedirectToReferrer();
         }
 
         [return: JSONReturnBinder]

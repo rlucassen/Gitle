@@ -2,9 +2,11 @@
 {
     using System.Collections;
     using System.Collections.Generic;
-    using System.Threading;
+    using System.Configuration;
+    using System.IO;
     using Boo.Lang;
     using Castle.Windsor;
+    using Model;
     using Model.Interfaces.Model;
     using Model.Interfaces.Service;
     using NHibernate;
@@ -16,6 +18,7 @@
         private IEmailService emailService;
 
         private IList<object> savedObjects = new List();
+        private IList<object> deletedObjects = new List();
 
         public GitleInterceptor(IWindsorContainer container)
         {
@@ -34,14 +37,31 @@
             return true;
         }
 
+        public override void OnDelete(object entity, object id, object[] state, string[] propertyNames, IType[] types)
+        {
+            if (entity is Document)
+                deletedObjects.Add(entity);
+        }
+
         public override void PostFlush(ICollection entities)
         {
             foreach (var entity in savedObjects)
             {
-                if (entity is IIssueAction)
-                    EmailService.SendIssueActionNotification((IIssueAction) entity);
+                var action = entity as IIssueAction;
+                if (action != null)
+                    EmailService.SendIssueActionNotification(action);
             }
             savedObjects.Clear();
+
+            foreach (var entity in deletedObjects)
+            {
+                var document = entity as Document;
+                if (document == null) continue;
+                var path = Path.Combine(ConfigurationManager.AppSettings["fileUpload"], document.Path.Replace("/Public/", ""));
+                var fileInfo = new FileInfo(path);
+                if(fileInfo.Exists) fileInfo.Delete();
+            }
+            deletedObjects.Clear();
         }
     }
 }

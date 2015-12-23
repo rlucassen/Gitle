@@ -24,21 +24,21 @@ $.fn.extend({
       var uploadButton = $('<a href="#" class="button no-margin tiny">Upload afbeelding/bestand</a>').insertBefore(this);
       var uploadOptions = {
         url: '/upload/file',
-        beforeSend: function(e, a) {
+        beforeSend: function (e, a) {
           progressbar.show();
         },
-        onprogress: function(e) {
+        onprogress: function (e) {
           if (e.lengthComputable) {
             console.log('Progress ' + e.loaded + ' of ' + e.total);
             var percent = e.loaded / e.total * 100;
             progressbar.find('.meter').css('width', percent + '%');
           }
         },
-        error: function() {
+        error: function () {
           console.log('error');
           textarea.error('Bestand(en) uploaden niet gelukt');
         },
-        success: function(data) {
+        success: function (data) {
           data = $.parseJSON(data);
           for (var upload in data.Uploads) {
             textarea.insert(data.Uploads[upload]);
@@ -53,63 +53,111 @@ $.fn.extend({
       $(this).ajaxUploadDrop(uploadOptions);
       uploadButton.ajaxUploadPrompt(uploadOptions);
     });
+  },
+  uploadList: function () {
+    return this.each(function () {
+      var list = $(this);
+      var templateContainer = $($(this).data('template-container'));
+      var template = $($(this).data('template'));
+      var url = $(this).data('url');
+      var progressbar = $('<div class="progress">').append($('<span class="meter">')).insertAfter(this).hide();
+      if (!$.browser.msie)
+        list.after($('<small class="info">Je kunt ook afbeeldingen (jpg, png, gif) en bestanden (doc, docx, xls, xlsx, pdf, txt) uploaden door ze op de tabel te slepen.</small>'));
+      var uploadButton = $('<a href="#" class="button no-margin tiny">Upload document</a>').insertBefore(this);
+      var uploadOptions = {
+        url: url,
+        beforeSend: function (e, a) {
+          progressbar.show();
+        },
+        onprogress: function (e) {
+          if (e.lengthComputable) {
+            console.log('Progress ' + e.loaded + ' of ' + e.total);
+            var percent = e.loaded / e.total * 100;
+            progressbar.find('.meter').css('width', percent + '%');
+          }
+        },
+        error: function () {
+          console.log('error');
+          list.error('Bestand(en) uploaden niet gelukt');
+        },
+        success: function (data) {
+          data = $.parseJSON(data);
+          for (var upload in data.Uploads) {
+            var document = data.Uploads[upload];
+            var templateHtml = template.html();
+            templateHtml = templateHtml.replace(/{{id}}/g, document.Id);
+            templateHtml = templateHtml.replace(/{{name}}/g, document.Name);
+            templateHtml = templateHtml.replace(/{{path}}/g, document.Path);
+            templateHtml = templateHtml.replace(/{{date}}/g, document.DateString);
+            templateContainer.append(templateHtml);
+          }
+          for (var error in data.Errors) {
+            console.log('Error: ' + error + ' - ' + data.Errors[error]);
+            list.error(error + ': ' + data.Errors[error]);
+          }
+          progressbar.hide();
+        }
+      };
+      $(this).ajaxUploadDrop(uploadOptions);
+      uploadButton.ajaxUploadPrompt(uploadOptions);
+    });
   }
 });
 
 $.fn.nestedTable = function (conf) {
 
-    var config = jQuery.extend({
-        deleteText: 'Verwijder',
-        afterAdd: function (row) { }
-    }, conf);
+  var config = jQuery.extend({
+    deleteText: 'Verwijder',
+    afterAdd: function (row) { }
+  }, conf);
 
-    var deleteRow = function (e) {
-        e.preventDefault();
-        $(this).parents('tr').remove();
-    };
+  var deleteRow = function (e) {
+    e.preventDefault();
+    $(this).parents('tr').remove();
+  };
 
-    return this.each(function () {
+  return this.each(function () {
 
-        var table = $(this);
+    var table = $(this);
 
-        var deleteHeader = $('<th>' + config.deleteText + '</th>');
-        table.find('thead tr').append(deleteHeader);
-        var deleteButton = $('<a href="#" class="button tiny no-margin alert">Verwijder</a>');
-        deleteButton.click(deleteRow);
-        var deleteCell = $('<td></td>').append(deleteButton);
-        table.find('tbody tr').append(deleteCell);
+    var deleteHeader = $('<th>' + config.deleteText + '</th>');
+    table.find('thead tr').append(deleteHeader);
+    var deleteButton = $('<a href="#" class="button tiny no-margin alert">Verwijder</a>');
+    deleteButton.click(deleteRow);
+    var deleteCell = $('<td></td>').append(deleteButton);
+    table.find('tbody tr').append(deleteCell);
 
-        var addRow = $('<a href="#" class="button small">Nieuw</a>');
-        addRow.click(function (e) {
-            e.preventDefault();
-            var fr = table.find('tbody tr:last-child input:first-child');
-            var newRowNumber = parseInt(fr.length == 0 ? 0 : fr.prop('name').match(/\d+/)[0]) + 1;
-            var firstRow = table.find('tbody tr:first-child'); // use first row to clone
-            var newRow = firstRow.clone().removeClass('hide');
-            // rename all inputs
-            newRow.find(':input').each(function () {
-                var input = $(this);
-                var name = input.prop('name');
-                var newName = name.replace(/\d+/g, newRowNumber);
-                input.attr('name', newName);
-            });
+    var addRow = $('<a href="#" class="button small">Nieuw</a>');
+    addRow.click(function (e) {
+      e.preventDefault();
+      var fr = table.find('tbody tr:last-child input:first-child');
+      var newRowNumber = parseInt(fr.length == 0 ? 0 : fr.prop('name').match(/\d+/)[0]) + 1;
+      var firstRow = table.find('tbody tr:first-child'); // use first row to clone
+      var newRow = firstRow.clone().removeClass('hide');
+      // rename all inputs
+      newRow.find(':input').each(function () {
+        var input = $(this);
+        var name = input.prop('name');
+        var newName = name.replace(/\d+/g, newRowNumber);
+        input.attr('name', newName);
+      });
 
-            newRow.find('[type=text]').val(''); // set all values to nothing
-            newRow.find('[data-nested-remove]').remove();
-            newRow.find('[type=checkbox]').removeProp('checked'); // uncheck checkbox
-            newRow.find('.button.alert').click(deleteRow); // set delete action on delete button
+      newRow.find('[type=text]').val(''); // set all values to nothing
+      newRow.find('[data-nested-remove]').remove();
+      newRow.find('[type=checkbox]').removeProp('checked'); // uncheck checkbox
+      newRow.find('.button.alert').click(deleteRow); // set delete action on delete button
 
-            table.find('tbody').append(newRow); // append new row
-            config.afterAdd(newRow); // trigger the afterAdd callback from config
-        });
-        table.after(addRow);
+      table.find('tbody').append(newRow); // append new row
+      config.afterAdd(newRow); // trigger the afterAdd callback from config
     });
+    table.after(addRow);
+  });
 };
 
-var growl = function(type, text) {
+var growl = function (type, text) {
   var alert = $('<div>').addClass("alert-box");
   $("body").prepend(alert.addClass(type).html(text));
-  alert.delay(2000).fadeOut(2000, function() {
+  alert.delay(2000).fadeOut(2000, function () {
     $(this).remove();
   });
 };
@@ -130,7 +178,7 @@ var slugify = function (origin, target) {
   }).change();
 };
 
-function Application() {}
+function Application() { }
 Application.prototype = {
   queryString: {},
   init: function () {
@@ -155,7 +203,7 @@ Application.prototype = {
     $('#search').autocomplete({
       serviceUrl: '/search',
       autoSelectFirst: true,
-      onSelect: function(suggestion) {
+      onSelect: function (suggestion) {
         window.location = suggestion.data;
       }
     });
@@ -206,6 +254,7 @@ Application.prototype = {
     slugify('#item_Name', '#item_Slug');
 
     $('.uploadarea').upload();
+    $('.uploadlist').uploadList();
 
     $('.colorpicker').colorPicker();
 
@@ -222,7 +271,7 @@ Application.prototype = {
       var selector = $(this).data('selector');
       var checkboxes = $(selector);
       checkboxes.click(function () {
-        if(checkboxes.length == checkboxes.filter(':checked').length) {
+        if (checkboxes.length == checkboxes.filter(':checked').length) {
           checker.attr('data-state', 'all');
         } else if (checkboxes.filter(':checked').length == 0) {
           checker.attr('data-state', 'none');
@@ -325,7 +374,7 @@ Application.prototype = {
 
   },
 
-  initComments: function() {
+  initComments: function () {
     $('.comments-container').each(function () {
       var container = $(this);
       var staticComments = container.find('.comments');
@@ -387,11 +436,11 @@ Application.prototype = {
 };
 
 var app = null;
-$(document).ready(function() {
+$(document).ready(function () {
   app = new Application();
   app.init();
 });
 
-$(window).load(function() {
+$(window).load(function () {
   app.initOnLoad();
 });

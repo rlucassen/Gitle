@@ -2,13 +2,15 @@
 {
     using System.Collections.Generic;
     using System.Linq;
+    using Interfaces.Model;
 
-    public class Project : ModelBase
+    public class Project : ModelBase, IDocumentContainer
     {
         public Project()
         {
             Users = new List<UserProject>();
             Labels = new List<Label>();
+            Documents = new List<Document>();
         }
 
         public virtual string Name { get; set; }
@@ -29,6 +31,7 @@
         public virtual IList<UserProject> Users { get; set; }
         public virtual IList<Label> Labels { get; set; }
         public virtual IList<Issue> Issues { get; set; }
+        public virtual IList<Document> Documents { get; set; } 
 
         public virtual int NotifiedUsers { get { return Users.Count(u => u.Notifications); } }
 

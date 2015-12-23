@@ -8,7 +8,7 @@
             Map(x => x.Slug);
             Map(x => x.Comments);
             References(x => x.Customer);
-            HasMany<Project>(x => x.Projects);
+            HasMany<Project>(x => x.Projects).Cascade.DeleteOrphan();
         }
     }
 }

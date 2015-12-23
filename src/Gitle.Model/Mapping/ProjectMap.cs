@@ -17,6 +17,7 @@
             HasMany(x => x.Users).Cascade.All();
             HasMany(x => x.Labels).Cascade.AllDeleteOrphan();
             HasMany(x => x.Issues).Cascade.AllDeleteOrphan();
+            HasManyToMany(x => x.Documents).Table("ProjectDocument").Cascade.AllDeleteOrphan();
             References(x => x.Customer);
         }
     }
