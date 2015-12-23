@@ -13,8 +13,11 @@
       <input type="hidden" name="issueId" class="booking_Issue_Id" value="${?booking.Issue.Id}" />
       <input type="text" class="booking-issue-edit booking-edit-field issue-chooser" title="#${?booking.Issue.Number} - ${?booking.Issue.Name}" value="#${?booking.Issue.Number}">
     </div>
-    <div class="large-6 columns no-padding end">
+    <div class="large-5 columns no-padding">
       <input type="text" class="booking-comment-edit booking-edit-field booking_Comment" name="booking.Comment" value="${booking.Comment}">
+    </div>
+    <div class="large-1 columns no-padding end">
+      <input type="text" name="booking.Date" class="date booking-edit-field" placeholder="Eerder" value="${booking.Date}">
     </div>
     <div class="large-1 columns no-padding">
       <a href="#" class="button success radius supertiny no-margin booking-edit-save" onclick="$(this).parents('form').submit()">Edit <i class="fa fa-check"></i></a>

@@ -243,18 +243,20 @@
         bookingInput.val(hoursOutput);
       });
 
+      row.find('.date').fdatepicker(datepickerOptions);
 
+    };
+
+    var datepickerOptions = {
+      format: 'dd-mm-yyyy',
+      weekStart: 1
     };
 
     bookingRowInit($('.booking-row-new'));
 
-    $('.date').fdatepicker({
-      format: 'dd-mm-yyyy',
-      weekStart: 1
-    }).on('show', function () {
+    $('.date').fdatepicker(datepickerOptions).on('show', function () {
       $('[data-dayshift]').removeClass('active');
     });
-
 
     $('[data-dayshift]').each(function () {
       var shift = $(this).data('dayshift');
