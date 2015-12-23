@@ -2,19 +2,19 @@
   <input type="hidden" name="id" value="${booking.Id}" />
   <div class="row booking-row-edit">
     <div class="large-1 columns no-padding">
-      <input type="hidden" name="booking.Minutes" class="booking_Minutes" />
+      <input type="hidden" name="booking.Minutes" class="booking_Minutes" value="${booking.Time}" />
       <input type="text" class="booking-minutes-edit booking-edit-field booking-parser" value="${booking.Time}">
     </div>
     <div class="large-3 columns no-padding">
-      <input type="hidden" name="projectId" class="booking_Project_Id" />
-      <input type="text" class="booking-project-edit booking-edit-field project-chooser" value="${booking.Project.Name}">
+      <input type="hidden" name="projectId" class="booking_Project_Id" value="${booking.Project.Id}" />
+      <input type="text" data-suggestion="${?suggestion.data}" class="booking-project-edit booking-edit-field project-chooser" value="${booking.Project.Name}">
     </div>
     <div class="large-1 columns no-padding">
-      <input type="hidden" name="issueId" class="booking_Issue_Id" />
+      <input type="hidden" name="issueId" class="booking_Issue_Id" value="${?booking.Issue.Id}" />
       <input type="text" class="booking-issue-edit booking-edit-field issue-chooser" title="#${?booking.Issue.Number} - ${?booking.Issue.Name}" value="#${?booking.Issue.Number}">
     </div>
     <div class="large-6 columns no-padding end">
-      <input type="text" class="booking-comment-edit booking-edit-field booking_Comment" value="${booking.Comment}">
+      <input type="text" class="booking-comment-edit booking-edit-field booking_Comment" name="booking.Comment" value="${booking.Comment}">
     </div>
     <div class="large-1 columns no-padding">
       <a href="#" class="button success radius supertiny no-margin booking-edit-save" onclick="$(this).parents('form').submit()">Edit <i class="fa fa-check"></i></a>

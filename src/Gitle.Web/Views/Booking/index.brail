@@ -126,10 +126,10 @@
 
     $('.booking-row').hover(function () {
       $(this).addClass('booking-highlight');
-      $(this).find('.booking-buttons').fadeIn(100);
+      $(this).find('.booking-buttons').show();
     }, function () {
       $(this).removeClass('booking-highlight');
-      $(this).find('.booking-buttons').fadeOut(100);
+      $(this).find('.booking-buttons').hide();
     });
 
     $('.booking-edit').on('click', function (e) {
@@ -147,13 +147,12 @@
         },
         url: '/booking/edit',
         success: function (data) {
-          row.find('.booking-row-content').fadeOut(100, function () {
-            row.prepend(data);
-            row.find('.booking-row-edit').hide();
-            row.find('.booking-row-edit').fadeIn(100);
-            addEditListeners();
-            bookingRowInit(row.find('.booking-row-edit'));
-          });
+          row.find('.booking-row-content').hide();
+          row.prepend(data);
+          row.find('.booking-row-edit').hide();
+          row.find('.booking-row-edit').show();
+          addEditListeners();
+          bookingRowInit(row.find('.booking-row-edit'));
 
         }
       });
@@ -170,29 +169,30 @@
 
       $('.booking-edit-save').on('click', function (e) {
         e.preventDefault();
-        alert('Hij doet het, goos!');
       });
     };
 
     var bookingRowInit = function (row) {
 
+      row.find('.project-chooser').data('suggestion', undefined);
+
       row.find('.project-chooser').autocomplete({
         serviceUrl: '/project/autocomplete',
         autoSelectFirst: true,
         onSelect: function (suggestion) {
+          if (row.find('.project-chooser').data('suggestion') != undefined && row.find('.project-chooser').data('suggestion') == suggestion.data) return false;
+          row.find('.project-chooser').data('suggestion', suggestion.data);
           row.find('.booking_Project_Id').val(suggestion.data);
           row.find('.project-chooser').val(suggestion.value);
           row.find('.issue-chooser').val('');
           row.find('.booking_Issue_Id').val('');
+          row.find('.issue-chooser').autocomplete('setOptions', { params: { projectId: row.find('.booking_Project_Id').val() } });
         }
       });
 
       row.find('.issue-chooser').autocomplete({
         serviceUrl: '/issue/autocomplete',
         width: row.find('.project-chooser').width(),
-        onSearchStart: function () {
-          $(this).autocomplete('setOptions', { params: { projectId: row.find('.booking_Project_Id').val() } });
-        },
         noCache: true,
         autoSelectFirst: true,
         onSelect: function (suggestion) {
@@ -279,7 +279,7 @@
       $(this).addClass('active');
     }).filter('[data-dayshift=0]').click();
 
-    
+
 
   });
 </script>

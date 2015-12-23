@@ -98,7 +98,9 @@ namespace Gitle.Web.Controllers
             }
             else
             {
+                var suggestion = new Suggestion(booking.Project.Name, booking.Project.Id.ToString());
                 PropertyBag.Add("booking", booking);
+                PropertyBag.Add("suggestion", suggestion);
                 RenderView("_row");
                 CancelLayout();
             }
