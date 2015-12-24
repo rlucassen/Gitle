@@ -15,6 +15,12 @@ $.fn.extend({
       $(this).after('<small class="error">' + error + '</small>').parent().addClass("error");
     });
   },
+  commafy: function () {
+    return this.replace('.', ',');
+  },
+  dotify: function () {
+    return this.replace(',', '.');
+  },
   upload: function () {
     return this.each(function () {
       var textarea = $(this);
