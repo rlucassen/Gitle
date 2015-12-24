@@ -16,7 +16,7 @@
         public ApplicationController(ISessionFactory sessionFactory) : base(sessionFactory)
         {
         }
-
+        [Admin]
         public void Index()
         {
             PropertyBag.Add("items", session.Query<Application>().Where(x => x.IsActive).ToList());
