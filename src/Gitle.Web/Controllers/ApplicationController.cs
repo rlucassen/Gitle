@@ -4,6 +4,7 @@
     using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
+    using Helpers;
     using Model;
     using Model.Interfaces.Service;
     using Model.Nested;
@@ -20,7 +21,7 @@
         {
             PropertyBag.Add("items", session.Query<Application>().Where(x => x.IsActive).ToList());
         }
-
+        [Admin]
         public void New()
         {
             PropertyBag.Add("item", new Application());
@@ -28,6 +29,7 @@
             RenderView("edit");
         }
 
+        [Admin]
         public void Edit(string applicationSlug)
         {
             var application = session.Query<Application>().FirstOrDefault(x => x.Slug == applicationSlug);
@@ -36,12 +38,13 @@
             if (application != null) PropertyBag.Add("customerId", application.Customer.Id);
         }
 
+        [Admin]
         public void View(string applicationSlug)
         {
             var application = session.Query<Application>().FirstOrDefault(x => x.Slug == applicationSlug);
             PropertyBag.Add("item", application);
         }
-
+        [Admin]
         public void Save(string applicationSlug, long customerId)
         {
             var item = session.Query<Application>().FirstOrDefault(x => x.IsActive && x.Slug == applicationSlug);
@@ -67,7 +70,7 @@
 
             RedirectToUrl("/application/index");
         }
-
+        [Admin]
         public void Delete(string applicationSlug)
         {
             var application = session.Query<Application>().FirstOrDefault(x => x.IsActive && x.Slug == applicationSlug);
@@ -80,6 +83,7 @@
             RedirectToReferrer();
         }
 
+        [Admin]
         public void Comments(string applicationSlug, string comment)
         {
             var item = session.Query<Application>().FirstOrDefault(p => p.Slug == applicationSlug);

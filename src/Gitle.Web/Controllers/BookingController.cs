@@ -8,12 +8,15 @@ using NHibernate.Linq;
 
 namespace Gitle.Web.Controllers
 {
+    using Helpers;
+
     public class BookingController : SecureController
     {
         public BookingController(ISessionFactory sessionFactory) : base(sessionFactory)
         {
         }
 
+        [Admin]
         public void Index()
         {
             var bookings = session.Query<Booking>()
@@ -23,7 +26,7 @@ namespace Gitle.Web.Controllers
                 .ToDictionary(g => new { date = g.Key, total = g.ToList().Sum(x => x.Minutes) }, g => g.ToList());
             PropertyBag.Add("bookings", bookings);
         }
-
+        [Admin]
         public void Save()
         {
             var booking = BindObject<Booking>("booking");
@@ -41,7 +44,7 @@ namespace Gitle.Web.Controllers
             }
             RedirectToReferrer();
         }
-
+        [Admin]
         public void Save(int id, int projectId, int issueId)
         {
             var booking = session.Query<Booking>().FirstOrDefault(x => x.IsActive && x.Id == id);
@@ -69,7 +72,7 @@ namespace Gitle.Web.Controllers
             }
             RedirectToReferrer();
         }
-
+        [Admin]
         public void Delete(int id)
         {
             var booking = session.Query<Booking>().FirstOrDefault(x => x.IsActive && x.Id == id && !x.Invoices.Any());
@@ -85,7 +88,7 @@ namespace Gitle.Web.Controllers
             }
             RedirectToReferrer();
         }
-
+        [Admin]
         public void Edit(int id)
         {
             var booking = session.Query<Booking>().FirstOrDefault(x => x.IsActive && x.Id == id && x.User == CurrentUser); //TODO: admin moet ook kunnen ophalen = andere user

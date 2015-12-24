@@ -206,6 +206,7 @@
             RenderText(comment);
         }
 
+        [Admin]
         public void DeleteDocument(string projectSlug, long id)
         {
             var item = session.Query<Project>().FirstOrDefault(p => p.Slug == projectSlug);
