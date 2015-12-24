@@ -1,9 +1,9 @@
 ﻿<h1>Nieuwe bijlage maken</h1>
 <form action="create" method="POST">
-  <div class="row">
+  <div class="row booking-row-new">
     <div class="large-12 columns">
-      <input type="hidden" name="projectId" id="projectId" />
-      <input type="text" class="" id="project-chooser" placeholder="Project" />
+      <input type="hidden" name="projectId" class="booking_Project_Id" />
+      <input type="text" class="project-chooser" placeholder="Project" />
     </div>
   </div>
   <div class="row">
@@ -79,4 +79,4 @@
 </div>
 
 
-<script src="/Content/javascript/vendor/invoice.index.js"> </script>
+<script src="/Content/javascript/vendor/booking.js"> </script>

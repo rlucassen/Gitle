@@ -51,6 +51,11 @@
     });
   };
 
+  var datepickerOptions = {
+    format: 'dd-mm-yyyy',
+    weekStart: 1
+  };
+
   var bookingRowInit = function (row) {
 
     row.find('.project-chooser').data('suggestion', undefined);
@@ -124,11 +129,6 @@
 
     row.find('.date').fdatepicker(datepickerOptions);
 
-  };
-
-  var datepickerOptions = {
-    format: 'dd-mm-yyyy',
-    weekStart: 1
   };
 
   bookingRowInit($('.booking-row-new'));
