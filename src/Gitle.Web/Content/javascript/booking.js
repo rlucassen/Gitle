@@ -1,8 +1,7 @@
 ﻿$(function () {
   $('.booking-buttons').hide();
 
-  var activeRow = undefined;
-
+  // met css
   $('.booking-row').hover(function () {
     $(this).addClass('booking-highlight');
     $(this).find('.booking-buttons').show();
@@ -11,10 +10,12 @@
     $(this).find('.booking-buttons').hide();
   });
 
+  var activeRow = undefined;
   $('.booking-edit').on('click', function (e) {
     e.preventDefault();
     var row = $(this).parents('.booking-row');
     if (activeRow != undefined) {
+      // hele form moet weg
       activeRow.find('.booking-row-edit').remove();
       activeRow.find('.booking-row-content').show();
     }
@@ -28,27 +29,26 @@
       success: function (data) {
         row.find('.booking-row-content').hide();
         row.prepend(data);
-        row.find('.booking-row-edit').hide();
-        row.find('.booking-row-edit').show();
-        addEditListeners();
-        bookingRowInit(row.find('.booking-row-edit'));
+        addEditListeners(row);
+        bookingRowInit(row);
 
       }
     });
   });
 
-  var addEditListeners = function () {
-    $('.booking-edit-cancel').on('click', function (e) {
+  var addEditListeners = function (row) {
+    row.find('.booking-edit-cancel').on('click', function (e) {
       e.preventDefault();
-      var row = $(this).parents('.booking-row');
+      // hele form moet weg
       row.find('.booking-row-edit').remove();
       row.find('.booking-row-content').show();
       activeRow = undefined;
     });
+  };
 
-    $('.booking-edit-save').on('click', function (e) {
-      e.preventDefault();
-    });
+  var datepickerOptions = {
+    format: 'dd-mm-yyyy',
+    weekStart: 1
   };
 
   var bookingRowInit = function (row) {
@@ -58,29 +58,30 @@
     row.find('.project-chooser').autocomplete({
       serviceUrl: '/project/autocomplete',
       autoSelectFirst: true,
+      noCache: true,
       onSelect: function (suggestion) {
-        if (row.find('.project-chooser').data('suggestion') != undefined && row.find('.project-chooser').data('suggestion') == suggestion.data) return false;
-        row.find('.project-chooser').data('suggestion', suggestion.data);
+        var projectChooser = row.find('.project-chooser');
+        if (projectChooser.data('suggestion') != undefined && projectChooser.data('suggestion') == suggestion.data) return false;
+        projectChooser.data('suggestion', suggestion.data).val(suggestion.value);
         row.find('.booking_Project_Id').val(suggestion.data);
-        row.find('.project-chooser').val(suggestion.value);
-        row.find('.issue-chooser').val('');
+        row.find('.issue-chooser').val('').autocomplete('setOptions', { params: { projectId: suggestion.data } });
         row.find('.booking_Issue_Id').val('');
-        row.find('.issue-chooser').autocomplete('setOptions', { params: { projectId: row.find('.booking_Project_Id').val() } });
       }
     });
 
     row.find('.issue-chooser').autocomplete({
       serviceUrl: '/issue/autocomplete',
-      width: row.find('.project-chooser').width(),
-      noCache: true,
       params: { projectId: row.find('.booking_Project_Id').val() },
       autoSelectFirst: true,
+      noCache: true,
+      width: row.find('.project-chooser').width(),
       onSelect: function (suggestion) {
         row.find('.booking_Issue_Id').val(suggestion.data);
         row.find('.issue-chooser').val(suggestion.value);
       }
     });
 
+    // naar app.js, universeel maken door vanuit booking-parser te verwijzen naar output veld.
     var bookingInput = row.find('.booking_Minutes');
     $('.booking-parser').change(function (e) {
       var value = $(this).val().replace(',', '.');
@@ -124,11 +125,6 @@
 
     row.find('.date').fdatepicker(datepickerOptions);
 
-  };
-
-  var datepickerOptions = {
-    format: 'dd-mm-yyyy',
-    weekStart: 1
   };
 
   bookingRowInit($('.booking-row-new'));

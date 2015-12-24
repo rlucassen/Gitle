@@ -51,9 +51,8 @@
     <Content Include="Content\javascript\app.min.js">
       <DependentUpon>app.js</DependentUpon>
     </Content>
-    <Content Include="Content\javascript\vendor\booking.js" />
-    <Content Include="Content\javascript\vendor\invoice.index.js" />
-    <Content Include="Content\javascript\vendor\invoice.js" />
+    <Content Include="Content\javascript\booking.js" />
+    <Content Include="Content\javascript\invoice.js" />
     <Content Include="Content\javascript\vendor\jquery.autocomplete.js" />
     <Content Include="Content\javascript\vendor\date.js" />
     <Content Include="Content\javascript\vendor\foundation.datepicker.js" />

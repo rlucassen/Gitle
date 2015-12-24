@@ -20,7 +20,7 @@
       <input type="text" name="booking.Date" class="date booking-edit-field" placeholder="Eerder" value="${booking.Date.ToString("dd-MM-yyyy")}">
     </div>
     <div class="large-1 columns no-padding">
-      <a href="#" class="button success radius supertiny no-margin booking-edit-save" onclick="$(this).parents('form').submit()">Edit <i class="fa fa-check"></i></a>
+      <button type="submit" class="button success radius supertiny no-margin booking-edit-save">Edit <i class="fa fa-check"></i></button>
       <a href="#" class="button secondary radius supertiny no-margin booking-edit-cancel">Cancel <i class="fa fa-times"></i></a>
     </div>
   </div>

@@ -12,26 +12,26 @@
       estimateButton.addClass('alert');
       hoursButton.addClass('success');
     }
-  }
+  };
 
-  var computePriceForInvoiceLine = function (invoiceLine) {
+  var computePriceForInvoiceLine = function(invoiceLine) {
     var hourPrice = parseFloat($('#invoice_HourPrice').val());
     var hours = parseFloat(invoiceLine.find('.invoiceline-hours-input').val().replace(',', '.'));
     var nill = parseInt(invoiceLine.find('.invoiceline-null').val());
     var price = hours * hourPrice * (1 - nill);
     invoiceLine.find('.invoiceline-price').val(price.toString().replace('.', ','));
     calculateTotals();
-  }
+  };
 
-  var calculateTotals = function () {
+  var calculateTotals = function() {
     var subtotalPrice = 0.0;
-    $('.invoiceline').each(function () {
+    $('.invoiceline').each(function() {
       var linePrice = parseFloat($(this).find('.invoiceline-price').val().replace(',', '.')) * (1 - parseInt($(this).find('.invoiceline-null').val()));
       subtotalPrice += linePrice;
     });
     $('#invoice_Subtotal').val(subtotalPrice.toString().replace('.', ','));
     var correctionTotalPrice = 0.0;
-    $('.correctionline').each(function () {
+    $('.correctionline').each(function() {
       var correctionValue = $(this).find('.correctionline-price').val();
       if (correctionValue)
         correctionTotalPrice += parseFloat(correctionValue.replace(',', '.'));
@@ -41,7 +41,7 @@
     $('.vatline-price').val(vatPrice.toString().replace('.', ','));
     var totalPrice = subtotalPrice + correctionTotalPrice + vatPrice;
     $('#invoice_Total').val(totalPrice.toString().replace('.', ','));
-  }
+  };
 
   $('.invoiceline-issue').each(function () {
     computeHoursForIssue($(this).data('issue'));
