@@ -708,8 +708,17 @@ input[type=checkbox].inline {
   padding: 0.1rem 0.2rem 0.1rem 0.2rem;
   font-size: 0.6875rem; }
 
-.booking-highlight {
+.booking-row :hover {
   background-color: #E6E6E6; }
+  .booking-row :hover .booking-buttons {
+    display: block; }
+    .booking-row :hover .booking-buttons .booking-edit :hover {
+      background-color: #007095; }
+    .booking-row :hover .booking-buttons .alert :hover {
+      background-color: #CF2A19; }
+
+.booking-row .booking-buttons {
+  display: none; }
 
 .booking-row-edit {
   background-color: #E8B087;

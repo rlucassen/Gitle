@@ -1,21 +1,9 @@
 ﻿$(function () {
-  $('.booking-buttons').hide();
-
-  // met css
-  $('.booking-row').hover(function () {
-    $(this).addClass('booking-highlight');
-    $(this).find('.booking-buttons').show();
-  }, function () {
-    $(this).removeClass('booking-highlight');
-    $(this).find('.booking-buttons').hide();
-  });
-
   var activeRow = undefined;
   $('.booking-edit').on('click', function (e) {
     e.preventDefault();
     var row = $(this).parents('.booking-row');
     if (activeRow != undefined) {
-      // hele form moet weg
       activeRow.find('.booking-row-edit').remove();
       activeRow.find('.booking-row-content').show();
     }
@@ -39,7 +27,6 @@
   var addEditListeners = function (row) {
     row.find('.booking-edit-cancel').on('click', function (e) {
       e.preventDefault();
-      // hele form moet weg
       row.find('.booking-row-edit').remove();
       row.find('.booking-row-content').show();
       activeRow = undefined;
