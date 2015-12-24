@@ -33,6 +33,12 @@
         <div class="large-9 columns"><input type="number" name="item.HourPrice" value="${?item.HourPrice}"/></div>
       </div>
       <div class="row">
+        <div class="large-3 columns">Comments</div>
+        <div class="large-9 columns">
+          <textarea type="text" id="item_Comments" name="item.Comments" value="" class="focus">${?item.Comments}</textarea>
+        </div>
+      </div>
+      <div class="row">
         <div class="large-3 columns">Projectinformatie</div>
         <div class="large-9 columns">
           ${Form.TextArea("item.Information", {"class": "uploadarea"})}

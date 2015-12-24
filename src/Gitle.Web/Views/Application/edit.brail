@@ -23,14 +23,12 @@
         </div>
       </div>
 
-      <span>Comments</span>
-      <div class="comments-container" data-url="/application/${item.Slug}/comments">
-        <div class="comments marked">${?item.Comments}</div>
-        <textarea name="comment">
-          ${?item.Comments}
-        </textarea>
+      <div class="row">
+        <div class="large-3 columns">Comments</div>
+        <div class="large-9 columns">
+          <textarea type="text" id="item_Comments" name="item.Comments" value="" class="focus">${?item.Comments}</textarea>
+        </div>
       </div>
-
       <div class="row">
         <div class="large-12 columns"><input type="submit" class="button" value="Opslaan" /></div>
       </div>
