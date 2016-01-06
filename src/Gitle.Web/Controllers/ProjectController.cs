@@ -227,7 +227,11 @@
         public object Autocomplete(string query)
         {
             var suggestions = new List<Suggestion>();
-            var projects = session.Query<Project>().Where(p => p.Name.Contains(query));
+            var projects = session.Query<Project>();
+            if (query != null)
+            {
+                projects = projects.Where(p => p.Name.Contains(query));
+            }
             suggestions.AddRange(projects.Select(x => new Suggestion(x.Name, x.Id.ToString())));
             return new { query = query, suggestions = suggestions };
         }

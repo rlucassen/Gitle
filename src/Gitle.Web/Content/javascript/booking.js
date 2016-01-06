@@ -46,6 +46,7 @@
       serviceUrl: '/project/autocomplete',
       autoSelectFirst: true,
       noCache: true,
+      minChars: 0,
       onSelect: function (suggestion) {
         var projectChooser = row.find('.project-chooser');
         if (projectChooser.data('suggestion') != undefined && projectChooser.data('suggestion') == suggestion.data) return false;
@@ -54,13 +55,16 @@
         row.find('.issue-chooser').val('').autocomplete('setOptions', { params: { projectId: suggestion.data } });
         row.find('.booking_Issue_Id').val('');
       }
-    });
+    }).on('focus', function () {
+      $(this).autocomplete().onValueChange();
+    });;
 
     row.find('.issue-chooser').autocomplete({
       serviceUrl: '/issue/autocomplete',
       params: { projectId: row.find('.booking_Project_Id').val() },
       autoSelectFirst: true,
       noCache: true,
+      minChars: 0,
       width: row.find('.project-chooser').width(),
       onSelect: function (suggestion) {
         row.find('.booking_Issue_Id').val(suggestion.data);

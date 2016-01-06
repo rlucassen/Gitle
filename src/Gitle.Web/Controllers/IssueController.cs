@@ -574,7 +574,11 @@ using Castle.MonoRail.Framework;
         public object Autocomplete(long projectId, string query)
         {
             var suggestions = new List<Suggestion>();
-            var issues = session.Query<Issue>().Where(i => i.Project.Id == projectId && (i.Number.ToString().Contains(query) || i.Name.Contains(query)));
+            var issues = session.Query<Issue>().Where(i => i.Project.Id == projectId);
+            if (query != null)
+            {
+                issues = issues.Where(i => i.Number.ToString().Contains(query) || i.Name.Contains(query));
+            }
             suggestions.AddRange(issues.Select(x => new Suggestion(string.Format("#{0} - {1}", x.Number, x.Name), x.Id.ToString())));
             return new { query = query, suggestions = suggestions };
         }
