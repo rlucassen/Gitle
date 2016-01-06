@@ -31,9 +31,9 @@ namespace Gitle.Web.Controllers
         [Admin]
         public void Create(long projectId, DateTime startDate, DateTime endDate, bool oldBookings)
         {
-            var project = session.Get<Project>(projectId);
+            var project = session.Query<Project>().FirstOrDefault(x => x.IsActive && x.Id == projectId);
 
-            var bookings = session.Query<Booking>();
+            var bookings = session.Query<Booking>().Where(x => x.IsActive && x.Project == project);
 
             if(oldBookings){
                 bookings = bookings.Where(x => x.Date <= endDate && (x.Date >= startDate || x.Invoices.Count(i => i.State == InvoiceState.Definitive) == 0));
