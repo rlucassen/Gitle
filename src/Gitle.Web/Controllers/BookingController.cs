@@ -26,6 +26,34 @@ namespace Gitle.Web.Controllers
                 .ToDictionary(g => new { date = g.Key, total = g.ToList().Sum(x => x.Minutes) }, g => g.ToList());
             PropertyBag.Add("bookings", bookings);
         }
+
+        [Admin]
+        public void Overview()
+        {
+            var bookingsByDate = session.Query<Booking>()
+                .Where(x => x.IsActive)
+                .OrderByDescending(x => x.Date)
+                .GroupBy(x => x.Date.Date);
+                //.ToDictionary(g => new { date = g.Key, total = g.ToList().Sum(x => x.Minutes) }, g => g.ToList());
+            var dayList = new List<BookingDay>();
+            foreach (var bookingDateGroup in bookingsByDate)
+            {
+                var bookingDay = new BookingDay {Day = bookingDateGroup.Key, Users = new List<BookingUser>()};
+                var bookingsByUser = bookingDateGroup.GroupBy(x => x.User);
+                foreach (var bookingUserGroup in bookingsByUser)
+                {
+                    var bookingUser = new BookingUser
+                    {
+                        User = bookingUserGroup.Key,
+                        Bookings = bookingUserGroup.ToList()
+                    };
+                    bookingDay.Users.Add(bookingUser);
+                }
+                dayList.Add(bookingDay);
+            }
+            PropertyBag.Add("dayList", dayList);
+        }
+
         [Admin]
         public void Save()
         {
@@ -106,5 +134,19 @@ namespace Gitle.Web.Controllers
             }
         }
 
+    }
+
+    public class BookingDay
+    {
+        public DateTime Day;
+        public IList<BookingUser> Users;
+        public double Minutes { get { return Users.Sum(u => u.Bookings.Sum(x => x.Minutes)); } }
+    }
+
+    public class BookingUser
+    {
+        public User User;
+        public IList<Booking> Bookings;
+        public double Minutes { get { return Bookings.Sum(x => x.Minutes); } }
     }
 }
