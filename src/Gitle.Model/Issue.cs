@@ -24,13 +24,14 @@
         public virtual double Hours { get; set; }
         public virtual int Devvers { get; set; }
 
+        public virtual int PrioOrder { get; set; }
+
         public virtual Project Project { get; set; }
         public virtual IList<Label> Labels { get; set; }
         public virtual IList<Comment> Comments { get; set; }
         public virtual IList<ChangeState> ChangeStates { get; set; }
         public virtual IList<Change> Changes { get; set; }
         public virtual IList<Pickup> Pickups { get; set; }
-
 
         public virtual string BodyHtml { get { return Body.Markdown(Project); } }
 
@@ -229,11 +230,13 @@
         {
             if(State != IssueState.Archived)
                 ChangeState(user, IssueState.Closed);
+            PrioOrder = 0;
         }
 
         public virtual void Archive(User user)
         {
             ChangeState(user, IssueState.Archived);
+            PrioOrder = 0;
         }
 
         public virtual void Change(User user)

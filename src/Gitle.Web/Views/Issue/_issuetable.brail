@@ -1,8 +1,8 @@
-﻿<div class="issues">
+﻿<div class="issues" id="issueContainer">
   <% for issue in items: %>
   <div class="row">
     <div class="large-12 columns">
-      <div class="issue<% if issue.Touched(CurrentUser): %> touched<% end %> ${issue.State.ToString()}">
+      <div class="issue<% if issue.Touched(CurrentUser): %> touched<% end %> radius<% if issue.Pickups.Count == 0: %> free<% end %> ${issue.State.ToString()}" data-issueid="${issue.Number}">
         <div class="row">
           <div class="large-1 columns issuestate">
             <div class="row">
@@ -10,13 +10,19 @@
                 <span class="number">#${issue.Number}</span>
                 <input type="checkbox" name="issue" value="${issue.Number}" class="no-margin" />
               </div>
-              <div class="large-6 columns">
+              <div class="large-6 columns text-center">
                 <% if issue.IsOpen: %>
                 <i class="fa fa-exclamation-circle green" title="open"></i>
                 <% elif issue.IsArchived: %>
                 <i class="fa fa-trash red" title="${Helpers.DateTimeHelper.Readable(issue.ArchivedAt)}" title="gearchiveerd"></i>
                 <% else: %>
                 <i class="fa fa-ban red" title="${Helpers.DateTimeHelper.Readable(issue.ClosedAt)}" title="gesloten"></i>
+                <% end %>
+                <% if issue.PrioOrder == 0 and issue.IsOpen and issue.Pickups.Count == 0: %>
+                <i class="fa fa-paw red noprio" title="Niet geprioriteerd"></i>
+                <% end %>
+                <% if issue.PickedUpBy != null and issue.IsOpen: %>
+                <i class="fa fa-user orange pickedup" title="In behandeling"></i>
                 <% end %>
               </div>
             </div>
@@ -43,7 +49,7 @@
             </div>
             <div class="row detailsrow">
               <div class="large-8 columns">
-                <% if issue.PickedUpBy != null: %>
+                <% if issue.PickedUpBy != null and issue.IsOpen: %>
                 behandelaar: <strong>${?issue.PickedUpBy.FullName}</strong> <% if issue.PickedUpAt != null: %>(opgepakt op ${Helpers.DateTimeHelper.Readable(issue.PickedUpAt)})<% end %>
                 <% end %>
               </div>
@@ -55,13 +61,25 @@
             </div>
           </div>
           <div class="large-3 columns text-right">
-            <ul class="button-group">
-              <li><a class="button tiny no-margin" href="/project/${project.Slug}/issue/${issue.Number}/view">Open</a></li>
-              <% if CurrentUser.IsAdmin and not issue.IsArchived: %>
-                <li><a class="button tiny success no-margin" href="/project/${project.Slug}/issue/${issue.Number}/pickup">Oppakken</a></li>
-                <li><a class="button tiny success no-margin" href="/project/${project.Slug}/issue/${issue.Number}/edit">Bewerk</a></li>
+            <div class="row collapse">
+              <div class="large-10 columns">
+                <ul class="button-group actions">
+                  <li><a class="button tiny no-margin" href="/project/${project.Slug}/issue/${issue.Number}/view">Open</a></li>
+                  <% if CurrentUser.IsAdmin and not issue.IsArchived: %>
+                  <li><a class="button tiny success no-margin" href="/project/${project.Slug}/issue/${issue.Number}/pickup">Oppakken</a></li>
+                  <li><a class="button tiny success no-margin" href="/project/${project.Slug}/issue/${issue.Number}/edit">Bewerk</a></li>
+                  <% end %>
+                </ul>
+              </div>
+              <% if issue.PickedUpBy == null and issue.IsOpen: %>
+              <div class="large-2 columns text-center draghandle">
+                <i class="fa fa-arrow-up"></i>
+                <i class="fa fa-arrow-down"></i>
+              </div>
+              <% else: %>
+              <div class="large-2 columns"></div>
               <% end %>
-            </ul>
+            </div>
           </div>
         </div>
       </div>

@@ -219,7 +219,7 @@
 
             if(querySorts.Count == 0 && linqSorts.Count == 0) 
             {
-                items = items.OrderByDescending(x => x.Number).OrderBy(x => x.State).ToList();
+                items = items.OrderBy(x => x.State).ThenBy(x => x.Pickups.Count == 0).ThenBy(x => x.PrioOrder == 0).ThenBy(x => x.PrioOrder).ThenByDescending(x => x.ChangeStates.Max(cs => cs.CreatedAt)).ToList();
             }
 
             // TODO: dit moet eigenlijk verder naar boven in de query
@@ -322,6 +322,7 @@
             var project = session.Query<Project>().FirstOrDefault(p => p.Slug == projectSlug);
             var issue = session.Query<Issue>().FirstOrDefault(i => i.Number == issueId && i.Project == project);
 
+            var hash = string.Empty;
             if (issue != null)
             {
                 BindObjectInstance(issue, "item");
@@ -333,6 +334,7 @@
                 issue.Number = project.NewIssueNumber;
                 issue.Project = project;
                 issue.Open(CurrentUser);
+                hash = $"#issue{issue.Number}";
             }
 
             issue.Labels = labels.Select(label => session.Query<Label>().FirstOrDefault(l => l.Name == label)).ToList();
@@ -342,7 +344,7 @@
                 session.SaveOrUpdate(issue);
                 transaction.Commit();
             }
-            RedirectToUrl(string.Format("/project/{0}/issue/index", project.Slug));
+            RedirectToUrl($"/project/{project.Slug}/issue/index{hash}");
         }
 
         [Admin]
@@ -489,6 +491,25 @@
                 session.SaveOrUpdate(issue);
                 tx.Commit();
             }
+        }
+
+        [MustHaveProject]
+        public void ReOrderIssues(string projectSlug, int[] issueNumbers)
+        {
+            var issues = session.Query<Issue>().Where(x => x.Project.Slug == projectSlug && issueNumbers.Contains(x.Number));
+            var order = 1;
+            using (var tx = session.BeginTransaction())
+            {
+                foreach (var issueNumber in issueNumbers)
+                {
+                    var issue = issues.Single(x => x.Number == issueNumber);
+                    issue.PrioOrder = order;
+                    order++;
+                    session.SaveOrUpdate(issue);
+                }
+                tx.Commit();
+            }
+            CancelView();
         }
 
 
