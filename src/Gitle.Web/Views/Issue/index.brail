@@ -254,7 +254,6 @@
       $('#issueContainer .issue.Open.free').each(function () {
         orderedIssues.push($(this).data('issueid'));
       });
-      console.log(orderedIssues.join(','));
       $.ajax({
         url: '/project/${project.Slug}/issue/reorderissues',
         data: {
