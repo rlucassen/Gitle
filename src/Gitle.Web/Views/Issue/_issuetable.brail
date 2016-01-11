@@ -6,11 +6,11 @@
         <div class="row">
           <div class="large-1 columns issuestate">
             <div class="row">
-              <div class="large-6 columns">
+              <div class="small-6 columns">
                 <span class="number">#${issue.Number}</span>
                 <input type="checkbox" name="issue" value="${issue.Number}" class="no-margin" />
               </div>
-              <div class="large-6 columns text-center">
+              <div class="small-6 columns large-text-center medium-text-right">
                 <% if issue.IsOpen: %>
                 <i class="fa fa-exclamation-circle green" title="open"></i>
                 <% elif issue.IsArchived: %>
@@ -62,7 +62,7 @@
           </div>
           <div class="large-3 columns text-right">
             <div class="row collapse">
-              <div class="large-10 columns">
+              <div class="large-10 small-12 columns">
                 <ul class="button-group actions">
                   <li><a class="button tiny no-margin" href="/project/${project.Slug}/issue/${issue.Number}/view">Open</a></li>
                   <% if CurrentUser.IsAdmin and not issue.IsArchived: %>
@@ -72,12 +72,12 @@
                 </ul>
               </div>
               <% if issue.PickedUpBy == null and issue.IsOpen: %>
-              <div class="large-2 columns text-center draghandle">
+              <div class="large-2 columns text-center draghandle show-for-large-up">
                 <i class="fa fa-arrow-up"></i>
                 <i class="fa fa-arrow-down"></i>
               </div>
               <% else: %>
-              <div class="large-2 columns"></div>
+              <div class="large-2 columns show-for-large-up"></div>
               <% end %>
             </div>
           </div>
