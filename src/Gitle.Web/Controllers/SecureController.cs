@@ -37,8 +37,7 @@
                 return null;
             }
 
-            base.InvokeMethod(method, request, extraArgs);
-            return null;
+            return base.InvokeMethod(method, request, extraArgs);
         }
         
         protected void ServeCsv(string exportName, string csv)

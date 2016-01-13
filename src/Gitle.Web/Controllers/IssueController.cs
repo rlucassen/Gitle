@@ -8,6 +8,7 @@
     using System.Text;
     using System.Text.RegularExpressions;
     using System.Web;
+    using Castle.MonoRail.Framework;
     using Castle.MonoRail.Framework.Routing;
     using Clients.Freckle.Interfaces;
     using Clients.Freckle.Models;
@@ -494,24 +495,36 @@
         }
 
         [MustHaveProject]
-        public void ReOrderIssues(string projectSlug, int[] issueNumbers)
+        public void ReOrderIssue(string projectSlug, int issueNumber, int newIndex)
         {
-            var issues = session.Query<Issue>().Where(x => x.Project.Slug == projectSlug && issueNumbers.Contains(x.Number));
+            var issues = session.Query<Issue>().Where(x => x.Project.Slug == projectSlug && x.Pickups.Count == 0).ToList().Where(x => x.ChangeStates.Last().IssueState == IssueState.Open).OrderBy(x => x.PrioOrder).ToList();
+            
+            var issue = session.Query<Issue>().First(x => x.Project.Slug == projectSlug && x.Number == issueNumber);
+            issues.Remove(issue);
+            issue.Prioritized = true;
+            issues.Insert(newIndex, issue);
+
             var order = 1;
             using (var tx = session.BeginTransaction())
             {
-                foreach (var issueNumber in issueNumbers)
+                foreach (var currentissue in issues)
                 {
-                    var issue = issues.Single(x => x.Number == issueNumber);
-                    issue.PrioOrder = order;
+                    currentissue.PrioOrder = order;
                     order++;
-                    session.SaveOrUpdate(issue);
+                    session.SaveOrUpdate(currentissue);
                 }
                 tx.Commit();
             }
+
             CancelView();
         }
 
+        [return: JSONReturnBinder]
+        public Dictionary<int, int> GetPrioOrder(string projectSlug)
+        {
+            var issues = session.Query<Issue>().Where(x => x.Project.Slug == projectSlug && x.Pickups.Count == 0).ToList().Where(x => x.ChangeStates.Last().IssueState == IssueState.Open);
+            return issues.ToDictionary(issue => issue.Number, issue => issue.PrioOrder);
+        }
 
         [Admin]
         public void ExportImport(string projectSlug)

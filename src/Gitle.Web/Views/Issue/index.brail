@@ -249,21 +249,30 @@
       $('#newFilterPreset #item_FilterString').val($('#query').val());
     });
 
-    var orderIssues = function () {
-      var orderedIssues = [];
-      $('#issueContainer .issue.Open.free').each(function () {
-        orderedIssues.push($(this).data('issueid'));
-      });
+    var dragging = false;
+
+    var orderIssues = function (e) {
+      var issueContainer = $(e.item).find('.issue');
+      issueContainer.find('.noprio').fadeOut(500, function () { $(this).remove(); });
+      var issueNumber = issueContainer.data('issueid');
+      var newIndex = (e.newIndex != undefined ? e.newIndex : e.oldIndex) - $('#issueContainer > .row.pickedup').length;
       $.ajax({
-        url: '/project/${project.Slug}/issue/reorderissues',
+        url: '/project/${project.Slug}/issue/reorderissue',
         data: {
-          issueNumbers: orderedIssues
+          issueNumber: issueNumber,
+          newIndex: newIndex
+        },
+        success: function () {
+          dragging = false;
         }
       });
     };
-    var list = document.getElementById("issueContainer");
-    Sortable.create(list, {
-      onUpdate: orderIssues,
+
+    Sortable.create(document.getElementById("issueContainer"), {
+      onEnd: orderIssues,
+      onStart: function () {
+        dragging = true;
+      },
       handle: ".draghandle"
     });
 
@@ -279,5 +288,31 @@
       }, 100);
       issue.css('background-color', '#fce87c');
     }
+
+    window.setInterval(function () {
+      if (!dragging) {
+        updatePrio();
+      }
+    }, 5000);
   });
+
+  var updatePrio = function () {
+    var lastPickedUp = $('#issueContainer > .row.pickedup').last();
+    $.ajax({
+      url: '/project/${project.Slug}/issue/getprioorder',
+      success: function (data) {
+        var sortedIssues = $('#issueContainer > .row.orderable').sort(function (a, b) {
+          var aIssueId = $(a).find('.issue').data('issueid');
+          var bIssueId = $(b).find('.issue').data('issueid');
+
+          return data[aIssueId] - data[bIssueId];
+        });
+        if (lastPickedUp.length != 0) {
+          sortedIssues.insertAfter(lastPickedUp);
+        } else {
+          sortedIssues.prependTo($('#issueContainer'));
+        }
+      }
+    });
+  };
 </script>

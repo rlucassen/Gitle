@@ -1,6 +1,6 @@
 ﻿<div class="issues" id="issueContainer">
   <% for issue in items: %>
-  <div class="row">
+  <div class="row <% if issue.IsOpen: %><% if issue.PickedUpBy == null:%>orderable<% else: %>pickedup<% end %><% end %>">
     <div class="large-12 columns">
       <div class="issue<% if issue.Touched(CurrentUser): %> touched<% end %> radius<% if issue.Pickups.Count == 0: %> free<% end %> ${issue.State.ToString()}" data-issueid="${issue.Number}">
         <div class="row">
@@ -18,7 +18,7 @@
                 <% else: %>
                 <i class="fa fa-ban red" title="${Helpers.DateTimeHelper.Readable(issue.ClosedAt)}" title="gesloten"></i>
                 <% end %>
-                <% if issue.PrioOrder == 0 and issue.IsOpen and issue.Pickups.Count == 0: %>
+                <% if not issue.Prioritized and issue.IsOpen and issue.Pickups.Count == 0: %>
                 <i class="fa fa-paw red noprio" title="Niet geprioriteerd"></i>
                 <% end %>
                 <% if issue.PickedUpBy != null and issue.IsOpen: %>

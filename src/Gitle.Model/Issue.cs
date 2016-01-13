@@ -24,6 +24,7 @@
         public virtual double Hours { get; set; }
         public virtual int Devvers { get; set; }
 
+        public virtual bool Prioritized { get; set; }
         public virtual int PrioOrder { get; set; }
 
         public virtual Project Project { get; set; }
