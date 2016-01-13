@@ -1,4 +1,4 @@
-﻿<div class="issues" id="issueContainer">
+﻿<div class="issues <% if prioritizable: %>prioritizable<% end %>" id="issueContainer"> 
   <% for issue in items: %>
   <div class="row <% if issue.IsOpen: %><% if issue.PickedUpBy == null:%>orderable<% else: %>pickedup<% end %><% end %>">
     <div class="large-12 columns">
@@ -72,7 +72,7 @@
                 </ul>
               </div>
               <% if issue.PickedUpBy == null and issue.IsOpen: %>
-              <div class="large-2 columns text-center draghandle show-for-large-up">
+              <div class="large-2 columns text-center show-for-large-up draghandle<% if not prioritizable: %> disabled<% end %>" <% if not prioritizable: %> title="Om prioriteiten aan te geven zul je de sortering uit moeten zetten"<% end %>>
                 <i class="fa fa-arrow-up"></i>
                 <i class="fa fa-arrow-down"></i>
               </div>

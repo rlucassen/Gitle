@@ -268,13 +268,22 @@
       });
     };
 
-    Sortable.create(document.getElementById("issueContainer"), {
-      onEnd: orderIssues,
-      onStart: function () {
-        dragging = true;
-      },
-      handle: ".draghandle"
-    });
+    var issueContainer = $('#issueContainer');
+    if (issueContainer.hasClass('prioritizable')) {
+      Sortable.create(document.getElementById("issueContainer"), {
+        onEnd: orderIssues,
+        onStart: function () {
+          dragging = true;
+        },
+        handle: ".draghandle"
+      });
+
+      window.setInterval(function () {
+        if (!dragging) {
+          updatePrio();
+        }
+      }, 5000);
+    }
 
     if (location.hash != "") {
       var issueNumber = location.hash.replace('#issue', '');
@@ -289,11 +298,6 @@
       issue.css('background-color', '#fce87c');
     }
 
-    window.setInterval(function () {
-      if (!dragging) {
-        updatePrio();
-      }
-    }, 5000);
   });
 
   var updatePrio = function () {

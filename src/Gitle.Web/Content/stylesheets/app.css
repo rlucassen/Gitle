@@ -535,6 +535,9 @@ table {
     cursor: move; }
     .issue .draghandle * {
       display: block; }
+    .issue .draghandle.disabled {
+      cursor: not-allowed;
+      opacity: 0.2; }
 
 .chosen-ghost {
   background-color: green !important; }
