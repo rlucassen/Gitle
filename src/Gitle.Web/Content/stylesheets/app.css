@@ -92,12 +92,6 @@ body.scroll .footer {
 .no-margin {
   margin: 0 !important; }
 
-.no-top-margin {
-  margin-top: 0 !important; }
-
-.no-bottom-margin {
-  margin-bottom: 0 !important; }
-
 .no-padding {
   padding: 0 !important; }
 
@@ -107,8 +101,11 @@ body.scroll .footer {
 .green {
   color: #3c9a5f; }
 
-.blue {
-  color: #008CBA; }
+.yellow {
+  color: gold; }
+
+.orange {
+  color: orange; }
 
 .small-text {
   font-size: 0.9rem; }
@@ -235,8 +232,7 @@ a.quickview-delay {
     color: #0079a1; }
 
 table {
-  width: 100%;
-  margin-bottom: 1em; }
+  width: 100%; }
   table input[type="text"] {
     margin-bottom: 0; }
   table thead {
@@ -518,6 +514,11 @@ table {
     font-weight: bold; }
   .issue .issuestate i {
     font-size: 1.6em; }
+  .issue .issuestate i.pickedup {
+    margin-top: 0.2em; }
+  .issue .issuestate i.noprio {
+    font-size: 1.3em;
+    margin-top: 0.2em; }
   .issue .namerow a {
     margin-right: 0.5em; }
   .issue .detailsrow {
@@ -526,6 +527,20 @@ table {
     font-size: 0.8em; }
     .issue .comments i {
       font-size: 1.4em; }
+  .issue .actions .button {
+    padding-left: 0.9em;
+    padding-right: 0.9em; }
+  .issue .draghandle {
+    padding-top: 2px;
+    cursor: move; }
+    .issue .draghandle * {
+      display: block; }
+    .issue .draghandle.disabled {
+      cursor: not-allowed;
+      opacity: 0.2; }
+
+.chosen-ghost {
+  background-color: green !important; }
 
 .issueaction:not(.Comment), .issueaction.Comment .panel {
   border-left: 3px solid #008CBA; }
@@ -552,64 +567,6 @@ body.admin table#issue-table th#issue-cost {
 
 body.admin table#issue-table th#issue-actions {
   width: 170px; }
-
-#booking [data-dayshift] {
-  border: 1px solid #ccc; }
-  #booking [data-dayshift].active {
-    background-color: #b9b9b9; }
-
-.booking h3 {
-  text-transform: capitalize;
-  color: #008CBA; }
-
-.booking .totalrow {
-  border-top: 2px solid #ccc;
-  margin-top: 0.5em;
-  padding-top: 0.5em; }
-
-#createinvoice {
-  font-size: 0.875rem; }
-  #createinvoice .invoice-title input {
-    font-size: 2em;
-    padding: 01em; }
-  #createinvoice .invoiceline .null {
-    color: #ccc; }
-  #createinvoice .invoiceline .button.tiny {
-    font-size: 0.875rem; }
-  #createinvoice .invoiceline .button.active {
-    font-weight: bold;
-    text-shadow: 2px 2px 0 #666; }
-  #createinvoice .bookings {
-    margin-bottom: 1em; }
-    #createinvoice .bookings .booking-date.old {
-      color: #cf2a0e;
-      font-weight: bold; }
-    #createinvoice .bookings .booking-hours-span {
-      padding: 0 0.5rem; }
-  #createinvoice .vatline .vat {
-    color: #ccc; }
-  #createinvoice .totals {
-    border-top: 2px solid #666;
-    padding-top: 1em; }
-
-.invoices {
-  border-top: 1px solid #ccc; }
-  .invoices .invoice {
-    padding: 1em 1em 0.2em;
-    border-bottom: 1px solid #ccc; }
-    .invoices .invoice:hover {
-      background-color: #efefef; }
-    .invoices .invoice .number {
-      font-size: 1.2em; }
-      .invoices .invoice .number.Concept {
-        background-color: #e7e7e7;
-        color: #333; }
-      .invoices .invoice .number.Gearchiveerd {
-        background-color: #f04124; }
-    .invoices .invoice .state {
-      font-size: 1.6em; }
-    .invoices .invoice .detailrow {
-      font-size: 0.8em; }
 
 table#issue-table th#issue-estimate, table#issue-table td.estimate {
   display: none; }
@@ -703,51 +660,4 @@ input[type=checkbox].inline {
     content: "Freckle project: "; }
   table.small-blocks td.login:before {
     content: "Username: "; } }
-
-.supertiny {
-  padding: 0.1rem 0.2rem 0.1rem 0.2rem;
-  font-size: 0.6875rem; }
-
-.booking-row :hover {
-  background-color: #E6E6E6; }
-  .booking-row :hover .booking-buttons {
-    display: block; }
-    .booking-row :hover .booking-buttons .booking-edit :hover {
-      background-color: #007095; }
-    .booking-row :hover .booking-buttons .alert :hover {
-      background-color: #CF2A19; }
-
-.booking-row .booking-buttons {
-  display: none; }
-
-.booking-row-edit {
-  background-color: #E8B087;
-  padding-left: 0.5rem; }
-
-.booking-edit-field {
-  height: 1rem !important;
-  margin: 0.15rem 0 0 0 !important; }
-
-.indent-td {
-  width: 25px; }
-
-.dragover {
-  -webkit-box-shadow: 0px 0px 3px 3px rgba(0, 140, 186, 0.46);
-  -moz-box-shadow: 0px 0px 3px 3px rgba(0, 140, 186, 0.46);
-  box-shadow: 0px 0px 3px 3px rgba(0, 140, 186, 0.46); }
-
-.booking-user-row {
-  background-color: #FAFAFA;
-  border-style: solid;
-  border-width: 1px;
-  border-color: #d8d8d8;
-  margin-bottom: 1.25rem;
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem; }
-
-.user-booking-total {
-  border-bottom: 1px solid #d8d8d8;
-  margin-bottom: 0.25rem !important; }
-  .user-booking-total h5 {
-    margin-bottom: 0.25rem; }
 

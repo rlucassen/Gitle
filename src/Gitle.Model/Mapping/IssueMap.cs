@@ -11,6 +11,8 @@
              Map(x => x.Body).CustomSqlType("nvarchar(max)").CustomType("StringClob");
              Map(x => x.Hours);
              Map(x => x.Devvers);
+             Map(x => x.Prioritized);
+             Map(x => x.PrioOrder);
              References(x => x.Project).Column("Project_id").LazyLoad(Laziness.False);
              HasMany(x => x.Comments).Cascade.AllDeleteOrphan();
              HasMany(x => x.ChangeStates).Cascade.AllDeleteOrphan();

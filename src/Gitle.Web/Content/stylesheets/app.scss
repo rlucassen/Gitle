@@ -152,6 +152,14 @@ body.scroll .footer {
   color: #008CBA;
 }
 
+.yellow {
+  color: gold;
+}
+
+.orange {
+  color: orange;
+}
+
 .small-text {
   font-size: 0.9rem;
 
@@ -784,8 +792,14 @@ table {
     i {
       font-size: 1.6em;
     }
+    i.pickedup {
+      margin-top: 0.2em;
   }
-
+    i.noprio {
+      font-size: 1.3em;
+      margin-top: 0.2em;
+    }
+  }
   .namerow a {
     margin-right: 0.5em;
   }
@@ -801,7 +815,29 @@ table {
       font-size: 1.4em;
     }
   }
+  .actions {
+    .button {
+      padding-left: 0.9em;
+      padding-right: 0.9em;
 }
+  }
+  .draghandle {
+    padding-top: 2px;
+    cursor: move;
+    * {
+      display: block;
+    }
+    &.disabled {
+      cursor: not-allowed;
+      opacity: 0.2;
+    }
+  }
+}
+
+  .chosen-ghost {
+    background-color: green !important;
+  }
+
 
 .issueaction {
   &:not(.Comment), &.Comment .panel {

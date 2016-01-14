@@ -8,6 +8,7 @@
     using System.Text;
     using System.Text.RegularExpressions;
     using System.Web;
+    using Castle.MonoRail.Framework;
     using Castle.MonoRail.Framework.Routing;
     using Clients.Freckle.Interfaces;
     using Clients.Freckle.Models;
@@ -215,10 +216,11 @@ using Castle.MonoRail.Framework;
                     items = items.OrderByProperty(sort.Key, sort.Value).ToList();
                 }
             }
-
-            if(querySorts.Count == 0 && linqSorts.Count == 0) 
+            var prioritizable = false;
+            if(querySorts.Count == 0 && linqSorts.Count == 0)
             {
-                items = items.OrderByDescending(x => x.Number).OrderBy(x => x.State).ToList();
+                prioritizable = true;
+                items = items.OrderBy(x => x.State).ThenBy(x => x.Pickups.Count == 0).ThenBy(x => x.PrioOrder == 0).ThenBy(x => x.PrioOrder).ThenByDescending(x => x.ChangeStates.Max(cs => cs.CreatedAt)).ToList();
             }
 
             // TODO: dit moet eigenlijk verder naar boven in de query
@@ -250,6 +252,7 @@ using Castle.MonoRail.Framework;
             PropertyBag.Add("selectedPickupbys", selectedPickupbys);
             PropertyBag.Add("pickupany", pickupany);
             PropertyBag.Add("pickupnone", pickupnone);
+            PropertyBag.Add("prioritizable", prioritizable);
         }
 
         [MustHaveProject]
@@ -321,6 +324,7 @@ using Castle.MonoRail.Framework;
             var project = session.Query<Project>().FirstOrDefault(p => p.Slug == projectSlug);
             var issue = session.Query<Issue>().FirstOrDefault(i => i.Number == issueId && i.Project == project);
 
+            var hash = string.Empty;
             if (issue != null)
             {
                 BindObjectInstance(issue, "item");
@@ -332,6 +336,7 @@ using Castle.MonoRail.Framework;
                 issue.Number = project.NewIssueNumber;
                 issue.Project = project;
                 issue.Open(CurrentUser);
+                hash = $"#issue{issue.Number}";
             }
 
             issue.Labels = labels.Select(label => session.Query<Label>().FirstOrDefault(l => l.Name == label)).ToList();
@@ -341,7 +346,7 @@ using Castle.MonoRail.Framework;
                 session.SaveOrUpdate(issue);
                 transaction.Commit();
             }
-            RedirectToUrl(string.Format("/project/{0}/issue/index", project.Slug));
+            RedirectToUrl($"/project/{project.Slug}/issue/index{hash}");
         }
 
         [Admin]
@@ -490,6 +495,37 @@ using Castle.MonoRail.Framework;
             }
         }
 
+        [MustHaveProject]
+        public void ReOrderIssue(string projectSlug, int issueNumber, int newIndex)
+        {
+            var issues = session.Query<Issue>().Where(x => x.Project.Slug == projectSlug && x.Pickups.Count == 0).ToList().Where(x => x.ChangeStates.Last().IssueState == IssueState.Open).OrderBy(x => x.PrioOrder).ToList();
+            
+            var issue = session.Query<Issue>().First(x => x.Project.Slug == projectSlug && x.Number == issueNumber);
+            issues.Remove(issue);
+            issue.Prioritized = true;
+            issues.Insert(newIndex, issue);
+
+            var order = 1;
+            using (var tx = session.BeginTransaction())
+            {
+                foreach (var currentissue in issues)
+                {
+                    currentissue.PrioOrder = order;
+                    order++;
+                    session.SaveOrUpdate(currentissue);
+                }
+                tx.Commit();
+            }
+
+            CancelView();
+        }
+
+        [return: JSONReturnBinder]
+        public Dictionary<int, int> GetPrioOrder(string projectSlug)
+        {
+            var issues = session.Query<Issue>().Where(x => x.Project.Slug == projectSlug && x.Pickups.Count == 0).ToList().Where(x => x.ChangeStates.Last().IssueState == IssueState.Open);
+            return issues.ToDictionary(issue => issue.Number, issue => issue.PrioOrder);
+        }
 
         [Admin]
         public void ExportImport(string projectSlug)

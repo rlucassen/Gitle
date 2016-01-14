@@ -240,6 +240,7 @@
       $('#query').val(query.replace(/ +(?= )/g,''));
       $('#query-form').submit();
     });
+
     $('#query-form .submit').click(function (e) {
       e.preventDefault();
       $('#query-form').submit();
@@ -247,5 +248,75 @@
     $(document).on('open.fndtn.reveal', '#newFilterPreset', function () {
       $('#newFilterPreset #item_FilterString').val($('#query').val());
     });
+
+    var dragging = false;
+
+    var orderIssues = function (e) {
+      var issueContainer = $(e.item).find('.issue');
+      issueContainer.find('.noprio').fadeOut(500, function () { $(this).remove(); });
+      var issueNumber = issueContainer.data('issueid');
+      var newIndex = (e.newIndex != undefined ? e.newIndex : e.oldIndex) - $('#issueContainer > .row.pickedup').length;
+      $.ajax({
+        url: '/project/${project.Slug}/issue/reorderissue',
+        data: {
+          issueNumber: issueNumber,
+          newIndex: newIndex
+        },
+        success: function () {
+          dragging = false;
+        }
+      });
+    };
+
+    var issueContainer = $('#issueContainer');
+    if (issueContainer.hasClass('prioritizable')) {
+      Sortable.create(document.getElementById("issueContainer"), {
+        onEnd: orderIssues,
+        onStart: function () {
+          dragging = true;
+        },
+        handle: ".draghandle"
+      });
+
+      window.setInterval(function () {
+        if (!dragging) {
+          updatePrio();
+        }
+      }, 5000);
+    }
+
+    if (location.hash != "") {
+      var issueNumber = location.hash.replace('#issue', '');
+      var issue = $('.issue[data-issueid=' + issueNumber + ']');
+      var windowHeight = window.innerHeight;
+      var issueHeight = issue.height();
+      var issuePosition = (windowHeight - issueHeight) / 2;
+      var issueOffset = issue.offset().top;
+      setTimeout(function () {
+        $(window).scrollTop(issueOffset - issuePosition);
+      }, 100);
+      issue.css('background-color', '#fce87c');
+    }
+
   });
+
+  var updatePrio = function () {
+    var lastPickedUp = $('#issueContainer > .row.pickedup').last();
+    $.ajax({
+      url: '/project/${project.Slug}/issue/getprioorder',
+      success: function (data) {
+        var sortedIssues = $('#issueContainer > .row.orderable').sort(function (a, b) {
+          var aIssueId = $(a).find('.issue').data('issueid');
+          var bIssueId = $(b).find('.issue').data('issueid');
+
+          return data[aIssueId] - data[bIssueId];
+        });
+        if (lastPickedUp.length != 0) {
+          sortedIssues.insertAfter(lastPickedUp);
+        } else {
+          sortedIssues.prependTo($('#issueContainer'));
+        }
+      }
+    });
+  };
 </script>
