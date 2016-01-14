@@ -2,7 +2,7 @@
   <% for issue in items: %>
   <div class="row <% if issue.IsOpen: %><% if issue.PickedUpBy == null:%>orderable<% else: %>pickedup<% end %><% end %>">
     <div class="large-12 columns">
-      <div class="issue<% if issue.Touched(CurrentUser): %> touched<% end %> radius<% if issue.Pickups.Count == 0: %> free<% end %> ${issue.State.ToString()}" data-issueid="${issue.Number}">
+      <div class="issue<% if issue.Touched(CurrentUser): %> touched<% end %> radius<% if issue.PickedUpBy == null: %> free<% end %> ${issue.State.ToString()}" data-issueid="${issue.Number}">
         <div class="row">
           <div class="large-1 columns issuestate">
             <div class="row">
