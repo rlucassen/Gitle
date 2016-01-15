@@ -13,5 +13,21 @@
       "Content/stylesheets/vendor/jquery.autocomplete.css",
       "Content/stylesheets/vendor/normalize.css"
     ]
+  },
+  {
+    "outputFileName": "Content/javascript/gitle.js",
+    "inputFiles": [
+      "Content/javascript/gitle.booking.js",
+      "Content/javascript/gitle.invoice.js",
+      "Content/javascript/gitle.issues.js"
+    ]
+  },
+  {
+    "outputFileName": "Content/javascript/auxilium.js",
+    "inputFiles": [
+      "Content/javascript/auxilium.foundationhelper.js",
+      "Content/javascript/auxilium.functions.js",
+      "Content/javascript/auxilium.nestedtable.js"
+    ]
   }
 ]

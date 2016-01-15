@@ -6,6 +6,8 @@ using System.Text;
 
 namespace Gitle.Model
 {
+    using Enum;
+
     public class Booking : ModelBase
     {
         public Booking()
@@ -21,8 +23,11 @@ namespace Gitle.Model
         public virtual DateTime Date { get; set; }
         public virtual double Minutes { get; set; }
         public virtual string Comment { get; set; }
+        public virtual bool Unbillable { get; set; }
 
         public virtual IList<Invoice> Invoices { get; set; }
+
+        public virtual bool IsDefinitive { get { return Invoices.Any(x => x.IsDefinitive); } }
 
         public virtual double Hours { get { return Minutes / 60.0; } }
         public virtual string Time

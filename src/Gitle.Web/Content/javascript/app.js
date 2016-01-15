@@ -4,7 +4,7 @@ $.fn.extend({
   insert: function (text) {
     return this.each(function () {
       var textarea = $(this);
-      if (textarea[0].nodeName == "TEXTAREA") {
+      if (textarea[0].nodeName === "TEXTAREA") {
         textarea.val(textarea.val().substr(0, textarea.prop("selectionStart")) + text + textarea.val().substr(textarea.prop("selectionEnd")));
       }
     });
@@ -111,83 +111,11 @@ $.fn.extend({
   }
 });
 
-$.fn.nestedTable = function (conf) {
-
-  var config = jQuery.extend({
-    deleteText: 'Verwijder',
-    afterAdd: function (row) { }
-  }, conf);
-
-  var deleteRow = function (e) {
-    e.preventDefault();
-    $(this).parents('tr').remove();
-  };
-
-  return this.each(function () {
-
-    var table = $(this);
-
-    var deleteHeader = $('<th>' + config.deleteText + '</th>');
-    table.find('thead tr').append(deleteHeader);
-    var deleteButton = $('<a href="#" class="button tiny no-margin alert">Verwijder</a>');
-    deleteButton.click(deleteRow);
-    var deleteCell = $('<td></td>').append(deleteButton);
-    table.find('tbody tr').append(deleteCell);
-
-    var addRow = $('<a href="#" class="button small">Nieuw</a>');
-    addRow.click(function (e) {
-      e.preventDefault();
-      var fr = table.find('tbody tr:last-child input:first-child');
-      var newRowNumber = parseInt(fr.length == 0 ? 0 : fr.prop('name').match(/\d+/)[0]) + 1;
-      var firstRow = table.find('tbody tr:first-child'); // use first row to clone
-      var newRow = firstRow.clone().removeClass('hide');
-      // rename all inputs
-      newRow.find(':input').each(function () {
-        var input = $(this);
-        var name = input.prop('name');
-        var newName = name.replace(/\d+/g, newRowNumber);
-        input.attr('name', newName);
-      });
-
-      newRow.find('[type=text]').val(''); // set all values to nothing
-      newRow.find('[data-nested-remove]').remove();
-      newRow.find('[type=checkbox]').removeProp('checked'); // uncheck checkbox
-      newRow.find('.button.alert').click(deleteRow); // set delete action on delete button
-
-      table.find('tbody').append(newRow); // append new row
-      config.afterAdd(newRow); // trigger the afterAdd callback from config
-    });
-    table.after(addRow);
-  });
-};
-
-var growl = function (type, text) {
-  var alert = $('<div>').addClass("alert-box");
-  $("body").prepend(alert.addClass(type).html(text));
-  alert.delay(2000).fadeOut(2000, function () {
-    $(this).remove();
-  });
-};
-
-var slugify = function (origin, target) {
-  $(origin).change(function () {
-    $.ajax({
-      method: 'POST',
-      data: {
-        text: $(this).val()
-      },
-      url: '/slug/index',
-      success: function (data) {
-        $(target).val(data);
-      }
-    });
-
-  }).change();
-};
 
 function Application() { }
 Application.prototype = {
   queryString: {},
+  foundationSize: '',
   init: function () {
     var self = this;
 
@@ -202,6 +130,12 @@ Application.prototype = {
 
 
     $(document.body).addClass("js-enabled");
+
+    var foundationHelper = new FoundationHelper();
+    foundationHelper.registerSizeClassChangeListener(onSizeClassChange = function (newSizeClass) {
+      self.foundationSize = newSizeClass;
+      console.log('changed size class: ' + newSizeClass);
+    });
 
     $(window).resize(function () {
       self.windowResize();
@@ -237,72 +171,6 @@ Application.prototype = {
 
     $(".chosen-select").chosen({ no_results_text: "Oops, nothing found!", width: '100%' });
 
-    $('.time-parser').blur(function () {
-      var value = $(this).val();
-      if (value === "" || value === "0") return;
-      value = value.replace(/[A-Za-z$-]/g, "");
-      value = value.replace(",", ".");
-      value = parseFloat(value);
-      var lessThanQuarter = value < 0.25;
-      if (lessThanQuarter) {
-        value = 0.25;
-      }
-      value = value.toString().replace(".", ",");
-      $(this).val(value);
-      if (lessThanQuarter) {
-        $(this).error("minimum is een kwartier");
-      }
-    });
-
-    self.initFreckleSelect();
-    self.initCtrlS();
-    self.initComments();
-
-    slugify('#item_Name', '#item_Slug');
-
-    $('.uploadarea').upload();
-    $('.uploadlist').uploadList();
-
-    $('.colorpicker').colorPicker();
-
-    $('table.nested').nestedTable({
-      afterAdd: function (row) {
-        row.find('.colorpicker-open').prop('rel', row.find('.colorpicker').prop('name'));
-        row.find('.colorpicker').colorPicker();
-      }
-    });
-
-    $('.three-state-checker').each(function () {
-      var checker = $(this);
-      checker.append('<i class="fa fa-square-o none"></i><i class="fa fa-check-square-o all"></i><i class="fa fa-minus-square-o some"></i>');
-      var selector = $(this).data('selector');
-      var checkboxes = $(selector);
-      checkboxes.click(function () {
-        if (checkboxes.length == checkboxes.filter(':checked').length) {
-          checker.attr('data-state', 'all');
-        } else if (checkboxes.filter(':checked').length == 0) {
-          checker.attr('data-state', 'none');
-        } else {
-          checker.attr('data-state', 'some');
-        }
-      });
-    }).click(function () {
-      var selector = $(this).data('selector');
-      var state = $(this).attr('data-state');
-      var checkboxes = $(selector);
-      switch (state) {
-        case "none":
-          checkboxes.attr('checked', 'checked');
-          $(this).attr('data-state', 'all');
-          break;
-        default:
-          checkboxes.removeAttr('checked');
-          $(this).attr('data-state', 'none');
-          break;
-      }
-      checkboxes.change();
-    });
-
     $('input[data-remember]').each(function () {
       var name = $(this).data('remember');
       if ($.cookie(name) && self.queryString['query'] == undefined) {
@@ -314,33 +182,22 @@ Application.prototype = {
       $.cookie(name, $(this).val());
     });
 
-    $('#group-actions').hide();
-    $('.issues input[type=checkbox][name=issue]').change(function () {
-      var checkedBoxes = $('.issues input[type=checkbox][name=issue]:checked');
-      if (checkedBoxes.length > 0) {
-        $('#group-actions, #exportselection').show();
-      } else {
-        $('#group-actions, #exportselection').hide();
+
+    self.initFreckleSelect();
+    self.initCtrlS();
+    self.initComments();
+
+    slugify('#item_Name', '#item_Slug');
+
+    $('.uploadarea').upload();
+    $('.uploadlist').uploadList();
+    $('.colorpicker').colorPicker();
+
+    $('table.nested').nestedTable({
+      afterAdd: function (row) {
+        row.find('.colorpicker-open').prop('rel', row.find('.colorpicker').prop('name'));
+        row.find('.colorpicker').colorPicker();
       }
-      var values = [];
-      checkedBoxes.each(function () {
-        values.push($(this).val());
-      });
-      $('#group-actions [name=issues]').val(values.join(','));
-    }).change();
-
-    $('[data-group-action]').click(function (e) {
-      e.preventDefault();
-      var issues = $('#group-actions input[name=issues]').val();
-      var href = $(this).prop('href');
-      location.href = href + (href.indexOf('?') == -1 ? '?' : '&') + 'issues=' + issues;
-    });
-
-    $('.issue').click(function () {
-      var checkbox = $(this).find('input[type=checkbox]');
-      checkbox.prop('checked', !checkbox.is(':checked')).change();
-    }).on('click', 'a, input', function (e) {
-      e.stopPropagation();
     });
 
     marked.setOptions({
@@ -349,36 +206,6 @@ Application.prototype = {
     $('.marked').each(function () {
       $(this).html(marked($(this).html()));
     });
-
-    var quickviewDelay = 800;
-    $('[data-quickview]').hover(function () {
-      var link = $(this);
-      if ($(this).data('tooltip') == undefined) {
-        var offset = $(this).position();
-        var tooltip = $('<div class="quickview">').css('top', offset.top + $(this).height()).css('left', offset.left);
-        $(this).data('tooltip', tooltip);
-        tooltip.load($(this).data('quickview'), function () {
-          tooltip.find('.marked').each(function () {
-            $(this).html(marked($(this).html()));
-          });
-          link.append(tooltip.hide());
-          link.data('timeout', setTimeout(function () {
-            if (link.is(':hover')) {
-              link.data('tooltip').show();
-            }
-          }, quickviewDelay));
-        });
-      } else {
-        link.data('timeout', setTimeout(function () {
-          if (link.is(':hover')) {
-            link.data('tooltip').show();
-          }
-        }, quickviewDelay));
-      }
-    }, function () {
-      $('.quickview').hide();
-    });
-
   },
 
   initComments: function () {

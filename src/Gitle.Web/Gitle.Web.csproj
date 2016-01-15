@@ -51,9 +51,26 @@
     <Content Include="Content\javascript\app.min.js">
       <DependentUpon>app.js</DependentUpon>
     </Content>
-    <Content Include="Content\javascript\booking.js" />
-    <Content Include="Content\javascript\invoice.js" />
+    <Content Include="Content\javascript\auxilium.functions.js" />
+    <Content Include="Content\javascript\bundles\auxilium.js" />
+    <Content Include="Content\javascript\bundles\auxilium.min.js">
+      <DependentUpon>auxilium.js</DependentUpon>
+    </Content>
+    <Content Include="Content\javascript\auxilium.nestedtable.js" />
+    <Content Include="Content\javascript\gitle.booking.js" />
+    <Content Include="Content\javascript\auxilium.foundationhelper.js" />
+    <Content Include="Content\javascript\gitle.issues.js" />
+    <Content Include="Content\javascript\gitle.invoice.js" />
+    <Content Include="Content\javascript\bundles\gitle.js" />
+    <Content Include="Content\javascript\bundles\gitle.min.js">
+      <DependentUpon>gitle.js</DependentUpon>
+    </Content>
+    <Content Include="Content\javascript\gitle.js" />
+    <Content Include="Content\javascript\gitle.min.js">
+      <DependentUpon>gitle.js</DependentUpon>
+    </Content>
     <Content Include="Content\javascript\vendor\jquery.autocomplete.js" />
+    <Content Include="Content\javascript\vendor\jquery.migrate.js" />
     <Content Include="Content\javascript\vendor\Sortable.min.js" />
     <Content Include="Content\javascript\vendor\date.js" />
     <Content Include="Content\javascript\vendor\foundation.datepicker.js" />
@@ -257,9 +274,9 @@
   <ItemGroup>
     <None Include="bundleconfig.json" />
     <None Include="compilerconfig.json" />
-    <Content Include="compilerconfig.json.defaults">
+    <None Include="compilerconfig.json.defaults">
       <DependentUpon>compilerconfig.json</DependentUpon>
-    </Content>
+    </None>
     <None Include="Content\stylesheets\vendor\fonts\fontawesome-webfont.eot" />
     <None Include="Content\stylesheets\vendor\fonts\fontawesome-webfont.ttf" />
     <None Include="Content\stylesheets\vendor\fonts\fontawesome-webfont.woff" />

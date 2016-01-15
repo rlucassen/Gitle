@@ -4,40 +4,12 @@
     <div class="panel">
       <form id="booking" action="save" method="POST">
         <div class="row collapse">
-          <div class="large-1 columns">
-            <a href="#" data-dayshift="0" class="button secondary prefix"></a>
+          <% for i in range(0, -11): %>
+          <div class="small-2 large-1 columns">
+            <a href="#" data-dayshift="${i}" class="button secondary prefix"></a>
           </div>
-          <div class="large-1 columns">
-            <a href="#" data-dayshift="-1" class="button secondary prefix"></a>
-          </div>
-          <div class="large-1 columns">
-            <a href="#" data-dayshift="-2" class="button secondary prefix"></a>
-          </div>
-          <div class="large-1 columns">
-            <a href="#" data-dayshift="-3" class="button secondary prefix"></a>
-          </div>
-          <div class="large-1 columns">
-            <a href="#" data-dayshift="-4" class="button secondary prefix"></a>
-          </div>
-          <div class="large-1 columns">
-            <a href="#" data-dayshift="-5" class="button secondary prefix"></a>
-          </div>
-          <div class="large-1 columns">
-            <a href="#" data-dayshift="-6" class="button secondary prefix"></a>
-          </div>
-          <div class="large-1 columns">
-            <a href="#" data-dayshift="-7" class="button secondary prefix"></a>
-          </div>
-          <div class="large-1 columns">
-            <a href="#" data-dayshift="-8" class="button secondary prefix"></a>
-          </div>
-          <div class="large-1 columns">
-            <a href="#" data-dayshift="-9" class="button secondary prefix"></a>
-          </div>
-          <div class="large-1 columns">
-            <a href="#" data-dayshift="-10" class="button secondary prefix"></a>
-          </div>
-          <div class="large-1 columns">
+          <% end %>
+          <div class="small-2 large-1 columns">
             <input type="text" name="booking.Date" id="booking_Date" class="date" placeholder="Eerder" />
           </div>
         </div>
@@ -55,7 +27,15 @@
             <input type="text" class="no-margin issue-chooser" placeholder="Taak" />
           </div>
           <div class="large-5 columns">
-            <input type="text" class="no-margin booking_Comment" name="booking.Comment" placeholder="Opmerking" />
+            <div class="row collapse">
+              <div class="large-10 columns">
+                <input type="text" class="no-margin booking_Comment" name="booking.Comment" placeholder="Opmerking" />
+              </div>
+              <div class="large-2 columns">
+                <input type="hidden" name="booking.Unbillable" class="booking_Unbillable" />
+                <a href="#" class="postfix booking-row-null-toggle "><i class="fa fa-euro"></i></a>
+              </div>
+            </div>
           </div>
           <div class="large-1 columns">
             <input type="submit" class="button postfix no-margin success" value="Boeken" />
@@ -88,19 +68,30 @@
           </div>
           <div class="large-1 columns">
             <% if booking.Issue: %>
-            <div class="booking-issue" title="#${booking.Issue.Number} - ${booking.Issue.Name}">#${booking.Issue.Number}</div>
+            <div class=" row booking-issue">
+              <div class="small-8 columns">
+                <span title="#${booking.Issue.Number} - ${booking.Issue.Name}">#${booking.Issue.Number}</span>
+              </div>
+              <div class="small-4 columns">
+                <% if not booking.Unbillable: %>
+                <i class="fa fa-euro green" title="billable"></i>
+                <% else: %>
+                <i class="fa fa-euro red" title="unbillable"></i>
+                <% end %>
+              </div>
+            </div>
             <% end %>
           </div>
-          <div class="large-6 columns end">
+          <div class="large-5 columns end">
             <span class="booking-comment">${booking.Comment}</span>
             <% for invoice in booking.Invoices: %>
             <span class="label round right <% if not invoice.IsDefinitive: %>secondary<% end %>" title="${invoice.Title}">${invoice.Number}</span>
             <% end %>
           </div>
-          <% if booking.Invoices.Count == 0: %>
-          <div class="large-1 columns no-padding booking-buttons">
-            <a href="#" class="button radius supertiny no-margin booking-edit">Edit <i class="fa fa-pencil-square-o"></i></a>
-            <a href="/booking/${booking.Id}/delete" class="button radius alert supertiny no-margin">Delete <i class="fa fa-times"></i></a>
+          <% if not booking.IsDefinitive: %>
+          <div class="large-2 columns no-padding booking-buttons text-right">
+            <a href="#" class="button radius supertiny no-margin booking-edit">bewerk <i class="fa fa-pencil-square-o"></i></a>
+            <a href="/booking/${booking.Id}/delete" class="button radius alert supertiny no-margin">verwijder <i class="fa fa-times"></i></a>
           </div>
           <% end %>
         </div>
@@ -118,4 +109,3 @@
     <% end %>
   </div>
 </div>
-<script src="/Content/javascript/booking.js"></script>

@@ -2,6 +2,8 @@
 {
     #region Usings
 
+    using System.Collections.Generic;
+    using System.Reflection;
     using Castle.MonoRail.Framework;
     using Castle.MonoRail.Framework.Filters;
     using NHibernate;
@@ -43,5 +45,14 @@
                 RedirectToReferrer();
         }
 
+        protected override object InvokeMethod(MethodInfo method, IRequest request, IDictionary<string, object> extraArgs)
+        {
+            var release = true;
+#if DEBUG
+            release = false;
+#endif
+            PropertyBag.Add("RELEASE", release);
+            return base.InvokeMethod(method, request, extraArgs);
+        }
     }
 }

@@ -72,6 +72,19 @@
       }
     });
 
+    row.find('.booking-row-null-toggle').click(function (e) {
+      e.preventDefault();
+      var line = $(this).parents('.invoiceline');
+      if ($(this).hasClass('null')) {
+        $(this).removeClass('null');
+        row.find('.booking_Unbillable').val(0);
+      } else {
+        $(this).addClass('null');
+        row.find('.booking_Unbillable').val(1);
+      }
+    });
+
+
     // naar app.js, universeel maken door vanuit booking-parser te verwijzen naar output veld.
     var bookingInput = row.find('.booking_Minutes');
     $('.booking-parser').change(function (e) {
@@ -124,6 +137,11 @@
     $('[data-dayshift]').removeClass('active');
   });
 
+  var dayShiftFormat = 'dd MMM';
+  if (app.foundationSize === 'large') {
+    dayShiftFormat = 'ddd dd MMM';
+  }
+
   $('[data-dayshift]').each(function () {
     var shift = $(this).data('dayshift');
     var label = '';
@@ -135,7 +153,7 @@
         label = 'Gisteren';
         break;
       default:
-        label = Date.today().add(shift).days().toString('ddd dd MMM');
+        label = Date.today().add(shift).days().toString(dayShiftFormat);
     }
     $(this).text(label);
   }).click(function (e) {

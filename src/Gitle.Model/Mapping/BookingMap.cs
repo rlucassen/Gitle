@@ -10,6 +10,7 @@
              Map(x => x.Date);
              Map(x => x.Comment);
              Map(x => x.Minutes);
+             Map(x => x.Unbillable);
 
              References(x => x.Project).Column("Project_id");
              References(x => x.User).Column("User_id");

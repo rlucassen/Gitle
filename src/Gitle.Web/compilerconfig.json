@@ -1,6 +1,7 @@
-﻿[
+[
   {
     "outputFile": "Content/stylesheets/app.css",
-    "inputFile": "Content/stylesheets/app.scss"
+    "inputFile": "Content/stylesheets/app.scss",
+    "sourceMap": false
   }
 ]
