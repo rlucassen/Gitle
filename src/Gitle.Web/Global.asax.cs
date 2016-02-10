@@ -4,6 +4,7 @@
 
     using System;
     using System.Linq;
+    using System.Net;
     using System.Reflection;
     using System.Web;
     using Castle.MicroKernel.Registration;
@@ -108,6 +109,8 @@
 
         protected void Application_Start(object sender, EventArgs e)
         {
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
             container = new GitleContainer();
             RegisterSessionFactory(container);
 
