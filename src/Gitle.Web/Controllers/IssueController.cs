@@ -524,7 +524,7 @@
         [return: JSONReturnBinder]
         public Dictionary<int, int> GetPrioOrder(string projectSlug)
         {
-            var issues = session.Query<Issue>().Where(x => x.Project.Slug == projectSlug && x.Pickups.Count == 0).ToList().Where(x => x.ChangeStates.Last().IssueState == IssueState.Open).OrderBy(x => x.PrioOrder).ThenByDescending(x => x.Number);
+            var issues = session.Query<Issue>().Where(x => x.Project.Slug == projectSlug && x.Pickups.Count == 0).ToList().Where(x => x.ChangeStates.Last().IssueState == IssueState.Open).OrderByDescending(x => x.Prioritized).ThenBy(x => x.PrioOrder).ThenByDescending(x => x.Number);
             return issues.Select((x, i) => new {x.Number, i}).ToDictionary(x => x.Number, x => x.i);
         }
 
