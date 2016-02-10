@@ -36,12 +36,12 @@
 
         public virtual string BodyHtml { get { return Body.Markdown(Project); } }
 
-        public virtual bool Touched(User user)
+        public new virtual bool Touched(User user)
         {
             return Touches.Any(x => x.User == user) && Actions.All(x => x.Touched(user));
         }
 
-        public virtual bool TouchedBefore(User user, DateTime datetime)
+        public new virtual bool TouchedBefore(User user, DateTime datetime)
         {
             return Touches.Any(x => x.User == user && x.DateTime < datetime) && Actions.All(x => x.TouchedBefore(user, datetime));
         }

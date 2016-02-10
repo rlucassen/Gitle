@@ -36,7 +36,7 @@ namespace Gitle.Clients.GitHub
             {
                 return _client.Get<List<Hook>>("repos/" + repo + "/hooks");
             }
-            catch(Exception e)
+            catch(Exception)
             {
                 return new List<Hook>();
             }
@@ -48,7 +48,7 @@ namespace Gitle.Clients.GitHub
             {
                 _client.Post<Hook>("repos/" + repo + "/hooks", new Hook(url));
             }
-            catch(Exception e)
+            catch(Exception)
             {
                 return false;
             }
