@@ -62,7 +62,7 @@
           <input type="hidden" name="lines[${count}].Null" class="invoiceline-null" value="<% if line.Null: %>1<% else: %>0<% end %>" />
           <div class="row collapse">
             <div class="large-3 columns">
-              <a href="#" class="prefix invoiceline-null-toggle <% if line.Null: %>null<% end %>"><i class="fa fa-euro"></i></a>
+              <a href="#" class="prefix invoiceline-null-toggle <% if line.Null: %>null<% end %>" title="Billable/Unbillable"><i class="fa fa-euro"></i></a>
             </div>
             <div class="large-9 columns">
               <input type="text" class="invoiceline-price" disabled />
@@ -103,7 +103,7 @@
               <a href="#" class="button tiny invoiceline-estimate expand <% if line.EstimateHours == line.Hours: %>active<% end %>" title="Schatting">${line.EstimateHours}</a>
             </div>
             <div class="large-6 columns">
-              <a href="#" class="button tiny invoiceline-hours expand <% if line.BookingHours == line.Hours: %>active<% end %>" title="Geboekte uren">${line.BookingHours}</a>
+              <a href="#" class="button tiny invoiceline-hours expand <% if line.BookingHours == line.Hours: %>active<% end %>" title="Billable geboekte uren">${line.BookingHours}</a>
             </div>
           </div>
         </div>
@@ -130,7 +130,14 @@
             <span class="booking-date <% if invoice.StartDate > booking.Date: %>old<% end %>">${booking.Date.ToString("dd-MM-yyyy")}</span> <span class="booking-info">${booking.User.FullName}</span>:
             <span class="booking-comment">${booking.Comment}</span>
           </div>
-          <div class="large-1 large-offset-1 columns end text-right">
+          <div class="large-1 columns text-center">
+            <% if not booking.Unbillable: %>
+            <i class="fa fa-euro green" title="billable"></i>
+            <% else: %>
+            <i class="fa fa-euro red" title="unbillable"></i>
+            <% end %>
+          </div>
+          <div class="large-1 columns end text-right">
             <input type="hidden" class="booking-hours text-right" value="${booking.Hours}" disabled />
             <span class="booking-hours-span">${booking.Hours}</span>
           </div>

@@ -10,7 +10,6 @@ namespace Gitle.Model
         public InvoiceLine()
         {
             Hours = 0;
-            Null = false;
         }
 
         public virtual Invoice Invoice { get; set; }
@@ -18,12 +17,16 @@ namespace Gitle.Model
         public virtual string Description { get; set; }
         public virtual double Hours { get; set; }
         public virtual double Price { get { return Null ? 0 : Hours * Invoice.HourPrice; } }
-        public virtual bool Null { get; set; }
 
-        public virtual IList<Booking> Bookings { get { return Invoice != null ? Invoice.Bookings.Where(x => x.Issue == Issue).ToList() : new List<Booking>(); } }
+        public virtual bool Null
+        {
+            get { return Bookings.All(x => x.Unbillable); }
+        }
 
-        public virtual double EstimateHours { get { return Issue.Hours; } }
-        public virtual double BookingHours { get { return Bookings.Sum(x => x.Hours); } }
+        public virtual IList<Booking> Bookings { get { return Invoice?.Bookings.Where(x => x.Issue == Issue).ToList() ?? new List<Booking>(); } }
+
+        public virtual double EstimateHours => Issue.Hours;
+        public virtual double BookingHours { get { return Bookings.Where(x => !x.Unbillable).Sum(x => x.Hours); } }
     }
 
     public class Correction : ModelBase

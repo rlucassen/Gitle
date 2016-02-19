@@ -33,7 +33,7 @@
               </div>
               <div class="large-2 columns">
                 <input type="hidden" name="booking.Unbillable" class="booking_Unbillable" />
-                <a href="#" class="postfix booking-row-null-toggle "><i class="fa fa-euro"></i></a>
+                <a href="#" class="postfix booking-row-null-toggle" title="Billable/Unbillable"><i class="fa fa-euro"></i></a>
               </div>
             </div>
           </div>

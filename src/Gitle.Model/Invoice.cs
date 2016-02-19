@@ -25,7 +25,7 @@ namespace Gitle.Model
             HourPrice = project.HourPrice;
             StartDate = startDate;
             EndDate = endDate;
-            Title = string.Format("{0} ({1:dd-MM-yyyy} tot {2:dd-MM-yyyy})", Project.Name, StartDate, EndDate);
+            Title = $"{Project.Name} ({StartDate:dd-MM-yyyy} tot {EndDate:dd-MM-yyyy})";
         }
 
         public Invoice(Project project, DateTime startDate, DateTime endDate, IList<Booking> bookings)
@@ -40,9 +40,9 @@ namespace Gitle.Model
                     {
                         invoiceLine = new InvoiceLine()
                         {
-                            Description = string.Format("#{0} - {1}", booking.Issue.Number, booking.Issue.Name),
+                            Description = $"#{booking.Issue.Number} - {booking.Issue.Name}",
                             Issue = booking.Issue,
-                            Invoice = this
+                            Invoice = this,
                         };
                         Lines.Add(invoiceLine);
                     }
