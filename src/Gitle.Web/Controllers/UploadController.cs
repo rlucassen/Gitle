@@ -11,7 +11,7 @@
     public class UploadController : SecureController
     {
         private readonly IList<string> ImageExtensions = new List<string> {".jpg", ".png", ".gif"};
-        private readonly IList<string> DocumentExtensions = new List<string> {".doc", ".docx", ".xls", ".xlsx", ".pdf", ".json", ".txt", ".xml", ".xsd", ".msg"};
+        private readonly IList<string> DocumentExtensions = new List<string> {".doc", ".docx", ".xls", ".xlsx", ".pdf", ".json", ".txt", ".xml", ".xsd", ".msg", ".apk" /*apk = Android PacKage*/};
 
         public void File([FileBinder] IEnumerable<HttpPostedFile> uploads)
         {
