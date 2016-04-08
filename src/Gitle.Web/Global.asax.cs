@@ -197,13 +197,13 @@
         {
             var sessionFactory = Container.Resolve<ISessionFactory>();
             ISession session = sessionFactory.OpenSession();
-            ManagedWebSessionContext.Bind(HttpContext.Current, session);
+            WebSessionContext.Bind(session);
         }
 
         protected void Application_EndRequest(object sender, EventArgs e)
         {
             var sessionFactory = Container.Resolve<ISessionFactory>();
-            ISession session = ManagedWebSessionContext.Unbind(HttpContext.Current, sessionFactory);
+            ISession session = WebSessionContext.Unbind(sessionFactory);
             if (session != null && session.IsOpen) session.Close();
         }
 
@@ -211,7 +211,7 @@
         {
             FluentConfiguration configuration = Fluently.Configure()
                 .Database(MsSqlConfiguration.MsSql2008.ConnectionString(c => c.FromConnectionStringWithKey("Gitle")))
-                .ExposeConfiguration(c => c.CurrentSessionContext<ManagedWebSessionContext>())
+                .ExposeConfiguration(c => c.CurrentSessionContext<WebSessionContext>())
                 .ExposeConfiguration(c => ConfigureValidatorEngine<ModelBase>(c))
                 .ExposeConfiguration(c => c.SetInterceptor(new GitleInterceptor(windsorContainer)))
                 .ExposeConfiguration(ExportSchema)
