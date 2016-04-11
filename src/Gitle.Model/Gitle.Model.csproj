@@ -79,6 +79,9 @@
     <Compile Include="Enum\InvoiceState.cs" />
     <Compile Include="Customer.cs" />
     <Compile Include="Enum\IssueState.cs" />
+    <Compile Include="Interfaces\Service\IBookingQueryParserService.cs" />
+    <Compile Include="Mapping\ReportPresetMap.cs" />
+    <Compile Include="ReportPreset.cs" />
     <Compile Include="FilterPreset.cs" />
     <Compile Include="Helpers\CsvHelper.cs" />
     <Compile Include="Helpers\DateTimeHelper.cs" />

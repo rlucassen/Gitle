@@ -137,6 +137,22 @@
     $('[data-dayshift]').removeClass('active');
   });
 
+  $('.reportdate').fdatepicker({
+    format: 'yyyy-mm-dd',
+    weekStart: 1
+  }).on('changeDate', function (ev) {
+    var query = $('#query').val();
+    var target = $(ev.target);
+    var prefix = target.data('filter-prefix');
+    var rx = new RegExp(prefix + ":[a-zA-Z0-9-_,.]+");
+    query = query.replace(rx, '');
+    query = query + ' ' + prefix + ':' + target.val();
+    $('#query').val(query.replace(/ +(?= )/g, ''));
+    $('#query-form').submit();
+  });
+
+
+
   var dayShiftFormat = 'dd MMM';
   if (app.foundationSize === 'large') {
     dayShiftFormat = 'ddd dd MMM';

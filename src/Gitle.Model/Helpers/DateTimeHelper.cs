@@ -93,5 +93,16 @@
         {
             return string.Format("{0}:{1:00}", Math.Floor(minutes/60.0), minutes - (Math.Floor(minutes/60.0) * 60));
         }
+
+        public static DateTime StartOfMonth(this DateTime dateTime)
+        {
+            return new DateTime(dateTime.Year, dateTime.Month, 1);
+        }
+
+        public static DateTime EndOfMonth(this DateTime dateTime)
+        {
+            return new DateTime(dateTime.Year, dateTime.Month, DateTime.DaysInMonth(dateTime.Year, dateTime.Month));
+        }
+
     }
 }

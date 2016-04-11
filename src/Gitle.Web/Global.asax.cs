@@ -207,6 +207,7 @@
             RoutingModuleEx.Engine.Add<OAuthController>();
             RoutingModuleEx.Engine.Add<BookingController>();
             RoutingModuleEx.Engine.Add<InvoiceController>();
+            RoutingModuleEx.Engine.Add<ReportController>();
         }
 
         protected void Application_End(object sender, EventArgs e)

@@ -7,7 +7,6 @@
     using System.Linq;
     using System.Text;
     using System.Text.RegularExpressions;
-    using System.Web;
     using Castle.MonoRail.Framework;
     using Castle.MonoRail.Framework.Routing;
     using Clients.Freckle.Interfaces;
@@ -16,13 +15,11 @@
     using Model;
     using Model.Enum;
     using Model.Helpers;
-    using Model.Interfaces.Model;
     using NHibernate;
     using NHibernate.Linq;
     using Newtonsoft.Json;
     using Issue = Model.Issue;
     using Project = Model.Project;
-using Castle.MonoRail.Framework;
 
     public class IssueController : SecureController
     {

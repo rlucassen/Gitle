@@ -223,23 +223,6 @@
 </div>
 <script>
   $(function () {
-    $('a[data-filter], a[data-filter-clear]').click(function (e) {
-      e.preventDefault();
-      var filter = $(this).data('filter');
-      var oppositeFilter = $(this).data('filter-opposite');
-      var query = $('#query').val();
-      if ($(this).is('[data-filter-clear]')) query = '';
-      if (query.indexOf(oppositeFilter) != -1) {
-        query = query.replace(oppositeFilter, "");
-      }
-      if (query.indexOf(filter) != -1) {
-        query = query.replace(filter, "");
-      } else {
-        query = query + " " + filter;
-      }
-      $('#query').val(query.replace(/ +(?= )/g,''));
-      $('#query-form').submit();
-    });
 
     $('#query-form .submit').click(function (e) {
       e.preventDefault();

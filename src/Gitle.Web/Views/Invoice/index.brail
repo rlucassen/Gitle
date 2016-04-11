@@ -27,6 +27,15 @@
 </form>
 
 <h1>Bijlages</h1>
+<div class="row">
+  <div class="large-12 columns">
+    <p>
+      <span class="label round secondary">Concept</span>
+      <span class="label round">Definitief</span>
+      <span class="label round alert">Gearchiveerd</span>
+    </p>
+  </div>
+</div>
 <div class="invoices">
   <% for invoice in invoices: %>
   <div class="invoice">

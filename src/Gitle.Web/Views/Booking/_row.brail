@@ -1,5 +1,5 @@
 ﻿<div class="row booking-row-edit">
-  <form id="booking" action="save" method="POST">
+  <form id="booking" action="/booking/save" method="POST">
     <input type="hidden" name="id" value="${booking.Id}" />
     <div class="large-1 columns no-padding">
       <input type="hidden" name="booking.Minutes" class="booking_Minutes" value="${booking.Time}" />

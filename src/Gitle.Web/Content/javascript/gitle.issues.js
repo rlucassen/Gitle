@@ -2,10 +2,32 @@
 
 GitleIssues.prototype = {
   init: function() {
+    this.initFilters();
     this.initThreeStateChecker();
     this.initGroupActions();
     this.initQuickView();
     this.initTimeParser();
+  },
+
+  initFilters: function() {
+    $('a[data-filter], a[data-filter-clear]').click(function (e) {
+      e.preventDefault();
+      var filter = $(this).data('filter');
+      var oppositeFilter = $(this).data('filter-opposite');
+      var query = $('#query').val();
+      if ($(this).is('[data-filter-clear]')) query = '';
+      if (query.indexOf(oppositeFilter) != -1) {
+        query = query.replace(oppositeFilter, "");
+      }
+      if (query.indexOf(filter) != -1) {
+        query = query.replace(filter, "");
+      } else {
+        query = query + " " + filter;
+      }
+      $('#query').val(query.replace(/ +(?= )/g, ''));
+      $('#query-form').submit();
+    });
+
   },
 
   initThreeStateChecker: function() {

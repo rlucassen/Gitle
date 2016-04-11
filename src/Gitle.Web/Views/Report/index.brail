@@ -1,0 +1,218 @@
+﻿<div class="row">
+  <div class="large-12 columns">
+    <h1>Urenrapporten</h1>
+  </div>
+</div>
+
+<div class="row">
+  <div class="large-12 columns">
+    <div class="panel">
+      <form id="query-form" method="GET">
+        <div class="row collapse">
+          <div class="large-9 columns">
+            <input type="text" id="query" name="query" data-remember="report" value="${query}" />
+          </div>
+          <div class="large-1 small-1 columns">
+            <a href="#" data-filter="" data-filter-clear="" class="button postfix alert">
+              <i class="fa fa-close"></i>
+            </a>
+          </div>
+          <div class="large-2 small-5 columns">
+            <span class="button split postfix"><a href="#" class="submit">Report</a> <span data-dropdown="drop"></span></span>
+            <ul id="drop" class="f-dropdown medium" data-dropdown-content>
+              <% for reportPreset in reportPresets: %>
+              <li><a class="report-preset" data-filter="${reportPreset.FilterString}" data-filter-clear href="#">${reportPreset.Name}</a></li>
+              <% end %>
+              <li class="divider"></li>
+              <% for globalReportPreset in globalReportPresets: %>
+              <li><a class="report-preset" data-filter="${globalReportPreset.FilterString}" data-filter-clear href="#">${globalReportPreset.Name}</a></li>
+              <% end %>
+              <li class="divider"></li>
+              <li><strong><a href="#" data-reveal-id="newReportPreset">Nieuw rapport</a></strong></li>
+            </ul>
+          </div>
+        </div>
+        <div class="row filters">
+          <div class="large-3 columns">
+            <div class="row collapse">
+              <div class="large-6 columns">
+                <input type="text" data-filter-prefix="start" class="reportdate" placeholder="Vanaf" value="${startDate.ToString(" yyyy-MM-dd")}" />
+              </div>
+              <div class="large-6 columns">
+                <input type="text" data-filter-prefix="end" class="reportdate" placeholder="Tot" value="${endDate.ToString(" yyyy-MM-dd")}" />
+              </div>
+            </div>
+          </div>
+          <div class="large-0 small-12 columns">
+            <button href="#" data-dropdown="users" aria-controls="users" aria-expanded="false" class="button tiny dropdown no-margin <% if selectedUsers.Count > 0: %>warning<% end %>">Medewerker:</button>
+            <ul id="users" data-dropdown-content="" class="f-dropdown wide" aria-hidden="true" tabindex="-1">
+              <% for user in allUsers: %>
+              <% isSelected = selectedUsers.Contains(user) %>
+              <li>
+                <a href="#" data-filter="user:${user.Name}">
+                  <% if isSelected: %><i class="fa fa-check"></i><% end %>
+                  ${user.FullName}
+                </a>
+                <% if isSelected: %>
+                <a href="#" class="remove-filter" data-filter="user:${user.Name}">
+                  <i class="fa fa-close red"></i>
+                </a>
+                <% end %>
+              </li>
+              <% end %>
+            </ul>
+          </div>
+          <div class="large-0 small-12 columns">
+            <button href="#" data-dropdown="customers" aria-controls="customers" aria-expanded="false" class="button tiny dropdown no-margin <% if selectedCustomers.Count > 0: %>warning<% end %>">Klanten:</button>
+            <ul id="customers" data-dropdown-content="" class="f-dropdown wide" aria-hidden="true" tabindex="-1">
+              <% for customer in allCustomers: %>
+              <% isSelected = selectedCustomers.Contains(customer) %>
+              <li>
+                <a href="#" data-filter="customer:${customer.Slug}">
+                  <% if isSelected: %><i class="fa fa-check"></i><% end %>
+                  ${customer.Name}
+                </a>
+                <% if isSelected: %>
+                <a href="#" class="remove-filter" data-filter="user:${customer.Name}">
+                  <i class="fa fa-close red"></i>
+                </a>
+                <% end %>
+              </li>
+              <% end %>
+            </ul>
+          </div>
+          <div class="large-0 small-12 columns">
+            <button href="#" data-dropdown="applications" aria-controls="applications" aria-expanded="false" class="button tiny dropdown no-margin <% if selectedApplications.Count > 0: %>warning<% end %>">Applicaties:</button>
+            <ul id="applications" data-dropdown-content="" class="f-dropdown wide" aria-hidden="true" tabindex="-1">
+              <% for application in allApplications: %>
+              <% isSelected = selectedApplications.Contains(application) %>
+              <li>
+                <a href="#" data-filter="application:${application.Slug}">
+                  <% if isSelected: %><i class="fa fa-check"></i><% end %>
+                  ${application.Name}
+                </a>
+                <% if isSelected: %>
+                <a href="#" class="remove-filter" data-filter="user:${application.Name}">
+                  <i class="fa fa-close red"></i>
+                </a>
+                <% end %>
+              </li>
+              <% end %>
+            </ul>
+          </div>
+          <div class="large-0 small-12 columns">
+            <button href="#" data-dropdown="projects" aria-controls="projects" aria-expanded="false" class="button tiny dropdown no-margin <% if selectedProjects.Count > 0: %>warning<% end %>">Projecten:</button>
+            <ul id="projects" data-dropdown-content="" class="f-dropdown wide" aria-hidden="true" tabindex="-1">
+              <% for project in allProjects: %>
+              <% isSelected = selectedProjects.Contains(project) %>
+              <li>
+                <a href="#" data-filter="project:${project.Slug}">
+                  <% if isSelected: %><i class="fa fa-check"></i><% end %>
+                  ${project.Name}
+                </a>
+                <% if isSelected: %>
+                <a href="#" class="remove-filter" data-filter="user:${project.Name}">
+                  <i class="fa fa-close red"></i>
+                </a>
+                <% end %>
+              </li>
+              <% end %>
+            </ul>
+          </div>
+          <div class="large-0 small-12 columns right">
+            <button href="#" data-dropdown="groupbys" aria-controls="groupbys" aria-expanded="false" class="button tiny dropdown no-margin <% if groupedBy: %>warning<% end %>">Groeperen:</button>
+            <ul id="groupbys" data-dropdown-content class="f-dropdown" aria-hidden="true" tabindex="-1">
+              <% for groupby in allGroupbys: %>
+              <li>
+                <a href="#" data-filter="groupby:${groupby.Key}">
+                  <% if groupby.Key == groupedBy: %><i class="fa fa-check"></i><% end %>
+                  ${groupby.Value} ${groupedBy}
+                </a>
+                <% if groupby.Key == groupedBy: %>
+                <a href="#" class="remove-filter" data-filter="groupby:${groupby.Key}">
+                  <i class="fa fa-close red"></i>
+                </a>
+                <% end %>
+              </li>
+              <% end %>
+            </ul>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+<div class="row">
+  <div class="large-12 columns">
+    <% for groupedBooking in groupedBookings: %>
+    <div class="panel booking">
+      <h3>${groupedBooking.Title}</h3>
+      <% for booking in groupedBooking.Bookings: %>
+      <div class="booking-row" data-id="${booking.Id}">
+        <div class="row booking-row-content">
+          <div class="large-1 columns">
+            <span class="booking-minutes">${booking.Time}</span>
+          </div>
+          <div class="large-1 columns">
+            <div class="booking-project">${booking.Date.ToString("dd-MM-yy")}</div>
+          </div>
+          <div class="large-2 columns">
+            <div class="booking-project">${booking.User.FullName}</div>
+          </div>
+          <div class="large-2 columns">
+            <div class="booking-project">${booking.Project.Name}</div>
+          </div>
+          <div class="large-1 columns">
+            <% if booking.Issue: %>
+            <div class=" row booking-issue">
+              <div class="small-8 columns">
+                <span title="#${booking.Issue.Number} - ${booking.Issue.Name}">#${booking.Issue.Number}</span>
+              </div>
+              <div class="small-4 columns">
+                <% if not booking.Unbillable: %>
+                <i class="fa fa-euro green" title="billable"></i>
+                <% else: %>
+                <i class="fa fa-euro red" title="unbillable"></i>
+                <% end %>
+              </div>
+            </div>
+            <% end %>
+          </div>
+          <div class="large-4 columns end">
+            <span class="booking-comment">${booking.Comment}</span>
+            <% for invoice in booking.Invoices: %>
+            <span class="label round right <% if not invoice.IsDefinitive: %>secondary<% end %>" title="${invoice.Title}">${invoice.Number}</span>
+            <% end %>
+          </div>
+          <% if not booking.IsDefinitive: %>
+          <div class="large-1 columns no-padding booking-buttons text-right">
+            <a href="#" class="button radius supertiny no-margin booking-edit">edit <i class="fa fa-pencil-square-o"></i></a>
+            <a href="/booking/${booking.Id}/delete" class="button radius alert supertiny no-margin">delete <i class="fa fa-times"></i></a>
+          </div>
+          <% end %>
+        </div>
+      </div>
+      <% end %>
+      <div class="row totalrow">
+        <div class="large-1 columns">
+          ${groupedBooking.Time}
+        </div>
+        <div class="large-11 columns">
+          <strong>Totaal</strong>
+        </div>
+      </div>
+    </div>
+    <% end %>
+  </div>
+</div>
+
+<script>
+  $(function () {
+    $('#query-form .submit').click(function (e) {
+      e.preventDefault();
+      $('#query-form').submit();
+    });
+  });
+</script>

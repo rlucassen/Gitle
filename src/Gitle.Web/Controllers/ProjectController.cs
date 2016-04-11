@@ -71,7 +71,6 @@
         [Admin]
         public void New()
         {
-            PropertyBag.Add("freckleProjects", projectClient.List().Where(x => x.Enabled));
             PropertyBag.Add("customers", session.Query<Customer>().Where(x => x.IsActive).ToList());
             PropertyBag.Add("applications", session.Query<Application>().Where(x => x.IsActive));
             PropertyBag.Add("item", new Project());
@@ -82,7 +81,6 @@
         public void Edit(string projectSlug)
         {
             var project = session.Query<Project>().FirstOrDefault(x => x.IsActive && x.Slug == projectSlug);
-            PropertyBag.Add("freckleProjects", projectClient.List().Where(x => x.Enabled));
             PropertyBag.Add("customers", session.Query<Customer>().Where(x => x.IsActive).ToList());
             PropertyBag.Add("applications", session.Query<Application>().Where(x => x.IsActive));
             PropertyBag.Add("applicationId", session.Query<Application>().Where(x => x.Projects.Contains(project)));

@@ -59,6 +59,11 @@ ul.f-dropdown .divider {
   border-bottom: 1px solid #ccc;
 }
 
+ul.f-dropdown.wide {
+  max-width: 400px;
+  width: 400px;
+}
+
 .large-0 {
   width: auto;
 

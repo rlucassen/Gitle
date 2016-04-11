@@ -23,12 +23,6 @@
         </div>
       </div>
       <div class="row">
-        <div class="large-3 columns">Freckle project id</div>
-        <div class="large-9 columns">
-          ${Form.Select("item.FreckleId", freckleProjects, {"class": "chosen-select", "value": "Id", "text": "Name", "firstoption": "Kies een freckle project"})}
-        </div>
-      </div>
-      <div class="row">
         <div class="large-3 columns">Uurprijs</div>
         <div class="large-9 columns"><input type="number" name="item.HourPrice" value="${?item.HourPrice}"/></div>
       </div>
