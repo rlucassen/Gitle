@@ -43,11 +43,11 @@ namespace Gitle.Clients.GitHub.Models
         {
             unchecked
             {
-                int result = Id;
-                result = (result*397) ^ (Name != null ? Name.GetHashCode() : 0);
-                result = (result*397) ^ (FullName != null ? FullName.GetHashCode() : 0);
-                result = (result*397) ^ (DescriptionId != null ? DescriptionId.GetHashCode() : 0);
-                result = (result*397) ^ (Owner != null ? Owner.GetHashCode() : 0);
+                var result = Id;
+                result = (result*397) ^ (Name?.GetHashCode() ?? 0);
+                result = (result*397) ^ (FullName?.GetHashCode() ?? 0);
+                result = (result*397) ^ (DescriptionId?.GetHashCode() ?? 0);
+                result = (result*397) ^ (Owner?.GetHashCode() ?? 0);
                 return result;
             }
         }

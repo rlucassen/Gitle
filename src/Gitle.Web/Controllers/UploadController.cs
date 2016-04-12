@@ -10,8 +10,8 @@
 
     public class UploadController : SecureController
     {
-        private readonly IList<string> ImageExtensions = new List<string> {".jpg", ".png", ".gif"};
-        private readonly IList<string> DocumentExtensions = new List<string> {".doc", ".docx", ".xls", ".xlsx", ".pdf", ".json", ".txt", ".xml", ".xsd", ".msg"};
+        private static readonly IList<string> ImageExtensions = new List<string> {".jpg", ".png", ".gif"};
+        private static readonly IList<string> DocumentExtensions = new List<string> {".doc", ".docx", ".xls", ".xlsx", ".pdf", ".json", ".txt", ".xml", ".xsd", ".msg"};
 
         public void File([FileBinder] IEnumerable<HttpPostedFile> uploads)
         {
@@ -21,30 +21,33 @@
             var feedback = new UploadFeedback();
             foreach (var upload in uploads)
             {
-                if (upload.FileName.LastIndexOf(".") == -1)
+                var extension = Path.GetExtension(upload.FileName).ToLower();
+                if (string.IsNullOrEmpty(extension))
                 {
                     feedback.Errors.Add(upload.FileName, "Bestanden zonder extensie zijn niet toegestaan");
                 }
-                var extension = upload.FileName.Substring(upload.FileName.LastIndexOf(".")).ToLower();
-                if (allowedExtensions.Contains(extension))
+                else if (!allowedExtensions.Contains(extension))
+                {
+                    feedback.Errors.Add(upload.FileName, $"De extensie {extension} is niet toegestaan");
+                }
+                else
                 {
                     var info = new FileInfo(upload.FileName);
-                    var filename = string.Format("{0}-{1}", DateTime.Now.Ticks, info.Name);
+                    var filename = $"{DateTime.Now.Ticks}-{info.Name}";
                     var path = Path.Combine(ConfigurationManager.AppSettings["fileUpload"], filename);
                     upload.SaveAs(path);
                     var fileInfo = new FileInfo(path);
                     if (fileInfo.Exists)
                     {
                         var url = filename;
+                        var webPath = ConfigurationManager.AppSettings["webPath"];
                         if (ImageExtensions.Contains(extension))
                         {
-                            url = string.Format("![alt]({0}/Public/{1})",
-                                                    ConfigurationManager.AppSettings["webPath"], filename);
+                            url = $"![alt]({webPath}/Public/{filename})";
                         }
                         else if (DocumentExtensions.Contains(extension))
                         {
-                            url = string.Format("[{2}]({0}/Public/{1})",
-                                                    ConfigurationManager.AppSettings["webPath"], filename, info.Name);
+                            url = $"[{info.Name}]({webPath}/Public/{filename})";
                         }
                         feedback.Uploads.Add(url);
                     }
@@ -52,10 +55,6 @@
                     {
                         feedback.Errors.Add(upload.FileName, "Er is iets mis gegaan met uploaden");
                     }
-                }
-                else
-                {
-                    feedback.Errors.Add(upload.FileName, string.Format("De extensie {0} is niet toegestaan", extension));
                 }
             }
             RenderText(new JavaScriptSerializer().Serialize(feedback));

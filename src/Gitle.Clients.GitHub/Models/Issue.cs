@@ -13,7 +13,7 @@
     {
         public Issue()
         {
-            Title = string.Empty;
+            Title = "";
             Labels = new List<Label>();
         }
 

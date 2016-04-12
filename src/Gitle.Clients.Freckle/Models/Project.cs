@@ -94,28 +94,28 @@
         {
             unchecked
             {
-                int result = Id;
-                result = (result * 397) ^ (Name != null ? Name.GetHashCode() : 0);
-                result = (result * 397) ^ (GroupName != null ? GroupName.GetHashCode() : 0);
-                result = (result * 397) ^ (ProjectGroupId.HasValue ? ProjectGroupId.Value : 0);
+                var result = Id;
+                result = (result * 397) ^ (Name?.GetHashCode() ?? 0);
+                result = (result * 397) ^ (GroupName?.GetHashCode() ?? 0);
+                result = (result * 397) ^ (ProjectGroupId ?? 0);
                 result = (result * 397) ^ CreatedAt.GetHashCode();
                 result = (result * 397) ^ UpdatedAt.GetHashCode();
-                result = (result * 397) ^ (Minutes.HasValue ? Minutes.Value : 0);
-                result = (result * 397) ^ (BillableMinutes.HasValue ? BillableMinutes.Value : 0);
-                result = (result * 397) ^ (UnbillableMinutes.HasValue ? UnbillableMinutes.Value : 0);
-                result = (result * 397) ^ (InvoicedMinutes.HasValue ? InvoicedMinutes.Value : 0);
-                result = (result * 397) ^ (RemainingMinutes.HasValue ? RemainingMinutes.Value : 0);
-                result = (result * 397) ^ (BudgetMinutes.HasValue ? BudgetMinutes.Value : 0);
+                result = (result * 397) ^ (Minutes ?? 0);
+                result = (result * 397) ^ (BillableMinutes ?? 0);
+                result = (result * 397) ^ (UnbillableMinutes ?? 0);
+                result = (result * 397) ^ (InvoicedMinutes ?? 0);
+                result = (result * 397) ^ (RemainingMinutes ?? 0);
+                result = (result * 397) ^ (BudgetMinutes ?? 0);
                 result = (result * 397) ^ Billable.GetHashCode();
-                result = (result * 397) ^ (ImportId.HasValue ? ImportId.Value : 0);
+                result = (result * 397) ^ (ImportId ?? 0);
                 result = (result * 397) ^ Enabled.GetHashCode();
-                result = (result * 397) ^ (ColorHex != null ? ColorHex.GetHashCode() : 0);
+                result = (result * 397) ^ (ColorHex?.GetHashCode() ?? 0);
                 result = (result * 397) ^ Stepping;
-                result = (result * 397) ^ (UserId.HasValue ? UserId.Value : 0);
-                result = (result * 397) ^ (Budget.HasValue ? Budget.Value : 0);
-                result = (result * 397) ^ (AccountId.HasValue ? AccountId.Value : 0);
-                result = (result * 397) ^ (InvoiceRecipientDetails != null ? InvoiceRecipientDetails.GetHashCode() : 0);
-                result = (result * 397) ^ (CachedTags != null ? CachedTags.GetHashCode() : 0);
+                result = (result * 397) ^ (UserId ?? 0);
+                result = (result * 397) ^ (Budget ?? 0);
+                result = (result * 397) ^ (AccountId ?? 0);
+                result = (result * 397) ^ (InvoiceRecipientDetails?.GetHashCode() ?? 0);
+                result = (result * 397) ^ (CachedTags?.GetHashCode() ?? 0);
                 return result;
             }
         }

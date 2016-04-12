@@ -1,15 +1,11 @@
 ﻿namespace Gitle.Web.Controllers
 {
-    using System.Collections.Generic;
     using System.Linq;
     using Clients.GitHub.Interfaces;
     using Model;
     using Model.Enum;
     using NHibernate;
     using NHibernate.Linq;
-    using Comment = Clients.GitHub.Models.Comment;
-    using Issue = Clients.GitHub.Models.Issue;
-    using Label = Clients.GitHub.Models.Label;
 
     public class ImportController : SecureController
     {
@@ -26,17 +22,17 @@
 
         public void Index()
         {
-            IQueryable<Project> projects = session.Query<Project>();
+            var projects = session.Query<Project>();
 
-            foreach (Project project in projects)
+            foreach (var project in projects)
             {
-                using (ITransaction trans = session.BeginTransaction())
+                using (var trans = session.BeginTransaction())
                 {
-                    List<Issue> items = issueClient.List(project.Repository, project.MilestoneId);
+                    var items = issueClient.List(project.Repository, project.MilestoneId);
 
-                    foreach (Issue issue in items)
+                    foreach (var issue in items)
                     {
-                        var newIssue = new Model.Issue
+                        var newIssue = new Issue
                                            {
                                                Body = issue.Body,
                                                Devvers = issue.Devvers,
@@ -56,20 +52,20 @@
                                                               IssueState = IssueState.Closed
                                                           });
 
-                        foreach (Label label in issue.Labels)
+                        foreach (var label in issue.Labels)
                         {
-                            Model.Label gitleLabel =
-                                session.Query<Model.Label>().FirstOrDefault(
+                            var gitleLabel =
+                                session.Query<Label>().FirstOrDefault(
                                     x => x.Name == label.Name && x.Project == project) ??
-                                new Model.Label {Name = label.Name, Color = label.Color, Project = project};
+                                new Label {Name = label.Name, Color = label.Color, Project = project};
                             newIssue.Labels.Add(gitleLabel);
                         }
 
-                        List<Comment> comments = commentClient.List(project.Repository, issue.Number).ToList();
-                        foreach (Comment comment in comments)
+                        var comments = commentClient.List(project.Repository, issue.Number).ToList();
+                        foreach (var comment in comments)
                         {
-                            User user = session.Query<User>().FirstOrDefault(x => x.FullName == comment.Name);
-                            var newComment = new Model.Comment
+                            var user = session.Query<User>().FirstOrDefault(x => x.FullName == comment.Name);
+                            var newComment = new Comment
                                                  {
                                                      CreatedAt = comment.CreatedAt,
                                                      Issue = newIssue,

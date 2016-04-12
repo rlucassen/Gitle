@@ -22,7 +22,7 @@
             get
             {
                 var match = r.Matches(Body).Cast<Match>().Select(p => p.Value).FirstOrDefault();
-                return string.IsNullOrEmpty(match) ? User.Login : match.Replace("): ", string.Empty).TrimStart('(');
+                return string.IsNullOrEmpty(match) ? User.Login : match.Replace("): ", "").TrimStart('(');
             }
         }
 
@@ -30,7 +30,7 @@
         {
             get
             {
-                return Body.Replace(string.Format("({0}): ", Name), string.Empty);
+                return Body.Replace(string.Format("({0}): ", Name), "");
             }
         }
 
