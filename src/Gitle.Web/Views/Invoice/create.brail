@@ -1,5 +1,5 @@
-﻿<h1>Nieuwe factuur maken</h1>
-<form id="createinvoice" action="save" method="POST">
+﻿<h1>Nieuwe bijlage maken</h1>
+<form id="createinvoice" action="save" method="POST" data-abide>
   <div class="row">
     <div class="large-12 columns">
       <div class="row collapse invoice-title">
@@ -7,7 +7,8 @@
           <input type="hidden" name="invoice.Project.Id" id="invoice_Project_Id" value="${invoice.Project.Id}">
           <input type="hidden" name="invoice.StartDate" id="invoice_StartDate" value="${invoice.StartDate}">
           <input type="hidden" name="invoice.EndDate" id="invoice_EndDate" value="${invoice.EndDate}">
-          <input type="text" name="invoice.Number" id="invoice_Number" value="${invoice.Number}" placeholder="Factuurnr." />
+          <input type="text" name="invoice.Number" id="invoice_Number" value="${invoice.Number}" placeholder="Bijlagenr." required />
+          <small class="error">Geef een bijlagenummer op</small>
         </div>
         <div class="large-10 columns">
           <input type="text" name="invoice.Title" id="invoice_Title" value="${invoice.Title}" />
@@ -33,7 +34,7 @@
           <strong>Omschrijving</strong>
         </div>
         <div class="large-1 columns">
-          <strong>Schat/Boek</strong>
+          <strong><span data-tooltip class="has-tip" title="Schatting exclusief gefactureerde uren">Schat</span>/Boek</strong>
         </div>
         <div class="large-1 columns">
           <strong>Uren</strong>
@@ -92,15 +93,18 @@
                 <% end %>
               </span>
             </div>
-            <div class="small-10 columns">
+            <div class="small-9 columns">
               <input type="text" name="lines[${count}].Description" id="lines_${count}_Description" value="${line.Description}" />
+            </div>
+            <div class="small-1 columns">
+              <span class="postfix invoiceline-fullestimate secondary expand" title="Originele schatting issue">${line.FullEstimateHours}</a>
             </div>
           </div>
         </div>
         <div class="large-1 columns">
           <div class="row collapse estimate-hours">
             <div class="large-6 columns">
-              <a href="#" class="button tiny invoiceline-estimate expand <% if line.EstimateHours == line.Hours: %>active<% end %>" title="Schatting">${line.EstimateHours}</a>
+              <a href="#" class="button tiny invoiceline-estimate expand <% if line.EstimateHours == line.Hours: %>active<% end %>" title="Schatting exclusief gefactureerde uren">${line.EstimateHours}</a>
             </div>
             <div class="large-6 columns">
               <a href="#" class="button tiny invoiceline-hours expand <% if line.BookingHours == line.Hours: %>active<% end %>" title="Billable geboekte uren">${line.BookingHours}</a>
@@ -129,6 +133,31 @@
           <div class="large-7 large-offset-1 columns">
             <span class="booking-date <% if invoice.StartDate > booking.Date: %>old<% end %>">${booking.Date.ToString("dd-MM-yyyy")}</span> <span class="booking-info">${booking.User.FullName}</span>:
             <span class="booking-comment">${booking.Comment}</span>
+          </div>
+          <div class="large-1 columns text-center">
+            <% if not booking.Unbillable: %>
+            <i class="fa fa-euro green" title="billable"></i>
+            <% else: %>
+            <i class="fa fa-euro red" title="unbillable"></i>
+            <% end %>
+          </div>
+          <div class="large-1 columns end text-right">
+            <input type="hidden" class="booking-hours text-right" value="${booking.Hours}" disabled />
+            <span class="booking-hours-span">${booking.Hours}</span>
+          </div>
+        </div>
+        <% end %>
+        <% for booking in line.OldBookings: %>
+        <div class="row booking old-booking" data-issue="${line.Issue.Number}">
+          <input type="hidden" name="bookings[${booking.Id}]" id="bookings_${booking.Id}" value="${booking.Id}" />
+          <div class="large-7 large-offset-1 columns">
+            <span class="booking-date">${booking.Date.ToString("dd-MM-yyyy")}</span> <span class="booking-info">${booking.User.FullName}</span>:
+            <span class="booking-comment">${booking.Comment}</span>
+            <% for invoice in booking.Invoices: %>
+            <% if not invoice.IsDefinitive: %>
+            <span class="label round right" title="${invoice.Title}">${invoice.Number}</span>
+            <% end %>
+            <% end %>
           </div>
           <div class="large-1 columns text-center">
             <% if not booking.Unbillable: %>

@@ -613,6 +613,8 @@ body.admin table#issue-table th#issue-actions {
       font-weight: bold; }
     #createinvoice .bookings .booking-hours-span {
       padding: 0 0.5rem; }
+    #createinvoice .bookings .old-booking {
+      color: #aaa; }
   #createinvoice .vatline .vat {
     color: #ccc; }
   #createinvoice .totals {

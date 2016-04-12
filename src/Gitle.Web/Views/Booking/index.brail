@@ -85,7 +85,9 @@
           <div class="large-5 columns end">
             <span class="booking-comment">${booking.Comment}</span>
             <% for invoice in booking.Invoices: %>
-            <span class="label round right <% if not invoice.IsDefinitive: %>secondary<% end %>" title="${invoice.Title}">${invoice.Number}</span>
+            <% if not invoice.IsDefinitive: %>
+            <span class="label round right" title="${invoice.Title}">${invoice.Number}</span>
+            <% end %>
             <% end %>
           </div>
           <% if not booking.IsDefinitive: %>

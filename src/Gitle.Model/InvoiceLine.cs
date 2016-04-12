@@ -25,7 +25,16 @@ namespace Gitle.Model
 
         public virtual IList<Booking> Bookings { get { return Invoice?.Bookings.Where(x => x.Issue == Issue).ToList() ?? new List<Booking>(); } }
 
-        public virtual double EstimateHours => Issue.Hours;
+        public virtual IList<Booking> OldBookings
+        {
+            get
+            {
+                return Issue?.Bookings.Where(x => !Bookings.Contains(x)).ToList() ?? new List<Booking>();
+            }
+        }
+
+        public virtual double EstimateHours => Issue.Hours - OldBookings.Where(x => !x.Unbillable).Sum(x => x.Hours);
+        public virtual double FullEstimateHours => Issue.Hours;
         public virtual double BookingHours { get { return Bookings.Where(x => !x.Unbillable).Sum(x => x.Hours); } }
     }
 
