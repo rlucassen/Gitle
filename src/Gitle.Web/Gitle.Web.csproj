@@ -51,6 +51,12 @@
   <ItemGroup>
     <Content Include="Content\images\chosen-sprite%402x.png" />
     <Content Include="Content\images\chosen-sprite.png" />
+    <Content Include="Content\javascript\app.es5.js">
+      <DependentUpon>app.js</DependentUpon>
+    </Content>
+    <Content Include="Content\javascript\app.es5.min.js">
+      <DependentUpon>app.es5.js</DependentUpon>
+    </Content>
     <Content Include="Content\javascript\app.min.js">
       <DependentUpon>app.js</DependentUpon>
     </Content>
