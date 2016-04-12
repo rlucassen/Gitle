@@ -33,7 +33,7 @@
 
         public static string Markdown(this string txt, Project project)
         {
-            if (string.IsNullOrEmpty(txt)) return string.Empty;
+            if (string.IsNullOrEmpty(txt)) return "";
             // spaces in urls will not work with MarkdownDeep
             txt = Regex.Replace(txt, @"\(http(.*)\)", match => match.ToString().Replace(" ", "%20"));
             // single linebreaks become double linebreaks to conform gitle markdown

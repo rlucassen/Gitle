@@ -4,6 +4,7 @@
 
     using System;
     using System.Linq;
+    using System.Net;
     using System.Reflection;
     using System.Web;
     using Castle.MicroKernel.Registration;
@@ -37,26 +38,24 @@
         public static void Add<T>(this RoutingEngine engine)
             where T : class, IController
         {
-            string name = typeof (T).Name.Replace("Controller", string.Empty);
+            var name = typeof (T).Name.Replace("Controller", "");
             var controllerDetails =
                 typeof (T).GetCustomAttributes(typeof (ControllerDetailsAttribute), true).FirstOrDefault() as
                 ControllerDetailsAttribute;
-            string area = string.Empty;
+            var area = "";
             if (controllerDetails != null)
             {
                 area = controllerDetails.Area;
             }
 
-            PatternRoute patternIdRoute =
-                new PatternRoute(string.Format("{1}/{0}/<id>/<action>", name,
-                                               string.IsNullOrEmpty(area) ? string.Empty : string.Format("/{0}", area)))
+            var patternIdRoute =
+                new PatternRoute($"{$"/{ area }".TrimEnd('/')}/{name}/<id>/<action>")
                     .DefaultForController().Is<T>()
                     .Restrict("id").ValidInteger
                     .DefaultForAction().Is("index");
 
-            PatternRoute patternRoute =
-                new PatternRoute(string.Format("{1}/{0}/<action>", name,
-                                               string.IsNullOrEmpty(area) ? string.Empty : string.Format("/{0}", area)))
+            var patternRoute =
+                new PatternRoute($"{$"/{ area }".TrimEnd('/')}/{name}/<action>")
                     .DefaultForController().Is<T>()
                     .DefaultForAction().Is("index");
 
@@ -108,6 +107,8 @@
 
         protected void Application_Start(object sender, EventArgs e)
         {
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
             container = new GitleContainer();
             RegisterSessionFactory(container);
 
@@ -212,34 +213,34 @@
 
         protected void Application_End(object sender, EventArgs e)
         {
-            if (container != null) container.Dispose();
+            container?.Dispose();
         }
 
         protected void Application_BeginRequest(object sender, EventArgs e)
         {
             var sessionFactory = Container.Resolve<ISessionFactory>();
-            ISession session = sessionFactory.OpenSession();
-            ManagedWebSessionContext.Bind(HttpContext.Current, session);
+            var session = sessionFactory.OpenSession();
+            WebSessionContext.Bind(session);
         }
 
         protected void Application_EndRequest(object sender, EventArgs e)
         {
             var sessionFactory = Container.Resolve<ISessionFactory>();
-            ISession session = ManagedWebSessionContext.Unbind(HttpContext.Current, sessionFactory);
+            var session = WebSessionContext.Unbind(sessionFactory);
             if (session != null && session.IsOpen) session.Close();
         }
 
         protected static void RegisterSessionFactory(IWindsorContainer windsorContainer)
         {
-            FluentConfiguration configuration = Fluently.Configure()
+            var configuration = Fluently.Configure()
                 .Database(MsSqlConfiguration.MsSql2008.ConnectionString(c => c.FromConnectionStringWithKey("Gitle")))
-                .ExposeConfiguration(c => c.CurrentSessionContext<ManagedWebSessionContext>())
+                .ExposeConfiguration(c => c.CurrentSessionContext<WebSessionContext>())
                 .ExposeConfiguration(c => ConfigureValidatorEngine<ModelBase>(c))
                 .ExposeConfiguration(c => c.SetInterceptor(new GitleInterceptor(windsorContainer)))
                 .ExposeConfiguration(ExportSchema)
                 .Mappings(m => m.FluentMappings.AddFromAssemblyOf<ModelBase>());
 
-            ISessionFactory sessionFactory = configuration.BuildSessionFactory();
+            var sessionFactory = configuration.BuildSessionFactory();
             windsorContainer.Register(Component.For<ISessionFactory>().Instance(sessionFactory));
         }
 
@@ -254,7 +255,7 @@
         private static ValidatorEngine ConfigureValidatorEngine<T>(Configuration configuration)
         {
             Environment.SharedEngineProvider = new NHibernateSharedEngineProvider();
-            ValidatorEngine validatorEngine = Environment.SharedEngineProvider.GetEngine();
+            var validatorEngine = Environment.SharedEngineProvider.GetEngine();
             var validatorConfiguration = new NHibernate.Validator.Cfg.Loquacious.FluentConfiguration();
             validatorConfiguration.SetDefaultValidatorMode(ValidatorMode.UseAttribute)
                 .SetCustomResourceManager("Gitle.Localization.Language", Assembly.Load("Gitle.Localization"))

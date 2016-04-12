@@ -154,7 +154,7 @@ Application.prototype = {
       }
     });
 
-    $('form .focus[value=]').focus();
+    $('form .focus[value=""]').focus();
 
     $("table.row-clickable tr").click(function () {
       var href = $(this).find("a").first().attr("href");

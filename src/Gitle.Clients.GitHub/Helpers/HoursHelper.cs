@@ -26,7 +26,7 @@
 
         public static string GetNameFromTitle(string title)
         {
-            return string.IsNullOrEmpty(HoursMatch(title)) ? title : title.Replace(HoursMatch(title), string.Empty).TrimEnd(' ');
+            return string.IsNullOrEmpty(HoursMatch(title)) ? title : title.Replace(HoursMatch(title), "").TrimEnd(' ');
         }
 
         public static string CreateTitle(string title, int devvers, double hours)
@@ -39,13 +39,13 @@
         private static string HoursMatch(string title)
         {
             var match = r.Matches(title).Cast<Match>().Select(p => p.Value).LastOrDefault();
-            return string.IsNullOrWhiteSpace(match) ? string.Empty : match;
+            return string.IsNullOrWhiteSpace(match) ? "" : match;
         }
 
         private static string TrimmedHoursMatch(string title)
         {
             var trimmed = HoursMatch(title).Trim(new[] { '(', ')' });
-            return string.IsNullOrWhiteSpace(trimmed) ? string.Empty : trimmed;
+            return string.IsNullOrWhiteSpace(trimmed) ? "" : trimmed;
         }
     }
 

@@ -17,7 +17,7 @@
                 return
                     string.Format(
                         "De taak is opgepakt{0}",
-                        User != null ? string.Format(" door <strong>{0}</strong>", User.FullName) : string.Empty);
+                        User != null ? string.Format(" door <strong>{0}</strong>", User.FullName) : "");
             }
         }
 
@@ -28,12 +28,12 @@
                 return
                     string.Format(
                         "De taak is opgepakt{0} op <strong>{1}</strong>",
-                        User != null ? string.Format(" door <strong>{0}</strong>", User.FullName) : string.Empty,
+                        User != null ? string.Format(" door <strong>{0}</strong>", User.FullName) : "",
                         DateTimeHelper.Readable(CreatedAt));
             }
         }
 
-        public virtual string EmailSubject { get { return string.Format("Taak {1} is opgepakt door {0}", User != null ? User.FullName : string.Empty, Issue.Number); } }
+        public virtual string EmailSubject { get { return string.Format("Taak {1} is opgepakt door {0}", User != null ? User.FullName : "", Issue.Number); } }
 
     }
 }

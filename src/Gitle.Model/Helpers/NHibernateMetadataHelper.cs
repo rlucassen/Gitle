@@ -9,8 +9,8 @@
     {
          public static bool IsMapped<T>(ISessionFactory sessionFactory, string propertyName)
          {
-             Type type = typeof (T);
-             IClassMetadata meta = sessionFactory.GetClassMetadata(type);
+             var type = typeof (T);
+             var meta = sessionFactory.GetClassMetadata(type);
 
              var propertyNames = new List<string>(meta.PropertyNames);
 

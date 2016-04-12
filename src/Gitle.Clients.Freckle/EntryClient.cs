@@ -28,7 +28,7 @@
             {
                 _client.Post<bool>("entries", new EntryResult(entry));
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return false;
             }

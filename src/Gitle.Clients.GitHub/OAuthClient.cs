@@ -30,7 +30,7 @@ namespace Gitle.Clients.GitHub
                 return _client.Post<AccessToken>("https://github.com/login/oauth/access_token",
                                                  new LoginPost { ClientId = clientId, ClientSecret = clientSecret, Code = code });
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return new AccessToken();
             }

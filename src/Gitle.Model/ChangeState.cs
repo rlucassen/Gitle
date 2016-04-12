@@ -25,7 +25,7 @@
                     state = "heropend";
                 }
                 return string.Format("De taak is {0}{1}", state,
-                                     User != null ? string.Format(" door {0}", User.FullName) : string.Empty);
+                                     User != null ? string.Format(" door {0}", User.FullName) : "");
             }
         }
 
@@ -41,7 +41,7 @@
                     state = "heropend";
                 }
                 return string.Format("De taak is {0}{1} op <strong>{2}</strong>", state,
-                                     User != null ? string.Format(" door <strong>{0}</strong>", User.FullName) : string.Empty, DateTimeHelper.Readable(CreatedAt));
+                                     User != null ? string.Format(" door <strong>{0}</strong>", User.FullName) : "", DateTimeHelper.Readable(CreatedAt));
             }
         }
 
@@ -56,7 +56,7 @@
                     state = "heropend";
                 }
                 return string.Format("Taak {2} is {0}{1}", state,
-                                     User != null ? string.Format(" door {0}", User.FullName) : string.Empty, Issue.Number);
+                                     User != null ? string.Format(" door {0}", User.FullName) : "", Issue.Number);
             }
         }
     }

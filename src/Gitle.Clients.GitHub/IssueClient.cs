@@ -36,7 +36,7 @@ namespace Gitle.Clients.GitHub
                 {
                     var url = string.Format("repos/{0}/issues?page={1}&per_page={2}&state={3}{4}", 
                                             repo, page, perPage, s,
-                                            milestoneId > 0 ? string.Format("&milestone={0}", milestoneId) : string.Empty);
+                                            milestoneId > 0 ? string.Format("&milestone={0}", milestoneId) : "");
                     var issuePage = _client.Get<List<Issue>>(url);
                     issues.AddRange(issuePage);
 

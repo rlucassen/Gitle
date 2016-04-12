@@ -11,6 +11,7 @@
     using Castle.MonoRail.Framework.Routing;
     using Clients.Freckle.Interfaces;
     using Clients.Freckle.Models;
+    using FluentNHibernate.Conventions.Inspections;
     using Helpers;
     using Model;
     using Model.Enum;
@@ -35,7 +36,7 @@
         [MustHaveProject]
         public void Index(string projectSlug, string query)
         {
-            query = query ?? string.Empty;
+            query = query ?? "";
 
             var project = session.Query<Project>().FirstOrDefault(p => p.Slug == projectSlug);
 
@@ -66,8 +67,8 @@
             IDictionary<string, bool> linqSorts = new Dictionary<string, bool>();
             IDictionary<string, bool> selectedSorts = new Dictionary<string, bool>();
             var searchQuery = query;
-            bool pickupany = false;
-            bool pickupnone = false;
+            var pickupany = false;
+            var pickupnone = false;
 
             foreach (Match match in matches)
             {
@@ -258,14 +259,13 @@
             if (!string.IsNullOrEmpty(Request.UrlReferrer))
             {
                 var referer = new Uri(Request.UrlReferrer);
-                var routeMatch = RoutingModuleEx.Engine.FindMatch(referer.AbsolutePath,
-                                                                  new RouteContext(Request, null, "/", new Hashtable()));
+                var routeMatch = RoutingModuleEx.Engine.FindMatch(referer.AbsolutePath, new RouteContext(Request, null, "/", new Hashtable()));
                 if (routeMatch.Name == "issues") PropertyBag.Add("referer", referer.PathAndQuery);
             }
 
-            var project = session.Query<Project>().FirstOrDefault(p => p.Slug == projectSlug);
+            var project = session.Query<Project>().Single(p => p.Slug == projectSlug);
             PropertyBag.Add("project", project);
-            var item = session.Query<Issue>().FirstOrDefault(i => i.Number == issueId && i.Project == project);
+            var item = session.Query<Issue>().Single(i => i.Number == issueId && i.Project == project);
             PropertyBag.Add("item", item);
             PropertyBag.Add("comments", item.Comments);
             PropertyBag.Add("days", DayHelper.GetPastDaysList());
@@ -286,9 +286,9 @@
         [MustHaveProject]
         public void QuickView(string projectSlug, int issueId)
         {
-            var project = session.Query<Project>().FirstOrDefault(p => p.Slug == projectSlug);
+            var project = session.Query<Project>().Single(p => p.Slug == projectSlug);
             PropertyBag.Add("project", project);
-            var item = session.Query<Issue>().FirstOrDefault(i => i.Number == issueId && i.Project == project);
+            var item = session.Query<Issue>().Single(i => i.Number == issueId && i.Project == project);
             PropertyBag.Add("item", item);
             PropertyBag.Add("comments", item.Comments);
             PropertyBag.Add("datetime", DateTime.Now);
@@ -298,7 +298,7 @@
         [MustHaveProject]
         public void New(string projectSlug)
         {
-            var project = session.Query<Project>().FirstOrDefault(p => p.Slug == projectSlug);
+            var project = session.Query<Project>().Single(p => p.Slug == projectSlug);
             PropertyBag.Add("project", project);
             PropertyBag.Add("item", new Issue());
             PropertyBag.Add("labels", CurrentUser.IsAdmin ? project.Labels : project.Labels.Where(l => l.ApplicableByCustomer));
@@ -308,9 +308,9 @@
         [Admin]
         public void Edit(string projectSlug, int issueId)
         {
-            var project = session.Query<Project>().FirstOrDefault(p => p.Slug == projectSlug);
+            var project = session.Query<Project>().Single(p => p.Slug == projectSlug);
             PropertyBag.Add("project", project);
-            var item = session.Query<Issue>().FirstOrDefault(i => i.Number == issueId && i.Project == project);
+            var item = session.Query<Issue>().Single(i => i.Number == issueId && i.Project == project);
             PropertyBag.Add("item", item);
             PropertyBag.Add("labels", CurrentUser.IsAdmin ? project.Labels : project.Labels.Where(l => l.ApplicableByCustomer));
         }
@@ -318,10 +318,10 @@
         [MustHaveProject]
         public void Save(string projectSlug, int issueId, string[] labels)
         {
-            var project = session.Query<Project>().FirstOrDefault(p => p.Slug == projectSlug);
-            var issue = session.Query<Issue>().FirstOrDefault(i => i.Number == issueId && i.Project == project);
+            var project = session.Query<Project>().Single(p => p.Slug == projectSlug);
+            var issue = session.Query<Issue>().Single(i => i.Number == issueId && i.Project == project);
 
-            var hash = string.Empty;
+            var hash = "";
             if (issue != null)
             {
                 BindObjectInstance(issue, "item");
@@ -349,8 +349,8 @@
         [Admin]
         public void Pickup(string projectSlug, int issueId)
         {
-            var project = session.Query<Project>().FirstOrDefault(p => p.Slug == projectSlug);
-            var issue = session.Query<Issue>().FirstOrDefault(i => i.Number == issueId && i.Project == project);
+            var project = session.Query<Project>().Single(p => p.Slug == projectSlug);
+            var issue = session.Query<Issue>().Single(i => i.Number == issueId && i.Project == project);
             if (!issue.IsArchived && issue.PickedUpBy != CurrentUser)
             {
                 issue.Pickup(CurrentUser);
@@ -367,8 +367,8 @@
         public void AddComment(string projectSlug, int issueId, string body)
         {
             RedirectToReferrer();
-            var project = session.Query<Project>().FirstOrDefault(p => p.Slug == projectSlug);
-            var issue = session.Query<Issue>().FirstOrDefault(i => i.Number == issueId && i.Project == project);
+            var project = session.Query<Project>().Single(p => p.Slug == projectSlug);
+            var issue = session.Query<Issue>().Single(i => i.Number == issueId && i.Project == project);
             if (issue.IsArchived) return;
             var comment = new Comment
                               {
@@ -388,8 +388,8 @@
         public void AddLabel(string projectSlug, int issueId, int param)
         {
             RedirectToReferrer();
-            var project = session.Query<Project>().FirstOrDefault(p => p.Slug == projectSlug);
-            var issue = session.Query<Issue>().FirstOrDefault(i => i.Number == issueId && i.Project == project);
+            var project = session.Query<Project>().Single(p => p.Slug == projectSlug);
+            var issue = session.Query<Issue>().Single(i => i.Number == issueId && i.Project == project);
             if (issue.IsArchived) return;
             var label = project.Labels.First(l => l.Id == param);
             issue.Labels.Add(label);
@@ -412,16 +412,18 @@
                 RedirectToReferrer();
                 return;
             }
-            var project = session.Query<Project>().FirstOrDefault(p => p.Slug == projectSlug);
-            var issue = session.Query<Issue>().FirstOrDefault(i => i.Number == issueId && i.Project == project);
+            var project = session.Query<Project>().Single(p => p.Slug == projectSlug);
+            var issue = session.Query<Issue>().Single(i => i.Number == issueId && i.Project == project);
             if (issue.IsArchived) return;
-            var labels = project.Labels.Where(l => l.ToFreckle && issue.Labels.Select(label => label.Name).Contains(l.Name)).Select(l => l.Name).ToList();
-            var description = string.Format("{0}, !!#{1} - {2}", string.Join(",", labels), issue.Number, issue.Name);
+            var description = new List<string>();
+            if (project.FreckleName != null && project.FreckleName.ToLower().Contains("service")) description.Add("#servicedesk");
+            description.AddRange(project.Labels.Where(l => l.ToFreckle && issue.Labels.Select(label => label.Name).Contains(l.Name)).Select(l => "#" + l.Name).ToList());
+            description.Add($"#{issue.Number} - {issue.Name}");
             var entry = new Entry()
                             {
                                 Date = date,
-                                Description = description,
-                                Minutes = string.Format("{0}h", hours),
+                                Description = string.Join(", ", description),
+                                Minutes = $"{hours}h",
                                 ProjectId = project.FreckleId,
                                 User = CurrentUser.FreckleEmail
                             };
@@ -447,8 +449,8 @@
         public void Close(string projectSlug, int issueId)
         {
             RedirectToReferrer();
-            var project = session.Query<Project>().FirstOrDefault(p => p.Slug == projectSlug);
-            var issue = session.Query<Issue>().FirstOrDefault(i => i.Number == issueId && i.Project == project);
+            var project = session.Query<Project>().Single(p => p.Slug == projectSlug);
+            var issue = session.Query<Issue>().Single(i => i.Number == issueId && i.Project == project);
             if (issue.State == IssueState.Open || issue.State == IssueState.Unknown)
             {
                 issue.Close(CurrentUser);
@@ -464,8 +466,8 @@
         public void Reopen(string projectSlug, int issueId)
         {
             RedirectToReferrer();
-            var project = session.Query<Project>().FirstOrDefault(p => p.Slug == projectSlug);
-            var issue = session.Query<Issue>().FirstOrDefault(i => i.Number == issueId && i.Project == project);
+            var project = session.Query<Project>().Single(p => p.Slug == projectSlug);
+            var issue = session.Query<Issue>().Single(i => i.Number == issueId && i.Project == project);
             if (issue.State == IssueState.Closed || issue.State == IssueState.Unknown)
             {
                 issue.Open(CurrentUser);
@@ -482,8 +484,8 @@
         {
             RedirectToReferrer();
             if (!CurrentUser.IsAdmin) return;
-            var project = session.Query<Project>().FirstOrDefault(p => p.Slug == projectSlug);
-            var issue = session.Query<Issue>().FirstOrDefault(i => i.Number == issueId && i.Project == project);
+            var project = session.Query<Project>().Single(p => p.Slug == projectSlug);
+            var issue = session.Query<Issue>().Single(i => i.Number == issueId && i.Project == project);
             issue.Archive(CurrentUser);
             using (var tx = session.BeginTransaction())
             {
@@ -497,7 +499,7 @@
         {
             var issues = session.Query<Issue>().Where(x => x.Project.Slug == projectSlug && x.Pickups.Count == 0).ToList().Where(x => x.ChangeStates.Last().IssueState == IssueState.Open).OrderBy(x => x.PrioOrder).ToList();
             
-            var issue = session.Query<Issue>().First(x => x.Project.Slug == projectSlug && x.Number == issueNumber);
+            var issue = session.Query<Issue>().Single(x => x.Project.Slug == projectSlug && x.Number == issueNumber);
             issues.Remove(issue);
             issue.Prioritized = true;
             issues.Insert(newIndex, issue);
@@ -520,14 +522,14 @@
         [return: JSONReturnBinder]
         public Dictionary<int, int> GetPrioOrder(string projectSlug)
         {
-            var issues = session.Query<Issue>().Where(x => x.Project.Slug == projectSlug && x.Pickups.Count == 0).ToList().Where(x => x.ChangeStates.Last().IssueState == IssueState.Open);
-            return issues.ToDictionary(issue => issue.Number, issue => issue.PrioOrder);
+            var issues = session.Query<Issue>().Where(x => x.Project.Slug == projectSlug && x.Pickups.Count == 0).ToList().Where(x => x.ChangeStates.Last().IssueState == IssueState.Open).OrderByDescending(x => x.Prioritized).ThenBy(x => x.PrioOrder).ThenByDescending(x => x.Number);
+            return issues.Select((x, i) => new {x.Number, i}).ToDictionary(x => x.Number, x => x.i);
         }
 
         [Admin]
         public void ExportImport(string projectSlug)
         {
-            var project = session.Query<Project>().FirstOrDefault(p => p.Slug == projectSlug);
+            var project = session.Query<Project>().Single(p => p.Slug == projectSlug);
 
             PropertyBag.Add("project", project);
         }
@@ -535,7 +537,7 @@
         [Admin]
         public void ExportJson(string projectSlug, string[] selectedLabels, IssueState state, string issues)
         {
-            var project = session.Query<Project>().FirstOrDefault(p => p.Slug == projectSlug);
+            var project = session.Query<Project>().Single(p => p.Slug == projectSlug);
 
             if (Request.Params["state"] == null) state = CurrentUser.DefaultState;
             var items = project.Issues;
@@ -558,9 +560,9 @@
             Response.ClearContent();
             Response.Clear();
 
-            var filename = string.Format("issues_{0}_{1:yyyyMMdd_hhmm}.json", project.Name, DateTime.Now);
+            var filename = $"issues_{project.Name}_{DateTime.Now:yyyyMMdd_hhmm}.json";
 
-            Response.AppendHeader("content-disposition", string.Format("attachment; filename={0}", filename));
+            Response.AppendHeader("content-disposition", $"attachment; filename={filename}");
             Response.ContentType = "application/json";
 
             var byteArray = Encoding.Default.GetBytes(json);
@@ -571,7 +573,7 @@
         [Admin]
         public void ExportCsv(string projectSlug, string[] selectedLabels, IssueState state, string issues)
         {
-            var project = session.Query<Project>().FirstOrDefault(p => p.Slug == projectSlug);
+            var project = session.Query<Project>().Single(p => p.Slug == projectSlug);
 
             if (Request.Params["state"] == null) state = CurrentUser.DefaultState;
             var items = project.Issues;
@@ -593,9 +595,9 @@
             Response.ClearContent();
             Response.Clear();
 
-            var filename = string.Format("issues_{0}_{1:yyyyMMdd_hhmm}.csv", project.Name, DateTime.Now);
+            var filename = $"issues_{project.Name}_{DateTime.Now:yyyyMMdd_hhmm}.csv";
 
-            Response.AppendHeader("content-disposition", string.Format("attachment; filename={0}", filename));
+            Response.AppendHeader("content-disposition", $"attachment; filename={filename}");
             Response.ContentType = "application/csv";
 
             var byteArray = Encoding.Default.GetBytes(csv);

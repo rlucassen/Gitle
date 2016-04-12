@@ -21,13 +21,9 @@
         {
         }
 
-        public User CurrentUser
-        {
-            get { return (User) Context.CurrentUser; }
-        }
+        protected User CurrentUser => (User) Context.CurrentUser;
 
-        protected override object InvokeMethod(MethodInfo method, IRequest request,
-                                               IDictionary<string, object> extraArgs)
+        protected override object InvokeMethod(MethodInfo method, IRequest request, IDictionary<string, object> extraArgs)
         {
             var adminAttributes = (AdminAttribute[])method.GetCustomAttributes(typeof(AdminAttribute), false);
             if (adminAttributes.Length > 0 && !CurrentUser.IsAdmin)
@@ -58,13 +54,10 @@
             Response.ClearContent();
             Response.Clear();
 
-            Response.AppendHeader("content-disposition",
-                                  string.Format("attachment; filename={0}",
-                                                string.Format("export_{0:yyyyMMdd_hhmmss}.csv",
-                                                              DateTime.Now)));
+            Response.AppendHeader("content-disposition", $"attachment; filename={$"export_{DateTime.Now:yyyyMMdd_hhmmss}.csv"}");
             Response.ContentType = "application/csv";
 
-            byte[] byteArray = Encoding.Default.GetBytes(csv);
+            var byteArray = Encoding.Default.GetBytes(csv);
             var stream = new MemoryStream(byteArray);
             Response.BinaryWrite(stream);
         }

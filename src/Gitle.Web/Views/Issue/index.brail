@@ -294,6 +294,7 @@
 
           return data[aIssueId] - data[bIssueId];
         });
+
         if (lastPickedUp.length != 0) {
           sortedIssues.insertAfter(lastPickedUp);
         } else {

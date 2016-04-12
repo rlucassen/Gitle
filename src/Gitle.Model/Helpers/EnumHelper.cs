@@ -16,15 +16,15 @@
         ///<exception cref="ArgumentException"></exception>
         public static List<T> EnumToList<T>()
         {
-            Type enumType = typeof(T);
+            var enumType = typeof(T);
 
             // Can't use type constraints on value types, so have to do check like this
             if (enumType.BaseType != typeof(Enum))
                 throw new ArgumentException("T must be of type System.Enum");
 
-            Array enumValArray = Enum.GetValues(enumType);
+            var enumValArray = Enum.GetValues(enumType);
 
-            List<T> enumValList = new List<T>(enumValArray.Length);
+            var enumValList = new List<T>(enumValArray.Length);
 
             foreach (int val in enumValArray)
             {
@@ -41,8 +41,8 @@
                 throw new ArgumentNullException("type");
             }
 
-            ArrayList list = new ArrayList();
-            Array enumValues = Enum.GetValues(type);
+            var list = new ArrayList();
+            var enumValues = Enum.GetValues(type);
 
             foreach (Enum value in enumValues)
             {
@@ -60,7 +60,7 @@
             }
 
             IDictionary<int, String> dict = new Dictionary<int, String>();
-            Array enumValues = Enum.GetValues(type);
+            var enumValues = Enum.GetValues(type);
 
             foreach (Enum value in enumValues)
             {
@@ -72,14 +72,14 @@
 
         public static string GetDescription(this object value)
         {
-            Type type = value.GetType();
-            string name = Enum.GetName(type, value);
+            var type = value.GetType();
+            var name = Enum.GetName(type, value);
             if (name != null)
             {
-                FieldInfo field = type.GetField(name);
+                var field = type.GetField(name);
                 if (field != null)
                 {
-                    DescriptionAttribute attr =
+                    var attr =
                            Attribute.GetCustomAttribute(field,
                              typeof(DescriptionAttribute)) as DescriptionAttribute;
                     if (attr != null)
