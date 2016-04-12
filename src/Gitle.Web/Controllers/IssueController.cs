@@ -417,12 +417,14 @@
             var project = session.Query<Project>().Single(p => p.Slug == projectSlug);
             var issue = session.Query<Issue>().Single(i => i.Number == issueId && i.Project == project);
             if (issue.IsArchived) return;
-            var labels = project.Labels.Where(l => l.ToFreckle && issue.Labels.Select(label => label.Name).Contains(l.Name)).Select(l => l.Name).ToList();
-            var description = string.Format("{0}, !!#{1} - {2}", string.Join(",", labels), issue.Number, issue.Name);
+            var description = new List<string>();
+            if (project.FreckleName != null && project.FreckleName.ToLower().Contains("service")) description.Add("#servicedesk");
+            description.AddRange(project.Labels.Where(l => l.ToFreckle && issue.Labels.Select(label => label.Name).Contains(l.Name)).Select(l => "#" + l.Name).ToList());
+            description.Add($"#{issue.Number} - {issue.Name}");
             var entry = new Entry()
                             {
                                 Date = date,
-                                Description = description,
+                                Description = string.Join(", ", description),
                                 Minutes = $"{hours}h",
                                 ProjectId = project.FreckleId,
                                 User = CurrentUser.FreckleEmail
