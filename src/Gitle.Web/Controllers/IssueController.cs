@@ -319,7 +319,7 @@
         public void Save(string projectSlug, int issueId, string[] labels)
         {
             var project = session.Query<Project>().Single(p => p.Slug == projectSlug);
-            var issue = session.Query<Issue>().Single(i => i.Number == issueId && i.Project == project);
+            var issue = session.Query<Issue>().SingleOrDefault(i => i.Number == issueId && i.Project == project);
 
             var hash = "";
             if (issue != null)
