@@ -9,6 +9,7 @@
     using Model;
     using Helpers;
     using Model.Enum;
+    using Model.Helpers;
     using NHibernate;
     using NHibernate.Linq;
 
@@ -35,12 +36,10 @@
 
             var application = session.Query<Application>().FirstOrDefault(x => x.Projects.Contains(project));
 
-            if (project.FreckleId > 0 && CurrentUser.IsAdmin)
+            if (CurrentUser.IsAdmin)
             {
-                var freckleProject = projectClient.Show(project.FreckleId);
-
-                var bookedTime = freckleProject.BillableMinutes/60.0;
-                var totalTime = freckleProject.BudgetMinutes/60.0;
+                var bookedTime = project.BillableMinutes/60.0;
+                var totalTime = project.BudgetMinutes/60.0;
 
                 var overbooked = false;
                 var bookedPercentage = bookedTime*100.0/totalTime;
@@ -73,6 +72,7 @@
         {
             PropertyBag.Add("customers", session.Query<Customer>().Where(x => x.IsActive).ToList());
             PropertyBag.Add("applications", session.Query<Application>().Where(x => x.IsActive));
+            PropertyBag.Add("types", EnumHelper.ToList(typeof(ProjectType)));
             PropertyBag.Add("item", new Project());
             RenderView("edit");
         }
@@ -84,6 +84,7 @@
             PropertyBag.Add("customers", session.Query<Customer>().Where(x => x.IsActive).ToList());
             PropertyBag.Add("applications", session.Query<Application>().Where(x => x.IsActive));
             PropertyBag.Add("applicationId", session.Query<Application>().Where(x => x.Projects.Contains(project)));
+            PropertyBag.Add("types", EnumHelper.ToList(typeof(ProjectType)));
             PropertyBag.Add("item", project);
             PropertyBag.Add("customerId", project.Customer?.Id);
         }

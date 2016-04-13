@@ -60,16 +60,34 @@
     <Content Include="Content\javascript\app.min.js">
       <DependentUpon>app.js</DependentUpon>
     </Content>
-    <Content Include="Content\javascript\auxilium.functions.js" />
+    <Content Include="Content\javascript\auxilium.es5.js">
+      <DependentUpon>auxilium.js</DependentUpon>
+    </Content>
+    <Content Include="Content\javascript\auxilium.es5.min.js">
+      <DependentUpon>auxilium.es5.js</DependentUpon>
+    </Content>
+    <Content Include="Content\javascript\auxilium.js" />
+    <Content Include="Content\javascript\auxilium.min.js">
+      <DependentUpon>auxilium.js</DependentUpon>
+    </Content>
+    <Content Include="Content\javascript\auxilium\auxilium.functions.js" />
+    <Content Include="Content\javascript\auxilium\auxilium.upload.js" />
     <Content Include="Content\javascript\bundles\auxilium.js" />
     <Content Include="Content\javascript\bundles\auxilium.min.js">
       <DependentUpon>auxilium.js</DependentUpon>
     </Content>
-    <Content Include="Content\javascript\auxilium.nestedtable.js" />
-    <Content Include="Content\javascript\gitle.booking.js" />
-    <Content Include="Content\javascript\auxilium.foundationhelper.js" />
-    <Content Include="Content\javascript\gitle.issues.js" />
-    <Content Include="Content\javascript\gitle.invoice.js" />
+    <Content Include="Content\javascript\auxilium\auxilium.nestedtable.js" />
+    <Content Include="Content\javascript\gitle.es5.js">
+      <DependentUpon>gitle.js</DependentUpon>
+    </Content>
+    <Content Include="Content\javascript\gitle.es5.min.js">
+      <DependentUpon>gitle.es5.js</DependentUpon>
+    </Content>
+    <Content Include="Content\javascript\gitle\gitle.booking.js" />
+    <Content Include="Content\javascript\auxilium\auxilium.foundationhelper.js" />
+    <Content Include="Content\javascript\gitle\gitle.functions.js" />
+    <Content Include="Content\javascript\gitle\gitle.issues.js" />
+    <Content Include="Content\javascript\gitle\gitle.invoice.js" />
     <Content Include="Content\javascript\bundles\gitle.js" />
     <Content Include="Content\javascript\bundles\gitle.min.js">
       <DependentUpon>gitle.js</DependentUpon>

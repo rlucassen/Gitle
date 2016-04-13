@@ -19,6 +19,13 @@ GitleIssues.prototype = {
       if (query.indexOf(oppositeFilter) != -1) {
         query = query.replace(oppositeFilter, "");
       }
+      if (oppositeFilter != undefined && oppositeFilter.indexOf(',') != -1 && oppositeFilter.indexOf(':')) {
+        var opposites = oppositeFilter.split(',');
+        for (var i in opposites) {
+          var rx = new RegExp(opposites[i] + ":[a-zA-Z0-9-_,.]+");
+          query = query.replace(rx, '');
+        }
+      }
       if (query.indexOf(filter) != -1) {
         query = query.replace(filter, "");
       } else {

@@ -9,8 +9,21 @@
     <div class="panel">
       <form id="query-form" method="GET">
         <div class="row collapse">
+          <div class="large-1 columns">
+            <input type="text" id="startDate" data-filter-prefix="start" class="reportdate no-margin" placeholder="Vanaf" value="${result.StartDate.ToString("yyyy-MM-dd")}" />
+          </div>
+          <div class="large-1 columns">
+            <input type="text" id="endDate" data-filter-prefix="end" class="reportdate no-margin" placeholder="Tot" value="${result.EndDate.ToString("yyyy-MM-dd")}" />
+          </div>
+          <% for date in presetDates: %>
+          <div class="large-1 columns">
+            <a href="#" class="button secondary prefix" data-insert-startdate="${date.startDate.ToString("yyyy-MM-dd")}" data-insert-startdate-to="#startDate" data-insert-enddate="${date.endDate.ToString("yyyy-MM-dd")}" data-insert-enddate-to="#endDate" data-filter="start:${date.startDate.ToString("yyyy-MM-dd")} end:${date.endDate.ToString("yyyy-MM-dd")}" data-filter-opposite="start,end">${date.title}</a>
+          </div>
+          <% end %>
+        </div>
+        <div class="row collapse">
           <div class="large-9 columns">
-            <input type="text" id="query" name="query" data-remember="report" value="${query}" />
+            <input type="text" id="query" name="query" data-remember="report" value="${result.Query}" />
           </div>
           <div class="large-1 small-1 columns">
             <a href="#" data-filter="" data-filter-clear="" class="button postfix alert">
@@ -33,21 +46,11 @@
           </div>
         </div>
         <div class="row filters">
-          <div class="large-3 columns">
-            <div class="row collapse">
-              <div class="large-6 columns">
-                <input type="text" data-filter-prefix="start" class="reportdate" placeholder="Vanaf" value="${startDate.ToString(" yyyy-MM-dd")}" />
-              </div>
-              <div class="large-6 columns">
-                <input type="text" data-filter-prefix="end" class="reportdate" placeholder="Tot" value="${endDate.ToString(" yyyy-MM-dd")}" />
-              </div>
-            </div>
-          </div>
           <div class="large-0 small-12 columns">
-            <button href="#" data-dropdown="users" aria-controls="users" aria-expanded="false" class="button tiny dropdown no-margin <% if selectedUsers.Count > 0: %>warning<% end %>">Medewerker:</button>
+            <button href="#" data-dropdown="users" aria-controls="users" aria-expanded="false" class="button tiny dropdown no-margin <% if result.Users.Count > 0: %>warning<% end %>">Medewerker:</button>
             <ul id="users" data-dropdown-content="" class="f-dropdown wide" aria-hidden="true" tabindex="-1">
               <% for user in allUsers: %>
-              <% isSelected = selectedUsers.Contains(user) %>
+              <% isSelected = result.Users.Contains(user) %>
               <li>
                 <a href="#" data-filter="user:${user.Name}">
                   <% if isSelected: %><i class="fa fa-check"></i><% end %>
@@ -63,10 +66,10 @@
             </ul>
           </div>
           <div class="large-0 small-12 columns">
-            <button href="#" data-dropdown="customers" aria-controls="customers" aria-expanded="false" class="button tiny dropdown no-margin <% if selectedCustomers.Count > 0: %>warning<% end %>">Klanten:</button>
+            <button href="#" data-dropdown="customers" aria-controls="customers" aria-expanded="false" class="button tiny dropdown no-margin <% if result.Customers.Count > 0: %>warning<% end %>">Klanten:</button>
             <ul id="customers" data-dropdown-content="" class="f-dropdown wide" aria-hidden="true" tabindex="-1">
               <% for customer in allCustomers: %>
-              <% isSelected = selectedCustomers.Contains(customer) %>
+              <% isSelected = result.Customers.Contains(customer) %>
               <li>
                 <a href="#" data-filter="customer:${customer.Slug}">
                   <% if isSelected: %><i class="fa fa-check"></i><% end %>
@@ -82,10 +85,10 @@
             </ul>
           </div>
           <div class="large-0 small-12 columns">
-            <button href="#" data-dropdown="applications" aria-controls="applications" aria-expanded="false" class="button tiny dropdown no-margin <% if selectedApplications.Count > 0: %>warning<% end %>">Applicaties:</button>
+            <button href="#" data-dropdown="applications" aria-controls="applications" aria-expanded="false" class="button tiny dropdown no-margin <% if result.Applications.Count > 0: %>warning<% end %>">Applicaties:</button>
             <ul id="applications" data-dropdown-content="" class="f-dropdown wide" aria-hidden="true" tabindex="-1">
               <% for application in allApplications: %>
-              <% isSelected = selectedApplications.Contains(application) %>
+              <% isSelected = result.Applications.Contains(application) %>
               <li>
                 <a href="#" data-filter="application:${application.Slug}">
                   <% if isSelected: %><i class="fa fa-check"></i><% end %>
@@ -101,10 +104,10 @@
             </ul>
           </div>
           <div class="large-0 small-12 columns">
-            <button href="#" data-dropdown="projects" aria-controls="projects" aria-expanded="false" class="button tiny dropdown no-margin <% if selectedProjects.Count > 0: %>warning<% end %>">Projecten:</button>
+            <button href="#" data-dropdown="projects" aria-controls="projects" aria-expanded="false" class="button tiny dropdown no-margin <% if result.Projects.Count > 0: %>warning<% end %>">Projecten:</button>
             <ul id="projects" data-dropdown-content="" class="f-dropdown wide" aria-hidden="true" tabindex="-1">
               <% for project in allProjects: %>
-              <% isSelected = selectedProjects.Contains(project) %>
+              <% isSelected = result.Projects.Contains(project) %>
               <li>
                 <a href="#" data-filter="project:${project.Slug}">
                   <% if isSelected: %><i class="fa fa-check"></i><% end %>
@@ -120,15 +123,15 @@
             </ul>
           </div>
           <div class="large-0 small-12 columns right">
-            <button href="#" data-dropdown="groupbys" aria-controls="groupbys" aria-expanded="false" class="button tiny dropdown no-margin <% if groupedBy: %>warning<% end %>">Groeperen:</button>
+            <button href="#" data-dropdown="groupbys" aria-controls="groupbys" aria-expanded="false" class="button tiny dropdown no-margin <% if result.GroupedBy: %>warning<% end %>">Groeperen:</button>
             <ul id="groupbys" data-dropdown-content class="f-dropdown" aria-hidden="true" tabindex="-1">
-              <% for groupby in allGroupbys: %>
+              <% for groupby in result.AllGroupbys: %>
               <li>
                 <a href="#" data-filter="groupby:${groupby.Key}">
-                  <% if groupby.Key == groupedBy: %><i class="fa fa-check"></i><% end %>
-                  ${groupby.Value} ${groupedBy}
+                  <% if groupby.Key == result.GroupedBy: %><i class="fa fa-check"></i><% end %>
+                  ${groupby.Value} ${result.GroupedBy}
                 </a>
-                <% if groupby.Key == groupedBy: %>
+                <% if groupby.Key == result.GroupedBy: %>
                 <a href="#" class="remove-filter" data-filter="groupby:${groupby.Key}">
                   <i class="fa fa-close red"></i>
                 </a>
@@ -143,10 +146,18 @@
   </div>
 </div>
 
+<div class="row">
+  <div class="large-8 columns">
+    <h3>Resultaten van ${result.StartDate.ToString("dd-MM-yyyy")} tot en met ${result.EndDate.ToString("dd-MM-yyyy")}</h3>
+  </div>
+  <div class="large-4 columns text-right">
+    <p>${result.ResultCount} van ${result.TotalResultCount} resultaten</p>
+  </div>
+</div>
 
 <div class="row">
   <div class="large-12 columns">
-    <% for groupedBooking in groupedBookings: %>
+    <% for groupedBooking in result.GroupedBookings: %>
     <div class="panel booking">
       <h3>${groupedBooking.Title}</h3>
       <% for booking in groupedBooking.Bookings: %>
@@ -209,6 +220,17 @@
     <% end %>
   </div>
 </div>
+
+<% if result.ResultCount < result.TotalResultCount: %>
+<div class="row">
+  <div class="large-12 columns">
+    <div class="panel text-center">
+      <p>Alleen de eerste ${result.ResultCount} resultaten worden getoond, er zijn nog ${result.OmmitedResults} extra resultaten.</p>
+      <a href="#" class="button small" data-filter="take:all">Geef alle resultaten</a>
+    </div>
+  </div>
+</div>
+<% end %>
 
 <script>
   $(function () {

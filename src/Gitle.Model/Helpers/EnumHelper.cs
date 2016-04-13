@@ -46,7 +46,8 @@
 
             foreach (Enum value in enumValues)
             {
-                list.Add(new { value = value.GetHashCode(), text = value.GetDescription(), name = value });
+                if(!string.IsNullOrEmpty(value.GetDescription()))
+                    list.Add(new { value = value.GetHashCode(), text = value.GetDescription(), name = value });
             }
 
             return list;

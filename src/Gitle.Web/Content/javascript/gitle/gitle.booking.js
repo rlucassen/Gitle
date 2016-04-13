@@ -74,7 +74,6 @@
 
     row.find('.booking-row-null-toggle').click(function (e) {
       e.preventDefault();
-      var line = $(this).parents('.invoiceline');
       if ($(this).hasClass('null')) {
         $(this).removeClass('null');
         row.find('.booking_Unbillable').val(0);
@@ -111,7 +110,7 @@
 
 
   var dayShiftFormat = 'dd MMM';
-  if (app.foundationSize === 'large') {
+  if (new FoundationHelper().getCurrentSizeClass() === 'large') {
     dayShiftFormat = 'ddd dd MMM';
   }
 
@@ -138,7 +137,4 @@
     $('[data-dayshift]').removeClass('active');
     $(this).addClass('active');
   }).filter('[data-dayshift=0]').click();
-
-
-
 });

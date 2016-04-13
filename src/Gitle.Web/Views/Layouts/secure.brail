@@ -135,13 +135,9 @@
   <script src="/Content/javascript/bundles/auxilium.min.js"> </script>
   <script src="/Content/javascript/bundles/gitle.min.js"> </script>
   <% else: %>
+  <script src="/Content/javascript/auxilium.js"> </script>
+  <script src="/Content/javascript/gitle.js"> </script>
   <script src="/Content/javascript/app.js"> </script>
-  <script src="/Content/javascript/auxilium.foundationhelper.js"> </script>
-  <script src="/Content/javascript/auxilium.functions.js"> </script>
-  <script src="/Content/javascript/auxilium.nestedtable.js"> </script>
-  <script src="/Content/javascript/gitle.booking.js"> </script>
-  <script src="/Content/javascript/gitle.invoice.js"> </script>
-  <script src="/Content/javascript/gitle.issues.js"> </script>
   <% end %>
 </body>
 </html>

@@ -25,6 +25,13 @@
         public DateTime StartDate { get; set; } = DateTime.Now.StartOfMonth();
         public DateTime EndDate { get; set; } = DateTime.Now.EndOfMonth();
 
+        public int MaxResults { get; set; } = 100;
+
+        public int ResultCount { get; set; }
+        public int TotalResultCount { get; set; }
+        public int OmmitedResults => TotalResultCount - ResultCount;
+
+        public string Query { get; set; }
 
         public Dictionary<string, string> AllGroupbys = new Dictionary<string, string>()
                             {
@@ -35,17 +42,19 @@
                             };
 
 
-        public BookingQueryParser(ISession session, string query, int start, int limit)
+        public BookingQueryParser(ISession session, string query)
         {
-            query = query ?? string.Empty;
+            Query = query ?? string.Empty;
 
-            var matches = Regex.Matches(query, queryRegex);
+            var matches = Regex.Matches(Query, queryRegex);
 
             IList<string> userStrings = new List<string>();
             IList<string> projects = new List<string>();
             IList<string> applications = new List<string>();
             IList<string> customers = new List<string>();
-            var searchQuery = query;
+            var searchQuery = Query;
+            var take = MaxResults;
+            var all = false;
 
             foreach (Match match in matches)
             {
@@ -68,6 +77,12 @@
                         break;
                     case "groupby":
                         GroupedBy = value;
+                        break;
+                    case "take":
+                        if (value == "all")
+                            all = true;
+                        else
+                            take = int.Parse(value);
                         break;
                     case "start":
                         DateTime startDate;
@@ -127,6 +142,15 @@
 
             bookings = bookings.OrderByDescending(x => x.Date);
 
+            if (!all)
+            {
+                bookings = bookings.Take(take);
+            }
+
+            TotalResultCount = bookings.Count();
+
+            ResultCount = TotalResultCount > take && !all ? take : TotalResultCount;
+
             switch (GroupedBy)
             {
                 case "project":
@@ -142,7 +166,7 @@
                     GroupedBookings = bookings.Where(x => x.Project.Application != null && x.Project.Application.Customer != null).OrderBy(x => x.Project.Application.Customer.Name).GroupBy(x => x.Project.Application.Customer).Select(x => new BookingGroup(x.Key.Name, x.ToList())).ToList();
                     break;
                 default:
-                    GroupedBookings = new List<BookingGroup> { new BookingGroup("Alle uren", bookings.OrderByDescending(x => x.Date).Skip(start).Take(limit).ToList()) };
+                    GroupedBookings = new List<BookingGroup> { new BookingGroup("Alle uren", bookings.ToList()) };
                     break;
             }
         }

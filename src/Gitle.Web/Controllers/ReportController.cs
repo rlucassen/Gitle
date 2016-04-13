@@ -5,8 +5,10 @@ using NHibernate.Linq;
 
 namespace Gitle.Web.Controllers
 {
+    using System;
     using System.Collections.Generic;
     using Helpers;
+    using Model.Helpers;
     using QueryParsers;
 
     public class ReportController : SecureController
@@ -18,26 +20,15 @@ namespace Gitle.Web.Controllers
         [Admin]
         public void Index(string query)
         {
-            var parser = new BookingQueryParser(session, query, 0, 100);
+            var parser = new BookingQueryParser(session, query);
 
             var reportPresets = session.Query<ReportPreset>().Where(x => x.User == CurrentUser);
             var globalReportPresets = session.Query<ReportPreset>().Where(x => x.User == null);
 
-            PropertyBag.Add("allGroupbys", parser.AllGroupbys);
-            PropertyBag.Add("groupedBy", parser.GroupedBy);
-            PropertyBag.Add("query", query);
-            PropertyBag.Add("groupedBookings", parser.GroupedBookings);
-
-            PropertyBag.Add("startDate", parser.StartDate);
-            PropertyBag.Add("endDate", parser.EndDate);
+            PropertyBag.Add("result", parser);
 
             PropertyBag.Add("reportPresets", reportPresets);
             PropertyBag.Add("globalReportPresets", globalReportPresets);
-
-            PropertyBag.Add("selectedUsers", parser.Users);
-            PropertyBag.Add("selectedProjects", parser.Projects);
-            PropertyBag.Add("selectedApplications", parser.Applications);
-            PropertyBag.Add("selectedCustomers", parser.Customers);
 
             PropertyBag.Add("allUsers", session.Query<User>().Where(x => x.IsAdmin && x.IsActive).OrderBy(x => x.FullName).ToList());
 
@@ -56,7 +47,27 @@ namespace Gitle.Web.Controllers
             PropertyBag.Add("allCustomers", allCustomers.OrderBy(x => x.Name).ToList());
             PropertyBag.Add("allApplications", allApplications.OrderBy(x => x.Name).ToList());
             PropertyBag.Add("allProjects", allProjects.OrderBy(x => x.Name).ToList());
+
+            var presetDates = new List<dynamic>();
+            var today = DateTime.Today;
+
+            presetDates.Add(new DatePreset { startDate = today.StartOfWeek(), endDate = today.EndOfWeek(), title = "Deze week"});
+
+            for (int i = 1; i <= 9; i++)
+            {
+                presetDates.Add(new DatePreset{ startDate = today.StartOfMonth(), endDate = today.EndOfMonth(), title = today.ToString("MMM yyyy")});
+                today = today.AddMonths(-1);
+            }
+
+            PropertyBag.Add("presetDates", presetDates);
         }
+    }
+
+    public class DatePreset
+    {
+        public string title;
+        public DateTime endDate;
+        public DateTime startDate;
     }
 
 }

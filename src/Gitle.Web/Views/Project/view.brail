@@ -3,11 +3,7 @@
     <h1>${project.Name}</h1>
 
     <span>Comments</span>
-    <div class="comments-container" data-url="/project/${project.Slug}/comments">
-      <div class="comments marked">${project.Comments}</div>
-      <textarea name="comment">${project.Comments}
-      </textarea>
-    </div>
+    <textarea data-live-comments="/project/${project.Slug}/comments">${?project.Comments}</textarea>
 
     <% if CurrentUser.IsAdmin: %>
     <% if application != null: %>
@@ -20,18 +16,6 @@
     <div class="row">
       <div class="large-2 columns">Applicatie</div>
       <div class="large-10 columns"><a href="/application/${application.Slug}/view">${?application.Name}</a></div>
-    </div>
-    <% end %>
-    <% if project.Repository != null: %>
-    <div class="row">
-      <div class="large-2 columns">Github</div>
-      <div class="large-10 columns"><a href="http://github.com/${project.Repository}">http://github.com/${project.Repository}</a></div>
-    </div>
-    <% end %>
-    <% if project.MilestoneName != null: %>
-    <div class="row">
-      <div class="large-2 columns">Milestone</div>
-      <div class="large-10 columns"><a href="https://github.com/${project.Repository}/issues?milestone=${project.MilestoneId}">${project.MilestoneName}</a></div>
     </div>
     <% end %>
     <% end %>

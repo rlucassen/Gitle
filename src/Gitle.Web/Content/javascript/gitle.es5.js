@@ -1,8 +1,10 @@
-/*
+﻿/*
  * input element that needs to parse its value into something of a readable time, writes the number of minutes to [data-minutes-field]
  */
+'use strict';
+
 $.fn.bookingParser = function () {
-  return this.change(function() {
+  return this.change(function () {
     var bookingInput = $($(this).data('minutes-field'));
     var value = $(this).val().replace(',', '.');
 
@@ -17,7 +19,7 @@ $.fn.bookingParser = function () {
       var number = parseInt(value);
       if (number > 9 && number <= 60) {
         var fullhours = parseInt(number / 60);
-        var fullminutes = number - (fullhours * 60);
+        var fullminutes = number - fullhours * 60;
         visualOutput = fullhours + ':' + (fullminutes < 10 ? "0" + fullminutes : fullminutes);
         hoursOutput = number;
       } else {
@@ -29,11 +31,11 @@ $.fn.bookingParser = function () {
       var parts = value.split(':');
       var hours = parseFloat(parts[0]);
       var minutes = parseFloat(parts[1]);
-      hoursOutput = (hours * 60 + minutes);
+      hoursOutput = hours * 60 + minutes;
     }
     if (decimalRegex.test(value)) {
       var hours = parseFloat(value);
-      hoursOutput = (hours * 60);
+      hoursOutput = hours * 60;
       var fullhours = parseInt(value);
       var fullminutes = (hours - fullhours) * 60;
       visualOutput = fullhours + ':' + (fullminutes < 10 ? "0" + fullminutes : fullminutes);
@@ -47,13 +49,13 @@ $.fn.bookingParser = function () {
 /*
  * Initializes the element with Gitle search functionality
  */
-$.fn.gitleSearch = function() {
+$.fn.gitleSearch = function () {
   return this.each(function () {
     var searchField = $(this);
     searchField.autocomplete({
       serviceUrl: '/search',
       autoSelectFirst: true,
-      onSelect: function (suggestion) {
+      onSelect: function onSelect(suggestion) {
         window.location = suggestion.data;
       }
     });
@@ -63,24 +65,23 @@ $.fn.gitleSearch = function() {
         searchField.focus();
       }
     });
-
   });
 };
 
 /*
  * Initializes the textarea as a gitle live comments textarea
  */
-$.fn.liveComments = function() {
-  return this.each(function() {
+$.fn.liveComments = function () {
+  return this.each(function () {
     var url = $(this).data('live-comments');
     var textarea = $(this);
     var staticComments = $('<div>').addClass('comments').html(marked(textarea.val()));
     var container = $('<div>').addClass('comments-container').insertAfter(textarea).append(staticComments).append(textarea);
-    staticComments.click(function() {
+    staticComments.click(function () {
       container.addClass('edit');
       textarea.focus();
     });
-    textarea.blur(function() {
+    textarea.blur(function () {
       $.ajax({
         url: url,
         method: 'POST',
@@ -88,11 +89,11 @@ $.fn.liveComments = function() {
         data: {
           comment: textarea.val()
         },
-        success: function(data) {
+        success: function success(data) {
           staticComments.html(marked(data));
           container.removeClass('edit');
         },
-        error: function() {
+        error: function error() {
           console.log('niet opgeslagen');
         }
       });
@@ -100,12 +101,12 @@ $.fn.liveComments = function() {
   });
 };
 
-$.fn.startEndDatePreset = function() {
+$.fn.startEndDatePreset = function () {
   return this.click(function () {
     $($(this).data('insert-startdate-to')).val($(this).data('insert-startdate'));
     $($(this).data('insert-enddate-to')).val($(this).data('insert-enddate'));
-  })
-}
+  });
+};
 
 $(function () {
   var activeRow = undefined;
@@ -123,17 +124,16 @@ $(function () {
         id: row.data('id')
       },
       url: '/booking/edit',
-      success: function (data) {
+      success: function success(data) {
         row.find('.booking-row-content').hide();
         row.prepend(data);
         addEditListeners(row);
         bookingRowInit(row);
-
       }
     });
   });
 
-  var addEditListeners = function (row) {
+  var addEditListeners = function addEditListeners(row) {
     row.find('.booking-edit-cancel').on('click', function (e) {
       e.preventDefault();
       row.find('.booking-row-edit').remove();
@@ -147,7 +147,7 @@ $(function () {
     weekStart: 1
   };
 
-  var bookingRowInit = function (row) {
+  var bookingRowInit = function bookingRowInit(row) {
 
     row.find('.project-chooser').data('suggestion', undefined);
 
@@ -156,7 +156,7 @@ $(function () {
       autoSelectFirst: true,
       noCache: true,
       minChars: 0,
-      onSelect: function (suggestion) {
+      onSelect: function onSelect(suggestion) {
         var projectChooser = row.find('.project-chooser');
         if (projectChooser.data('suggestion') != undefined && projectChooser.data('suggestion') == suggestion.data) return false;
         projectChooser.data('suggestion', suggestion.data).val(suggestion.value);
@@ -175,7 +175,7 @@ $(function () {
       noCache: true,
       minChars: 0,
       width: row.find('.project-chooser').width(),
-      onSelect: function (suggestion) {
+      onSelect: function onSelect(suggestion) {
         row.find('.booking_Issue_Id').val(suggestion.data);
         row.find('.issue-chooser').val(suggestion.value);
       }
@@ -193,7 +193,6 @@ $(function () {
     });
 
     row.find('.date').fdatepicker(datepickerOptions);
-
   };
 
   bookingRowInit($('.booking-row-new'));
@@ -215,8 +214,6 @@ $(function () {
     $('#query').val(query.replace(/ +(?= )/g, ''));
     $('#query-form').submit();
   });
-
-
 
   var dayShiftFormat = 'dd MMM';
   if (new FoundationHelper().getCurrentSizeClass() === 'large') {
@@ -248,7 +245,7 @@ $(function () {
   }).filter('[data-dayshift=0]').click();
 });
 $(function () {
-  var computeHoursForIssue = function (issueNumber) {
+  var computeHoursForIssue = function computeHoursForIssue(issueNumber) {
     var issueLine = $('.invoiceline[data-issue=' + issueNumber + ']');
     var hoursButton = issueLine.find('.invoiceline-hours');
     var hours = parseFloat(hoursButton.text());
@@ -263,7 +260,7 @@ $(function () {
     }
   };
 
-  var computePriceForInvoiceLine = function(invoiceLine) {
+  var computePriceForInvoiceLine = function computePriceForInvoiceLine(invoiceLine) {
     var hourPrice = parseFloat($('#invoice_HourPrice').val());
     var hours = parseFloat(invoiceLine.find('.invoiceline-hours-input').val().replace(',', '.'));
     var nill = parseInt(invoiceLine.find('.invoiceline-null').val());
@@ -272,18 +269,17 @@ $(function () {
     calculateTotals();
   };
 
-  var calculateTotals = function() {
+  var calculateTotals = function calculateTotals() {
     var subtotalPrice = 0.0;
-    $('.invoiceline').each(function() {
+    $('.invoiceline').each(function () {
       var linePrice = parseFloat($(this).find('.invoiceline-price').val().replace(',', '.')) * (1 - parseInt($(this).find('.invoiceline-null').val()));
       subtotalPrice += linePrice;
     });
     $('#invoice_Subtotal').val(subtotalPrice.toString().replace('.', ','));
     var correctionTotalPrice = 0.0;
-    $('.correctionline').each(function() {
+    $('.correctionline').each(function () {
       var correctionValue = $(this).find('.correctionline-price').val();
-      if (correctionValue)
-        correctionTotalPrice += parseFloat(correctionValue.replace(',', '.'));
+      if (correctionValue) correctionTotalPrice += parseFloat(correctionValue.replace(',', '.'));
     });
     var vat = parseInt($('.vatline .vatline-vat').val());
     var vatPrice = (subtotalPrice + correctionTotalPrice) * vat * 0.21;
@@ -372,10 +368,10 @@ $(function () {
     calculateTotals();
   });
 });
-function GitleIssues() { }
+function GitleIssues() {}
 
 GitleIssues.prototype = {
-  init: function() {
+  init: function init() {
     this.initFilters();
     this.initThreeStateChecker();
     this.initGroupActions();
@@ -383,7 +379,7 @@ GitleIssues.prototype = {
     this.initTimeParser();
   },
 
-  initFilters: function() {
+  initFilters: function initFilters() {
     $('a[data-filter], a[data-filter-clear]').click(function (e) {
       e.preventDefault();
       var filter = $(this).data('filter');
@@ -408,10 +404,9 @@ GitleIssues.prototype = {
       $('#query').val(query.replace(/ +(?= )/g, ''));
       $('#query-form').submit();
     });
-
   },
 
-  initThreeStateChecker: function() {
+  initThreeStateChecker: function initThreeStateChecker() {
     $('.three-state-checker').each(function () {
       var checker = $(this);
       checker.append('<i class="fa fa-square-o none"></i><i class="fa fa-check-square-o all"></i><i class="fa fa-minus-square-o some"></i>');
@@ -444,7 +439,7 @@ GitleIssues.prototype = {
     });
   },
 
-  initGroupActions: function() {
+  initGroupActions: function initGroupActions() {
     $('#group-actions').hide();
     $('.issues input[type=checkbox][name=issue]').change(function () {
       var checkedBoxes = $('.issues input[type=checkbox][name=issue]:checked');
@@ -475,7 +470,7 @@ GitleIssues.prototype = {
     });
   },
 
-  initQuickView: function() {
+  initQuickView: function initQuickView() {
     var quickviewDelay = 800;
     $('[data-quickview]').hover(function () {
       var link = $(this);
@@ -506,7 +501,7 @@ GitleIssues.prototype = {
     });
   },
 
-  initTimeParser: function() {
+  initTimeParser: function initTimeParser() {
     $('.time-parser').blur(function () {
       var value = $(this).val();
       if (value === "" || value === "0") return;
@@ -531,3 +526,4 @@ $(function () {
   gitleIssues = new GitleIssues();
   gitleIssues.init();
 });
+

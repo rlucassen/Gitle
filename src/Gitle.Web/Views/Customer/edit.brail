@@ -11,7 +11,7 @@
       <div class="row">
         <div class="large-3 columns">Naam</div>
         <div class="large-9 columns">
-          <input type="text" id="item_Name" name="item.Name" value="${?item.Name}" class="focus" required />
+          <input type="text" id="item_Name" name="item.Name" value="${?item.Name}" class="focus" data-slugify="#item_Slug" required />
           <small class="error">Geef een naam op</small>
         </div>
       </div>

@@ -1,7 +1,10 @@
 ﻿namespace Gitle.Model
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Enum;
+    using Helpers;
     using Interfaces.Model;
 
     public class Project : ModelBase, IDocumentContainer
@@ -26,6 +29,13 @@
         public virtual string Information { get; set; }
         public virtual string Comments { get; set; }
 
+        public virtual double BudgetMinutes { get; set; }
+        public virtual double BudgetHours => BudgetMinutes / 60.0;
+        public virtual string BudgetTime => $"{Math.Floor(BudgetHours)}:{BudgetMinutes - (Math.Floor(BudgetHours)*60):00}";
+
+        public virtual ProjectType Type { get; set; }
+        public virtual string TypeString => Type.GetDescription();
+
         public virtual Customer Customer { get; set; }
         public virtual Application Application { get; set; }
 
@@ -33,9 +43,12 @@
         public virtual IList<Label> Labels { get; set; }
         public virtual IList<Issue> Issues { get; set; }
         public virtual IList<Document> Documents { get; set; } 
+        public virtual IList<Booking> Bookings { get; set; } 
 
         public virtual int NotifiedUsers { get { return Users.Count(u => u.Notifications); } }
 
         public virtual int NewIssueNumber { get { return (Issues.Any() ? Issues.Max(x => x.Number) : 0) + 1; } }
+
+        public virtual double BillableMinutes { get { return Bookings.Where(x => !x.Unbillable).Sum(x => x.Minutes); } }
     }
 }

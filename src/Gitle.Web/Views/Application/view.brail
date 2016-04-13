@@ -17,12 +17,7 @@
 
 
     <span>Comments</span>
-    <div class="comments-container" data-url="/application/${item.Slug}/comments">
-      <div class="comments marked">${?item.Comments}</div>
-      <textarea name="comment">
-        ${?item.Comments}
-      </textarea>
-    </div>
+    <textarea data-live-comments="/application/${item.Slug}/comments">${?item.Comments}</textarea>
     
     <div class="row">
       <div class="large-12 columns">

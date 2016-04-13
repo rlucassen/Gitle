@@ -29,13 +29,7 @@ namespace Gitle.Model
 
         public virtual bool IsDefinitive { get { return Invoices.Any(x => x.IsDefinitive); } }
 
-        public virtual double Hours { get { return Minutes / 60.0; } }
-        public virtual string Time
-        {
-            get
-            {
-                return string.Format("{0}:{1:00}", Math.Floor(Hours), Minutes - (Math.Floor(Hours) * 60));
-            }
-        }
+        public virtual double Hours => Minutes / 60.0;
+        public virtual string Time => $"{Math.Floor(Hours)}:{Minutes - (Math.Floor(Hours)*60):00}";
     }
 }

@@ -3,11 +3,7 @@
     <h1>${customer.Name}</h1>
 
     <span>Comments</span>
-    <div class="comments-container" data-url="/customer/${customer.Slug}/comments">
-      <div class="comments marked">${customer.Comments}</div>
-      <textarea name="comment">${customer.Comments}
-      </textarea>
-    </div>
+    <textarea data-live-comments="/customer/${customer.Slug}/comments">${?customer.Comments}</textarea>
 
     <div class="row">
       <div class="large-12 columns">
