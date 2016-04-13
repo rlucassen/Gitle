@@ -403,46 +403,24 @@
         }
 
         [Admin]
-        public void BookTime(string projectSlug, int issueId, string date, double hours, bool close)
+        public void BookTime(string projectSlug, int issueId, DateTime date, double minutes, bool close, string comment)
         {
             RedirectToReferrer();
-            if (hours <= 0.0)
-            {
-                Flash.Add("error", "Geen uren ingevuld, niets geboekt naar Freckle");
-                RedirectToReferrer();
-                return;
-            }
             var project = session.Query<Project>().Single(p => p.Slug == projectSlug);
             var issue = session.Query<Issue>().Single(i => i.Number == issueId && i.Project == project);
             if (issue.IsArchived) return;
-            var description = new List<string>();
-            if (project.FreckleName != null && project.FreckleName.ToLower().Contains("service")) description.Add("#servicedesk");
-            description.AddRange(project.Labels.Where(l => l.ToFreckle && issue.Labels.Select(label => label.Name).Contains(l.Name)).Select(l => "#" + l.Name).ToList());
-            description.Add($"#{issue.Number} - {issue.Name}");
-            var entry = new Entry()
-                            {
-                                Date = date,
-                                Description = string.Join(", ", description),
-                                Minutes = $"{hours}h",
-                                ProjectId = project.FreckleId,
-                                User = CurrentUser.FreckleEmail
-                            };
-            if (entryClient.Post(entry))
+            var booking = new Booking() {User = CurrentUser, Date = date, Minutes = minutes, Issue = issue, Project = project, Comment = comment};
+
+            using (var tx = session.BeginTransaction())
             {
-                Flash.Add("info", "Uren geboekt in Freckle");
                 if (close)
                 {
                     issue.Close(CurrentUser);
-                    using (var tx = session.BeginTransaction())
-                    {
-                        session.SaveOrUpdate(issue);
-                        tx.Commit();
-                    }
+                    session.SaveOrUpdate(issue);
                 }
+                session.SaveOrUpdate(booking);
+                tx.Commit();
             }
-            else
-                Flash.Add("error", "Er is iets mis gegaan met boeken in Freckle");
-
         }
 
         [MustHaveProject]

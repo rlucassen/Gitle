@@ -12,7 +12,7 @@
         <tr>
           <th>Project</th>
           <% if CurrentUser.IsAdmin: %>
-          <th>Freckle project</th>
+          <th>Applicatie</th>
           <th>Klant</th>
           <% end %>
           <th id="project-actions" class="{sorter: false}"></th>
@@ -23,8 +23,8 @@
         <tr>
           <td class="name">${item.Name}</td>
           <% if CurrentUser.IsAdmin: %>
-          <td class="freckle">${item.FreckleName}</td>
-          <td class="customer">${?item.Customer.Name}</td>
+          <td class="application">${?item.Application.Name}</td>
+          <td class="customer">${?item.Application.Customer.Name}</td>
           <% end %>
           <td class="actions">
             <ul class="button-group">

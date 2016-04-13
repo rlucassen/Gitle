@@ -183,7 +183,6 @@ Application.prototype = {
     });
 
 
-    self.initFreckleSelect();
     self.initCtrlS();
     self.initComments();
 
@@ -199,6 +198,48 @@ Application.prototype = {
         row.find('.colorpicker').colorPicker();
       }
     });
+
+    $('.booking-parser').change(function (e) {
+      var bookingInput = $($(this).data('minutes-field'));
+      var value = $(this).val().replace(',', '.');
+
+      var timeRegex = /^([0-9]+):([0-9]{2})$/i;
+      var decimalRegex = /^([0-9]+)\.([0-9]+)$/i;
+      var numberRegex = /^[0-9]+$/i;
+
+      var visualOutput = value;
+      var hoursOutput = value;
+
+      if (numberRegex.test(value)) {
+        var number = parseInt(value);
+        if (number > 9) {
+          var fullhours = parseInt(number / 60);
+          var fullminutes = number - (fullhours * 60);
+          visualOutput = fullhours + ':' + (fullminutes < 10 ? "0" + fullminutes : fullminutes);
+          hoursOutput = number;
+        } else {
+          visualOutput = number + ':00';
+          hoursOutput = number * 60;
+        }
+      }
+      if (timeRegex.test(value)) {
+        var parts = value.split(':');
+        var hours = parseFloat(parts[0]);
+        var minutes = parseFloat(parts[1]);
+        hoursOutput = (hours * 60 + minutes);
+      }
+      if (decimalRegex.test(value)) {
+        var hours = parseFloat(value);
+        hoursOutput = (hours * 60);
+        var fullhours = parseInt(value);
+        var fullminutes = (hours - fullhours) * 60;
+        visualOutput = fullhours + ':' + (fullminutes < 10 ? "0" + fullminutes : fullminutes);
+      }
+
+      $(this).val(visualOutput);
+      bookingInput.val(hoursOutput);
+    });
+
 
     marked.setOptions({
       breaks: true
@@ -256,17 +297,8 @@ Application.prototype = {
       e.preventDefault();
       return false;
     });
-  },
-
-  initFreckleSelect: function () {
-    $('#item_FreckleId').change(function () {
-      if ($(this).val() != '0') {
-        $('#item_FreckleName').val($(this).find('option:selected').html());
-      } else {
-        $('#item_FreckleName').val('');
-      }
-    }).change();
   }
+
 };
 
 var app = null;

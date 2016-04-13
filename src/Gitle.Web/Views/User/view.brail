@@ -31,14 +31,16 @@
           <thead>
             <tr>
               <th>Naam</th>
-              <th>Freckleproject</th>
+              <th>Applicatie</th>
+              <th>Klant</th>
             </tr>
           </thead>
           <tbody>
             <% for project in item.Projects: %>
             <tr>
               <td class="name"><a href="/project/${project.Project.Slug}/view">${project.Project.Name}</a></td>
-              <td class="phone">${project.Project.FreckleName}</td>
+              <td class="application">${?project.Project.Application.Name}</td>
+              <td class="customer">${?project.Project.Application.Customer.Name}</td>
             </tr>
             <% end %>
           </tbody>

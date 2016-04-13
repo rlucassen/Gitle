@@ -34,12 +34,6 @@
       <div class="large-10 columns"><a href="https://github.com/${project.Repository}/issues?milestone=${project.MilestoneId}">${project.MilestoneName}</a></div>
     </div>
     <% end %>
-    <% if project.FreckleName != null: %>
-    <div class="row">
-      <div class="large-2 columns">Freckle</div>
-      <div class="large-10 columns"><a href="http://auxilium.letsfreckle.com/time/projects/${project.FreckleId}">${project.FreckleName}</a></div>
-    </div>
-    <% end %>
     <% end %>
     <div class="row">
       <div class="large-2 columns">Voortgang taken</div>

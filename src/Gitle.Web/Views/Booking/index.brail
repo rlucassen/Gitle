@@ -16,7 +16,7 @@
         <div class="row collapse booking-row-new">
           <div class="large-1 columns">
             <input type="hidden" name="booking.Minutes" class="booking_Minutes" />
-            <input type="text" class="booking-parser no-margin" placeholder="Uren" />
+            <input type="text" class="booking-parser no-margin" placeholder="Uren" data-minutes-field=".booking_Minutes" />
           </div>
           <div class="large-4 columns">
             <input type="hidden" name="booking.Project.Id" class="booking_Project_Id" />

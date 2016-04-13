@@ -84,49 +84,6 @@ $(function () {
       }
     });
 
-
-    // naar app.js, universeel maken door vanuit booking-parser te verwijzen naar output veld.
-    var bookingInput = row.find('.booking_Minutes');
-    $('.booking-parser').change(function (e) {
-      var value = $(this).val().replace(',', '.');
-
-      var timeRegex = /^([0-9]+):([0-9]{2})$/i;
-      var decimalRegex = /^([0-9]+)\.([0-9]+)$/i;
-      var numberRegex = /^[0-9]+$/i;
-
-      var visualOutput = value;
-      var hoursOutput = value;
-
-      if (numberRegex.test(value)) {
-        var number = parseInt(value);
-        if (number > 9) {
-          var fullhours = parseInt(number / 60);
-          var fullminutes = number - (fullhours * 60);
-          visualOutput = fullhours + ':' + (fullminutes < 10 ? "0" + fullminutes : fullminutes);
-          hoursOutput = number;
-        } else {
-          visualOutput = number + ':00';
-          hoursOutput = number * 60;
-        }
-      }
-      if (timeRegex.test(value)) {
-        var parts = value.split(':');
-        var hours = parseFloat(parts[0]);
-        var minutes = parseFloat(parts[1]);
-        hoursOutput = (hours * 60 + minutes);
-      }
-      if (decimalRegex.test(value)) {
-        var hours = parseFloat(value);
-        hoursOutput = (hours * 60);
-        var fullhours = parseInt(value);
-        var fullminutes = (hours - fullhours) * 60;
-        visualOutput = fullhours + ':' + (fullminutes < 10 ? "0" + fullminutes : fullminutes);
-      }
-
-      $(this).val(visualOutput);
-      bookingInput.val(hoursOutput);
-    });
-
     row.find('.date').fdatepicker(datepickerOptions);
 
   };
@@ -137,10 +94,18 @@ $(function () {
     $('[data-dayshift]').removeClass('active');
   });
 
-  $('.reportdate').fdatepicker(datepickerOptions).on('changeDate', function (ev) {
+  $('.reportdate').fdatepicker({
+    format: 'yyyy-mm-dd',
+    weekStart: 1
+  }).on('changeDate', function (ev) {
     var query = $('#query').val();
-    query = query + ' ' + new Date(ev.date);
-    $('#query').val(query);
+    var target = $(ev.target);
+    var prefix = target.data('filter-prefix');
+    var rx = new RegExp(prefix + ":[a-zA-Z0-9-_,.]+");
+    query = query.replace(rx, '');
+    query = query + ' ' + prefix + ':' + target.val();
+    $('#query').val(query.replace(/ +(?= )/g, ''));
+    $('#query-form').submit();
   });
 
 

@@ -135,7 +135,7 @@
   <script src="/Content/javascript/bundles/auxilium.min.js"> </script>
   <script src="/Content/javascript/bundles/gitle.min.js"> </script>
   <% else: %>
-  <script src="/Content/javascript/app.es5.js"> </script>
+  <script src="/Content/javascript/app.js"> </script>
   <script src="/Content/javascript/auxilium.foundationhelper.js"> </script>
   <script src="/Content/javascript/auxilium.functions.js"> </script>
   <script src="/Content/javascript/auxilium.nestedtable.js"> </script>

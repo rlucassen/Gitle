@@ -58,7 +58,6 @@
         <% if CurrentUser.IsAdmin: %>
         <form action="booktime" method="POST">
           <h2>Uren boeken</h2>
-          <% if not string.IsNullOrEmpty(CurrentUser.FreckleEmail) and project.FreckleId > 0: %>
           <div class="row">
             <div class="large-12 columns">
               ${Form.Select("date", days, {"value": "Value", "text": "Key", "class": "no-margin"})}
@@ -66,23 +65,24 @@
           </div>
           <div class="row">
             <div class="large-3 small-3 columns">Uren</div>
-            <div class="large-9 small-9 columns">${Form.TextField("hours", {"class": "no-margin"})}</div>
+            <input type="hidden" name="minutes" class="booking_Minutes" />
+            <div class="large-9 small-9 columns">
+              <input type="text" class="no-margin booking-parser" data-minutes-field=".booking_Minutes">
+            </div>
+          </div>
+          <div class="row">
+            <div class="large-12 columns">
+              <input type="text" name="comment" class="no-margin" placeholder="Opmerking">
+            </div>
           </div>
           <div class="row">
             <div class="large-12 columns">${Form.CheckboxField("close")} Sluit de taak</div>
           </div>
           <div class="row">
             <div class="large-12 columns">
-              <input type="submit" class="button right" value="Boek in Freckle"/>
+              <input type="submit" class="button right" value="Uren boeken" />
             </div>
           </div>
-          <% else: %>
-          <%   if string.IsNullOrEmpty(CurrentUser.FreckleEmail): %>
-          <p>Als je een Freckle emailadres in je account toevoegd kun je hier direct uren boeken.</p>
-          <%   elif project.FreckleId == 0: %>
-          <p>Er is nog geen Freckle project aan dit project gekoppeld.</p>
-          <%   end %>
-          <% end %>
         </form>
         <hr />
         <% end %>
