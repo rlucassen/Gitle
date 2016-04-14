@@ -1,5 +1,5 @@
 ﻿<div class="issues <% if prioritizable: %>prioritizable<% end %>" id="issueContainer"> 
-  <% for issue in items: %>
+  <% for issue in result.Items: %>
   <div class="row <% if issue.IsOpen: %><% if issue.PickedUpBy == null:%>orderable<% else: %>pickedup<% end %><% end %>">
     <div class="large-12 columns">
       <div class="issue<% if issue.Touched(CurrentUser): %> touched<% end %> radius<% if issue.PickedUpBy == null: %> free<% end %> ${issue.State.ToString()}" data-issueid="${issue.Number}">

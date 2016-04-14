@@ -19,6 +19,7 @@
     using NHibernate;
     using NHibernate.Linq;
     using Newtonsoft.Json;
+    using QueryParsers;
     using Issue = Model.Issue;
     using Project = Model.Project;
 
@@ -36,221 +37,24 @@
         [MustHaveProject]
         public void Index(string projectSlug, string query)
         {
-            query = query ?? "";
-
             var project = session.SlugOrDefault<Project>(projectSlug);
 
-            var matches = Regex.Matches(query, @"[a-zA-Z0-9_]+:(([a-zA-Z0-9_,.]+)|('[a-zA-Z0-9_,. ]+'))");
-
-            var allSorts = new Dictionary<string, string>()
-                            {
-                                {"CreatedBy", "Aanmelder"}, 
-                                {"CreatedAt", "Aanmaakdatum"},
-                                {"PickedUpBy", "Behandelaar"},
-                                {"PickedUpAt", "Behandeldatum"},
-                                {"Number", "Nummer"},
-                                {"Name", "Naam"},
-                                {"TotalHours", "Inspanning"},
-                                {"Comments.Count", "Aantal reacties"}
-                            };
-
-            IList<string> selectedLabels = new List<string>();
-            IList<string> notSelectedLabels = new List<string>();
-            IList<IssueState> states = new List<IssueState>();
-            IList<long> ids = new List<long>();
-            IList<string> involveds = new List<string>();
-            IList<string> openedbys = new List<string>();
-            IList<string> closedbys = new List<string>();
-            IList<string> pickupbys = new List<string>();
-            IList<User> selectedPickupbys = new List<User>();
-            IDictionary<string, bool> querySorts = new Dictionary<string, bool>();
-            IDictionary<string, bool> linqSorts = new Dictionary<string, bool>();
-            IDictionary<string, bool> selectedSorts = new Dictionary<string, bool>();
-            var searchQuery = query;
-            var pickupany = false;
-            var pickupnone = false;
-
-            foreach (Match match in matches)
-            {
-                var parts = match.Value.Split(':');
-                var value = parts[1].Replace("'", "");
-                searchQuery = searchQuery.Replace(match.Value, "");
-                switch (parts[0])
-                {
-                    case "label":
-                        selectedLabels.Add(value);
-                        break;
-                    case "notlabel":
-                        notSelectedLabels.Add(value);
-                        break;
-                    case "state":
-                        states.Add((IssueState)Enum.Parse(typeof(IssueState), value));
-                        break;
-                    case "id":
-                        ids = value.Split(',').Select(long.Parse).ToList();
-                        break;
-                    case "involved":
-                        involveds.Add(value == "me" ? CurrentUser.Name : value);
-                        break;
-                    case "opened":
-                        openedbys.Add(value == "me" ? CurrentUser.Name : value);
-                        break;
-                    case "closed":
-                        closedbys.Add(value == "me" ? CurrentUser.Name : value);
-                        break;
-                    case "pickup":
-                        if (value == "any")
-                        {
-                            pickupany = true;
-                            break;
-                        }
-                        if (value == "none")
-                        {
-                            pickupnone = true;
-                            break;
-                        }
-                        pickupbys.Add(value == "me" ? CurrentUser.Name : value);
-                        break;
-                    case "sort":
-                        selectedSorts.Add(value, false);
-                        if (NHibernateMetadataHelper.IsMapped<Issue>(sessionFactory, value))
-                            querySorts.Add(value, false);
-                        else
-                            linqSorts.Add(value, false);
-                        break;
-                    case "sortdesc":
-                        selectedSorts.Add(value, true);
-                        if (NHibernateMetadataHelper.IsMapped<Issue>(sessionFactory, value))
-                            querySorts.Add(value, true);
-                        else
-                            linqSorts.Add(value, true);
-                        break;
-                }
-            }
-
-
-            var itemsQuery =
-                session.Query<Issue>().Where(
-                    x =>
-                    x.Project == project &&
-                    x.Labels.Count(l => selectedLabels.Contains(l.Name)) == selectedLabels.Count &&
-                    !x.Labels.Any(l => notSelectedLabels.Contains(l.Name)));
-
-            if (!string.IsNullOrWhiteSpace(searchQuery))
-            {
-                var searchQueryParts = searchQuery.Split(' ').Where(x => !string.IsNullOrWhiteSpace(x));
-                foreach (var searchQueryPart in searchQueryParts)
-                {
-                    var trimmedSearchQueryPart = searchQueryPart.Trim();
-                    itemsQuery = itemsQuery.Where(x => x.Name.Contains(trimmedSearchQueryPart) || x.Body.Contains(trimmedSearchQueryPart));
-                }
-            }
-
-            if (ids.Any())
-                itemsQuery = itemsQuery.Where(x => ids.Contains(x.Number));
-
-            foreach (var involved in involveds)
-            {
-                itemsQuery =
-                    itemsQuery.Where(
-                        x =>
-                        x.Comments.Any(a => a.User != null && (a.User.Name == involved || a.User.FullName == involved)) ||
-                        x.ChangeStates.Any(a => a.User != null && (a.User.Name == involved || a.User.FullName == involved)) ||
-                        x.Changes.Any(a => a.User != null && (a.User.Name == involved || a.User.FullName == involved)));
-            }
-
-            foreach (var openedby in openedbys)
-            {
-                itemsQuery = itemsQuery.Where(
-                    x => x.ChangeStates.Any(
-                        a => a.IssueState == IssueState.Open && a.User != null &&
-                             (a.User.Name == openedby || a.User.FullName == openedby)));
-            }
-
-            foreach (var closedby in closedbys)
-            {
-                itemsQuery = itemsQuery.Where(
-                    x => x.ChangeStates.Any(
-                        a => a.IssueState == IssueState.Closed && a.User != null &&
-                             (a.User.Name == closedby || a.User.FullName == closedby)));
-            }
-
-            foreach (var pickupby in pickupbys)
-            {
-                selectedPickupbys.Add(session.Query<User>().FirstOrDefault(x => x.Name == pickupby || x.FullName == pickupby));
-            }
-
-            if (pickupany)
-            {
-                itemsQuery = itemsQuery.Where(x => x.Pickups.Any());
-            }
-
-            if (pickupnone)
-            {
-                itemsQuery = itemsQuery.Where(x => x.Pickups.Count == 0);
-            }
-
-            if (pickupbys.Any())
-            {
-                itemsQuery = itemsQuery.Where(
-                    x => x.Pickups.Any(
-                        a => a.User != null && pickupbys.Contains(a.User.Name) || pickupbys.Contains(a.User.FullName)));
-            }
-
-            if (querySorts.Count > 0)
-            {
-                foreach (var sort in querySorts)
-                {
-                    itemsQuery = itemsQuery.OrderByProperty(sort.Key, sort.Value);
-                }
-            }
-
-            var items = itemsQuery.ToList();
-
-            if (linqSorts.Count > 0)
-            {
-                foreach (var sort in linqSorts)
-                {
-                    items = items.OrderByProperty(sort.Key, sort.Value).ToList();
-                }
-            }
-            var prioritizable = false;
-            if(querySorts.Count == 0 && linqSorts.Count == 0)
-            {
-                prioritizable = true;
-                items = items.OrderBy(x => x.State).ThenBy(x => x.Pickups.Count == 0).ThenBy(x => x.PrioOrder == 0).ThenBy(x => x.PrioOrder).ThenByDescending(x => x.ChangeStates.Max(cs => cs.CreatedAt)).ToList();
-            }
-
-            // TODO: dit moet eigenlijk verder naar boven in de query
-            //if (states.Any())
-            //{
-            //    itemsQuery = itemsQuery.Where(x => states.Contains(x.ChangeStates.Single().IssueState));
-            //}
-            if (states.Any())
-            {
-                items = items.Where(x => states.Contains(x.State)).ToList();
-            }
+            var parser = new IssueQueryParser(sessionFactory, query, project, CurrentUser);
 
             var filterPresets = session.Query<FilterPreset>().Where(x => x.User == CurrentUser && x.IsActive && (x.Project == null || x.Project.Id == project.Id)).ToList();
             var globalFilterPresets = session.Query<FilterPreset>().Where(x => x.User == null && x.IsActive && (x.Project == null || x.Project.Id == project.Id)).ToList();
 
-            PropertyBag.Add("items", items.ToList());
             PropertyBag.Add("project", project);
-            PropertyBag.Add("selectedLabels", selectedLabels);
-            PropertyBag.Add("notSelectedLabels", notSelectedLabels);
+            PropertyBag.Add("result", parser);
             PropertyBag.Add("labels", CurrentUser.IsAdmin ? project.Labels : project.Labels.Where(l => l.VisibleForCustomer).ToList());
             PropertyBag.Add("customerLabels", CurrentUser.IsAdmin ? project.Labels : project.Labels.Where(l => l.ApplicableByCustomer).ToList());
-            PropertyBag.Add("states", states);
-            PropertyBag.Add("query", query);
             PropertyBag.Add("filterPresets", filterPresets);
             PropertyBag.Add("globalFilterPresets", globalFilterPresets);
-            PropertyBag.Add("selectedSorts", selectedSorts);
-            PropertyBag.Add("allSorts", allSorts);
             PropertyBag.Add("allAdmins", session.Query<User>().Where(x => x.IsAdmin).ToList());
-            PropertyBag.Add("selectedPickupbys", selectedPickupbys);
-            PropertyBag.Add("pickupany", pickupany);
-            PropertyBag.Add("pickupnone", pickupnone);
-            PropertyBag.Add("prioritizable", prioritizable);
+            PropertyBag.Add("selectedPickupbys", parser.SelectedPickupbys);
+            PropertyBag.Add("pickupany", parser.PickupAny);
+            PropertyBag.Add("pickupnone", parser.PickupNone);
+            PropertyBag.Add("prioritizable", parser.Prioritizable);
         }
 
         [MustHaveProject]

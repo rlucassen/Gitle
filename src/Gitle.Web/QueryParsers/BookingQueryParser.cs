@@ -142,12 +142,12 @@
 
             bookings = bookings.OrderByDescending(x => x.Date);
 
+            TotalResultCount = bookings.Count();
+
             if (!all)
             {
                 bookings = bookings.Take(take);
             }
-
-            TotalResultCount = bookings.Count();
 
             ResultCount = TotalResultCount > take && !all ? take : TotalResultCount;
 
