@@ -21,5 +21,17 @@
             }
             RedirectToReferrer();
         }
+
+        public void Delete(long id)
+        {
+            var filterPreset = session.Get<FilterPreset>(id);
+            filterPreset.Deactivate();
+            using (var transaction = session.BeginTransaction())
+            {
+                session.SaveOrUpdate(filterPreset);
+                transaction.Commit();
+            }
+            RedirectToReferrer();
+        }
     }
 }

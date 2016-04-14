@@ -34,11 +34,16 @@
             <span class="button split postfix"><a href="#" class="submit">Report</a> <span data-dropdown="drop"></span></span>
             <ul id="drop" class="f-dropdown medium" data-dropdown-content>
               <% for reportPreset in reportPresets: %>
-              <li><a class="report-preset" data-filter="${reportPreset.FilterString}" data-filter-clear href="#">${reportPreset.Name}</a></li>
+              <li>
+                <a class="report-preset" data-filter="${reportPreset.ReportString}" data-filter-clear href="#">${reportPreset.Name}</a>
+                <a href="/reportpreset/${reportPreset.Id}/delete" class="remove-link" >
+                  <i class="fa fa-close red"></i>
+                </a>
+              </li>
               <% end %>
               <li class="divider"></li>
               <% for globalReportPreset in globalReportPresets: %>
-              <li><a class="report-preset" data-filter="${globalReportPreset.FilterString}" data-filter-clear href="#">${globalReportPreset.Name}</a></li>
+              <li><a class="report-preset" data-filter="${globalReportPreset.ReportString}" data-filter-clear href="#">${globalReportPreset.Name}</a></li>
               <% end %>
               <li class="divider"></li>
               <li><strong><a href="#" data-reveal-id="newReportPreset">Nieuw rapport</a></strong></li>
@@ -232,11 +237,47 @@
 </div>
 <% end %>
 
+<div id="newReportPreset" class="reveal-modal small" data-reveal>
+  <div class="row">
+    <div class="small-12 columns">
+      <h2>Nieuwe report preset</h2>
+    </div>
+  </div>
+  <form action="/reportpreset/new">
+    <div class="row">
+      <div class="small-3 columns">
+        <label for="item_ReportString">Filter: </label>
+      </div>
+      <div class="small-9 columns">
+        <input type="text" id="item_ReportString" name="item.ReportString" />
+      </div>
+    </div>
+    <div class="row">
+      <div class="small-3 columns">
+        <label for="item_Name">Naam: </label>
+      </div>
+      <div class="small-9 columns">
+        <input type="text" id="item_Name" name="item.Name" />
+      </div>
+    </div>
+    <div class="row">
+      <div class="small-12 columns text-right">
+        <input type="submit" class="button small" value="Nieuw" />
+      </div>
+    </div>
+  </form>
+  <a class="close-reveal-modal">&#215;</a>
+</div>
+
 <script>
   $(function () {
     $('#query-form .submit').click(function (e) {
       e.preventDefault();
       $('#query-form').submit();
     });
+    $(document).on('open.fndtn.reveal', '#newReportPreset', function () {
+      $('#newReportPreset #item_ReportString').val($('#query').val());
+    });
+
   });
 </script>

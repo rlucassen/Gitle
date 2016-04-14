@@ -28,7 +28,12 @@
                   <span class="button split postfix"><a href="#" class="submit">Filter</a> <span data-dropdown="drop"></span></span>
                   <ul id="drop" class="f-dropdown medium" data-dropdown-content>
                     <% for filterPreset in filterPresets: %>
-                    <li><a class="filter-preset" data-filter="${filterPreset.FilterString}" data-filter-clear href="#">${filterPreset.Name}</a></li>
+                    <li>
+                      <a class="filter-preset" data-filter="${filterPreset.FilterString}" data-filter-clear href="#">${filterPreset.Name}</a>
+                      <a href="/filterpreset/${filterPreset.Id}/delete" class="remove-link">
+                        <i class="fa fa-close red"></i>
+                      </a>
+                    </li>
                     <% end %>
                     <li class="divider"></li>
                     <% for filterPreset in globalFilterPresets: %>

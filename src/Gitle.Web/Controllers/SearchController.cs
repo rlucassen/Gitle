@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using Castle.MonoRail.Framework;
+    using Helpers;
     using Model;
     using NHibernate;
     using NHibernate.Linq;
@@ -13,6 +14,7 @@
         {
         }
 
+        [Admin]
         [return: JSONReturnBinder]
         public object Index(string query)
         {

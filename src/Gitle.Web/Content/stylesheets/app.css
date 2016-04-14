@@ -396,24 +396,24 @@ table {
   background-color: #b9b9b9;
   color: #333; }
 
-.filters .f-dropdown li {
+.f-dropdown li {
   position: relative; }
 
-.filters .f-dropdown a {
+.f-dropdown a {
   position: relative;
   height: 2.5em; }
 
-.filters .f-dropdown.labels a i {
+.f-dropdown.labels a i {
   position: absolute;
   left: 0.7em;
   top: 0.7em; }
 
-.filters .f-dropdown .remove-filter {
+.f-dropdown .remove-filter, .f-dropdown .remove-link {
   position: absolute;
   top: 0;
   right: 0; }
 
-.filters .f-dropdown a span {
+.f-dropdown a span {
   position: absolute;
   left: 3em; }
 

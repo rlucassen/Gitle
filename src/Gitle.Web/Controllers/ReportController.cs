@@ -7,6 +7,7 @@ namespace Gitle.Web.Controllers
 {
     using System;
     using System.Collections.Generic;
+    using System.Security.Cryptography.X509Certificates;
     using Helpers;
     using Model.Helpers;
     using QueryParsers;
@@ -22,8 +23,8 @@ namespace Gitle.Web.Controllers
         {
             var parser = new BookingQueryParser(session, query);
 
-            var reportPresets = session.Query<ReportPreset>().Where(x => x.User == CurrentUser);
-            var globalReportPresets = session.Query<ReportPreset>().Where(x => x.User == null);
+            var reportPresets = session.Query<ReportPreset>().Where(x => x.User == CurrentUser && x.IsActive);
+            var globalReportPresets = session.Query<ReportPreset>().Where(x => x.User == null && x.IsActive);
 
             PropertyBag.Add("result", parser);
 

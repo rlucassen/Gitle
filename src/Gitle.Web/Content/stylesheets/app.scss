@@ -602,34 +602,36 @@ table {
     color: #333;
   }
 
-  .f-dropdown {
-    li {
-      position: relative;
-    }
+}
 
-    a {
-      position: relative;
-      height: 2.5em;
-    }
+.f-dropdown {
+  li {
+    position: relative;
+  }
 
-    &.labels a i {
-      position: absolute;
-      left: 0.7em;
-      top: 0.7em;
-    }
+  a {
+    position: relative;
+    height: 2.5em;
+  }
 
-    .remove-filter {
-      position: absolute;
-      top: 0;
-      right: 0;
-    }
+  &.labels a i {
+    position: absolute;
+    left: 0.7em;
+    top: 0.7em;
+  }
 
-    a span {
-      position: absolute;
-      left: 3em;
-    }
+  .remove-filter, .remove-link {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+
+  a span {
+    position: absolute;
+    left: 3em;
   }
 }
+
 
 .tablesorter .header {
   cursor: pointer;
@@ -1254,3 +1256,4 @@ input[type=checkbox].inline {
   }
   margin-bottom: 0.25rem !important;
 } 
+

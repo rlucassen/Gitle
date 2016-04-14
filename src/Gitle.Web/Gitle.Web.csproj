@@ -153,6 +153,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\ApplicationController.cs" />
+    <Compile Include="Controllers\ReportPresetController.cs" />
     <Compile Include="Controllers\ReportController.cs" />
     <Compile Include="Controllers\BookingController.cs" />
     <Compile Include="Controllers\FilterPresetController.cs" />
