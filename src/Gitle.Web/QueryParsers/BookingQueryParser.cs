@@ -113,7 +113,7 @@
                 bookings = bookings.Where(x => x.Project != null && projects.Contains(x.Project.Slug));
                 foreach (var project in projects)
                 {
-                    Projects.Add(session.Query<Project>().FirstOrDefault(x => x.Slug == project));
+                    Projects.Add(session.SlugOrDefault<Project>(project));
                 }
             }
 
@@ -122,7 +122,7 @@
                 bookings = bookings.Where(x => x.Project != null && x.Project.Application != null && applications.Contains(x.Project.Application.Slug));
                 foreach (var application in applications)
                 {
-                    Applications.Add(session.SlugOrDefault<Application>(application)));
+                    Applications.Add(session.SlugOrDefault<Application>(application));
                 }
             }
 
@@ -131,7 +131,7 @@
                 bookings = bookings.Where(x => x.Project != null && x.Project.Application != null && x.Project.Application.Customer != null && customers.Contains(x.Project.Application.Customer.Slug));
                 foreach (var customer in customers)
                 {
-                    Customers.Add(session.Query<Customer>().FirstOrDefault(x => x.Slug == customer));
+                    Customers.Add(session.SlugOrDefault<Customer>(customer));
                 }
             }
 

@@ -263,7 +263,7 @@
                 if (routeMatch.Name == "issues") PropertyBag.Add("referer", referer.PathAndQuery);
             }
 
-            var project = session.Query<Project>().Single(p => p.Slug == projectSlug);
+            var project = session.Slug<Project>(projectSlug);
             PropertyBag.Add("project", project);
             var item = session.Query<Issue>().Single(i => i.Number == issueId && i.Project == project);
             PropertyBag.Add("item", item);
@@ -286,7 +286,7 @@
         [MustHaveProject]
         public void QuickView(string projectSlug, int issueId)
         {
-            var project = session.Query<Project>().Single(p => p.Slug == projectSlug);
+            var project = session.Slug<Project>(projectSlug);
             PropertyBag.Add("project", project);
             var item = session.Query<Issue>().Single(i => i.Number == issueId && i.Project == project);
             PropertyBag.Add("item", item);
@@ -298,7 +298,7 @@
         [MustHaveProject]
         public void New(string projectSlug)
         {
-            var project = session.Query<Project>().Single(p => p.Slug == projectSlug);
+            var project = session.Slug<Project>(projectSlug);
             PropertyBag.Add("project", project);
             PropertyBag.Add("item", new Issue());
             PropertyBag.Add("labels", CurrentUser.IsAdmin ? project.Labels : project.Labels.Where(l => l.ApplicableByCustomer));
@@ -308,7 +308,7 @@
         [Admin]
         public void Edit(string projectSlug, int issueId)
         {
-            var project = session.Query<Project>().Single(p => p.Slug == projectSlug);
+            var project = session.Slug<Project>(projectSlug);
             PropertyBag.Add("project", project);
             var item = session.Query<Issue>().Single(i => i.Number == issueId && i.Project == project);
             PropertyBag.Add("item", item);
@@ -318,7 +318,7 @@
         [MustHaveProject]
         public void Save(string projectSlug, int issueId, string[] labels)
         {
-            var project = session.Query<Project>().Single(p => p.Slug == projectSlug);
+            var project = session.Slug<Project>(projectSlug);
             var issue = session.Query<Issue>().SingleOrDefault(i => i.Number == issueId && i.Project == project);
 
             var hash = "";
@@ -349,7 +349,7 @@
         [Admin]
         public void Pickup(string projectSlug, int issueId)
         {
-            var project = session.Query<Project>().Single(p => p.Slug == projectSlug);
+            var project = session.Slug<Project>(projectSlug);
             var issue = session.Query<Issue>().Single(i => i.Number == issueId && i.Project == project);
             if (!issue.IsArchived && issue.PickedUpBy != CurrentUser)
             {
@@ -367,7 +367,7 @@
         public void AddComment(string projectSlug, int issueId, string body)
         {
             RedirectToReferrer();
-            var project = session.Query<Project>().Single(p => p.Slug == projectSlug);
+            var project = session.Slug<Project>(projectSlug);
             var issue = session.Query<Issue>().Single(i => i.Number == issueId && i.Project == project);
             if (issue.IsArchived) return;
             var comment = new Comment
@@ -388,7 +388,7 @@
         public void AddLabel(string projectSlug, int issueId, int param)
         {
             RedirectToReferrer();
-            var project = session.Query<Project>().Single(p => p.Slug == projectSlug);
+            var project = session.Slug<Project>(projectSlug);
             var issue = session.Query<Issue>().Single(i => i.Number == issueId && i.Project == project);
             if (issue.IsArchived) return;
             var label = project.Labels.First(l => l.Id == param);
@@ -406,7 +406,7 @@
         public void BookTime(string projectSlug, int issueId, DateTime date, double minutes, bool close, string comment)
         {
             RedirectToReferrer();
-            var project = session.Query<Project>().Single(p => p.Slug == projectSlug);
+            var project = session.Slug<Project>(projectSlug);
             var issue = session.Query<Issue>().Single(i => i.Number == issueId && i.Project == project);
             if (issue.IsArchived) return;
             var booking = new Booking() {User = CurrentUser, Date = date, Minutes = minutes, Issue = issue, Project = project, Comment = comment};
@@ -427,7 +427,7 @@
         public void Close(string projectSlug, int issueId)
         {
             RedirectToReferrer();
-            var project = session.Query<Project>().Single(p => p.Slug == projectSlug);
+            var project = session.Slug<Project>(projectSlug);
             var issue = session.Query<Issue>().Single(i => i.Number == issueId && i.Project == project);
             if (issue.State == IssueState.Open || issue.State == IssueState.Unknown)
             {
@@ -444,7 +444,7 @@
         public void Reopen(string projectSlug, int issueId)
         {
             RedirectToReferrer();
-            var project = session.Query<Project>().Single(p => p.Slug == projectSlug);
+            var project = session.Slug<Project>(projectSlug);
             var issue = session.Query<Issue>().Single(i => i.Number == issueId && i.Project == project);
             if (issue.State == IssueState.Closed || issue.State == IssueState.Unknown)
             {
@@ -462,7 +462,7 @@
         {
             RedirectToReferrer();
             if (!CurrentUser.IsAdmin) return;
-            var project = session.Query<Project>().Single(p => p.Slug == projectSlug);
+            var project = session.Slug<Project>(projectSlug);
             var issue = session.Query<Issue>().Single(i => i.Number == issueId && i.Project == project);
             issue.Archive(CurrentUser);
             using (var tx = session.BeginTransaction())
@@ -507,7 +507,7 @@
         [Admin]
         public void ExportImport(string projectSlug)
         {
-            var project = session.Query<Project>().Single(p => p.Slug == projectSlug);
+            var project = session.Slug<Project>(projectSlug);
 
             PropertyBag.Add("project", project);
         }
@@ -515,7 +515,7 @@
         [Admin]
         public void ExportJson(string projectSlug, string[] selectedLabels, IssueState state, string issues)
         {
-            var project = session.Query<Project>().Single(p => p.Slug == projectSlug);
+            var project = session.Slug<Project>(projectSlug);
 
             if (Request.Params["state"] == null) state = CurrentUser.DefaultState;
             var items = project.Issues;
@@ -551,7 +551,7 @@
         [Admin]
         public void ExportCsv(string projectSlug, string[] selectedLabels, IssueState state, string issues)
         {
-            var project = session.Query<Project>().Single(p => p.Slug == projectSlug);
+            var project = session.Slug<Project>(projectSlug);
 
             if (Request.Params["state"] == null) state = CurrentUser.DefaultState;
             var items = project.Issues;
