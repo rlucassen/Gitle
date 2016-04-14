@@ -38,7 +38,7 @@
         {
             query = query ?? "";
 
-            var project = session.Query<Project>().FirstOrDefault(p => p.Slug == projectSlug);
+            var project = session.SlugOrDefault<Project>(projectSlug);
 
             var matches = Regex.Matches(query, @"[a-zA-Z0-9_]+:(([a-zA-Z0-9_,.]+)|('[a-zA-Z0-9_,. ]+'))");
 

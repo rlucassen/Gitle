@@ -12,6 +12,8 @@ using System.Web;
 
 namespace Gitle.Web.Controllers
 {
+    using Model.Helpers;
+
     public class InvoiceController : SecureController
     {
         private readonly IPdfExportService pdfExportService;
@@ -24,7 +26,7 @@ namespace Gitle.Web.Controllers
         [Admin]
         public void Index()
         {
-            var invoices = session.Query<Invoice>();
+            var invoices = session.Query<Invoice>().OrderBy(x => x.CreatedAt).ToList().OrderBy(x => (int)(x.State));
             PropertyBag.Add("invoices", invoices);
         }
 
@@ -50,7 +52,7 @@ namespace Gitle.Web.Controllers
         [Admin]
         public void Copy(string projectSlug, string invoiceId)
         {
-            var project = session.Query<Project>().FirstOrDefault(p => p.Slug == projectSlug);
+            var project = session.SlugOrDefault<Project>(projectSlug);
             var invoice = session.Query<Invoice>().FirstOrDefault(i => i.Number == invoiceId && i.Project == project);
 
             PropertyBag.Add("invoice", invoice);
@@ -108,7 +110,7 @@ namespace Gitle.Web.Controllers
         [Admin]
         public void ArchiveIssues(string projectSlug, string invoiceId)
         {
-            var project = session.Query<Project>().FirstOrDefault(p => p.Slug == projectSlug);
+            var project = session.SlugOrDefault<Project>(projectSlug);
             var invoice = session.Query<Invoice>().FirstOrDefault(i => i.Number == invoiceId && i.Project == project);
 
             using (var tx = session.BeginTransaction())
@@ -129,7 +131,7 @@ namespace Gitle.Web.Controllers
         {
             CancelView();
 
-            var project = session.Query<Project>().FirstOrDefault(p => p.Slug == projectSlug);
+            var project = session.SlugOrDefault<Project>(projectSlug);
             var invoice = session.Query<Invoice>().FirstOrDefault(i => i.Number == invoiceId && i.Project == project);
 
             var pdf = pdfExportService.ConvertHtmlToPdf("invoice", new Dictionary<string, object>{
@@ -155,7 +157,7 @@ namespace Gitle.Web.Controllers
 
         private void ChangeState(string projectSlug, string invoiceId, InvoiceState state)
         {
-            var project = session.Query<Project>().FirstOrDefault(p => p.Slug == projectSlug);
+            var project = session.SlugOrDefault<Project>(projectSlug);
             var invoice = session.Query<Invoice>().FirstOrDefault(i => i.Number == invoiceId && i.Project == project);
 
             invoice.State = state;

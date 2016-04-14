@@ -147,6 +147,11 @@
           </div>
         </div>
         <% end %>
+        <div class="row">
+          <div class="large-11 large-offset-1 columns">
+            <h5>Eerder al gefactureerd:</h5>
+          </div>
+        </div>
         <% for booking in line.OldBookings: %>
         <div class="row booking old-booking" data-issue="${line.Issue.Number}">
           <input type="hidden" name="bookings[${booking.Id}]" id="bookings_${booking.Id}" value="${booking.Id}" />

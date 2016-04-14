@@ -10,12 +10,12 @@
     {
         public static T Slug<T>(this ISession session, string slug) where T : ISlugger
         {
-            return session.Query<T>().Single(x => x.Slug == slug);
+            return session.Query<T>().Single(x => x.Slug == slug && x.IsActive);
         }
 
         public static T SlugOrDefault<T>(this ISession session, string slug) where T : ISlugger
         {
-            return session.Query<T>().SingleOrDefault(x => x.Slug == slug);
+            return session.Query<T>().SingleOrDefault(x => x.Slug == slug && x.IsActive);
         }
 
     }

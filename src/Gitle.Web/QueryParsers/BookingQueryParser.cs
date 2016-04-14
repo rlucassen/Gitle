@@ -122,7 +122,7 @@
                 bookings = bookings.Where(x => x.Project != null && x.Project.Application != null && applications.Contains(x.Project.Application.Slug));
                 foreach (var application in applications)
                 {
-                    Applications.Add(session.Query<Application>().FirstOrDefault(x => x.Slug == application));
+                    Applications.Add(session.SlugOrDefault<Application>(application)));
                 }
             }
 

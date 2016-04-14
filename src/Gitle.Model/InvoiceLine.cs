@@ -29,7 +29,7 @@ namespace Gitle.Model
         {
             get
             {
-                return Issue?.Bookings.Where(x => !Bookings.Contains(x)).ToList() ?? new List<Booking>();
+                return Issue?.Bookings.Where(x => !Bookings.Contains(x) && x.IsActive).ToList() ?? new List<Booking>();
             }
         }
 

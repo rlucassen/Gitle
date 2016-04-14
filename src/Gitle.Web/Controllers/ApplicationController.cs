@@ -23,7 +23,7 @@
             var applications = session.Query<Application>().Where(x => x.IsActive);
             if (!string.IsNullOrEmpty(customerSlug))
             {
-                var customer = session.Query<Customer>().FirstOrDefault(x => x.Slug == customerSlug);
+                var customer = session.SlugOrDefault<Customer>(customerSlug);
                 PropertyBag.Add("customer", customer);
                 applications = applications.Where(x => x.Customer == customer);
             }
@@ -54,13 +54,13 @@
         [Admin]
         public void View(string applicationSlug)
         {
-            var application = session.Query<Application>().FirstOrDefault(x => x.Slug == applicationSlug);
+            var application = session.SlugOrDefault<Application>(applicationSlug);
             PropertyBag.Add("item", application);
         }
         [Admin]
         public void Save(string applicationSlug, long customerId)
         {
-            var item = session.Query<Application>().FirstOrDefault(x => x.IsActive && x.Slug == applicationSlug);
+            var item = session.SlugOrDefault<Application>(applicationSlug);
             var customer = session.Query<Customer>().FirstOrDefault(x => x.IsActive && x.Id == customerId);
          
 
@@ -86,7 +86,7 @@
         [Admin]
         public void Delete(string applicationSlug)
         {
-            var application = session.Query<Application>().FirstOrDefault(x => x.IsActive && x.Slug == applicationSlug);
+            var application = session.SlugOrDefault<Application>(applicationSlug);
             application.Deactivate();
             using (var tx = session.BeginTransaction())
             {
@@ -99,8 +99,7 @@
         [Admin]
         public void Comments(string applicationSlug, string comment)
         {
-            var item = session.Query<Application>().FirstOrDefault(p => p.Slug == applicationSlug);
-
+            var item = session.SlugOrDefault<Application>(applicationSlug);
             item.Comments = comment;
 
             using (var tx = session.BeginTransaction())

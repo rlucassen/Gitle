@@ -53,7 +53,7 @@
         [MustHaveProject]
         public void View(string projectSlug)
         {
-            var project = session.Query<Project>().FirstOrDefault(x => x.IsActive && x.Slug == projectSlug);
+            var project = session.SlugOrDefault<Project>(projectSlug);
             PropertyBag.Add("project", project);
 
             var application = session.Query<Application>().FirstOrDefault(x => x.Projects.Contains(project));
@@ -111,7 +111,7 @@
         [Admin]
         public void Edit(string projectSlug)
         {
-            var project = session.Query<Project>().FirstOrDefault(x => x.IsActive && x.Slug == projectSlug);
+            var project = session.SlugOrDefault<Project>(projectSlug);
             PropertyBag.Add("customers", session.Query<Customer>().Where(x => x.IsActive).ToList());
             PropertyBag.Add("applications", session.Query<Application>().Where(x => x.IsActive));
             PropertyBag.Add("applicationId", session.Query<Application>().Where(x => x.Projects.Contains(project)));
@@ -136,7 +136,7 @@
         [Admin]
         public void Save(string projectSlug, long applicationId)
         {
-            var item = session.Query<Project>().FirstOrDefault(x => x.IsActive && x.Slug == projectSlug);
+            var item = session.SlugOrDefault<Project>(projectSlug);
             if (item != null)
             {
                 BindObjectInstance(item, "item");
@@ -175,7 +175,7 @@
         [MustHaveProject]
         public void AddLabel(string projectSlug, string issues, string label)
         {
-            var project = session.Query<Project>().FirstOrDefault(x => x.IsActive && x.Slug == projectSlug);
+            var project = session.SlugOrDefault<Project>(projectSlug);
             var issueIds = issues.Split(',');
             var realLabel = session.Query<Label>().FirstOrDefault(x => x.Name == label);
             if (!realLabel.ApplicableByCustomer && !CurrentUser.IsAdmin)
@@ -202,7 +202,7 @@
         [MustHaveProject]
         public void ChangeState(string projectSlug, string issues, IssueState state)
         {
-            var project = session.Query<Project>().FirstOrDefault(p => p.Slug == projectSlug);
+            var project = session.SlugOrDefault<Project>(projectSlug);
             var issueIds = issues.Split(',');
 
             using (var transaction = session.BeginTransaction())
@@ -223,7 +223,7 @@
         [Admin]
         public void Comments(string projectSlug, string comment)
         {
-            var item = session.Query<Project>().FirstOrDefault(p => p.Slug == projectSlug);
+            var item = session.SlugOrDefault<Project>(projectSlug);
 
             item.Comments = comment;
 
@@ -239,7 +239,7 @@
         [Admin]
         public void DeleteDocument(string projectSlug, long id)
         {
-            var item = session.Query<Project>().FirstOrDefault(p => p.Slug == projectSlug);
+            var item = session.SlugOrDefault<Project>(projectSlug);
             var document = session.Get<Document>(id);
 
             item.Documents.Remove(document);

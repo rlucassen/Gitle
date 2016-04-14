@@ -615,6 +615,11 @@ body.admin table#issue-table th#issue-actions {
       padding: 0 0.5rem; }
     #createinvoice .bookings .old-booking {
       color: #aaa; }
+    #createinvoice .bookings h5 {
+      font-size: 0.8rem;
+      margin-bottom: 0;
+      font-weight: bold;
+      color: #666; }
   #createinvoice .vatline .vat {
     color: #ccc; }
   #createinvoice .totals {
