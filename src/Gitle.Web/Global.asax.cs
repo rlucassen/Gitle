@@ -134,6 +134,12 @@
             RoutingModuleEx.Engine.Add(new PatternRoute("/application/<action>")
                                            .DefaultForController().Is<ApplicationController>()
                                            .DefaultForAction().Is("index"));
+            RoutingModuleEx.Engine.Add(new PatternRoute("/application/<applicationSlug>/projects")
+                                           .DefaultForController().Is<ProjectController>()
+                                           .DefaultForAction().Is("index"));
+            RoutingModuleEx.Engine.Add(new PatternRoute("/application/<applicationSlug>/newproject")
+                                           .DefaultForController().Is<ProjectController>()
+                                           .DefaultForAction().Is("new"));
             RoutingModuleEx.Engine.Add(new PatternRoute("/application/<applicationSlug>/<action>")
                                            .DefaultForController().Is<ApplicationController>()
                                            .DefaultForAction().Is("index"));
@@ -154,6 +160,18 @@
             RoutingModuleEx.Engine.Add(new PatternRoute("/customer/<action>")
                                            .DefaultForController().Is<CustomerController>()
                                            .DefaultForAction().Is("index"));
+            RoutingModuleEx.Engine.Add(new PatternRoute("/customer/<customerSlug>/applications")
+                                           .DefaultForController().Is<ApplicationController>()
+                                           .DefaultForAction().Is("index"));
+            RoutingModuleEx.Engine.Add(new PatternRoute("/customer/<customerSlug>/newapplication")
+                                           .DefaultForController().Is<ApplicationController>()
+                                           .DefaultForAction().Is("new"));
+            RoutingModuleEx.Engine.Add(new PatternRoute("/customer/<customerSlug>/projects")
+                                           .DefaultForController().Is<ProjectController>()
+                                           .DefaultForAction().Is("index"));
+            RoutingModuleEx.Engine.Add(new PatternRoute("/customer/<customerSlug>/newproject")
+                                           .DefaultForController().Is<ProjectController>()
+                                           .DefaultForAction().Is("new"));
             RoutingModuleEx.Engine.Add(new PatternRoute("/customer/<customerSlug>/<action>")
                                            .DefaultForController().Is<CustomerController>()
                                            .DefaultForAction().Is("index"));
@@ -162,6 +180,9 @@
                                            .DefaultForController().Is<ProjectController>()
                                            .DefaultForAction().Is("index"));
             RoutingModuleEx.Engine.Add(new PatternRoute("/project/<action>")
+                                           .DefaultForController().Is<ProjectController>()
+                                           .DefaultForAction().Is("index"));
+            RoutingModuleEx.Engine.Add(new PatternRoute("/project/<projectSlug>/<action>")
                                            .DefaultForController().Is<ProjectController>()
                                            .DefaultForAction().Is("index"));
             RoutingModuleEx.Engine.Add(new PatternRoute("/project/<projectSlug>/<action>")

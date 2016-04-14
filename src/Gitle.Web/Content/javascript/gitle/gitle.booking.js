@@ -54,6 +54,10 @@
         row.find('.booking_Project_Id').val(suggestion.data);
         row.find('.issue-chooser').val('').autocomplete('setOptions', { params: { projectId: suggestion.data } });
         row.find('.booking_Issue_Id').val('');
+        if (suggestion.extraValue == "ticketRequired") {
+          row.find('.booking_Issue_Id').prop("required", true);
+          $(document).foundation('abide', 'reflow');
+        }
       }
     }).on('focus', function () {
       $(this).autocomplete().onValueChange();

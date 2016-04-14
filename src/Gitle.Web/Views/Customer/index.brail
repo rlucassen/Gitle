@@ -17,6 +17,8 @@
             <ul class="button-group">
               <li><a class="button tiny secondary no-margin" href="/customer/${item.Slug}/view">Details</a></li>
               <li><a class="button tiny success no-margin" href="/customer/${item.Slug}/edit">Bewerk</a></li>
+              <li><a class="button tiny no-margin" href="/customer/${item.Slug}/applications">Applicaties</a></li>
+              <li><a class="button tiny no-margin" href="/customer/${item.Slug}/projects">Projecten</a></li>
               <li><a class="button tiny alert no-margin" href="/customer/${item.Slug}/delete">Verwijder</a></li>
             </ul>
           </td>

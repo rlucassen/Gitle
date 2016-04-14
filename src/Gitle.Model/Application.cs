@@ -1,8 +1,9 @@
 ﻿namespace Gitle.Model
 {
     using System.Collections.Generic;
+    using Interfaces.Model;
 
-    public class Application : ModelBase
+    public class Application : ModelBase, ISlugger
     {
         public virtual string Name { get; set; }
         public virtual string Slug { get; set; }

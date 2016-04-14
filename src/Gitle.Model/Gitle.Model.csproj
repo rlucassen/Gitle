@@ -86,6 +86,8 @@
     <Compile Include="Customer.cs" />
     <Compile Include="Enum\ProjectType.cs" />
     <Compile Include="Enum\IssueState.cs" />
+    <Compile Include="Helpers\ISessionExtension.cs" />
+    <Compile Include="Interfaces\Model\ISlugger.cs" />
     <Compile Include="Interfaces\Service\IBookingQueryParserService.cs" />
     <Compile Include="Mapping\ReportPresetMap.cs" />
     <Compile Include="ReportPreset.cs" />

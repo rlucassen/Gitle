@@ -6,6 +6,7 @@
     using System.Linq;
     using Helpers;
     using Model;
+    using Model.Helpers;
     using Model.Interfaces.Service;
     using Model.Nested;
     using NHibernate;
@@ -17,22 +18,34 @@
         {
         }
         [Admin]
-        public void Index()
+        public void Index(string customerSlug)
         {
-            PropertyBag.Add("items", session.Query<Application>().Where(x => x.IsActive).ToList());
+            var applications = session.Query<Application>().Where(x => x.IsActive);
+            if (!string.IsNullOrEmpty(customerSlug))
+            {
+                var customer = session.Query<Customer>().FirstOrDefault(x => x.Slug == customerSlug);
+                PropertyBag.Add("customer", customer);
+                applications = applications.Where(x => x.Customer == customer);
+            }
+            PropertyBag.Add("items", applications.ToList());
         }
+
         [Admin]
-        public void New()
+        public void New(string customerSlug)
         {
             PropertyBag.Add("item", new Application());
             PropertyBag.Add("customers", session.Query<Customer>().Where(x => x.IsActive).ToList());
+            if (!string.IsNullOrEmpty(customerSlug))
+            {
+                PropertyBag.Add("customerId", session.Slug<Customer>(customerSlug));
+            }
             RenderView("edit");
         }
 
         [Admin]
         public void Edit(string applicationSlug)
         {
-            var application = session.Query<Application>().FirstOrDefault(x => x.Slug == applicationSlug);
+            var application = session.SlugOrDefault<Application>(applicationSlug);
             PropertyBag.Add("item", application );
             PropertyBag.Add("customers", session.Query<Customer>().Where(x => x.IsActive).ToList());
             if (application != null) PropertyBag.Add("customerId", application.Customer.Id);

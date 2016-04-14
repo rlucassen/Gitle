@@ -1,12 +1,20 @@
 ﻿<div class="row">
   <div class="large-12 columns">
-    <h1>Projecten</h1>
-    <% if CurrentUser.IsAdmin: %><a class="button" href="/project/new">Nieuw</a><% end %>
+    <h1>Projecten  <% if IsDefined("customer"): %>van klant "${customer.Name}"<% end %> <% if IsDefined("application"): %>van applicatie "${application.Name}"<% end %></h1>
+    <% if CurrentUser.IsAdmin: %>
+    <% if IsDefined("application"): %>
+    <a class="button" href="/application/${application.Slug}/newproject">Nieuw</a>
+    <% elif IsDefined("customer"): %>
+    <a class="button" href="/customer/${customer.Slug}/newproject">Nieuw</a>
+    <% else: %>
+    <a class="button" href="/project/new">Nieuw</a>
+    <% end %>
+    <% end %>
     <table id="project-table" class="tablesorter small-blocks">
       <colgroup>
-        <col style="width: 240px;"/>
-        <col/>
-        <col style="width: 350px;"/>
+        <col style="width: 240px;" />
+        <col />
+        <col style="width: 350px;" />
       </colgroup>
       <thead>
         <tr>
@@ -32,8 +40,10 @@
             <ul class="button-group">
               <li><a class="button tiny secondary no-margin" href="/project/${item.Slug}/view">Details</a></li>
               <li><a class="button tiny no-margin" href="/project/${item.Slug}/issues">Takenlijst</a></li>
-              <% if CurrentUser.IsAdmin: %><li><a class="button tiny success no-margin" href="/project/${item.Slug}/edit">Bewerk</a></li><% end %>
-              <% if CurrentUser.IsAdmin: %><li><a class="button tiny alert no-margin" href="/project/${item.Slug}/delete">Verwijder</a></li><% end %>
+              <% if CurrentUser.IsAdmin: %>
+              <li><a class="button tiny success no-margin" href="/project/${item.Slug}/edit">Bewerk</a></li><% end %>
+              <% if CurrentUser.IsAdmin: %>
+              <li><a class="button tiny alert no-margin" href="/project/${item.Slug}/delete">Verwijder</a></li><% end %>
             </ul>
           </td>
         </tr>

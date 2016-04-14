@@ -15,17 +15,39 @@
 
     public class ProjectController : SecureController
     {
-        private IProjectClient projectClient;
 
-        public ProjectController(ISessionFactory sessionFactory, IProjectClient projectClient) : base(sessionFactory)
+        public ProjectController(ISessionFactory sessionFactory) : base(sessionFactory)
         {
-            this.projectClient = projectClient;
         }
 
-        public void Index()
+        public void Index(string customerSlug, string applicationSlug)
         {
-            if (CurrentUser.Projects.Count == 1 && !CurrentUser.IsAdmin) RedirectUsingNamedRoute("issues", new {projectSlug = CurrentUser.Projects.First().Project.Slug});
-            PropertyBag.Add("items", CurrentUser.IsAdmin ? session.Query<Project>().Where(x => x.IsActive).ToList() : CurrentUser.Projects.Select(x => x.Project).Where(x => x.IsActive));
+            if (CurrentUser.Projects.Count == 1 && !CurrentUser.IsAdmin)
+                RedirectUsingNamedRoute("issues", new {projectSlug = CurrentUser.Projects.First().Project.Slug});
+
+            var projects = session.Query<Project>().Where(x => x.IsActive);
+
+            if (!CurrentUser.IsAdmin)
+            {
+                projects = projects.Where(p => p.Users.Select(up => up.User).Contains(CurrentUser));
+            }
+            else
+            {
+                if (!string.IsNullOrEmpty(applicationSlug))
+                {
+                    var application = session.Slug<Application>(applicationSlug);
+                    PropertyBag.Add("application", application);
+                    projects = projects.Where(x => x.Application == application);
+                }
+                else if (!string.IsNullOrEmpty(customerSlug))
+                {
+                    var customer = session.Slug<Customer>(customerSlug);
+                    PropertyBag.Add("customer", customer);
+                    projects = projects.Where(x => x.Application != null && x.Application.Customer == customer);
+                }
+            }
+
+            PropertyBag.Add("items", projects);
         }
 
         [MustHaveProject]
@@ -68,10 +90,19 @@
         }
 
         [Admin]
-        public void New()
+        public void New(string applicationSlug, string customerSlug)
         {
             PropertyBag.Add("customers", session.Query<Customer>().Where(x => x.IsActive).ToList());
-            PropertyBag.Add("applications", session.Query<Application>().Where(x => x.IsActive));
+            var applications = session.Query<Application>().Where(x => x.IsActive);
+            if (!string.IsNullOrEmpty(customerSlug))
+            {
+                applications = applications.Where(x => x.Customer.Slug == customerSlug);
+            }
+            PropertyBag.Add("applications", applications);
+            if (!string.IsNullOrEmpty(applicationSlug))
+            {
+                PropertyBag.Add("applicationId", session.Slug<Application>(applicationSlug));
+            }
             PropertyBag.Add("types", EnumHelper.ToList(typeof(ProjectType)));
             PropertyBag.Add("item", new Project());
             RenderView("edit");
@@ -229,9 +260,9 @@
             var projects = session.Query<Project>();
             if (query != null)
             {
-                projects = projects.Where(p => p.Name.Contains(query));
+                projects = projects.Where(p => p.Name.Contains(query) || (p.Application != null && (p.Application.Name.Contains(query) || (p.Application.Customer != null && p.Application.Customer.Name.Contains(query)))));
             }
-            suggestions.AddRange(projects.Select(x => new Suggestion(x.Name, x.Id.ToString())));
+            suggestions.AddRange(projects.ToList().Select(x => new Suggestion(x.CompleteName, x.Id.ToString(), x.TicketRequiredForBooking ? "ticketRequired": string.Empty)));
             return new { query = query, suggestions = suggestions };
         }
     }

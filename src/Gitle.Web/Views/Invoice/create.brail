@@ -161,9 +161,9 @@
           </div>
           <div class="large-1 columns text-center">
             <% if not booking.Unbillable: %>
-            <i class="fa fa-euro green" title="billable"></i>
+            <i class="fa fa-euro" title="billable"></i>
             <% else: %>
-            <i class="fa fa-euro red" title="unbillable"></i>
+            <i class="fa fa-euro" title="unbillable"></i>
             <% end %>
           </div>
           <div class="large-1 columns end text-right">

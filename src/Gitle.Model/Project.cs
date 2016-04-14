@@ -7,7 +7,7 @@
     using Helpers;
     using Interfaces.Model;
 
-    public class Project : ModelBase, IDocumentContainer
+    public class Project : ModelBase, IDocumentContainer, ISlugger
     {
         public Project()
         {
@@ -36,6 +36,8 @@
         public virtual ProjectType Type { get; set; }
         public virtual string TypeString => Type.GetDescription();
 
+        public virtual bool TicketRequiredForBooking { get; set; }
+
         public virtual Customer Customer { get; set; }
         public virtual Application Application { get; set; }
 
@@ -45,10 +47,12 @@
         public virtual IList<Document> Documents { get; set; } 
         public virtual IList<Booking> Bookings { get; set; } 
 
-        public virtual int NotifiedUsers { get { return Users.Count(u => u.Notifications); } }
+        public virtual int NotifiedUsers => Users.Count(u => u.Notifications);
 
-        public virtual int NewIssueNumber { get { return (Issues.Any() ? Issues.Max(x => x.Number) : 0) + 1; } }
+        public virtual int NewIssueNumber => (Issues.Any() ? Issues.Max(x => x.Number) : 0) + 1;
 
-        public virtual double BillableMinutes { get { return Bookings.Where(x => !x.Unbillable).Sum(x => x.Minutes); } }
+        public virtual double BillableMinutes => Bookings.Where(x => !x.Unbillable).Sum(x => x.Minutes);
+
+        public virtual string CompleteName => $"{Name} ({Application?.Name}, {Application?.Customer?.Name})";
     }
 }

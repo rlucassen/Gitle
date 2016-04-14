@@ -23,7 +23,7 @@
         </div>
         <div class="row collapse">
           <div class="large-9 columns">
-            <input type="text" id="query" name="query" data-remember="report" value="${result.Query}" />
+            <input type="text" id="query" name="query" value="${result.Query}" />
           </div>
           <div class="large-1 small-1 columns">
             <a href="#" data-filter="" data-filter-clear="" class="button postfix alert">

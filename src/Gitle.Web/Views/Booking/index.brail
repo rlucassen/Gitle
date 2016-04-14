@@ -10,7 +10,7 @@
           </div>
           <% end %>
           <div class="small-2 large-1 columns">
-            <input type="text" name="booking.Date" id="booking_Date" class="date" placeholder="Eerder" />
+            <input type="text" name="booking.Date" id="booking_Date" class="date novalidate" placeholder="Eerder"  />
           </div>
         </div>
         <div class="row collapse booking-row-new">
@@ -25,8 +25,9 @@
             <small class="error">Project!</small>
           </div>
           <div class="large-1 columns">
-            <input type="hidden" name="booking.Issue.Id" class="booking_Issue_Id" />
             <input type="text" class="no-margin issue-chooser" placeholder="Taak" />
+            <input type="hidden" name="booking.Issue.Id" class="booking_Issue_Id" />
+            <small class="error">Taak!</small>
           </div>
           <div class="large-5 columns">
             <div class="row collapse">
@@ -113,3 +114,13 @@
     <% end %>
   </div>
 </div>
+
+<script>
+  $('#booking').on('invalid', function () {
+    $(this).find('[data-invalid]').focus();
+    $('#booking_Date').fdatepicker('hide');
+  })
+  .on('valid', function () {
+    console.log('valid!');
+  });
+</script>
