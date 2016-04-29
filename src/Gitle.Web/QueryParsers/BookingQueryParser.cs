@@ -97,7 +97,7 @@
                 }
             }
 
-            var bookings = session.Query<Booking>().Where(x => x.Date >= StartDate && x.Date <= EndDate);
+            var bookings = session.Query<Booking>().Where(x => x.IsActive && x.Date >= StartDate && x.Date <= EndDate);
 
             if (userStrings.Count > 0)
             {
@@ -154,16 +154,16 @@
             switch (GroupedBy)
             {
                 case "project":
-                    GroupedBookings = bookings.OrderBy(x => x.Project.Name).GroupBy(x => x.Project).Select(x => new BookingGroup(x.Key.Name, x.ToList())).ToList();
+                    GroupedBookings = bookings.OrderBy(x => x.Project.Name).ToList().GroupBy(x => x.Project).Select(x => new BookingGroup(x.Key.Name, x.ToList())).ToList();
                     break;
                 case "user":
-                    GroupedBookings = bookings.OrderBy(x => x.User.FullName).GroupBy(x => x.User).Select(x => new BookingGroup(x.Key.FullName, x.ToList())).ToList();
+                    GroupedBookings = bookings.OrderBy(x => x.User.FullName).ToList().GroupBy(x => x.User).Select(x => new BookingGroup(x.Key.FullName, x.ToList())).ToList();
                     break;
                 case "application":
-                    GroupedBookings = bookings.Where(x => x.Project.Application != null).OrderBy(x => x.Project.Application.Name).GroupBy(x => x.Project.Application).Select(x => new BookingGroup(x.Key.Name, x.ToList())).ToList();
+                    GroupedBookings = bookings.Where(x => x.Project.Application != null).OrderBy(x => x.Project.Application.Name).ToList().GroupBy(x => x.Project.Application).Select(x => new BookingGroup(x.Key.Name, x.ToList())).ToList();
                     break;
                 case "customer":
-                    GroupedBookings = bookings.Where(x => x.Project.Application != null && x.Project.Application.Customer != null).OrderBy(x => x.Project.Application.Customer.Name).GroupBy(x => x.Project.Application.Customer).Select(x => new BookingGroup(x.Key.Name, x.ToList())).ToList();
+                    GroupedBookings = bookings.Where(x => x.Project.Application != null && x.Project.Application.Customer != null).OrderBy(x => x.Project.Application.Customer.Name).ToList().GroupBy(x => x.Project.Application.Customer).Select(x => new BookingGroup(x.Key.Name, x.ToList())).ToList();
                     break;
                 default:
                     GroupedBookings = new List<BookingGroup> { new BookingGroup("Alle uren", bookings.ToList()) };

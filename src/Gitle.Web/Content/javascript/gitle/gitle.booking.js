@@ -100,7 +100,7 @@
   $('.reportdate').fdatepicker({
     format: 'yyyy-mm-dd',
     weekStart: 1
-  }).on('changeDate', function (ev) {
+  }).on('changeDate, change', function (ev) {
     var query = $('#query').val();
     var target = $(ev.target);
     var prefix = target.data('filter-prefix');

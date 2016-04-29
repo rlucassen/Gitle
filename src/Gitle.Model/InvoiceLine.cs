@@ -16,7 +16,7 @@ namespace Gitle.Model
         public virtual Issue Issue { get; set; }
         public virtual string Description { get; set; }
         public virtual double Hours { get; set; }
-        public virtual double Price { get { return Null ? 0 : Hours * Invoice.HourPrice; } }
+        public virtual double Price => Null ? 0 : Hours * Invoice.HourPrice;
 
         public virtual bool Null
         {
@@ -33,7 +33,9 @@ namespace Gitle.Model
             }
         }
 
-        public virtual double EstimateHours => Issue.Hours - OldBookings.Where(x => !x.Unbillable).Sum(x => x.Hours);
+        public virtual IList<InvoiceLine> OldInvoiceLines => Issue?.InvoiceLines.Where(x => x.Invoice.IsDefinitive).ToList() ?? new List<InvoiceLine>();
+
+        public virtual double EstimateHours => Issue.Hours - OldInvoiceLines.Sum(x => x.Hours);
         public virtual double FullEstimateHours => Issue.Hours;
         public virtual double BookingHours { get { return Bookings.Where(x => !x.Unbillable).Sum(x => x.Hours); } }
     }

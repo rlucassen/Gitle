@@ -132,9 +132,9 @@
             <ul id="groupbys" data-dropdown-content class="f-dropdown" aria-hidden="true" tabindex="-1">
               <% for groupby in result.AllGroupbys: %>
               <li>
-                <a href="#" data-filter="groupby:${groupby.Key}">
+                <a href="#" data-filter="groupby:${groupby.Key}" data-filter-opposite="groupby,groupby">
                   <% if groupby.Key == result.GroupedBy: %><i class="fa fa-check"></i><% end %>
-                  ${groupby.Value} ${result.GroupedBy}
+                  ${groupby.Value}
                 </a>
                 <% if groupby.Key == result.GroupedBy: %>
                 <a href="#" class="remove-filter" data-filter="groupby:${groupby.Key}">

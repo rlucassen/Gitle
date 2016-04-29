@@ -50,7 +50,7 @@
 </div>
 <div class="row">
   <div class="large-12 columns">
-    <h1>Uren geschreven</h1>
+    <h1>Uren geschreven afgelopen 14 dagen</h1>
     <% for keyvalue in bookings: %>
     <% date = keyvalue.Key %>
     <% datebookings = keyvalue.Value %>

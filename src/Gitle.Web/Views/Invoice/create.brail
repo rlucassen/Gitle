@@ -147,33 +147,21 @@
           </div>
         </div>
         <% end %>
+        <% if line.OldBookings.Count > 0: %>
         <div class="row">
           <div class="large-11 large-offset-1 columns">
             <h5>Eerder al gefactureerd:</h5>
           </div>
         </div>
-        <% for booking in line.OldBookings: %>
+        <% end %>
+        <% for invoiceLine in line.OldInvoiceLines: %>
         <div class="row booking old-booking" data-issue="${line.Issue.Number}">
-          <input type="hidden" name="bookings[${booking.Id}]" id="bookings_${booking.Id}" value="${booking.Id}" />
-          <div class="large-7 large-offset-1 columns">
-            <span class="booking-date">${booking.Date.ToString("dd-MM-yyyy")}</span> <span class="booking-info">${booking.User.FullName}</span>:
-            <span class="booking-comment">${booking.Comment}</span>
-            <% for invoice in booking.Invoices: %>
-            <% if not invoice.IsDefinitive: %>
-            <span class="label round right" title="${invoice.Title}">${invoice.Number}</span>
-            <% end %>
-            <% end %>
-          </div>
-          <div class="large-1 columns text-center">
-            <% if not booking.Unbillable: %>
-            <i class="fa fa-euro" title="billable"></i>
-            <% else: %>
-            <i class="fa fa-euro" title="unbillable"></i>
-            <% end %>
+          <div class="large-8 large-offset-1 columns">
+            <span class="booking-date">${invoiceLine.Invoice.CreatedAt.ToString("dd-MM-yyyy")}</span>:
+            <span class="label round" title="${invoiceLine.Invoice.Title}">${invoiceLine.Invoice.Number}</span>
           </div>
           <div class="large-1 columns end text-right">
-            <input type="hidden" class="booking-hours text-right" value="${booking.Hours}" disabled />
-            <span class="booking-hours-span">${booking.Hours}</span>
+            <span class="booking-hours-span">${invoiceLine.Hours}</span>
           </div>
         </div>
         <% end %>
