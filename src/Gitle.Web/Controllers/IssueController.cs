@@ -308,7 +308,7 @@
             return issues.Select((x, i) => new {x.Number, i}).ToDictionary(x => x.Number, x => x.i);
         }
 
-        [Admin]
+        [MustHaveProject]
         public void ExportImport(string projectSlug)
         {
             var project = session.Slug<Project>(projectSlug);
@@ -316,7 +316,7 @@
             PropertyBag.Add("project", project);
         }
 
-        [Admin]
+        [MustHaveProject]
         public void ExportJson(string projectSlug, string[] selectedLabels, IssueState state, string issues)
         {
             var project = session.Slug<Project>(projectSlug);
@@ -352,7 +352,7 @@
             Response.BinaryWrite(stream);
         }
 
-        [Admin]
+        [MustHaveProject]
         public void ExportCsv(string projectSlug, string[] selectedLabels, IssueState state, string issues)
         {
             var project = session.Slug<Project>(projectSlug);
