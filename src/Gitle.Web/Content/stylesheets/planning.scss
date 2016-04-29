@@ -1,0 +1,9 @@
+﻿.employee {
+  margin-bottom: 0.2em;
+  padding: 0.2em;
+  border: 1px solid #666;
+}
+
+.fc-event:after { 
+  content: attr(data-color);
+}

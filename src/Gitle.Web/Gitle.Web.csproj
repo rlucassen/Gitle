@@ -110,6 +110,7 @@
     <Compile Include="Controllers\FilterPresetController.cs" />
     <Compile Include="Controllers\ImportController.cs" />
     <Compile Include="Controllers\CustomerController.cs" />
+    <Compile Include="Controllers\PlanningController.cs" />
     <Compile Include="Controllers\SearchController.cs" />
     <Compile Include="Controllers\SlugController.cs" />
     <Compile Include="Controllers\UploadController.cs" />
@@ -296,6 +297,7 @@
     <Content Include="Views\Customer\edit.brail" />
     <Content Include="Views\Customer\index.brail" />
     <Content Include="Views\Customer\view.brail" />
+    <Content Include="Views\Planning\index.brail" />
     <None Include="Views\Project\view.brail" />
     <None Include="Views\User\profile.brail" />
     <None Include="Views\User\edit.brail" />

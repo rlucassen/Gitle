@@ -179,6 +179,7 @@
                                            .DefaultForAction().Is("index"));
 
             RoutingModuleEx.Engine.Add<FilterPresetController>();
+            RoutingModuleEx.Engine.Add<PlanningController>();
             RoutingModuleEx.Engine.Add<ImportController>();
             RoutingModuleEx.Engine.Add<UploadController>();
             RoutingModuleEx.Engine.Add<SlugController>();

@@ -2,5 +2,9 @@
   {
     "outputFile": "Content/stylesheets/app.css",
     "inputFile": "Content/stylesheets/app.scss"
+  },
+  {
+    "outputFile": "Content/stylesheets/planning.css",
+    "inputFile": "Content/stylesheets/planning.scss"
   }
 ]
