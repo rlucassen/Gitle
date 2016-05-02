@@ -46,6 +46,10 @@ $.fn.dotify = function() {
   return this.replace(',', '.');
 };
 
+$.fn.currency = function() {
+  return parseFloat(this).toFixed(2).commafy();
+};
+
 /*
  * Show given error below element
  */
