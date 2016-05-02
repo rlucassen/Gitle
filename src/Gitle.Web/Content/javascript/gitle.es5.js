@@ -166,6 +166,9 @@ $(function () {
         if (suggestion.extraValue == "ticketRequired") {
           row.find('.booking_Issue_Id').prop("required", true);
           $(document).foundation('abide', 'reflow');
+        } else {
+          row.find('.booking_Comment').prop("required", true);
+          $(document).foundation('abide', 'reflow');
         }
       }
     }).on('focus', function () {

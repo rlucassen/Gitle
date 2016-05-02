@@ -33,6 +33,7 @@
             <div class="row collapse">
               <div class="large-10 columns">
                 <input type="text" class="no-margin booking_Comment" name="booking.Comment" placeholder="Opmerking" />
+                <small class="error">Opmerking!</small>
               </div>
               <div class="large-2 columns">
                 <input type="hidden" name="booking.Unbillable" class="booking_Unbillable" />

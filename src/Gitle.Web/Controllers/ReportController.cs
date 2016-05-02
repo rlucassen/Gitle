@@ -56,8 +56,8 @@ namespace Gitle.Web.Controllers
 
             for (int i = 1; i <= 9; i++)
             {
-                presetDates.Add(new DatePreset{ startDate = today.StartOfMonth(), endDate = today.EndOfMonth(), title = today.ToString("MMM yyyy")});
-                today = today.AddMonths(-1);
+                today = today.AddDays(-7);
+                presetDates.Add(new DatePreset{ startDate = today.StartOfWeek(), endDate = today.EndOfWeek(), title = $"Week {today.WeekNr()}"});
             }
 
             PropertyBag.Add("presetDates", presetDates);

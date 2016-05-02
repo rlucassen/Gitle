@@ -1,6 +1,7 @@
 ﻿namespace Gitle.Model.Helpers
 {
     using System;
+    using System.Globalization;
 
     public static class DateTimeHelper
     {
@@ -126,5 +127,10 @@
             return dateTime.AddDays(diff).Date;
         }
 
+        public static int WeekNr(this DateTime dateTime)
+        {
+            if (DateTimeFormatInfo.CurrentInfo != null) return DateTimeFormatInfo.CurrentInfo.Calendar.GetWeekOfYear(dateTime, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
+            return 0;
+        }
     }
 }

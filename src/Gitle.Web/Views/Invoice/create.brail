@@ -1,5 +1,5 @@
 ﻿<h1>Nieuwe bijlage maken</h1>
-<form id="createinvoice" action="save" method="POST" data-abide>
+<form id="createinvoice" action="/project/${project.Slug}/invoice/${invoice.Id}/save" method="POST" data-abide>
   <div class="row">
     <div class="large-12 columns">
       <div class="row collapse invoice-title">
@@ -170,7 +170,7 @@
       <% end %>
       <div class="totals">
         <% correctionCount = 0 %>
-        <% for correction in invoice.FiveCorrections: %>
+        <% for correction in invoice.Corrections: %>
         <div class="row correctionline">
           <div class="large-10 columns">
             <input type="text" name="corrections[${correctionCount}].Description" id="corrections_${correctionCount}_Description" placeholder="Korting, extra kosten e.d." class="text-right" value="${correction.Description}" />

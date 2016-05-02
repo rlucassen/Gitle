@@ -50,10 +50,10 @@ namespace Gitle.Web.Controllers
         }
 
         [Admin]
-        public void Copy(string projectSlug, string invoiceId)
+        public void Copy(string projectSlug, long invoiceId)
         {
             var project = session.SlugOrDefault<Project>(projectSlug);
-            var invoice = session.Query<Invoice>().FirstOrDefault(i => i.Number == invoiceId && i.Project == project);
+            var invoice = session.Query<Invoice>().FirstOrDefault(i => i.Id == invoiceId && i.Project == project);
 
             PropertyBag.Add("invoice", invoice);
             PropertyBag.Add("project", project);
@@ -62,11 +62,35 @@ namespace Gitle.Web.Controllers
         }
 
         [Admin]
-        public void Save()
+        public void Edit(string projectSlug, long invoiceId)
         {
-            var invoice = BindObject<Invoice>("invoice");
+            var project = session.SlugOrDefault<Project>(projectSlug);
+            var invoice = session.Query<Invoice>().FirstOrDefault(i => i.Id == invoiceId && i.Project == project);
+
+            PropertyBag.Add("invoice", invoice);
+            PropertyBag.Add("project", project);
+
+            RenderView("create");
+        }
+
+        [Admin]
+        public void Save(string projectSlug, long invoiceId)
+        {
+            var project = session.SlugOrDefault<Project>(projectSlug);
+            var invoice = session.Query<Invoice>().FirstOrDefault(i => i.Id == invoiceId && i.Project == project);
+            if (invoiceId > 0)
+            {
+                BindObjectInstance(invoice, "invoice");
+            }
+            else
+            {
+                invoice = BindObject<Invoice>("invoice");
+            }
+
+
             var lines = BindObject<InvoiceLine[]>("lines");
-            var corrections = BindObject<Correction[]>("corrections").Where(x => x.Price != 0.0).ToArray();
+            var bindObject = BindObject<Correction[]>("corrections");
+            var corrections = bindObject.Where(x => x.Price != 0.0).ToArray();
             var bookingIds = BindObject<long[]>("bookings");
             var bookings = session.Query<Booking>().Where(x => bookingIds.Contains(x.Id)).ToArray();
 
@@ -96,22 +120,22 @@ namespace Gitle.Web.Controllers
         }
 
         [Admin]
-        public void Definitive(string projectSlug, string invoiceId)
+        public void Definitive(string projectSlug, long invoiceId)
         {
             ChangeState(projectSlug, invoiceId, InvoiceState.Definitive);
         }
 
         [Admin]
-        public void Archive(string projectSlug, string invoiceId)
+        public void Archive(string projectSlug, long invoiceId)
         {
             ChangeState(projectSlug, invoiceId, InvoiceState.Archived);
         }
 
         [Admin]
-        public void ArchiveIssues(string projectSlug, string invoiceId)
+        public void ArchiveIssues(string projectSlug, long invoiceId)
         {
             var project = session.SlugOrDefault<Project>(projectSlug);
-            var invoice = session.Query<Invoice>().FirstOrDefault(i => i.Number == invoiceId && i.Project == project);
+            var invoice = session.Query<Invoice>().FirstOrDefault(i => i.Id == invoiceId && i.Project == project);
 
             using (var tx = session.BeginTransaction())
             {
@@ -127,12 +151,12 @@ namespace Gitle.Web.Controllers
         }
 
         [Admin]
-        public void Download(string projectSlug, string invoiceId)
+        public void Download(string projectSlug, long invoiceId)
         {
             CancelView();
 
             var project = session.SlugOrDefault<Project>(projectSlug);
-            var invoice = session.Query<Invoice>().FirstOrDefault(i => i.Number == invoiceId && i.Project == project);
+            var invoice = session.Query<Invoice>().FirstOrDefault(i => i.Id == invoiceId && i.Project == project);
 
             var pdf = pdfExportService.ConvertHtmlToPdf("invoice", new Dictionary<string, object>{
                 {"invoice", invoice},
@@ -155,10 +179,10 @@ namespace Gitle.Web.Controllers
             Response.AppendHeader("content-disposition", string.Format("filename={0}", filename));
         }
 
-        private void ChangeState(string projectSlug, string invoiceId, InvoiceState state)
+        private void ChangeState(string projectSlug, long invoiceId, InvoiceState state)
         {
             var project = session.SlugOrDefault<Project>(projectSlug);
-            var invoice = session.Query<Invoice>().FirstOrDefault(i => i.Number == invoiceId && i.Project == project);
+            var invoice = session.Query<Invoice>().FirstOrDefault(i => i.Id == invoiceId && i.Project == project);
 
             invoice.State = state;
 

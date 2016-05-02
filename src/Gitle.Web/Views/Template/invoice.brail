@@ -104,7 +104,7 @@
     </tr>
     <% for line in invoice.Corrections: %>
     <tr>
-      <td class="right">1,00</td>
+      <td class="right"></td>
       <td>${line.Description}</td>
       <td class="right">${line.Price.ToString("#0.00")}</td>
       <td class="right">${line.Price.ToString("#0.00")}</td>
@@ -116,7 +116,8 @@
       <td colspan="4" class="spacerline"></td>
     </tr>
     <tr>
-      <td colspan="3" class="right totalname">Totaal &euro;</td>
+      <td class="right">${invoice.TotalHours.ToString("#0.00")}</td>
+      <td colspan="2" class="right totalname">Totaal &euro;</td>
       <td class="right total">${invoice.TotalExclVat.ToString("#0.00")}</td>
     </tr>
   </tfoot>
@@ -125,6 +126,8 @@
 <p>
   ${invoice.Remarks}
 </p>
+<hr />
+<p>Alle bedragen zijn excl. 21% BTW.</p>
 <hr />
 <p class="footer">
   <span>Auxilium BV,</span> <span>Oude Delft 48,</span> <span>2611 CD Delft</span> - <span>Postbus 64,</span> <span>2600 AB Delft</span><br/>
