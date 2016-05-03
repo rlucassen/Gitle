@@ -34,7 +34,7 @@
         public void New(string customerSlug)
         {
             PropertyBag.Add("item", new Application());
-            PropertyBag.Add("customers", session.Query<Customer>().Where(x => x.IsActive).ToList());
+            PropertyBag.Add("customers", session.Query<Customer>().Where(x => x.IsActive).OrderBy(x => x.Name).ToList());
             if (!string.IsNullOrEmpty(customerSlug))
             {
                 PropertyBag.Add("customerId", session.Slug<Customer>(customerSlug));
@@ -47,7 +47,7 @@
         {
             var application = session.SlugOrDefault<Application>(applicationSlug);
             PropertyBag.Add("item", application );
-            PropertyBag.Add("customers", session.Query<Customer>().Where(x => x.IsActive).ToList());
+            PropertyBag.Add("customers", session.Query<Customer>().Where(x => x.IsActive).OrderBy(x => x.Name).ToList());
             if (application != null) PropertyBag.Add("customerId", application.Customer.Id);
         }
 

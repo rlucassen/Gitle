@@ -98,7 +98,7 @@
             {
                 applications = applications.Where(x => x.Customer.Slug == customerSlug);
             }
-            PropertyBag.Add("applications", applications);
+            PropertyBag.Add("applications", applications.OrderBy(x => x.Name));
             if (!string.IsNullOrEmpty(applicationSlug))
             {
                 PropertyBag.Add("applicationId", session.Slug<Application>(applicationSlug));
@@ -113,7 +113,7 @@
         {
             var project = session.SlugOrDefault<Project>(projectSlug);
             PropertyBag.Add("customers", session.Query<Customer>().Where(x => x.IsActive).ToList());
-            PropertyBag.Add("applications", session.Query<Application>().Where(x => x.IsActive));
+            PropertyBag.Add("applications", session.Query<Application>().Where(x => x.IsActive).OrderBy(x => x.Name));
             PropertyBag.Add("applicationId", session.Query<Application>().Where(x => x.Projects.Contains(project)));
             PropertyBag.Add("types", EnumHelper.ToList(typeof(ProjectType)));
             PropertyBag.Add("item", project);

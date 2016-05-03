@@ -131,9 +131,9 @@
                });
   </script>
   <% if RELEASE: %>
+  <script src="/Content/javascript/auxilium.min.js"> </script>
+  <script src="/Content/javascript/gitle.min.js"> </script>
   <script src="/Content/javascript/app.min.js"> </script>
-  <script src="/Content/javascript/bundles/auxilium.min.js"> </script>
-  <script src="/Content/javascript/bundles/gitle.min.js"> </script>
   <% else: %>
   <script src="/Content/javascript/auxilium/auxilium.functions.js"> </script>
   <script src="/Content/javascript/auxilium/auxilium.foundationhelper.js"> </script>

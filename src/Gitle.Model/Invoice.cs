@@ -7,6 +7,8 @@ using System.Text;
 
 namespace Gitle.Model
 {
+    using Newtonsoft.Json.Bson;
+
     public class Invoice : ModelBase
     {
         public Invoice()
@@ -91,6 +93,28 @@ namespace Gitle.Model
         public virtual IList<InvoiceLine> ProjectLines { get { return Lines.Where(x => x.Issue == null).ToList(); } }
         public virtual IList<InvoiceLine> IssueLines { get { return Lines.Where(x => x.Issue != null).ToList(); } }
         public virtual IList<Issue> Issues { get { return Lines.Where(x => x.Issue != null).Select(x => x.Issue).ToList(); } }
+
+        public virtual void AddLine(InvoiceLine line)
+        {
+            line.Invoice = this;
+            Lines.Add(line);
+        }
+
+        public virtual void RemoveLine(InvoiceLine line)
+        {
+            Lines.Remove(line);
+        }
+
+        public virtual void AddCorrection(Correction correction)
+        {
+            correction.Invoice = this;
+            Corrections.Add(correction);
+        }
+
+        public virtual void RemoveCorrection(Correction correction)
+        {
+            Corrections.Remove(correction);
+        }
 
     }
 }

@@ -24,7 +24,7 @@
           <th>Klant</th>
           <th>Type</th>
           <% end %>
-          <th id="project-actions" class="{sorter: false}"></th>
+          <th id="project-actions" class="{sorter: false}" style="width: 345px;"></th>
         </tr>
       </thead>
       <tbody>

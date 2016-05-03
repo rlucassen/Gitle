@@ -99,18 +99,26 @@ namespace Gitle.Web.Controllers
             invoice.CreatedAt = DateTime.Now;
             invoice.State = InvoiceState.Concept;
 
+            foreach (var line in invoice.Lines.ToList())
+            {
+                invoice.RemoveLine(line);
+            }
+            foreach (var line in lines)
+            {
+                invoice.AddLine(line);
+            }
+
+            foreach (var correction in invoice.Corrections.ToList())
+            {
+                invoice.RemoveCorrection(correction);
+            }
+            foreach (var correction in corrections)
+            {
+                invoice.AddCorrection(correction);
+            }
+
             using (var tx = session.BeginTransaction())
             {
-                foreach(var line in lines){
-                    session.Save(line);
-                }
-                invoice.Lines = lines;
-
-                foreach (var correction in corrections)
-                {
-                    session.Save(correction);
-                }
-                invoice.Corrections = corrections;
 
                 session.SaveOrUpdate(invoice);
                 tx.Commit();
