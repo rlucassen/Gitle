@@ -69,7 +69,7 @@
       <div class="large-3 columns text-right">
         <ul class="button-group">
           <li><a class="button tiny no-margin" href="/project/${invoice.Project.Slug}/invoice/${invoice.Id}/download"><i class="fa fa-file-pdf-o"></i></a></li>
-          <% if not invoice.IsDefinitive: %>
+          <% if invoice.IsConcept: %>
           <li><a class="button tiny no-margin success" href="/project/${invoice.Project.Slug}/invoice/${invoice.Id}/edit">Bewerken</a></li>
           <% end %>
           <button href="#" data-dropdown="more${invoice.Id}" aria-controls="more${invoice.Id}" aria-expanded="false" class="button tiny dropdown secondary">Meer..</button>

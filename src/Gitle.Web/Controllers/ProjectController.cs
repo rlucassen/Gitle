@@ -29,7 +29,7 @@
 
             if (!CurrentUser.IsAdmin)
             {
-                projects = projects.Where(p => p.Users.Select(up => up.User).Contains(CurrentUser));
+                projects = projects.Where(p => p.Users.Any(x => x.User == CurrentUser));
             }
             else
             {
