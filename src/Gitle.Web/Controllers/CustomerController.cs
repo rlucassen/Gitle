@@ -8,16 +8,14 @@
     using Model;
     using Helpers;
     using Model.Enum;
+    using Model.Helpers;
     using NHibernate;
     using NHibernate.Linq;
 
     public class CustomerController : SecureController
     {
-        private ISession session;
-
-        public CustomerController(ISessionFactory sessionFactory)
+        public CustomerController(ISessionFactory sessionFactory) : base(sessionFactory)
         {
-            this.session = sessionFactory.GetCurrentSession();
         }
 
         [Admin]
@@ -29,7 +27,9 @@
         [Admin]
         public void View(string customerSlug)
         {
-            var customer = session.Query<Customer>().FirstOrDefault(x => x.IsActive && x.Slug == customerSlug);
+            var customer = session.SlugOrDefault<Customer>(customerSlug);
+            var applications = session.Query<Application>().Where(x => x.Customer == customer && x.IsActive).OrderBy(x => x.Name);
+            PropertyBag.Add("applications", applications);
             PropertyBag.Add("customer", customer);
 
         }
@@ -44,14 +44,14 @@
         [Admin]
         public void Edit(string customerSlug)
         {
-            var customer = session.Query<Customer>().FirstOrDefault(x => x.IsActive && x.Slug == customerSlug);
+            var customer = session.SlugOrDefault<Customer>(customerSlug);
             PropertyBag.Add("item", customer);
         }
 
         [Admin]
         public void Delete(string customerSlug)
         {
-            var customer = session.Query<Customer>().FirstOrDefault(x => x.IsActive && x.Slug == customerSlug);
+            var customer = session.SlugOrDefault<Customer>(customerSlug);
             customer.Deactivate();
             using (var tx = session.BeginTransaction())
             {
@@ -64,7 +64,7 @@
         [Admin]
         public void Save(string customerSlug)
         {
-            var item = session.Query<Customer>().FirstOrDefault(x => x.IsActive && x.Slug == customerSlug);
+            var item = session.SlugOrDefault<Customer>(customerSlug);
             if (item != null)
             {
                 BindObjectInstance(item, "item");
@@ -86,7 +86,7 @@
         [Admin]
         public void Comments(string customerSlug, string comment)
         {
-            var item = session.Query<Customer>().FirstOrDefault(x => x.IsActive && x.Slug == customerSlug);
+            var item = session.SlugOrDefault<Customer>(customerSlug);
 
             item.Comments = comment;
 

@@ -1,0 +1,36 @@
+﻿<div class="row booking-row-edit">
+  <form id="booking" action="/booking/save" method="POST">
+    <input type="hidden" name="id" value="${booking.Id}" />
+    <div class="large-1 columns no-padding">
+      <input type="hidden" name="booking.Minutes" class="booking_Minutes" value="${booking.Time}" />
+      <input type="text" class="booking-minutes-edit booking-edit-field booking-parser" value="${booking.Time}">
+    </div>
+    <div class="large-3 columns no-padding">
+      <input type="hidden" name="projectId" class="booking_Project_Id" value="${booking.Project.Id}" />
+      <input type="text" data-suggestion="${?suggestion.data}" class="booking-project-edit booking-edit-field project-chooser" value="${booking.Project.Name}">
+    </div>
+    <div class="large-1 columns no-padding">
+      <input type="hidden" name="issueId" class="booking_Issue_Id" value="${?booking.Issue.Id}" />
+      <input type="text" class="booking-issue-edit booking-edit-field issue-chooser" title="#${?booking.Issue.Number} - ${?booking.Issue.Name}" value="#${?booking.Issue.Number}">
+    </div>
+    <div class="large-4 columns no-padding">
+      <div class="row collapse">
+        <div class="small-11 columns">
+          <input type="text" class="booking-comment-edit booking-edit-field booking_Comment" name="booking.Comment" value="${booking.Comment}">
+        </div>
+        <div class="small-1 columns">
+          <input type="hidden" name="booking.Unbillable" class="booking_Unbillable" value="${booking.Unbillable}" />
+          <a href="#" class="postfix booking-row-null-toggle <% if booking.Unbillable: %>null<% end %>"><i class="fa fa-euro"></i></a>
+        </div>
+      </div>
+    </div>
+    <div class="large-1 columns no-padding end">
+      <input type="text" name="booking.Date" class="date booking-edit-field" placeholder="Eerder" value="${booking.Date.ToString(" dd-MM-yyyy")}">
+    </div>
+    <div class="large-2 columns no-padding text-right">
+      <button type="submit" class="button success radius supertiny no-margin booking-edit-save">opslaan <i class="fa fa-check"></i></button>
+      <a href="#" class="button secondary radius supertiny no-margin booking-edit-cancel">annuleren <i class="fa fa-times"></i></a>
+    </div>
+
+  </form>
+</div>

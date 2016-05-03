@@ -1,6 +1,7 @@
 ﻿namespace Gitle.Model.Helpers
 {
     using System;
+    using System.Globalization;
 
     public static class DateTimeHelper
     {
@@ -81,7 +82,55 @@
 
         public static string Readable(this DateTime? dateTime)
         {
-            return dateTime.Value.ToString("MMM d, yyyy HH:mm").ToCamelCase();
+            return dateTime.Value != null ? Readable(dateTime.Value) : "";
+        }
+
+        public static string Readable(this DateTime dateTime)
+        {
+            return dateTime.ToString("MMM d, yyyy HH:mm").ToCamelCase();
+        }
+
+        public static string MinutesToTime(int minutes)
+        {
+            return string.Format("{0}:{1:00}", Math.Floor(minutes/60.0), minutes - (Math.Floor(minutes/60.0) * 60));
+        }
+
+        public static DateTime StartOfMonth(this DateTime dateTime)
+        {
+            return new DateTime(dateTime.Year, dateTime.Month, 1);
+        }
+
+        public static DateTime EndOfMonth(this DateTime dateTime)
+        {
+            return new DateTime(dateTime.Year, dateTime.Month, DateTime.DaysInMonth(dateTime.Year, dateTime.Month));
+        }
+
+        public static DateTime StartOfWeek(this DateTime dateTime)
+        {
+            var diff = dateTime.DayOfWeek - DayOfWeek.Monday;
+            if (diff < 0)
+            {
+                diff += 7;
+            }
+
+            return dateTime.AddDays(-1 * diff).Date;
+        }
+
+        public static DateTime EndOfWeek(this DateTime dateTime)
+        {
+            var diff = DayOfWeek.Sunday - dateTime.DayOfWeek;
+            if (diff < 0)
+            {
+                diff += 7;
+            }
+
+            return dateTime.AddDays(diff).Date;
+        }
+
+        public static int WeekNr(this DateTime dateTime)
+        {
+            if (DateTimeFormatInfo.CurrentInfo != null) return DateTimeFormatInfo.CurrentInfo.Calendar.GetWeekOfYear(dateTime, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
+            return 0;
         }
     }
 }

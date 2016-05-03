@@ -12,25 +12,42 @@
       <div class="row">
         <div class="large-3 columns">Naam</div>
         <div class="large-9 columns">
-          <input type="text" id="item_Name" name="item.Name" value="${?item.Name}" class="focus" required />
+          <input type="text" id="item_Name" name="item.Name" value="${?item.Name}" class="focus" data-slugify="#item_Slug" required />
           <small class="error">Geef een naam op</small>
         </div>
       </div>
       <div class="row">
-        <div class="large-3 columns">Klant</div>
+        <div class="large-3 columns">Applicatie</div>
         <div class="large-9 columns">
-          ${Form.Select("customerId", customers, {"class": "chosen-select", "value": "Id", "text": "Name", "firstoption": "Kies een klant"})}
+          ${Form.Select("applicationId", applications, {"class": "chosen-select", "value": "Id", "text": "CompleteName", "firstoption": "Kies een applicatie"})}
         </div>
       </div>
       <div class="row">
-        <div class="large-3 columns">Freckle project id</div>
+        <div class="large-3 columns">Type project</div>
         <div class="large-9 columns">
-          ${Form.Select("item.FreckleId", freckleProjects, {"class": "chosen-select", "value": "Id", "text": "Name", "firstoption": "Kies een freckle project"})}
+          ${Form.Select("item.Type", types, {"text": "text", "value": "value", "firstoption": "Kies een type project"})}
         </div>
       </div>
       <div class="row">
         <div class="large-3 columns">Uurprijs</div>
-        <div class="large-9 columns"><input type="number" name="item.HourPrice" value="${?item.HourPrice}"/></div>
+        <div class="large-9 columns"><input type="number" name="item.HourPrice" value="${?item.HourPrice}" /></div>
+      </div>
+      <div class="row">
+        <div class="large-3 columns">Totaal uren beschikbaar</div>
+        <div class="large-9 columns">
+          <input type="hidden" name="item.BudgetMinutes" id="budget-minutes" value="${?item.BudgetMinutes}" />
+          <input type="text" value="${item.BudgetTime}" class="booking-parser" data-minutes-field="#budget-minutes" />
+        </div>
+      </div>
+      <div class="row">
+        <div class="large-3 columns">Verplicht op ticket boeken</div>
+        <div class="large-9 columns">${Form.CheckboxField("item.TicketRequiredForBooking")}</div>
+      </div>
+      <div class="row">
+        <div class="large-3 columns">Comments</div>
+        <div class="large-9 columns">
+          <textarea type="text" id="item_Comments" name="item.Comments" value="" class="focus">${?item.Comments}</textarea>
+        </div>
       </div>
       <div class="row">
         <div class="large-3 columns">Projectinformatie</div>
@@ -51,64 +68,67 @@
                 <th>Naar Freckle</th>
               </tr>
             </thead>
-              <tbody>
-                  <% if item.Labels.Count == 0 :%>
-                  <tr class="hide">
-                      <td>
-                          <input type="hidden" name="label[-1].Id" value="" data-nested-remove=""/>
-                          <input type="hidden" name="label[-1].Project.Id" value="${item.Id}"/>
-                          <input type="text" name="label[-1].Name" value=""/>
-                      </td>
-                      <td>
-                          <div class="row collapse">
-                              <div class="small-10 columns">
-                                  <input type="text" name="label[-1].Color" value="" class="colorpicker"/>
-                              </div>
-                              <div class="small-2 columns">
-                                  <a class="colorpicker-open button secondary postfix" rel="label[-1].Color" href="#" title="Open kleurenpalet">
-                                      <i class="fa fa-th"></i>
-                                  </a>
-                              </div>
-                          </div>
-                      </td>
-                      <td>
-                          <input type="checkbox" name="label[-1].VisibleForCustomer" value="true" /></td>
-                      <td>
-                          <input type="checkbox" name="label[-1].ApplicableByCustomer" value="true"/></td>
-                      <td>
-                          <input type="checkbox" name="label[-1}].ToFreckle" value="true" /></td>
-                  </tr>
-                  <% end %>
-                  <% count = 0 %>
-                  <% for label in item.Labels: %>
-                  <tr>
-                      <td>
-                          <input type="hidden" name="label[${count}].Id" value="${label.Id}" data-nested-remove/>
-                          <input type="hidden" name="label[${count}].Project.Id" value="${label.Project.Id}"/>
-                          <input type="text" name="label[${count}].Name" value="${label.Name}"/>
-                      </td>
-                      <td>
-                          <div class="row collapse">
-                              <div class="small-10 columns">
-                                  <input type="text" name="label[${count}].Color" value="${label.Color}" class="colorpicker"/>
-                              </div>
-                              <div class="small-2 columns">
-                                  <a class="colorpicker-open button secondary postfix" rel="label[${count}].Color" href="#" title="Open kleurenpalet"><i class="fa fa-th"></i></a>
-                              </div>
-                          </div>
-                      </td>
-                      <td><input type="checkbox" name="label[${count}].VisibleForCustomer" value="true" <% if label.VisibleForCustomer: %>checked="checked"<% end %>/></td>
-                      <td><input type="checkbox" name="label[${count}].ApplicableByCustomer" value="true" <% if label.ApplicableByCustomer: %>checked="checked"<% end %>/></td>
-                      <td><input type="checkbox" name="label[${count}].ToFreckle" value="true" <% if label.ToFreckle: %>checked="checked"<% end %>/></td>
-                  </tr>
-                  <% count++ %>
-                  <% end %>
-              </tbody>
+            <tbody>
+              <% if item.Labels.Count == 0 :%>
+              <tr class="hide">
+                <td>
+                  <input type="hidden" name="label[-1].Id" value="" data-nested-remove="" />
+                  <input type="hidden" name="label[-1].Project.Id" value="${item.Id}" />
+                  <input type="text" name="label[-1].Name" value="" />
+                </td>
+                <td>
+                  <div class="row collapse">
+                    <div class="small-10 columns">
+                      <input type="text" name="label[-1].Color" value="" class="colorpicker" />
+                    </div>
+                    <div class="small-2 columns">
+                      <a class="colorpicker-open button secondary postfix" rel="label[-1].Color" href="#" title="Open kleurenpalet">
+                        <i class="fa fa-th"></i>
+                      </a>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <input type="checkbox" name="label[-1].VisibleForCustomer" value="true" />
+                </td>
+                <td>
+                  <input type="checkbox" name="label[-1].ApplicableByCustomer" value="true" />
+                </td>
+                <td>
+                  <input type="checkbox" name="label[-1}].ToFreckle" value="true" />
+                </td>
+              </tr>
+              <% end %>
+              <% count = 0 %>
+              <% for label in item.Labels: %>
+              <tr>
+                <td>
+                  <input type="hidden" name="label[${count}].Id" value="${label.Id}" data-nested-remove />
+                  <input type="hidden" name="label[${count}].Project.Id" value="${label.Project.Id}" />
+                  <input type="text" name="label[${count}].Name" value="${label.Name}" />
+                </td>
+                <td>
+                  <div class="row collapse">
+                    <div class="small-10 columns">
+                      <input type="text" name="label[${count}].Color" value="${label.Color}" class="colorpicker" />
+                    </div>
+                    <div class="small-2 columns">
+                      <a class="colorpicker-open button secondary postfix" rel="label[${count}].Color" href="#" title="Open kleurenpalet"><i class="fa fa-th"></i></a>
+                    </div>
+                  </div>
+                </td>
+                <td><input type="checkbox" name="label[${count}].VisibleForCustomer" value="true" <% if label.VisibleForCustomer: %>checked="checked"<% end %>/></td>
+                <td><input type="checkbox" name="label[${count}].ApplicableByCustomer" value="true" <% if label.ApplicableByCustomer: %>checked="checked"<% end %>/></td>
+                <td><input type="checkbox" name="label[${count}].ToFreckle" value="true" <% if label.ToFreckle: %>checked="checked"<% end %>/></td>
+              </tr>
+              <% count++ %>
+              <% end %>
+            </tbody>
           </table>
         </div>
       </div>
       <div class="row">
-        <div class="large-12 columns"><input type="submit" class="button" value="Opslaan"/></div>
+        <div class="large-12 columns"><input type="submit" class="button" value="Opslaan" /></div>
       </div>
     </form>
   </div>

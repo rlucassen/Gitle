@@ -1,0 +1,63 @@
+﻿<div class="row">
+  <div class="large-12 columns">
+    <h1>Overzicht geboekte uren</h1>
+    <% for day in dayList: %>
+    <% date = day.Day %>
+    <div class="panel booking">
+      <div class="row">
+        <div class="large-12 columns">
+          <h3>${date.ToString("dddd d MMMM yyyy")}</h3>
+        </div>
+      </div>
+      <% for user in day.Users: %>
+      <div class="row booking-user-row">
+        <div class="large-12 columns">
+          <div class="row user-booking-total">
+            <div class="large-12 columns">
+              <h5>${user.User.FullName} - ${Helpers.DateTimeHelper.MinutesToTime(user.Minutes)} totaal</h5>
+            </div>
+          </div>
+          <% for booking in user.Bookings: %>
+      <div class="booking-row" data-id="${booking.Id}">
+        <div class="row booking-row-content">
+          <div class="large-1 columns">
+            <span class="booking-minutes">${booking.Time}</span>
+          </div>
+          <div class="large-3 columns">
+            <div class="booking-project">${booking.Project.Name}</div>
+          </div>
+          <div class="large-1 columns">
+            <% if booking.Issue: %>
+            <div class="booking-issue" title="#${booking.Issue.Number} - ${booking.Issue.Name}">#${booking.Issue.Number}</div>
+            <% end %>
+          </div>
+          <div class="large-6 columns end">
+            <span class="booking-comment">${booking.Comment}</span>
+            <% for invoice in booking.Invoices: %>
+            <span class="label round right <% if not invoice.IsDefinitive: %>secondary<% end %>" title="${invoice.Title}">${invoice.Number}</span>
+            <% end %>
+          </div>
+          <% if booking.Invoices.Count == 0: %>
+          <div class="large-1 columns no-padding booking-buttons">
+            <a href="#" class="button radius supertiny no-margin booking-edit">Edit <i class="fa fa-pencil-square-o"></i></a>
+            <a href="/booking/${booking.Id}/delete" class="button radius alert supertiny no-margin">Delete <i class="fa fa-times"></i></a>
+          </div>
+          <% end %>
+        </div>
+      </div>
+          <% end %>
+        </div>
+      </div>
+      <% end %>
+      <div class="row totalrow">
+        <div class="large-1 columns">
+          ${Helpers.DateTimeHelper.MinutesToTime(day.Minutes)}
+        </div>
+        <div class="large-11 columns">
+          <strong>Totaal</strong>
+        </div>
+      </div>
+    </div>
+    <% end %>
+  </div>
+</div>

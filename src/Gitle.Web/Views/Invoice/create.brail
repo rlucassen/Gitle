@@ -1,0 +1,258 @@
+﻿<h1>Nieuwe bijlage maken</h1>
+<form id="createinvoice" action="/project/${project.Slug}/invoice/${invoice.Id}/save" method="POST" data-abide>
+  <div class="row">
+    <div class="large-12 columns">
+      <div class="row collapse invoice-title">
+        <div class="large-2 columns">
+          <input type="hidden" name="invoice.Project.Id" id="invoice_Project_Id" value="${invoice.Project.Id}">
+          <input type="hidden" name="invoice.StartDate" id="invoice_StartDate" value="${invoice.StartDate}">
+          <input type="hidden" name="invoice.EndDate" id="invoice_EndDate" value="${invoice.EndDate}">
+          <input type="text" name="invoice.Number" id="invoice_Number" value="${invoice.Number}" placeholder="Bijlagenr." required />
+          <small class="error">Geef een bijlagenummer op</small>
+        </div>
+        <div class="large-10 columns">
+          <input type="text" name="invoice.Title" id="invoice_Title" value="${invoice.Title}" />
+        </div>
+      </div>
+      <div class="row">
+        <div class="large-1 large-offset-9 columns">
+          <label for="invoice_HourPrice">Uurprijs:</label>
+        </div>
+        <div class="large-2 columns">
+          <div class="row collapse">
+            <div class="large-3 columns">
+              <span class="prefix"><i class="fa fa-euro"></i></span>
+            </div>
+            <div class="large-9 columns">
+              <input type="text" name="invoice.HourPrice" id="invoice_HourPrice" value="${invoice.HourPrice}" />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="large-8 columns">
+          <strong>Omschrijving</strong>
+        </div>
+        <div class="large-1 columns">
+          <strong><span data-tooltip class="has-tip" title="Schatting exclusief gefactureerde uren">Schat</span>/Boek</strong>
+        </div>
+        <div class="large-1 columns">
+          <strong>Uren</strong>
+        </div>
+        <div class="large-2 columns">
+          <strong>Prijs</strong>
+        </div>
+      </div>
+      <% count = 0 %>
+      <% for line in invoice.ProjectLines: %>
+      <div class="row invoiceline invoiceline-booking">
+        <div class="large-8 columns">
+          <div class="row collapse">
+            <div class="small-1 columns">
+              <a href="#" class="button prefix secondary remove-line"><i class="fa fa-close red"></i></a>
+            </div>
+            <div class="small-11 columns">
+              <input type="text" name="lines[${count}].Description" id="lines_${count}_Description" value="${line.Description}" />
+            </div>
+          </div>
+        </div>
+        <div class="large-1 large-offset-1 columns">
+          <input type="text" name="lines[${count}].Hours" id="lines_${count}_Hours" class="invoiceline-hours-input text-right" value="${line.Hours.ToString("#0.##")}" />
+        </div>
+        <div class="large-2 columns">
+          <input type="hidden" name="lines[${count}].Null" class="invoiceline-null" value="<% if line.Null: %>1<% else: %>0<% end %>" />
+          <div class="row collapse">
+            <div class="large-3 columns">
+              <a href="#" class="prefix invoiceline-null-toggle <% if line.Null: %>null<% end %>" title="Billable/Unbillable"><i class="fa fa-euro"></i></a>
+            </div>
+            <div class="large-9 columns">
+              <input type="text" class="invoiceline-price" disabled />
+            </div>
+          </div>
+        </div>
+      </div>
+      <hr class="no-top-margin"/>
+      <% count = count + 1 %>
+      <% end %>
+      <% for line in invoice.IssueLines: %>
+      <div class="row invoiceline invoiceline-issue" data-issue="${line.Issue.Number}">
+        <input type="hidden" name="lines[${count}].Issue.Id" id="lines_${count}_Issue_Id" value="${line.Issue.Id}" />
+        <div class="large-8 columns">
+          <div class="row collapse">
+            <div class="small-1 columns">
+              <a href="#" class="button prefix secondary remove-line"><i class="fa fa-close red"></i></a>
+            </div>
+            <div class="small-1 columns">
+              <span class="prefix secondary">
+                <% if line.Issue.IsOpen: %>
+                <i class="fa fa-exclamation-circle green" title="open"></i>
+                <% elif line.Issue.IsArchived: %>
+                <i class="fa fa-trash red" title="${Helpers.DateTimeHelper.Readable(line.Issue.ArchivedAt)}" title="gearchiveerd"></i>
+                <% else: %>
+                <i class="fa fa-ban red" title="${Helpers.DateTimeHelper.Readable(line.Issue.ClosedAt)}" title="gesloten"></i>
+                <% end %>
+              </span>
+            </div>
+            <div class="small-9 columns">
+              <input type="text" name="lines[${count}].Description" id="lines_${count}_Description" value="${line.Description}" />
+            </div>
+            <div class="small-1 columns">
+              <span class="postfix invoiceline-fullestimate secondary expand" title="Originele schatting issue">${line.FullEstimateHours.ToString("#0.##")}</a>
+            </div>
+          </div>
+        </div>
+        <div class="large-1 columns">
+          <div class="row collapse estimate-hours">
+            <div class="large-6 columns">
+              <a href="#" class="button tiny invoiceline-estimate expand <% if line.EstimateHours == line.Hours: %>active<% end %>" title="Schatting exclusief gefactureerde uren">${line.EstimateHours.ToString("#0.##")}</a>
+            </div>
+            <div class="large-6 columns">
+              <a href="#" class="button tiny invoiceline-hours expand <% if line.BookingHours == line.Hours: %>active<% end %>" title="Billable geboekte uren">${line.BookingHours.ToString("#0.##")}</a>
+            </div>
+          </div>
+        </div>
+        <div class="large-1 columns">
+          <input type="text" name="lines[${count}].Hours" id="lines_${count}_Hours" class="invoiceline-hours-input text-right" value="${line.Hours.ToString("#0.##")}" />
+        </div>
+        <div class="large-2 columns">
+          <input type="hidden" name="lines[${count}].Null" class="invoiceline-null" value="<% if line.Null: %>1<% else: %>0<% end %>" />
+          <div class="row collapse">
+            <div class="large-3 columns">
+              <a href="#" class="prefix invoiceline-null-toggle <% if line.Null: %>null<% end %>"><i class="fa fa-euro"></i></a>
+            </div>
+            <div class="large-9 columns">
+              <input type="text" class="invoiceline-price" disabled />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="bookings">
+        <% for booking in line.Bookings: %>
+        <div class="row booking" data-issue="${line.Issue.Number}">
+          <input type="hidden" name="bookings[${booking.Id}]" id="bookings_${booking.Id}" value="${booking.Id}" />
+          <div class="large-7 large-offset-1 columns">
+            <span class="booking-date <% if invoice.StartDate > booking.Date: %>old<% end %>">${booking.Date.ToString("dd-MM-yyyy")}</span> <span class="booking-info">${booking.User.FullName}</span>:
+            <span class="booking-comment">${booking.Comment}</span>
+          </div>
+          <div class="large-1 columns text-center">
+            <% if not booking.Unbillable: %>
+            <i class="fa fa-euro green" title="billable"></i>
+            <% else: %>
+            <i class="fa fa-euro red" title="unbillable"></i>
+            <% end %>
+          </div>
+          <div class="large-1 columns end text-right">
+            <input type="hidden" class="booking-hours text-right" value="${booking.Hours}" disabled />
+            <span class="booking-hours-span">${booking.Hours.ToString("#0.##")}</span>
+          </div>
+        </div>
+        <% end %>
+        <% if line.OldBookings.Count > 0: %>
+        <div class="row">
+          <div class="large-11 large-offset-1 columns">
+            <h5>Eerder al gefactureerd:</h5>
+          </div>
+        </div>
+        <% end %>
+        <% for invoiceLine in line.OldInvoiceLines: %>
+        <div class="row booking old-booking" data-issue="${line.Issue.Number}">
+          <div class="large-8 large-offset-1 columns">
+            <span class="booking-date">${invoiceLine.Invoice.CreatedAt.ToString("dd-MM-yyyy")}</span>:
+            <span class="label round" title="${invoiceLine.Invoice.Title}">${invoiceLine.Invoice.Number}</span>
+          </div>
+          <div class="large-1 columns end text-right">
+            <span class="booking-hours-span">${invoiceLine.Hours}</span>
+          </div>
+        </div>
+        <% end %>
+      </div>
+      <% count = count + 1 %>
+      <% end %>
+      <div class="totals">
+        <% correctionCount = 0 %>
+        <% for correction in invoice.Corrections: %>
+        <div class="row correctionline">
+          <div class="large-10 columns">
+            <input type="text" name="corrections[${correctionCount}].Description" id="corrections_${correctionCount}_Description" placeholder="Korting, extra kosten e.d." class="text-right" value="${correction.Description}" />
+          </div>
+          <div class="large-2 columns">
+            <div class="row collapse">
+              <div class="large-3 columns">
+                <span class="prefix"><i class="fa fa-euro"></i></span>
+              </div>
+              <div class="large-9 columns">
+                <input type="text" name="corrections[${correctionCount}].Price" id="corrections_${correctionCount}_Price" value="${correction.Price}" class="correctionline-price" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <% correctionCount = correctionCount + 1 %>
+        <% end %>
+      </div>
+      <div class="totals">
+        <div class="row">
+          <div class="large-10 columns text-right">
+            <strong>Subtotaal:</strong>
+          </div>
+          <div class="large-2 columns">
+            <div class="row collapse">
+              <div class="large-3 columns">
+                <span class="prefix"><i class="fa fa-euro"></i></span>
+              </div>
+              <div class="large-9 columns">
+                <input type="text" name="invoice.Subtotal" id="invoice_Subtotal" disabled />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row vatline">
+          <div class="large-10 columns text-right">
+            <strong>BTW 21%:</strong>
+          </div>
+          <div class="large-2 columns">
+            <input type="hidden" name="invoice.VAT" class="vatline-vat" value="<% if invoice.VAT: %>1<% else: %>0<% end %>" />
+            <div class="row collapse">
+              <div class="large-3 columns">
+                <a href="#" class="prefix vatline-toggle"><i class="fa fa-euro"></i></a>
+              </div>
+              <div class="large-9 columns">
+                <input type="text" class="vatline-price" disabled />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="totals">
+        <div class="row">
+          <div class="large-10 columns text-right">
+            <strong>Totaal:</strong>
+          </div>
+          <div class="large-2 columns">
+            <div class="row collapse">
+              <div class="large-3 columns">
+                <span class="prefix"><i class="fa fa-euro"></i></span>
+              </div>
+              <div class="large-9 columns">
+                <input type="text" name="invoice.Total" id="invoice_Total" disabled />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="large-2 columns">
+          <label for="invoice_Remarks">Opmerkingen</label>
+        </div>
+        <div class="large-10 columns">
+          <textarea name="invoice.Remarks" id="invoice_Remarks" placeholder="Ruimte voor verdere opmerkingen, deze komen onderaan de factuur">${invoice.Remarks}</textarea>
+        </div>
+      </div>
+      <div class="row">
+        <div class="large-2 large-offset-10 columns text-right">
+          <input type="submit" class="button success expand" value="Factuur opslaan" />
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+

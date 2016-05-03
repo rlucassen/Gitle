@@ -3,8 +3,9 @@
     using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
+    using Interfaces.Model;
 
-    public class Customer : ModelBase
+    public class Customer : ModelBase, ISlugger
     {
         public Customer()
         {

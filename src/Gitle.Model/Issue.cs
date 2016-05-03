@@ -16,6 +16,8 @@
             ChangeStates = new List<ChangeState>();
             Changes = new List<Change>();
             Pickups = new List<Pickup>();
+            Bookings = new List<Booking>();
+            InvoiceLines = new List<InvoiceLine>();
         }
 
         public virtual int Number { get; set; }
@@ -33,6 +35,8 @@
         public virtual IList<ChangeState> ChangeStates { get; set; }
         public virtual IList<Change> Changes { get; set; }
         public virtual IList<Pickup> Pickups { get; set; }
+        public virtual IList<Booking> Bookings { get; set; }
+        public virtual IList<InvoiceLine> InvoiceLines { get; set; }
 
         public virtual string BodyHtml { get { return Body.Markdown(Project); } }
 
@@ -205,6 +209,16 @@
             get { return Hours * Devvers; }
         }
 
+        public virtual IList<Invoice> Invoices
+        {
+            get { return InvoiceLines.Select(x => x.Invoice).ToList(); }
+        }
+
+        public virtual IList<Invoice> DefinitiveInvoices
+        {
+            get { return InvoiceLines.Select(x => x.Invoice).Where(i => i.IsDefinitive).ToList(); }
+        }
+
         public virtual string CostString(double hourPrice)
         {
             return TotalHours > 0 ? (TotalHours * hourPrice).ToString("C") : "n.n.b.";
@@ -248,6 +262,11 @@
         public virtual void Pickup(User user)
         {
             Pickups.Add(new Pickup() { CreatedAt = DateTime.Now, User = user, Issue = this });
+        }
+
+        public virtual double BookingHours(DateTime startDate, DateTime endDate)
+        {
+            return Bookings.Where(x => x.Date >= startDate && x.Date <= endDate).Sum(x => x.Hours);
         }
     }
 }

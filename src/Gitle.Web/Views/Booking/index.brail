@@ -1,0 +1,127 @@
+﻿<div class="row">
+  <div class="large-12 columns">
+    <h1>Uren schrijven</h1>
+    <div class="panel">
+      <form id="booking" action="save" method="POST" data-abide>
+        <div class="row collapse">
+          <% for i in range(0, -11): %>
+          <div class="small-2 large-1 columns">
+            <a href="#" data-dayshift="${i}" class="button secondary prefix"></a>
+          </div>
+          <% end %>
+          <div class="small-2 large-1 columns">
+            <input type="text" name="booking.Date" id="booking_Date" class="date novalidate" placeholder="Eerder"  />
+          </div>
+        </div>
+        <div class="row collapse booking-row-new">
+          <div class="large-1 columns">
+            <input type="hidden" name="booking.Minutes" class="booking_Minutes" />
+            <input type="text" class="booking-parser no-margin" placeholder="Uren" data-minutes-field=".booking_Minutes" required />
+            <small class="error">Uren!</small>
+          </div>
+          <div class="large-4 columns">
+            <input type="text" class="no-margin project-chooser" placeholder="Project" />
+            <input type="hidden" name="booking.Project.Id" class="booking_Project_Id" required />
+            <small class="error">Project!</small>
+          </div>
+          <div class="large-1 columns">
+            <input type="text" class="no-margin issue-chooser" placeholder="Taak" />
+            <input type="hidden" name="booking.Issue.Id" class="booking_Issue_Id" />
+            <small class="error">Taak!</small>
+          </div>
+          <div class="large-5 columns">
+            <div class="row collapse">
+              <div class="large-10 columns">
+                <input type="text" class="no-margin booking_Comment" name="booking.Comment" placeholder="Opmerking" />
+                <small class="error">Opmerking!</small>
+              </div>
+              <div class="large-2 columns">
+                <input type="hidden" name="booking.Unbillable" class="booking_Unbillable" />
+                <a href="#" class="postfix booking-row-null-toggle" title="Billable/Unbillable"><i class="fa fa-euro"></i></a>
+              </div>
+            </div>
+          </div>
+          <div class="large-1 columns">
+            <input type="submit" class="button postfix no-margin success" value="Boeken" />
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="large-12 columns">
+    <h1>Uren geschreven afgelopen 14 dagen</h1>
+    <% for keyvalue in bookings: %>
+    <% date = keyvalue.Key %>
+    <% datebookings = keyvalue.Value %>
+    <div class="panel booking">
+      <div class="row">
+        <div class="large-12 columns">
+          <h3>${date.date.ToString("dddd d MMMM yyyy")}</h3>
+        </div>
+      </div>
+      <% for booking in datebookings: %>
+      <div class="booking-row" data-id="${booking.Id}">
+        <div class="row booking-row-content">
+          <div class="large-1 columns">
+            <span class="booking-minutes">${booking.Time}</span>
+          </div>
+          <div class="large-3 columns">
+            <div class="booking-project">${booking.Project.Name}</div>
+          </div>
+          <div class="large-1 columns">
+            <% if booking.Issue: %>
+            <div class=" row booking-issue">
+              <div class="small-8 columns">
+                <span title="#${booking.Issue.Number} - ${booking.Issue.Name}">#${booking.Issue.Number}</span>
+              </div>
+              <div class="small-4 columns">
+                <% if not booking.Unbillable: %>
+                <i class="fa fa-euro green" title="billable"></i>
+                <% else: %>
+                <i class="fa fa-euro red" title="unbillable"></i>
+                <% end %>
+              </div>
+            </div>
+            <% end %>
+          </div>
+          <div class="large-5 columns end">
+            <span class="booking-comment">${booking.Comment}</span>
+            <% for invoice in booking.Invoices: %>
+            <% if not invoice.IsDefinitive: %>
+            <span class="label round right" title="${invoice.Title}">${invoice.Number}</span>
+            <% end %>
+            <% end %>
+          </div>
+          <% if not booking.IsDefinitive: %>
+          <div class="large-2 columns no-padding booking-buttons text-right">
+            <a href="#" class="button radius supertiny no-margin booking-edit">bewerk <i class="fa fa-pencil-square-o"></i></a>
+            <a href="/booking/${booking.Id}/delete" class="button radius alert supertiny no-margin">verwijder <i class="fa fa-times"></i></a>
+          </div>
+          <% end %>
+        </div>
+      </div>
+      <% end %>
+      <div class="row totalrow">
+        <div class="large-1 columns">
+          ${Helpers.DateTimeHelper.MinutesToTime(date.total)}
+        </div>
+        <div class="large-11 columns">
+          <strong>Totaal</strong>
+        </div>
+      </div>
+    </div>
+    <% end %>
+  </div>
+</div>
+
+<script>
+  $('#booking').on('invalid', function () {
+    $(this).find('[data-invalid]').focus();
+    $('#booking_Date').fdatepicker('hide');
+  })
+  .on('valid', function () {
+    console.log('valid!');
+  });
+</script>

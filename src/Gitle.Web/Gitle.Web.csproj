@@ -51,11 +51,56 @@
   <ItemGroup>
     <Content Include="Content\images\chosen-sprite%402x.png" />
     <Content Include="Content\images\chosen-sprite.png" />
+    <Content Include="Content\javascript\app.es5.js">
+      <DependentUpon>app.js</DependentUpon>
+    </Content>
+    <Content Include="Content\javascript\app.es5.min.js">
+      <DependentUpon>app.es5.js</DependentUpon>
+    </Content>
     <Content Include="Content\javascript\app.min.js">
       <DependentUpon>app.js</DependentUpon>
     </Content>
+    <Content Include="Content\javascript\auxilium.es5.js">
+      <DependentUpon>auxilium.js</DependentUpon>
+    </Content>
+    <Content Include="Content\javascript\auxilium.es5.min.js">
+      <DependentUpon>auxilium.es5.js</DependentUpon>
+    </Content>
+    <Content Include="Content\javascript\auxilium.js" />
+    <Content Include="Content\javascript\auxilium.min.js">
+      <DependentUpon>auxilium.js</DependentUpon>
+    </Content>
+    <Content Include="Content\javascript\auxilium\auxilium.functions.js" />
+    <Content Include="Content\javascript\auxilium\auxilium.upload.js" />
+    <Content Include="Content\javascript\bundles\auxilium.js" />
+    <Content Include="Content\javascript\bundles\auxilium.min.js">
+      <DependentUpon>auxilium.js</DependentUpon>
+    </Content>
+    <Content Include="Content\javascript\auxilium\auxilium.nestedtable.js" />
+    <Content Include="Content\javascript\gitle.es5.js">
+      <DependentUpon>gitle.js</DependentUpon>
+    </Content>
+    <Content Include="Content\javascript\gitle.es5.min.js">
+      <DependentUpon>gitle.es5.js</DependentUpon>
+    </Content>
+    <Content Include="Content\javascript\gitle\gitle.booking.js" />
+    <Content Include="Content\javascript\auxilium\auxilium.foundationhelper.js" />
+    <Content Include="Content\javascript\gitle\gitle.functions.js" />
+    <Content Include="Content\javascript\gitle\gitle.issues.js" />
+    <Content Include="Content\javascript\gitle\gitle.invoice.js" />
+    <Content Include="Content\javascript\bundles\gitle.js" />
+    <Content Include="Content\javascript\bundles\gitle.min.js">
+      <DependentUpon>gitle.js</DependentUpon>
+    </Content>
+    <Content Include="Content\javascript\gitle.js" />
+    <Content Include="Content\javascript\gitle.min.js">
+      <DependentUpon>gitle.js</DependentUpon>
+    </Content>
     <Content Include="Content\javascript\vendor\jquery.autocomplete.js" />
+    <Content Include="Content\javascript\vendor\jquery.migrate.js" />
     <Content Include="Content\javascript\vendor\Sortable.min.js" />
+    <Content Include="Content\javascript\vendor\date.js" />
+    <Content Include="Content\javascript\vendor\foundation.datepicker.js" />
     <Content Include="Content\stylesheets\vendor\bundle.css" />
     <Content Include="Content\stylesheets\vendor\bundle.min.css">
       <DependentUpon>bundle.css</DependentUpon>
@@ -107,11 +152,16 @@
     <Content Include="Global.asax" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\ApplicationController.cs" />
+    <Compile Include="Controllers\ReportPresetController.cs" />
+    <Compile Include="Controllers\ReportController.cs" />
+    <Compile Include="Controllers\BookingController.cs" />
     <Compile Include="Controllers\FilterPresetController.cs" />
     <Compile Include="Controllers\ImportController.cs" />
     <Compile Include="Controllers\CustomerController.cs" />
     <Compile Include="Controllers\PlanningController.cs" />
     <Compile Include="Controllers\SearchController.cs" />
+    <Compile Include="Controllers\InvoiceController.cs" />
     <Compile Include="Controllers\SlugController.cs" />
     <Compile Include="Controllers\UploadController.cs" />
     <Compile Include="Controllers\UserController.cs" />
@@ -130,13 +180,17 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\DanielleAttribute.cs" />
     <Compile Include="Helpers\AdminAttribute.cs" />
     <Compile Include="Helpers\DayHelper.cs" />
     <Compile Include="Helpers\FileBinderAttribute.cs" />
     <Compile Include="Helpers\ProjectAttribute.cs" />
     <Compile Include="Helpers\SaveFeedback.cs" />
+    <Compile Include="Helpers\DocumentUploadFeedback.cs" />
     <Compile Include="Helpers\UploadFeedback.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QueryParsers\IssueQueryParser.cs" />
+    <Compile Include="QueryParsers\BookingQueryParser.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
@@ -265,9 +319,9 @@
   <ItemGroup>
     <None Include="bundleconfig.json" />
     <None Include="compilerconfig.json" />
-    <Content Include="compilerconfig.json.defaults">
+    <None Include="compilerconfig.json.defaults">
       <DependentUpon>compilerconfig.json</DependentUpon>
-    </Content>
+    </None>
     <None Include="Content\stylesheets\vendor\fonts\fontawesome-webfont.eot" />
     <None Include="Content\stylesheets\vendor\fonts\fontawesome-webfont.ttf" />
     <None Include="Content\stylesheets\vendor\fonts\fontawesome-webfont.woff" />
@@ -277,8 +331,16 @@
     <Content Include="Content\stylesheets\app.css.map">
       <DependentUpon>app.css</DependentUpon>
     </Content>
+    <Content Include="Views\Application\Index.brail" />
+    <Content Include="Views\Application\edit.brail" />
+    <Content Include="Views\Application\view.brail" />
     <None Include="Views\Authentication\changepassword.brail" />
     <None Include="Views\Authentication\requestreset.brail" />
+    <Content Include="Views\Booking\index.brail" />
+    <Content Include="Views\Invoice\index.brail" />
+    <Content Include="Views\Invoice\create.brail" />
+    <Content Include="Views\Booking\_row.brail" />
+    <Content Include="Views\Booking\overview.brail" />
     <None Include="Views\Issue\index.brail" />
     <None Include="Views\Issue\exportimport.brail" />
     <None Include="Views\Issue\quickview.brail" />
@@ -299,6 +361,8 @@
     <Content Include="Views\Customer\view.brail" />
     <Content Include="Views\Planning\index.brail" />
     <None Include="Views\Project\view.brail" />
+    <Content Include="Views\Template\invoice.brail" />
+    <Content Include="Views\Report\index.brail" />
     <None Include="Views\User\profile.brail" />
     <None Include="Views\User\edit.brail" />
     <None Include="Views\User\index.brail" />

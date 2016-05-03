@@ -13,5 +13,23 @@
       "Content/stylesheets/vendor/jquery.autocomplete.css",
       "Content/stylesheets/vendor/normalize.css"
     ]
+  },
+  {
+    "outputFileName": "Content/javascript/gitle.js",
+    "inputFiles": [
+      "Content/javascript/gitle/gitle.functions.js",
+      "Content/javascript/gitle/gitle.booking.js",
+      "Content/javascript/gitle/gitle.invoice.js",
+      "Content/javascript/gitle/gitle.issues.js"
+    ]
+  },
+  {
+    "outputFileName": "Content/javascript/auxilium.js",
+    "inputFiles": [
+      "Content/javascript/auxilium/auxilium.functions.js",
+      "Content/javascript/auxilium/auxilium.upload.js",
+      "Content/javascript/auxilium/auxilium.foundationhelper.js",
+      "Content/javascript/auxilium/auxilium.nestedtable.js"
+    ]
   }
 ]

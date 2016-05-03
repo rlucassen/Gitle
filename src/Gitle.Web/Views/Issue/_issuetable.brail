@@ -1,5 +1,5 @@
 ﻿<div class="issues <% if prioritizable: %>prioritizable<% end %>" id="issueContainer"> 
-  <% for issue in items: %>
+  <% for issue in result.Items: %>
   <div class="row <% if issue.IsOpen: %><% if issue.PickedUpBy == null:%>orderable<% else: %>pickedup<% end %><% end %>">
     <div class="large-12 columns">
       <div class="issue<% if issue.Touched(CurrentUser): %> touched<% end %> radius<% if issue.PickedUpBy == null: %> free<% end %> ${issue.State.ToString()}" data-issueid="${issue.Number}">
@@ -59,6 +59,26 @@
                 <% end %>
               </div>
             </div>
+            <% if CurrentUser.IsDanielle and issue.Invoices.Count > 0: %>
+            <div class="row detailsrow">
+              <div class="large-12 columns">
+                Factuurnummer(s):
+                <% for invoice in issue.Invoices: %>
+                <span class="label round <% if not invoice.IsDefinitive: %>secondary<% end %>" title="${invoice.Title}">${invoice.Number}</span>
+                <% end %>
+              </div>
+            </div>
+            <% end %>
+            <% if CurrentUser.IsCustomer and issue.DefinitiveInvoices.Count > 0: %>
+            <div class="row detailsrow">
+              <div class="large-12 columns">
+                Factuurnummer(s):
+                <% for invoice in issue.DefinitiveInvoices: %>
+                <span class="label round" title="${invoice.Title}">${invoice.Number}</span>
+                <% end %>
+              </div>
+            </div>
+            <% end %>
           </div>
           <div class="large-3 columns text-right">
             <div class="row collapse">

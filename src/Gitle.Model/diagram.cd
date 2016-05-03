@@ -1,0 +1,136 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Gitle.Model.Booking" Collapsed="true">
+    <Position X="4.25" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAUBAAAEAAAQAAAAQCAACAAAAAAAAAABAAAAACAAAQI=</HashCode>
+      <FileName>Booking.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Gitle.Model.Change">
+    <Position X="8.25" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEFAAAAAAAAAAAAACAAAAAAAAAAAAAAAEAACAAAAAA=</HashCode>
+      <FileName>Change.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Gitle.Model.ChangeState">
+    <Position X="10.5" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEFAAAAAAAEAAAAACAAAAAAAAAAAAAAAEAACAAAAAA=</HashCode>
+      <FileName>ChangeState.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Gitle.Model.Comment">
+    <Position X="12.75" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEFAAAAAAAAAAAAACAAAAQAAAAAAAAAAEAACAAAAAA=</HashCode>
+      <FileName>Comment.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Gitle.Model.FilterPreset" Collapsed="true">
+    <Position X="6.5" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAAAAAAAAAAAAACAQAAAAAABAAAAAAAAAAAAA=</HashCode>
+      <FileName>FilterPreset.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Gitle.Model.Invoice" Collapsed="true">
+    <Position X="11" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACEAAgAAEIAgAEQAAGAESAAgIAABQAACAAAABEASACs=</HashCode>
+      <FileName>Invoice.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Gitle.Model.InvoiceLine" Collapsed="true">
+    <Position X="5" Y="10.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAAQAwAAAAAAAAAAAAAAAAAAAAIAIAAAAAAQA=</HashCode>
+      <FileName>InvoiceLine.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Gitle.Model.Correction" Collapsed="true">
+    <Position X="9.5" Y="10.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAQAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQA=</HashCode>
+      <FileName>InvoiceLine.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Gitle.Model.Issue">
+    <Position X="6" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>oQAAAAAAMKBwPIiAAGARyCUAABAFgEIQIAAABCLAKCE=</HashCode>
+      <FileName>Issue.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Gitle.Model.Label" Collapsed="true">
+    <Position X="13.25" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAgACAQCAAAAAAAAAAAAgAAAAAA=</HashCode>
+      <FileName>Label.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Gitle.Model.Project" Collapsed="true">
+    <Position X="11.75" Y="10.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACEQECIAEAgAAAAAAAAEAAQQAAAAAAACAAAAAgQBIAA=</HashCode>
+      <FileName>Project.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Gitle.Model.Touch" Collapsed="true">
+    <Position X="8.75" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABBAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAA=</HashCode>
+      <FileName>Touch.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Gitle.Model.Touchable" Collapsed="true">
+    <Position X="9.5" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAAAAAAAAAAAAAAAAAEAIAAAAAAAAAAAABAAAAA=</HashCode>
+      <FileName>Touchable.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.119" />
+  </Class>
+  <Class Name="Gitle.Model.User" Collapsed="true">
+    <Position X="7.25" Y="10.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEQAAiACAAAAIQCCAAABAQgCAAAAAACAEAAIiCQIQA=</HashCode>
+      <FileName>User.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Gitle.Model.UserProject" Collapsed="true">
+    <Position X="14" Y="10.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAIAAAgAAAAAAAACAgAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>UserProject.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="Gitle.Model.Interfaces.Model.ITouchable" Collapsed="true">
+    <Position X="11.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Interfaces\Model\ITouchable.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Gitle.Model.Interfaces.Model.IIssueAction" Collapsed="true">
+    <Position X="11.5" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQEFAAAAAAAAAAAAACAAAAEAAAAAAAAAAEAACBAAAAA=</HashCode>
+      <FileName>Interfaces\Model\IIssueAction.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Gitle.Model.Interfaces.Model.IPassword" Collapsed="true">
+    <Position X="14" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAgAAAAIAAAAAQAAAAAAAAAAAAAAAAAAAAAEAAAA=</HashCode>
+      <FileName>Interfaces\Model\IPassword.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

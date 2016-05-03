@@ -2,8 +2,11 @@
 {
     #region Usings
 
+    using System.Collections.Generic;
+    using System.Reflection;
     using Castle.MonoRail.Framework;
     using Castle.MonoRail.Framework.Filters;
+    using NHibernate;
 
     #endregion
 
@@ -13,6 +16,13 @@
     [Filter(ExecuteWhen.BeforeAction, typeof(Filters.LocalizationFilter), ExecutionOrder = 1)]
     public abstract class BaseController : SmartDispatcherController
     {
+        protected ISession session;
+
+        protected BaseController(ISessionFactory sessionFactory)
+        {
+            session = sessionFactory.GetCurrentSession();
+        }
+
         protected void Error(string message, bool redirectToReferrer = false)
         {
             CreateMessage("error", message, redirectToReferrer);
@@ -35,5 +45,14 @@
                 RedirectToReferrer();
         }
 
+        protected override object InvokeMethod(MethodInfo method, IRequest request, IDictionary<string, object> extraArgs)
+        {
+            var release = true;
+#if DEBUG
+            release = false;
+#endif
+            PropertyBag.Add("RELEASE", release);
+            return base.InvokeMethod(method, request, extraArgs);
+        }
     }
 }

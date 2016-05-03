@@ -1,9 +1,9 @@
 ﻿<h1>Nieuwe bijlage maken</h1>
-<form action="create" method="POST">
-  <div class="row">
+<form action="/invoice/create" method="POST">
+  <div class="row booking-row-new">
     <div class="large-12 columns">
-      <input type="hidden" name="projectId" id="projectId" />
-      <input type="text" class="" id="project-chooser" placeholder="Project" />
+      <input type="hidden" name="projectId" class="booking_Project_Id" />
+      <input type="text" class="project-chooser" placeholder="Project" />
     </div>
   </div>
   <div class="row">
@@ -26,7 +26,16 @@
   </div>
 </form>
 
-<h1>Bijlages</h1>
+<h1>Bijlagen</h1>
+<div class="row">
+  <div class="large-12 columns">
+    <p>
+      <span class="label round secondary">Concept</span>
+      <span class="label round">Definitief</span>
+      <span class="label round alert">Gearchiveerd</span>
+    </p>
+  </div>
+</div>
 <div class="invoices">
   <% for invoice in invoices: %>
   <div class="invoice">
@@ -59,17 +68,19 @@
       </div>
       <div class="large-3 columns text-right">
         <ul class="button-group">
-          <li><a class="button tiny no-margin" href="/project/${invoice.Project.Slug}/invoice/${invoice.Number}/download"><i class="fa fa-file-pdf-o"></i></a></li>
-          <li><a class="button tiny no-margin success" href="/project/${invoice.Project.Slug}/invoice/${invoice.Number}/copy">Kopie</a></li>
+          <li><a class="button tiny no-margin" href="/project/${invoice.Project.Slug}/invoice/${invoice.Id}/download"><i class="fa fa-file-pdf-o"></i></a></li>
+          <% if invoice.IsConcept: %>
+          <li><a class="button tiny no-margin success" href="/project/${invoice.Project.Slug}/invoice/${invoice.Id}/edit">Bewerken</a></li>
+          <% end %>
           <button href="#" data-dropdown="more${invoice.Id}" aria-controls="more${invoice.Id}" aria-expanded="false" class="button tiny dropdown secondary">Meer..</button>
           <ul id="more${invoice.Id}" data-dropdown-content="" class="f-dropdown text-left" aria-hidden="true" tabindex="-1">
             <% if invoice.IsConcept: %>
-            <li><a href="/project/${invoice.Project.Slug}/invoice/${invoice.Number}/definitive">Definitief maken</a></li>
+            <li><a href="/project/${invoice.Project.Slug}/invoice/${invoice.Id}/definitive">Definitief maken</a></li>
             <% end %>
             <% if not invoice.IsArchived: %>
-            <li><a href="/project/${invoice.Project.Slug}/invoice/${invoice.Number}/archive">Archiveren</a></li>
+            <li><a href="/project/${invoice.Project.Slug}/invoice/${invoice.Id}/archive">Archiveren</a></li>
             <% end %>
-            <li><a href="/project/${invoice.Project.Slug}/invoice/${invoice.Number}/archiveissues">Taken archiveren</a></li>
+            <li><a href="/project/${invoice.Project.Slug}/invoice/${invoice.Id}/archiveissues">Taken archiveren</a></li>
           </ul>
         </ul>
       </div>
@@ -78,23 +89,3 @@
   <% end %>
 </div>
 
-
-<script>
-  $(function () {
-    $('#project-chooser').autocomplete({
-      autoFocus: true,
-      source: '/project/autocomplete',
-      select: function (event, ui) {
-        event.preventDefault();
-        $('#projectId').val(ui.item.value);
-        $('#project-chooser').val(ui.item.label);
-      }
-    });
-
-    $('.date').fdatepicker({
-      format: 'dd-mm-yyyy',
-      weekStart: 1
-    });
-
-  });
-</script>

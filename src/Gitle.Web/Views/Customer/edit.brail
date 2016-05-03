@@ -5,13 +5,13 @@
     <% else: %>
     <h1>Nieuwe klant</h1>
     <% end %>
-    <form action="/customer/<% if item.Slug: %>${?item.Slug}<% else: %>0<% end %>/save" method="POST" data-abide>
+    <form action="/customer/<% if item.Slug: %>${item.Slug}<% else: %>0<% end %>/save" method="POST" data-abide>
       ${Form.HiddenField("item.Id")}
       ${Form.HiddenField("item.Slug")}
       <div class="row">
         <div class="large-3 columns">Naam</div>
         <div class="large-9 columns">
-          <input type="text" id="item_Name" name="item.Name" value="${?item.Name}" class="focus" required />
+          <input class="focus" type="text" id="item_Name" name="item.Name" value="${?item.Name}" class="focus" data-slugify="#item_Slug" required />
           <small class="error">Geef een naam op</small>
         </div>
       </div>

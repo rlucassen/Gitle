@@ -1,10 +1,15 @@
 ﻿namespace Gitle.Web.Controllers
 {
     using Model.Helpers;
+    using NHibernate;
 
     public class SlugController : BaseController
     {
-         public void Index(string text)
+        public SlugController(ISessionFactory sessionFactory) : base(sessionFactory)
+        {
+        }
+
+        public void Index(string text)
          {
              CancelLayout();
              RenderText(string.IsNullOrEmpty(text) ? "" : text.Slugify());

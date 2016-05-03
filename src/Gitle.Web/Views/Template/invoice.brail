@@ -1,0 +1,137 @@
+﻿<style>
+  body {
+    font-family: 'Tahoma';
+    font-weight: lighter;
+    font-size: 16px;
+  }
+
+  h1 {
+    font-family: 'Tahoma';
+  }
+
+  .right {
+    text-align: right;
+  }
+
+  .invoice-details {
+    margin-left: 1em;
+    line-height: 1.5em;
+  }
+
+  table {
+    width: 100%;
+  }
+
+  table th {
+    text-align: left;
+    padding: 0.8em 1em;
+    border-bottom: 1px solid #000;
+    font-weight: normal;
+  }
+
+  table td {
+    padding: 0.5em 1em;
+  }
+
+  table .spacer {
+    height: 1em;
+  }
+
+  table .spacerline {
+    border-top: 1px solid #000;
+  padding: 0;
+  height: 1px;
+  }
+
+  td.totalname {
+    padding-top: 0.8em;
+  }
+
+  td.total {
+    padding-top: 0.8em;
+  }
+
+  hr {
+    border-color: #000;
+  }
+
+  .footer {
+    margin-top: 2em;
+    line-height: 1.5em;
+    text-align: center;
+    font-size: 0.8em;
+    font-style: italic;
+  }
+
+  .footer span {
+    margin: 0 0.8em;
+  }
+
+</style>
+
+<p class="right">
+  <img src="http://localhost:51459/Content/images/auxlogo.png" width="350" />
+</p>
+
+<h1>BIJLAGE</h1>
+<p>Delft, ${invoice.CreatedAt.ToString("dd-MM-yyyy")}</p>
+
+<p class="invoice-details">
+  Factuurnummer: ${invoice.Number}<br />
+  Factuurdatum: ${invoice.CreatedAt.ToString("dd-MM-yyyy")}<br />
+</p>
+
+<table cellspacing="0">
+  <thead>
+    <tr>
+      <th style="width: 8%;" class="right">Aantal</th>
+      <th style="width: 72%;">Omschrijving</th>
+      <th style="width: 10%;" class="right">Stuksprijs</th>
+      <th style="width: 10%;" class="right">Bedrag</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% for line in invoice.Lines: %>
+    <tr>
+      <td class="right">${line.Hours.ToString("#0.00")}</td>
+      <td>${line.Description}</td>
+      <td class="right">${invoice.HourPrice},00</td>
+      <td class="right">${line.Price.ToString("#0.00")}</td>
+    </tr>
+    <% end %>
+    <tr>
+      <td colspan="4" class="spacerline"></td>
+    </tr>
+    <% for line in invoice.Corrections: %>
+    <tr>
+      <td class="right"></td>
+      <td>${line.Description}</td>
+      <td class="right">${line.Price.ToString("#0.00")}</td>
+      <td class="right">${line.Price.ToString("#0.00")}</td>
+    </tr>
+    <% end %>
+  </tbody>
+  <tfoot>
+    <tr>
+      <td colspan="4" class="spacerline"></td>
+    </tr>
+    <tr>
+      <td class="right">${invoice.TotalHours.ToString("#0.00")}</td>
+      <td colspan="2" class="right totalname">Totaal &euro;</td>
+      <td class="right total">${invoice.TotalExclVat.ToString("#0.00")}</td>
+    </tr>
+  </tfoot>
+</table>
+
+<p>
+  ${invoice.Remarks}
+</p>
+<hr />
+<p>Alle bedragen zijn excl. 21% BTW.</p>
+<hr />
+<p class="footer">
+  <span>Auxilium BV,</span> <span>Oude Delft 48,</span> <span>2611 CD Delft</span> - <span>Postbus 64,</span> <span>2600 AB Delft</span><br/>
+  <span>Tel. 015 - 2612316</span> <span>Fax. 015 - 2133483</span> <span><a href="mailto:info@auxilium.nl">info@auxilium.nl</a></span> <span><a href="http://www.auxilium.nl">www.auxilium.nl</a></span><br/>
+  <span>ABN-AMRO NL72ABNA0407655441</span> <span>Postbank NL38INGB0007864290</span><br/>
+  <span>KVK Nummer 27168210</span> <span>BTW-nummer NL809759111B01</span>
+</p>

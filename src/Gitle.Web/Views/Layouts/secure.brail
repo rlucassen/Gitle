@@ -17,14 +17,17 @@
   <link rel="stylesheet" href="/content/stylesheets/vendor/foundation.min.css" />
   <link rel="stylesheet" href="/Content/stylesheets/vendor/fontawesome/font-awesome.min.css">
   <link rel="stylesheet" href="/Content/stylesheets/vendor/jquery.autocomplete.css">
+  <link rel="stylesheet" href="/Content/stylesheets/vendor/jquery-ui-1.10.3.custom.min.css">
+  <link rel="stylesheet" href="/Content/stylesheets/vendor/foundation.datepicker.css">
   <link rel="stylesheet" href="/Content/stylesheets/app.css">
   <link rel="stylesheet" href="/Content/stylesheets/chosen.css">
   <link rel="stylesheet" href="/Content/javascript/vendor/jqueryui/jquery-ui.css">
   <link rel="stylesheet" href="/Content/javascript/vendor/fullcalendar/fullcalendar.css">
   <link rel="stylesheet" href="/Content/javascript/vendor/scheduler/scheduler.css">
 
-  <script src="http://code.jquery.com/jquery-1.8.3.min.js"> </script>
-  <script src="http://code.jquery.com/jquery-migrate-1.2.1.js"></script>
+  <script src="/Content/javascript/vendor/jquery.js"> </script>
+  <script>jQuery.migrateMute = true;</script>
+  <script src="/Content/javascript/vendor/jquery.migrate.js"></script>
   <script src="/Content/javascript/vendor/custom.modernizr.js"> </script>
   <script src="/Content/javascript/vendor/marked.js"> </script>
   <script src="/Content/javascript/vendor/jquery.metadata.js"> </script>
@@ -35,6 +38,8 @@
   <script src="/Content/javascript/vendor/jquery.cookie.js"> </script>
   <script src="/Content/javascript/vendor/chosen.jquery.min.js"> </script>
   <script src="/Content/javascript/vendor/Sortable.min.js"> </script>
+  <script src="/Content/javascript/vendor/foundation.datepicker.js"> </script>
+  <script src="/Content/javascript/vendor/date.js"> </script>
   <script src="/Content/javascript/vendor/jqueryui/jquery-ui.js"></script>
   <script src="/Content/javascript/vendor/fullcalendar/lib/moment.min.js"></script>
   <script src="/Content/javascript/vendor/fullcalendar/fullcalendar.js"></script>
@@ -53,7 +58,19 @@
       <ul class="left">
         <% if CurrentUser.IsAdmin: %>
         <li class="divider"></li>
+        <li><a href="/booking/index">Uren boeken</a></li>
+        <% end %>
+        <% if CurrentUser.IsDanielle: %>
+        <li class="divider"></li>
+        <li><a href="/report/index">Urenrapporten</a></li>
+        <% end %>
+        <% if CurrentUser.IsAdmin: %>
+        <li class="divider"></li>
         <li><a href="/customers">Klanten</a></li>
+        <% end %>
+        <% if CurrentUser.IsAdmin: %>
+        <li class="divider"></li>
+        <li><a href="/applications">Applicatie</a></li>
         <% end %>
         <% if CurrentUser.IsAdmin or CurrentUser.Projects.Count > 1: %>
         <li class="divider"></li>
@@ -65,6 +82,10 @@
         <% else: %>
         <li class="divider"></li>
         <li><a href="/user/profile">Gegevens wijzigen</a></li>
+        <% end %>
+        <% if CurrentUser.IsDanielle: %>
+        <li class="divider"></li>
+        <li><a href="/invoice/index">Bijlagen</a></li>
         <% end %>
       </ul>
       <ul class="right">
@@ -117,6 +138,20 @@
                  live_validate: false
                });
   </script>
+  <% if RELEASE: %>
+  <script src="/Content/javascript/auxilium.min.js"> </script>
+  <script src="/Content/javascript/gitle.min.js"> </script>
+  <script src="/Content/javascript/app.min.js"> </script>
+  <% else: %>
+  <script src="/Content/javascript/auxilium/auxilium.functions.js"> </script>
+  <script src="/Content/javascript/auxilium/auxilium.foundationhelper.js"> </script>
+  <script src="/Content/javascript/auxilium/auxilium.nestedtable.js"> </script>
+  <script src="/Content/javascript/auxilium/auxilium.upload.js"> </script>
+  <script src="/Content/javascript/gitle/gitle.functions.js"> </script>
+  <script src="/Content/javascript/gitle/gitle.invoice.js"> </script>
+  <script src="/Content/javascript/gitle/gitle.booking.js"> </script>
+  <script src="/Content/javascript/gitle/gitle.issues.js"> </script>
   <script src="/Content/javascript/app.js"> </script>
+  <% end %>
 </body>
 </html>

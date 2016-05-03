@@ -19,240 +19,42 @@
     using NHibernate;
     using NHibernate.Linq;
     using Newtonsoft.Json;
+    using QueryParsers;
     using Issue = Model.Issue;
     using Project = Model.Project;
 
     public class IssueController : SecureController
     {
         private readonly ISessionFactory sessionFactory;
-        private readonly ISession session;
         private readonly IEntryClient entryClient;
 
-        public IssueController(ISessionFactory sessionFactory, IEntryClient entryClient)
+        public IssueController(ISessionFactory sessionFactory, IEntryClient entryClient) : base(sessionFactory)
         {
             this.sessionFactory = sessionFactory;
-            this.session = sessionFactory.GetCurrentSession();
             this.entryClient = entryClient;
         }
 
         [MustHaveProject]
         public void Index(string projectSlug, string query)
         {
-            query = query ?? "";
+            var project = session.SlugOrDefault<Project>(projectSlug);
 
-            var project = session.Query<Project>().FirstOrDefault(p => p.Slug == projectSlug);
+            var parser = new IssueQueryParser(sessionFactory, query, project, CurrentUser);
 
-            var matches = Regex.Matches(query, @"[a-zA-Z0-9_]+:(([a-zA-Z0-9_,.]+)|('[a-zA-Z0-9_,. ]+'))");
+            var filterPresets = session.Query<FilterPreset>().Where(x => x.User == CurrentUser && x.IsActive && (x.Project == null || x.Project.Id == project.Id)).ToList();
+            var globalFilterPresets = session.Query<FilterPreset>().Where(x => x.User == null && x.IsActive && (x.Project == null || x.Project.Id == project.Id)).ToList();
 
-            var allSorts = new Dictionary<string, string>()
-                            {
-                                {"CreatedBy", "Aanmelder"}, 
-                                {"CreatedAt", "Aanmaakdatum"},
-                                {"PickedUpBy", "Behandelaar"},
-                                {"PickedUpAt", "Behandeldatum"},
-                                {"Number", "Nummer"},
-                                {"Name", "Naam"},
-                                {"TotalHours", "Inspanning"},
-                                {"Comments.Count", "Aantal reacties"}
-                            };
-
-            IList<string> selectedLabels = new List<string>();
-            IList<string> notSelectedLabels = new List<string>();
-            IList<IssueState> states = new List<IssueState>();
-            IList<long> ids = new List<long>();
-            IList<string> involveds = new List<string>();
-            IList<string> openedbys = new List<string>();
-            IList<string> closedbys = new List<string>();
-            IList<string> pickupbys = new List<string>();
-            IList<User> selectedPickupbys = new List<User>();
-            IDictionary<string, bool> querySorts = new Dictionary<string, bool>();
-            IDictionary<string, bool> linqSorts = new Dictionary<string, bool>();
-            IDictionary<string, bool> selectedSorts = new Dictionary<string, bool>();
-            var searchQuery = query;
-            var pickupany = false;
-            var pickupnone = false;
-
-            foreach (Match match in matches)
-            {
-                var parts = match.Value.Split(':');
-                var value = parts[1].Replace("'", "");
-                searchQuery = searchQuery.Replace(match.Value, "");
-                switch (parts[0])
-                {
-                    case "label":
-                        selectedLabels.Add(value);
-                        break;
-                    case "notlabel":
-                        notSelectedLabels.Add(value);
-                        break;
-                    case "state":
-                        states.Add((IssueState)Enum.Parse(typeof(IssueState), value));
-                        break;
-                    case "id":
-                        ids = value.Split(',').Select(long.Parse).ToList();
-                        break;
-                    case "involved":
-                        involveds.Add(value == "me" ? CurrentUser.Name : value);
-                        break;
-                    case "opened":
-                        openedbys.Add(value == "me" ? CurrentUser.Name : value);
-                        break;
-                    case "closed":
-                        closedbys.Add(value == "me" ? CurrentUser.Name : value);
-                        break;
-                    case "pickup":
-                        if (value == "any")
-                        {
-                            pickupany = true;
-                            break;
-                        }
-                        if (value == "none")
-                        {
-                            pickupnone = true;
-                            break;
-                        }
-                        pickupbys.Add(value == "me" ? CurrentUser.Name : value);
-                        break;
-                    case "sort":
-                        selectedSorts.Add(value, false);
-                        if (NHibernateMetadataHelper.IsMapped<Issue>(sessionFactory, value))
-                            querySorts.Add(value, false);
-                        else
-                            linqSorts.Add(value, false);
-                        break;
-                    case "sortdesc":
-                        selectedSorts.Add(value, true);
-                        if (NHibernateMetadataHelper.IsMapped<Issue>(sessionFactory, value))
-                            querySorts.Add(value, true);
-                        else
-                            linqSorts.Add(value, true);
-                        break;
-                }
-            }
-
-
-            var itemsQuery =
-                session.Query<Issue>().Where(
-                    x =>
-                    x.Project == project &&
-                    x.Labels.Count(l => selectedLabels.Contains(l.Name)) == selectedLabels.Count &&
-                    !x.Labels.Any(l => notSelectedLabels.Contains(l.Name)));
-
-            if (!string.IsNullOrWhiteSpace(searchQuery))
-            {
-                var searchQueryParts = searchQuery.Split(' ').Where(x => !string.IsNullOrWhiteSpace(x));
-                foreach (var searchQueryPart in searchQueryParts)
-                {
-                    var trimmedSearchQueryPart = searchQueryPart.Trim();
-                    itemsQuery = itemsQuery.Where(x => x.Name.Contains(trimmedSearchQueryPart) || x.Body.Contains(trimmedSearchQueryPart));
-                }
-            }
-
-            if (ids.Any())
-                itemsQuery = itemsQuery.Where(x => ids.Contains(x.Number));
-
-            foreach (var involved in involveds)
-            {
-                itemsQuery =
-                    itemsQuery.Where(
-                        x =>
-                        x.Comments.Any(a => a.User != null && (a.User.Name == involved || a.User.FullName == involved)) ||
-                        x.ChangeStates.Any(a => a.User != null && (a.User.Name == involved || a.User.FullName == involved)) ||
-                        x.Changes.Any(a => a.User != null && (a.User.Name == involved || a.User.FullName == involved)));
-            }
-
-            foreach (var openedby in openedbys)
-            {
-                itemsQuery = itemsQuery.Where(
-                    x => x.ChangeStates.Any(
-                        a => a.IssueState == IssueState.Open && a.User != null &&
-                             (a.User.Name == openedby || a.User.FullName == openedby)));
-            }
-
-            foreach (var closedby in closedbys)
-            {
-                itemsQuery = itemsQuery.Where(
-                    x => x.ChangeStates.Any(
-                        a => a.IssueState == IssueState.Closed && a.User != null &&
-                             (a.User.Name == closedby || a.User.FullName == closedby)));
-            }
-
-            foreach (var pickupby in pickupbys)
-            {
-                selectedPickupbys.Add(session.Query<User>().FirstOrDefault(x => x.Name == pickupby || x.FullName == pickupby));
-            }
-
-            if (pickupany)
-            {
-                itemsQuery = itemsQuery.Where(x => x.Pickups.Any());
-            }
-
-            if (pickupnone)
-            {
-                itemsQuery = itemsQuery.Where(x => x.Pickups.Count == 0);
-            }
-
-            if (pickupbys.Any())
-            {
-                itemsQuery = itemsQuery.Where(
-                    x => x.Pickups.Any(
-                        a => a.User != null && pickupbys.Contains(a.User.Name) || pickupbys.Contains(a.User.FullName)));
-            }
-
-            if (querySorts.Count > 0)
-            {
-                foreach (var sort in querySorts)
-                {
-                    itemsQuery = itemsQuery.OrderByProperty(sort.Key, sort.Value);
-                }
-            }
-
-            var items = itemsQuery.ToList();
-
-            if (linqSorts.Count > 0)
-            {
-                foreach (var sort in linqSorts)
-                {
-                    items = items.OrderByProperty(sort.Key, sort.Value).ToList();
-                }
-            }
-            var prioritizable = false;
-            if(querySorts.Count == 0 && linqSorts.Count == 0)
-            {
-                prioritizable = true;
-                items = items.OrderBy(x => x.State).ThenBy(x => x.Pickups.Count == 0).ThenBy(x => x.PrioOrder == 0).ThenBy(x => x.PrioOrder).ThenByDescending(x => x.ChangeStates.Max(cs => cs.CreatedAt)).ToList();
-            }
-
-            // TODO: dit moet eigenlijk verder naar boven in de query
-            //if (states.Any())
-            //{
-            //    itemsQuery = itemsQuery.Where(x => states.Contains(x.ChangeStates.Single().IssueState));
-            //}
-            if (states.Any())
-            {
-                items = items.Where(x => states.Contains(x.State)).ToList();
-            }
-
-            var filterPresets = session.Query<FilterPreset>().Where(x => x.User == CurrentUser && (x.Project == null || x.Project.Id == project.Id)).ToList();
-            var globalFilterPresets = session.Query<FilterPreset>().Where(x => x.User == null && (x.Project == null || x.Project.Id == project.Id)).ToList();
-
-            PropertyBag.Add("items", items.ToList());
             PropertyBag.Add("project", project);
-            PropertyBag.Add("selectedLabels", selectedLabels);
-            PropertyBag.Add("notSelectedLabels", notSelectedLabels);
+            PropertyBag.Add("result", parser);
             PropertyBag.Add("labels", CurrentUser.IsAdmin ? project.Labels : project.Labels.Where(l => l.VisibleForCustomer).ToList());
             PropertyBag.Add("customerLabels", CurrentUser.IsAdmin ? project.Labels : project.Labels.Where(l => l.ApplicableByCustomer).ToList());
-            PropertyBag.Add("states", states);
-            PropertyBag.Add("query", query);
             PropertyBag.Add("filterPresets", filterPresets);
             PropertyBag.Add("globalFilterPresets", globalFilterPresets);
-            PropertyBag.Add("selectedSorts", selectedSorts);
-            PropertyBag.Add("allSorts", allSorts);
             PropertyBag.Add("allAdmins", session.Query<User>().Where(x => x.IsAdmin).ToList());
-            PropertyBag.Add("selectedPickupbys", selectedPickupbys);
-            PropertyBag.Add("pickupany", pickupany);
-            PropertyBag.Add("pickupnone", pickupnone);
-            PropertyBag.Add("prioritizable", prioritizable);
+            PropertyBag.Add("selectedPickupbys", parser.SelectedPickupbys);
+            PropertyBag.Add("pickupany", parser.PickupAny);
+            PropertyBag.Add("pickupnone", parser.PickupNone);
+            PropertyBag.Add("prioritizable", parser.Prioritizable);
         }
 
         [MustHaveProject]
@@ -265,7 +67,7 @@
                 if (routeMatch.Name == "issues") PropertyBag.Add("referer", referer.PathAndQuery);
             }
 
-            var project = session.Query<Project>().Single(p => p.Slug == projectSlug);
+            var project = session.Slug<Project>(projectSlug);
             PropertyBag.Add("project", project);
             var item = session.Query<Issue>().Single(i => i.Number == issueId && i.Project == project);
             PropertyBag.Add("item", item);
@@ -288,7 +90,7 @@
         [MustHaveProject]
         public void QuickView(string projectSlug, int issueId)
         {
-            var project = session.Query<Project>().Single(p => p.Slug == projectSlug);
+            var project = session.Slug<Project>(projectSlug);
             PropertyBag.Add("project", project);
             var item = session.Query<Issue>().Single(i => i.Number == issueId && i.Project == project);
             PropertyBag.Add("item", item);
@@ -300,7 +102,7 @@
         [MustHaveProject]
         public void New(string projectSlug)
         {
-            var project = session.Query<Project>().Single(p => p.Slug == projectSlug);
+            var project = session.Slug<Project>(projectSlug);
             PropertyBag.Add("project", project);
             PropertyBag.Add("item", new Issue());
             PropertyBag.Add("labels", CurrentUser.IsAdmin ? project.Labels : project.Labels.Where(l => l.ApplicableByCustomer));
@@ -310,7 +112,7 @@
         [Admin]
         public void Edit(string projectSlug, int issueId)
         {
-            var project = session.Query<Project>().Single(p => p.Slug == projectSlug);
+            var project = session.Slug<Project>(projectSlug);
             PropertyBag.Add("project", project);
             var item = session.Query<Issue>().Single(i => i.Number == issueId && i.Project == project);
             PropertyBag.Add("item", item);
@@ -320,7 +122,7 @@
         [MustHaveProject]
         public void Save(string projectSlug, int issueId, string[] labels)
         {
-            var project = session.Query<Project>().Single(p => p.Slug == projectSlug);
+            var project = session.Slug<Project>(projectSlug);
             var issue = session.Query<Issue>().SingleOrDefault(i => i.Number == issueId && i.Project == project);
 
             var hash = "";
@@ -351,7 +153,7 @@
         [Admin]
         public void Pickup(string projectSlug, int issueId)
         {
-            var project = session.Query<Project>().Single(p => p.Slug == projectSlug);
+            var project = session.Slug<Project>(projectSlug);
             var issue = session.Query<Issue>().Single(i => i.Number == issueId && i.Project == project);
             if (!issue.IsArchived && issue.PickedUpBy != CurrentUser)
             {
@@ -369,7 +171,7 @@
         public void AddComment(string projectSlug, int issueId, string body)
         {
             RedirectToReferrer();
-            var project = session.Query<Project>().Single(p => p.Slug == projectSlug);
+            var project = session.Slug<Project>(projectSlug);
             var issue = session.Query<Issue>().Single(i => i.Number == issueId && i.Project == project);
             if (issue.IsArchived) return;
             var comment = new Comment
@@ -390,7 +192,7 @@
         public void AddLabel(string projectSlug, int issueId, int param)
         {
             RedirectToReferrer();
-            var project = session.Query<Project>().Single(p => p.Slug == projectSlug);
+            var project = session.Slug<Project>(projectSlug);
             var issue = session.Query<Issue>().Single(i => i.Number == issueId && i.Project == project);
             if (issue.IsArchived) return;
             var label = project.Labels.First(l => l.Id == param);
@@ -405,53 +207,31 @@
         }
 
         [Admin]
-        public void BookTime(string projectSlug, int issueId, string date, double hours, bool close)
+        public void BookTime(string projectSlug, int issueId, DateTime date, double minutes, bool close, string comment)
         {
             RedirectToReferrer();
-            if (hours <= 0.0)
-            {
-                Flash.Add("error", "Geen uren ingevuld, niets geboekt naar Freckle");
-                RedirectToReferrer();
-                return;
-            }
-            var project = session.Query<Project>().Single(p => p.Slug == projectSlug);
+            var project = session.Slug<Project>(projectSlug);
             var issue = session.Query<Issue>().Single(i => i.Number == issueId && i.Project == project);
             if (issue.IsArchived) return;
-            var description = new List<string>();
-            if (project.FreckleName != null && project.FreckleName.ToLower().Contains("service")) description.Add("#servicedesk");
-            description.AddRange(project.Labels.Where(l => l.ToFreckle && issue.Labels.Select(label => label.Name).Contains(l.Name)).Select(l => "#" + l.Name).ToList());
-            description.Add($"#{issue.Number} - {issue.Name}");
-            var entry = new Entry()
-                            {
-                                Date = date,
-                                Description = string.Join(", ", description),
-                                Minutes = $"{hours}h",
-                                ProjectId = project.FreckleId,
-                                User = CurrentUser.FreckleEmail
-                            };
-            if (entryClient.Post(entry))
+            var booking = new Booking() {User = CurrentUser, Date = date, Minutes = minutes, Issue = issue, Project = project, Comment = comment};
+
+            using (var tx = session.BeginTransaction())
             {
-                Flash.Add("info", "Uren geboekt in Freckle");
                 if (close)
                 {
                     issue.Close(CurrentUser);
-                    using (var tx = session.BeginTransaction())
-                    {
-                        session.SaveOrUpdate(issue);
-                        tx.Commit();
-                    }
+                    session.SaveOrUpdate(issue);
                 }
+                session.SaveOrUpdate(booking);
+                tx.Commit();
             }
-            else
-                Flash.Add("error", "Er is iets mis gegaan met boeken in Freckle");
-
         }
 
         [MustHaveProject]
         public void Close(string projectSlug, int issueId)
         {
             RedirectToReferrer();
-            var project = session.Query<Project>().Single(p => p.Slug == projectSlug);
+            var project = session.Slug<Project>(projectSlug);
             var issue = session.Query<Issue>().Single(i => i.Number == issueId && i.Project == project);
             if (issue.State == IssueState.Open || issue.State == IssueState.Unknown)
             {
@@ -468,7 +248,7 @@
         public void Reopen(string projectSlug, int issueId)
         {
             RedirectToReferrer();
-            var project = session.Query<Project>().Single(p => p.Slug == projectSlug);
+            var project = session.Slug<Project>(projectSlug);
             var issue = session.Query<Issue>().Single(i => i.Number == issueId && i.Project == project);
             if (issue.State == IssueState.Closed || issue.State == IssueState.Unknown)
             {
@@ -486,7 +266,7 @@
         {
             RedirectToReferrer();
             if (!CurrentUser.IsAdmin) return;
-            var project = session.Query<Project>().Single(p => p.Slug == projectSlug);
+            var project = session.Slug<Project>(projectSlug);
             var issue = session.Query<Issue>().Single(i => i.Number == issueId && i.Project == project);
             issue.Archive(CurrentUser);
             using (var tx = session.BeginTransaction())
@@ -528,18 +308,18 @@
             return issues.Select((x, i) => new {x.Number, i}).ToDictionary(x => x.Number, x => x.i);
         }
 
-        [Admin]
+        [MustHaveProject]
         public void ExportImport(string projectSlug)
         {
-            var project = session.Query<Project>().Single(p => p.Slug == projectSlug);
+            var project = session.Slug<Project>(projectSlug);
 
             PropertyBag.Add("project", project);
         }
 
-        [Admin]
+        [MustHaveProject]
         public void ExportJson(string projectSlug, string[] selectedLabels, IssueState state, string issues)
         {
-            var project = session.Query<Project>().Single(p => p.Slug == projectSlug);
+            var project = session.Slug<Project>(projectSlug);
 
             if (Request.Params["state"] == null) state = CurrentUser.DefaultState;
             var items = project.Issues;
@@ -572,10 +352,10 @@
             Response.BinaryWrite(stream);
         }
 
-        [Admin]
+        [MustHaveProject]
         public void ExportCsv(string projectSlug, string[] selectedLabels, IssueState state, string issues)
         {
-            var project = session.Query<Project>().Single(p => p.Slug == projectSlug);
+            var project = session.Slug<Project>(projectSlug);
 
             if (Request.Params["state"] == null) state = CurrentUser.DefaultState;
             var items = project.Issues;
@@ -605,6 +385,19 @@
             var byteArray = Encoding.Default.GetBytes(csv);
             var stream = new MemoryStream(byteArray);
             Response.BinaryWrite(stream);
+        }
+
+        [return: JSONReturnBinder]
+        public object Autocomplete(long projectId, string query)
+        {
+            var suggestions = new List<Suggestion>();
+            var issues = session.Query<Issue>().Where(i => i.Project.Id == projectId);
+            if (query != null)
+            {
+                issues = issues.Where(i => i.Number.ToString().Contains(query) || i.Name.Contains(query));
+            }
+            suggestions.AddRange(issues.ToList().Where(i => i.IsOpen).Select(x => new Suggestion(string.Format("#{0} - {1}", x.Number, x.Name), x.Id.ToString())));
+            return new { query = query, suggestions = suggestions };
         }
     }
 }

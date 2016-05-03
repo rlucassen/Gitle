@@ -14,10 +14,16 @@
             Map(x => x.FreckleName);
             Map(x => x.Information).CustomSqlType("nvarchar(max)");
             Map(x => x.Comments).CustomSqlType("nvarchar(max)");
+            Map(x => x.Type);
+            Map(x => x.TicketRequiredForBooking);
+            Map(x => x.BudgetMinutes);
             HasMany(x => x.Users).Cascade.All();
             HasMany(x => x.Labels).Cascade.AllDeleteOrphan();
             HasMany(x => x.Issues).Cascade.AllDeleteOrphan();
+            HasMany(x => x.Bookings).Cascade.AllDeleteOrphan();
+            HasManyToMany(x => x.Documents).Table("ProjectDocument").Cascade.AllDeleteOrphan();
             References(x => x.Customer);
+            References(x => x.Application);
         }
     }
 }

@@ -12,11 +12,8 @@
 
     public class UserController : SecureController
     {
-        private readonly ISession session;
-
-        public UserController(ISessionFactory sessionFactory)
+        public UserController(ISessionFactory sessionFactory) : base(sessionFactory)
         {
-            this.session = sessionFactory.GetCurrentSession();
         }
 
         [Admin]

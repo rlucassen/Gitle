@@ -3,19 +3,18 @@
     using System.Collections.Generic;
     using System.Linq;
     using Castle.MonoRail.Framework;
+    using Helpers;
     using Model;
     using NHibernate;
     using NHibernate.Linq;
 
     public class SearchController : BaseController
     {
-        private readonly ISession session;
-
-        public SearchController(ISessionFactory sessionFactory)
+        public SearchController(ISessionFactory sessionFactory) : base(sessionFactory)
         {
-            this.session = sessionFactory.GetCurrentSession();
         }
 
+        [Admin]
         [return: JSONReturnBinder]
         public object Index(string query)
         {
@@ -30,6 +29,8 @@
             var projects = session.Query<Project>().Where(x => x.Name.Contains(query));
             suggestions.AddRange(projects.Select(x => new Suggestion($"Project: {x.Name}", $"/project/{x.Slug}/view")));
 
+            var applications = session.Query<Application>().Where(x => x.Name.Contains(query));
+            suggestions.AddRange(applications.Select(x => new Suggestion($"Application: {x.Name}", $"/application/{x.Slug}/view")));
 
             return new {query = query, suggestions = suggestions };
         }
@@ -42,7 +43,14 @@
             this.value = value;
             this.data = data;
         }
+        public Suggestion(string value, string data, string extraValue)
+        {
+            this.value = value;
+            this.data = data;
+            this.extraValue = extraValue;
+        }
         public string value;
         public string data;
+        public string extraValue;
     }
 }

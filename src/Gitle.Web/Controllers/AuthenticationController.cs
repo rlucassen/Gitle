@@ -11,18 +11,17 @@
     using Model.Interfaces.Service;
     using Model.Nested;
     using NHibernate;
+    using Castle.MonoRail.Framework;
     using NHibernate.Linq;
 
     #endregion
 
     public class AuthenticationController : BaseController
     {
-        private readonly ISession session;
         private readonly IEmailService emailService;
 
-        public AuthenticationController(ISessionFactory sessionFactory, IEmailService emailService)
+        public AuthenticationController(ISessionFactory sessionFactory, IEmailService emailService) : base(sessionFactory)
         {
-            this.session = sessionFactory.GetCurrentSession();
             this.emailService = emailService;
         }
 
@@ -68,7 +67,7 @@
         public void RequestReset(string email)
         {
             var users = session.Query<User>().Where(x => !string.IsNullOrWhiteSpace(email) && x.IsActive && x.EmailAddress == email).ToList();
-
+            
             if (users.Any())
             {
                 users.ForEach(
@@ -78,11 +77,11 @@
                         user.Password.GenerateHash();
 
                         emailService.SendPasswordLink(user);
-                        using (var tx = session.BeginTransaction())
-                        {
+                using (var tx = session.BeginTransaction())
+                {
                             session.SaveOrUpdate(user);
-                            tx.Commit();
-                        }
+                    tx.Commit();
+                }
                     });
             }
             else

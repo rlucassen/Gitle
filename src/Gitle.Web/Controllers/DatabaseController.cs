@@ -12,11 +12,8 @@
 
     public class DatabaseController : BaseController
     {
-        private readonly ISession session;
-
-        public DatabaseController(ISessionFactory sessionFactory)
+        public DatabaseController(ISessionFactory sessionFactory) : base(sessionFactory)
         {
-            session = sessionFactory.GetCurrentSession();
         }
 
         public void DemoData(long id)

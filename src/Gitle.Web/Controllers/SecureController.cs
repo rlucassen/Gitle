@@ -10,18 +10,29 @@
     using System.Linq;
     using System.Reflection;
     using Helpers;
+    using NHibernate;
 
     [Layout("secure")]
     [Filter(ExecuteWhen.BeforeAction, typeof (AuthorisationFilter), ExecutionOrder = 1)]
     [Filter(ExecuteWhen.BeforeAction, typeof (AuthenticationFilter), ExecutionOrder = 2)]
     public abstract class SecureController : BaseController
     {
+        protected SecureController(ISessionFactory sessionFactory) : base(sessionFactory)
+        {
+        }
+
         protected User CurrentUser => (User) Context.CurrentUser;
 
         protected override object InvokeMethod(MethodInfo method, IRequest request, IDictionary<string, object> extraArgs)
         {
             var adminAttributes = (AdminAttribute[])method.GetCustomAttributes(typeof(AdminAttribute), false);
             if (adminAttributes.Length > 0 && !CurrentUser.IsAdmin)
+            {
+                RenderView("/shared/forbidden");
+                return null;
+            }
+            var danielleAttributes = (DanielleAttribute[])method.GetCustomAttributes(typeof(DanielleAttribute), false);
+            if (danielleAttributes.Length > 0 && !CurrentUser.IsDanielle)
             {
                 RenderView("/shared/forbidden");
                 return null;

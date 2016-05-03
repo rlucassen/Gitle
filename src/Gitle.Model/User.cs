@@ -28,6 +28,7 @@
         public virtual IList<UserProject> Projects { get; set; }
         public virtual IList<FilterPreset> FilterPresets { get; set; }
         public virtual bool IsAdmin { get; set; }
+        public virtual bool IsDanielle { get; set; }
         public virtual string Phone { get; set; }
         public virtual string GitHubUsername { get; set; }
         public virtual string GitHubAccessToken { get; set; }
@@ -42,6 +43,8 @@
         {
             return Projects.FirstOrDefault(x => x.Project == project) ?? new UserProject();
         }
+
+        public virtual bool IsCustomer { get { return !IsAdmin && !IsDanielle; } }
 
         #region Implementation of IPrincipal
 

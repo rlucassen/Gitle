@@ -1,6 +1,6 @@
 ﻿<div class="row">
   <div class="large-12 columns">
-    <h1>${project.Name}: ${items.Count} Taken</h1>
+    <h1>${project.Name}: ${result.TotalResultCount} Taken</h1>
     <a class="button" href="/project/${project.Slug}/issue/new">Nieuwe taak</a>
     <a class="button secondary" href="/project/${project.Slug}/view">Projectdetails</a>
     <% if CurrentUser.IsAdmin: %>
@@ -17,7 +17,7 @@
             <form id="query-form" method="GET">
               <div class="row collapse">
                 <div class="large-9 small-1 columns">
-                  <input type="text" id="query" name="query" data-remember="filter-${project.Slug}" value="${query}"/>
+                  <input type="text" id="query" name="query" data-remember="filter-${project.Slug}" value="${result.Query}"/>
                 </div>
                 <div class="large-1 small-1 columns">
                   <a href="#" data-filter="" data-filter-clear="" class="button postfix alert">
@@ -28,7 +28,12 @@
                   <span class="button split postfix"><a href="#" class="submit">Filter</a> <span data-dropdown="drop"></span></span>
                   <ul id="drop" class="f-dropdown medium" data-dropdown-content>
                     <% for filterPreset in filterPresets: %>
-                    <li><a class="filter-preset" data-filter="${filterPreset.FilterString}" data-filter-clear href="#">${filterPreset.Name}</a></li>
+                    <li>
+                      <a class="filter-preset" data-filter="${filterPreset.FilterString}" data-filter-clear href="#">${filterPreset.Name}</a>
+                      <a href="/filterpreset/${filterPreset.Id}/delete" class="remove-link">
+                        <i class="fa fa-close red"></i>
+                      </a>
+                    </li>
                     <% end %>
                     <li class="divider"></li>
                     <% for filterPreset in globalFilterPresets: %>
@@ -49,10 +54,10 @@
           <div class="large-0 columns">
             <ul class="button-group">
               <li>
-                <a href="#" data-filter="state:Open" class="button tiny no-margin secondary<% if states.Contains(Gitle.Model.Enum.IssueState.Open): %> active<% end %>">Open</a>
+                <a href="#" data-filter="state:Open" class="button tiny no-margin secondary<% if result.States.Contains(Gitle.Model.Enum.IssueState.Open): %> active<% end %>">Open</a>
               </li>
               <li>
-                <a href="#" data-filter="state:Closed" class="button tiny no-margin secondary<% if states.Contains(Gitle.Model.Enum.IssueState.Closed): %> active<% end %>">Gesloten</a>
+                <a href="#" data-filter="state:Closed" class="button tiny no-margin secondary<% if result.States.Contains(Gitle.Model.Enum.IssueState.Closed): %> active<% end %>">Gesloten</a>
               </li>
             </ul>
           </div>
@@ -63,11 +68,11 @@
               <% for label in labels: %>
               <li>
                 <a href="#" data-filter="label:'${label.Name}'">
-                  <% if selectedLabels.Contains(label.Name): %>
+                  <% if result.SelectedLabels.Contains(label.Name): %>
                   <i class="fa fa-check"></i>
                   <% end %>
                   <span class="label no-margin"
-                    <% if label.VisibleForCustomer: %> radius<% end %>" title="${label.Name}" style="background-color: #${label.Color} ;">${label.Name}</span>
+                  <% if label.VisibleForCustomer: %> radius<% end %>" title="${label.Name}" style="background-color: #${label.Color} ;">${label.Name}</span>
                 </a>
               </li>
               <% end %>
@@ -77,11 +82,11 @@
               <% for label in labels: %>
               <li>
                 <a href="#" data-filter="notlabel:'${label.Name}'">
-                  <% if notSelectedLabels.Contains(label.Name): %>
+                  <% if result.NotSelectedLabels.Contains(label.Name): %>
                   <i class="fa fa-check"></i>
                   <% end %>
                   <span class="label no-margin"
-                    <% if label.VisibleForCustomer: %> radius<% end %>" title="${label.Name}" style="background-color: #${label.Color} ;">${label.Name}</span>
+                  <% if label.VisibleForCustomer: %> radius<% end %>" title="${label.Name}" style="background-color: #${label.Color} ;">${label.Name}</span>
                 </a>
               </li>
               <% end %>
@@ -93,20 +98,20 @@
           <div class="large-0 small-12 columns">
             <button href="#" data-dropdown="sorts" aria-controls="sorts" aria-expanded="false" class="button tiny dropdown no-margin">Sorteren:</button>
             <ul id="sorts" data-dropdown-content="" class="f-dropdown" aria-hidden="true" tabindex="-1">
-              <% for sort in allSorts: %>
-              <% isSorted = selectedSorts.ContainsKey(sort.Key) %>
+              <% for sort in result.AllSorts: %>
+              <% isSorted = result.SelectedSorts.ContainsKey(sort.Key) %>
               <li>
-                <a href="#" data-filter="sort<% if not isSorted or (isSorted and not selectedSorts[sort.Key]): %>desc<% end %>:${sort.Key}" data-filter-opposite="sort<% if isSorted and selectedSorts[sort.Key]: %>desc<% end %>:${sort.Key}">
-                  <% if isSorted and selectedSorts[sort.Key]: %>
+                <a href="#" data-filter="sort<% if not isSorted or (isSorted and not result.SelectedSorts[sort.Key]): %>desc<% end %>:${sort.Key}" data-filter-opposite="sort<% if isSorted and result.SelectedSorts[sort.Key]: %>desc<% end %>:${sort.Key}">
+                  <% if isSorted and result.SelectedSorts[sort.Key]: %>
                   <i class="fa fa-chevron-down"></i>
                   <% end %>
-                  <% if isSorted and not selectedSorts[sort.Key]: %>
+                  <% if isSorted and not result.SelectedSorts[sort.Key]: %>
                   <i class="fa fa-chevron-up"></i>
                   <% end %>
-              ${sort.Value}
+                  ${sort.Value}
                 </a>
                 <% if isSorted: %>
-                <a href="#" class="remove-filter" data-filter="sort<% if not isSorted or (isSorted and selectedSorts[sort.Key]): %>desc<% end %>:${sort.Key}">
+                <a href="#" class="remove-filter" data-filter="sort<% if not isSorted or (isSorted and result.SelectedSorts[sort.Key]): %>desc<% end %>:${sort.Key}">
                   <i class="fa fa-close red"></i>
                 </a>
                 <% end %>
@@ -152,7 +157,7 @@
           <% end %>
           <div class="large-0 small-12 columns">
             <div class="row" id="group-actions">
-              <input type="hidden" name="issues" />
+              <input type="hidden" name="issues"/>
               <div class="large-0 small-12 columns text-right small-text-left">
                 <label>Geselecteerde taken:</label>
               </div>
@@ -162,7 +167,7 @@
                   <% for label in customerLabels: %>
                   <li>
                     <a href="/project/${project.Slug}/addlabel?label=${label.Name}" data-group-action>
-                      <span class="label no-margin<% if label.VisibleForCustomer: %> radius<% end %>" title="${label.Name}" style="background-color: #${label.Color} ;">${label.Name}</span>
+                      <span class="label no-margin<% if label.VisibleForCustomer: %> radius<% end %>" title="${label.Name}" style="background-color: #$ {label.Color}; ">${label.Name}</span>
                     </a>
                   </li>
                   <% end %>
@@ -182,6 +187,19 @@
     <% OutputSubView("_issuetable", {"actions": true}) %>
   </div>
 </div>
+
+<% if result.ResultCount < result.TotalResultCount: %>
+<div class="row">
+  <div class="large-12 columns">
+    <div class="panel text-center">
+      <p>Alleen de eerste ${result.ResultCount} resultaten worden getoond, er zijn nog ${result.OmmitedResults} extra resultaten.</p>
+      <a href="#" class="button small" data-filter="take:all">Geef alle resultaten</a>
+    </div>
+  </div>
+</div>
+<% end %>
+
+
 <div id="newFilterPreset" class="reveal-modal small" data-reveal>
   <div class="row">
     <div class="small-12 columns">
@@ -223,23 +241,6 @@
 </div>
 <script>
   $(function () {
-    $('a[data-filter], a[data-filter-clear]').click(function (e) {
-      e.preventDefault();
-      var filter = $(this).data('filter');
-      var oppositeFilter = $(this).data('filter-opposite');
-      var query = $('#query').val();
-      if ($(this).is('[data-filter-clear]')) query = '';
-      if (query.indexOf(oppositeFilter) != -1) {
-        query = query.replace(oppositeFilter, "");
-      }
-      if (query.indexOf(filter) != -1) {
-        query = query.replace(filter, "");
-      } else {
-        query = query + " " + filter;
-      }
-      $('#query').val(query.replace(/ +(?= )/g,''));
-      $('#query-form').submit();
-    });
 
     $('#query-form .submit').click(function (e) {
       e.preventDefault();
