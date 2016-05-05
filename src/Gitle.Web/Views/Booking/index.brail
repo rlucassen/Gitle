@@ -71,10 +71,11 @@
             <div class="booking-project">${booking.Project.Name}</div>
           </div>
           <div class="large-1 columns">
-            <% if booking.Issue: %>
             <div class=" row booking-issue">
               <div class="small-8 columns">
+                <% if booking.Issue: %>
                 <span title="#${booking.Issue.Number} - ${booking.Issue.Name}">#${booking.Issue.Number}</span>
+                <% end %>
               </div>
               <div class="small-4 columns">
                 <% if not booking.Unbillable: %>
@@ -84,7 +85,6 @@
                 <% end %>
               </div>
             </div>
-            <% end %>
           </div>
           <div class="large-5 columns end">
             <span class="booking-comment">${booking.Comment}</span>

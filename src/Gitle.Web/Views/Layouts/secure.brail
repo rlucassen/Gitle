@@ -126,9 +126,9 @@
   <script src="/Content/javascript/vendor/foundation/foundation.joyride.js"> </script>
   <script>
     $(document).foundation()
-               .foundation('abide', {
-                 live_validate: false
-               });
+      .foundation('abide', {
+        live_validate: false,
+      });
   </script>
   <% if RELEASE: %>
   <script src="/Content/javascript/auxilium.min.js"> </script>

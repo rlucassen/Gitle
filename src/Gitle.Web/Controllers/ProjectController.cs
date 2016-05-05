@@ -1,11 +1,8 @@
 ﻿namespace Gitle.Web.Controllers
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
     using Castle.MonoRail.Framework;
-    using Clients.Freckle.Interfaces;
-    using FluentNHibernate.Utils;
     using Model;
     using Helpers;
     using Model.Enum;
@@ -146,9 +143,14 @@
                 item = BindObject<Project>("item");
             }
 
-            var application = session.Get<Application>(applicationId);
-            application.Projects.Add(item);
-            session.SaveOrUpdate(application);
+            if (applicationId > 0)
+            {
+                var application = session.Get<Application>(applicationId);
+                item.Application = application;
+                application.Projects.Add(item);
+                session.SaveOrUpdate(application);
+            }
+
             var labels = BindObject<Label[]>("label");
 
             var labelsToDelete = item.Labels.Where(l => !labels.Select(x => x.Id).Contains(l.Id)).ToList();
@@ -257,14 +259,14 @@
         public object Autocomplete(string query)
         {
             var suggestions = new List<Suggestion>();
-            var projects = session.Query<Project>();
+            var projects = session.Query<Project>().Where(x => x.IsActive);
             if (query != null)
             {
                 projects = projects.Where(p => p.Name.Contains(query) || (p.Application != null && (p.Application.Name.Contains(query) || (p.Application.Customer != null && p.Application.Customer.Name.Contains(query)))));
             }
             projects = projects.OrderBy(x => x.Name);
             suggestions.AddRange(projects.ToList().Select(x => new Suggestion(x.CompleteName, x.Id.ToString(), x.TicketRequiredForBooking ? "ticketRequired": string.Empty)));
-            return new { query = query, suggestions = suggestions };
+            return new {query, suggestions };
         }
     }
 }

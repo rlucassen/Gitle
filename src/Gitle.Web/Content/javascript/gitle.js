@@ -185,6 +185,9 @@ $(function () {
       onSelect: function (suggestion) {
         row.find('.booking_Issue_Id').val(suggestion.data);
         row.find('.issue-chooser').val(suggestion.value);
+        row.find('.booking_Comment').prop("required", false);
+        $(document).foundation('abide', 'reflow');
+
       }
     });
 
@@ -200,6 +203,8 @@ $(function () {
     });
 
     row.find('.date').fdatepicker(datepickerOptions);
+
+    row.find('.booking-parser').bookingParser();
 
   };
 
