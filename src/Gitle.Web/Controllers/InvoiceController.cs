@@ -23,14 +23,14 @@ namespace Gitle.Web.Controllers
             this.pdfExportService = pdfExportService;
         }
 
-        [Admin]
+        [Danielle]
         public void Index()
         {
             var invoices = session.Query<Invoice>().OrderBy(x => x.CreatedAt).ToList().OrderBy(x => (int)(x.State));
             PropertyBag.Add("invoices", invoices);
         }
 
-        [Admin]
+        [Danielle]
         public void Create(long projectId, DateTime startDate, DateTime endDate, bool oldBookings)
         {
             var project = session.Query<Project>().FirstOrDefault(x => x.IsActive && x.Id == projectId);
@@ -49,7 +49,7 @@ namespace Gitle.Web.Controllers
             PropertyBag.Add("project", project);
         }
 
-        [Admin]
+        [Danielle]
         public void Copy(string projectSlug, long invoiceId)
         {
             var project = session.SlugOrDefault<Project>(projectSlug);
@@ -61,7 +61,7 @@ namespace Gitle.Web.Controllers
             RenderView("create");
         }
 
-        [Admin]
+        [Danielle]
         public void Edit(string projectSlug, long invoiceId)
         {
             var project = session.SlugOrDefault<Project>(projectSlug);
@@ -73,7 +73,7 @@ namespace Gitle.Web.Controllers
             RenderView("create");
         }
 
-        [Admin]
+        [Danielle]
         public void Save(string projectSlug, long invoiceId)
         {
             var project = session.SlugOrDefault<Project>(projectSlug);
@@ -127,19 +127,19 @@ namespace Gitle.Web.Controllers
             RedirectToAction("index");
         }
 
-        [Admin]
+        [Danielle]
         public void Definitive(string projectSlug, long invoiceId)
         {
             ChangeState(projectSlug, invoiceId, InvoiceState.Definitive);
         }
 
-        [Admin]
+        [Danielle]
         public void Archive(string projectSlug, long invoiceId)
         {
             ChangeState(projectSlug, invoiceId, InvoiceState.Archived);
         }
 
-        [Admin]
+        [Danielle]
         public void ArchiveIssues(string projectSlug, long invoiceId)
         {
             var project = session.SlugOrDefault<Project>(projectSlug);
@@ -158,7 +158,7 @@ namespace Gitle.Web.Controllers
             RedirectToReferrer();
         }
 
-        [Admin]
+        [Danielle]
         public void Download(string projectSlug, long invoiceId)
         {
             CancelView();
