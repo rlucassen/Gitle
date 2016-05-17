@@ -51,18 +51,12 @@
         <% if CurrentUser.IsAdmin: %>
         <li class="divider"></li>
         <li><a href="/booking/index">Uren boeken</a></li>
-        <% end %>
-        <% if CurrentUser.IsDanielle: %>
         <li class="divider"></li>
         <li><a href="/report/index">Urenrapporten</a></li>
-        <% end %>
-        <% if CurrentUser.IsAdmin: %>
         <li class="divider"></li>
         <li><a href="/customers">Klanten</a></li>
-        <% end %>
-        <% if CurrentUser.IsAdmin: %>
         <li class="divider"></li>
-        <li><a href="/applications">Applicatie</a></li>
+        <li><a href="/applications">Applicaties</a></li>
         <% end %>
         <% if CurrentUser.IsAdmin or CurrentUser.Projects.Count > 1: %>
         <li class="divider"></li>

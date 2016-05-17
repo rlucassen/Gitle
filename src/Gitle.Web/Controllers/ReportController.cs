@@ -7,7 +7,6 @@ namespace Gitle.Web.Controllers
 {
     using System;
     using System.Collections.Generic;
-    using System.Security.Cryptography.X509Certificates;
     using Helpers;
     using Model.Helpers;
     using QueryParsers;

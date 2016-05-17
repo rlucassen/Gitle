@@ -19,12 +19,19 @@ namespace Gitle.Web.Controllers
         [Admin]
         public void Index()
         {
+            Index(DateTime.Today);
+        }
+
+        [Admin]
+        public void Index(DateTime date)
+        {
             var bookings = session.Query<Booking>()
                 .Where(x => x.IsActive && x.User == CurrentUser && x.Date > DateTime.Today.AddDays(-14))
                 .OrderByDescending(x => x.Date)
                 .GroupBy(x => x.Date.Date)
                 .ToDictionary(g => new { date = g.Key, total = g.ToList().Sum(x => x.Minutes) }, g => g.ToList());
             PropertyBag.Add("bookings", bookings);
+            PropertyBag.Add("today", date.ToString("dd-MM-yyyy"));
         }
 
         [Admin]
@@ -70,8 +77,9 @@ namespace Gitle.Web.Controllers
                 session.SaveOrUpdate(booking);
                 transaction.Commit();
             }
-            RedirectToReferrer();
+            RedirectToAction("index", new {date = booking.Date});
         }
+
         [Admin]
         public void Save(int id, int projectId, int issueId)
         {

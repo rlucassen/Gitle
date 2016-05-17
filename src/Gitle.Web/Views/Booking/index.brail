@@ -10,7 +10,7 @@
           </div>
           <% end %>
           <div class="small-2 large-1 columns">
-            <input type="text" name="booking.Date" id="booking_Date" class="date novalidate" placeholder="Eerder"  />
+            <input type="text" name="booking.Date" id="booking_Date" class="date novalidate" placeholder="Eerder" value="${today}" />
           </div>
         </div>
         <div class="row collapse booking-row-new">

@@ -55,6 +55,15 @@
             get { return State == IssueState.Open; }
         }
 
+        public virtual bool HasBeenOpenSince(DateTime dateTime)
+        {
+            if (!ChangeStates.Any()) return false;
+            var oldStates = ChangeStates.Where(x => x.CreatedAt <= dateTime);
+            var wasOpenAt = oldStates.Any() ? oldStates.OrderByDescending(x => x.CreatedAt).First().IssueState == IssueState.Open : false;
+            var hasBeenOpenSince = ChangeStates.Any(x => x.CreatedAt >= dateTime && x.IssueState == IssueState.Open);
+            return wasOpenAt || hasBeenOpenSince;
+        }
+
         public virtual bool IsArchived
         {
             get { return State == IssueState.Archived; }
