@@ -77,7 +77,7 @@ namespace Gitle.Web.Controllers
                 session.SaveOrUpdate(booking);
                 transaction.Commit();
             }
-            RedirectToAction("index", new {date = booking.Date});
+            RedirectToAction("index", new {date = booking.Date.ToShortDateString()});
         }
 
         [Admin]
