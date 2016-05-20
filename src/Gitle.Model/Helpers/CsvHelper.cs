@@ -45,5 +45,36 @@
 
             return $"{header}{rows}";
         }
+
+        public static string ReportCsv(IList<Booking> bookings)
+        {
+            const string rowTemplate =
+                "\"{2}\"{0}\"{3}\"{0}\"{4}\"{0}\"{5}\"{0}\"{6}\"{0}\"{7}\"{0}\"{8}\"{0}{1}";
+
+            var header = string.Format(rowTemplate, fieldseparator, lineEnd,
+                                          "Minuten",
+                                          "Datum",
+                                          "Gebruiker",
+                                          "Project",
+                                          "Taak",
+                                          "Billable",
+                                          "Opmerking");
+
+            var rows = "";
+            foreach (var booking in bookings)
+            {
+                rows += string.Format(rowTemplate, fieldseparator, lineEnd,
+                                      booking.Minutes,
+                                      booking.Date.ToShortDateString(),
+                                      booking.User.FullName,
+                                      booking.Project.Name,
+                                      booking.Issue?.Name,
+                                      booking.Unbillable ? "Nee" : "Ja",
+                                      booking.Comment
+                    );
+            }
+
+            return $"{header}{rows}";
+        }
     }
 }

@@ -128,6 +128,9 @@
             </ul>
           </div>
           <div class="large-0 small-12 columns right">
+            <a class="button tiny" href="/report/exportcsv">Exporteren</a>
+          </div>
+          <div class="large-0 small-12 columns right">
             <button href="#" data-dropdown="groupbys" aria-controls="groupbys" aria-expanded="false" class="button tiny dropdown no-margin <% if result.GroupedBy: %>warning<% end %>">Groeperen:</button>
             <ul id="groupbys" data-dropdown-content class="f-dropdown" aria-hidden="true" tabindex="-1">
               <% for groupby in result.AllGroupbys: %>

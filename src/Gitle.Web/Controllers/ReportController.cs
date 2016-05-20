@@ -7,7 +7,10 @@ namespace Gitle.Web.Controllers
 {
     using System;
     using System.Collections.Generic;
+    using System.IO;
+    using System.Text;
     using Helpers;
+    using Model.Enum;
     using Model.Helpers;
     using QueryParsers;
 
@@ -60,6 +63,28 @@ namespace Gitle.Web.Controllers
             }
 
             PropertyBag.Add("presetDates", presetDates);
+        }
+
+        [Admin]
+        public void ExportCsv()
+        {
+            //var project = session.Slug<Booking>(projectSlug);
+            var bookings = session.Query<Booking>().ToList();
+
+            var csv = CsvHelper.ReportCsv(bookings);
+            CancelView();
+
+            Response.ClearContent();
+            Response.Clear();
+
+            var filename = $"bookings_{DateTime.Now:yyyyMMdd_hhmm}.csv";
+
+            Response.AppendHeader("content-disposition", $"attachment; filename={filename}");
+            Response.ContentType = "application/csv";
+
+            var byteArray = Encoding.Default.GetBytes(csv);
+            var stream = new MemoryStream(byteArray);
+            Response.BinaryWrite(stream);
         }
     }
 
