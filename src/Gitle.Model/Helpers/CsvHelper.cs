@@ -68,7 +68,7 @@
                                       booking.Date.ToShortDateString(),
                                       booking.User.FullName,
                                       booking.Project.Name,
-                                      booking.Issue?.Name,
+                                      booking.Issue?.Number,
                                       booking.Unbillable ? "Nee" : "Ja",
                                       booking.Comment
                     );
