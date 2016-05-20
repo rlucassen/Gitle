@@ -69,7 +69,7 @@ namespace Gitle.Web.Controllers
         public void ExportCsv()
         {
             //var project = session.Slug<Booking>(projectSlug);
-            var bookings = session.Query<Booking>().ToList();
+            var bookings = session.Query<Booking>().Where(x => x.IsActive).ToList();
 
             var csv = CsvHelper.ReportCsv(bookings);
             CancelView();
