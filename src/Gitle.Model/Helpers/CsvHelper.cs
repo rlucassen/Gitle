@@ -100,7 +100,7 @@
             foreach (var project in projects)
             {
                 rows += string.Format(rowTemplate, fieldseparator, lineEnd,
-                                      project.Customer?.Name,
+                                      project.Application?.Customer.Name,
                                       project.Application?.Name,
                                       project.Name,
                                       project.TypeString,
