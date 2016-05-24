@@ -191,7 +191,7 @@ namespace Gitle.Web.Controllers
         [Danielle]
         public void Export()
         {
-            var projects = session.Query<Project>().Where(x => x.IsActive).OrderBy(x => x.Customer.Name).ToList();
+            var projects = session.Query<Project>().Where(x => x.IsActive).OrderBy(x => x.Application.Customer.Name).ToList();
 
             var csv = CsvHelper.InvoiceCsv(projects);
             CancelView();
