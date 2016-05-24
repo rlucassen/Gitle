@@ -76,5 +76,46 @@
 
             return $"{header}{rows}";
         }
+
+        public static string InvoiceCsv(IList<Project> projects)
+        {
+            const string rowTemplate =
+                "\"{2}\"{0}\"{3}\"{0}\"{4}\"{0}\"{5}\"{0}\"{6}\"{0}\"{7}\"{0}\"{8}\"{0}\"{9}\"{0}\"{10}\"{0}\"{11}\"{0}\"{12}\"{0}\"{13}\"{0}{1}";
+
+            var header = string.Format(rowTemplate, fieldseparator, lineEnd,
+                                          "Klant",
+                                          "Applicatie",
+                                          "Project",
+                                          "Type",
+                                          "Uurtarief",
+                                          "Budget initieel project",
+                                          "Facturabele uren bij serviceproject",
+                                          "Totaal gemaakte uren",
+                                          "Billable gemaakte uren",
+                                          "Unbillable gemaakte uren",
+                                          "Totaal gefactureerde uren",
+                                          "Blijf nog te factureren");
+
+            var rows = "";
+            foreach (var project in projects)
+            {
+                rows += string.Format(rowTemplate, fieldseparator, lineEnd,
+                                      project.Customer?.Name,
+                                      project.Application?.Name,
+                                      project.Name,
+                                      project.TypeString,
+                                      project.HourPrice,
+                                      project.BudgetHours,
+                                      "nog te doen",
+                                      project.Bookings.Sum(x => x.Hours),
+                                      project.Bookings.Where(x => !x.Unbillable).Sum(x => x.Hours),
+                                      project.Bookings.Where(x => x.Unbillable).Sum(x => x.Hours),
+                                      "nog te doen",
+                                      "nog te doen"
+                    );
+            }
+
+            return $"{header}{rows}";
+        }
     }
 }

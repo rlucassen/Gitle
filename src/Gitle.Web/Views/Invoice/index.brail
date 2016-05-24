@@ -1,4 +1,13 @@
-﻿<h1>Nieuwe bijlage maken</h1>
+﻿<h1>Overzicht bijlagen</h1>
+<form action="/invoice/export" method="POST">
+  <div class="row">
+    <div class="large-12 columns">
+      <input type="submit" class="button" value="Export" />
+    </div>
+  </div>
+</form>
+
+<h1>Nieuwe bijlage maken</h1>
 <form action="/invoice/create" method="POST">
   <div class="row booking-row-new">
     <div class="large-12 columns">

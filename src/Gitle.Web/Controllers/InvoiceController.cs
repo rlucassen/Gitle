@@ -12,6 +12,7 @@ using System.Web;
 
 namespace Gitle.Web.Controllers
 {
+    using System.Text;
     using Model.Helpers;
 
     public class InvoiceController : SecureController
@@ -185,6 +186,27 @@ namespace Gitle.Web.Controllers
 
             Response.BinaryWrite(pdf);
             Response.AppendHeader("content-disposition", string.Format("filename={0}", filename));
+        }
+
+        [Danielle]
+        public void Export()
+        {
+            var projects = session.Query<Project>().Where(x => x.IsActive).OrderBy(x => x.Customer.Name).ToList();
+
+            var csv = CsvHelper.InvoiceCsv(projects);
+            CancelView();
+
+            Response.ClearContent();
+            Response.Clear();
+
+            var filename = $"invoices_{DateTime.Now:yyyyMMdd_hhmm}.csv";
+
+            Response.AppendHeader("content-disposition", $"attachment; filename={filename}");
+            Response.ContentType = "application/csv";
+
+            var byteArray = Encoding.Default.GetBytes(csv);
+            var stream = new MemoryStream(byteArray);
+            Response.BinaryWrite(stream);
         }
 
         private void ChangeState(string projectSlug, long invoiceId, InvoiceState state)
