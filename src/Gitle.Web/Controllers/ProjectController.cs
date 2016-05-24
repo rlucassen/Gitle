@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Linq;
+    using System.Web.UI.WebControls.Expressions;
     using Castle.MonoRail.Framework;
     using Model;
     using Helpers;
@@ -24,6 +25,11 @@
 
             var projects = session.Query<Project>().Where(x => x.IsActive);
 
+            if (!CurrentUser.IsDanielle)
+            {
+                projects = projects.Where(x => x.Type.ToString() != "Administration" || x.Type.ToString() == null);
+            }
+            
             if (!CurrentUser.IsAdmin)
             {
                 projects = projects.Where(p => p.Users.Any(x => x.User == CurrentUser));

@@ -11,5 +11,7 @@
         Service = 2,
         [Description("Intern project")]
         Internal = 3,
+        [Description("Administratief project")]
+        Administration = 4,
     }
 }
