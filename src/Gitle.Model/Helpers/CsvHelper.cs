@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Enum;
 
     public static class CsvHelper
     {
@@ -109,11 +110,11 @@
                                       project.HourPrice,
                                       project.BudgetHours,
                                       project.SumMaxOfEstimateAndBooking(),
-                                      project.Bookings.Where(x => x.IsActive).Sum(x => x.Hours),
-                                      project.Bookings.Where(x => x.IsActive && !x.Unbillable).Sum(x => x.Hours),
-                                      project.Bookings.Where(x => x.IsActive && x.Unbillable).Sum(x => x.Hours),
-                                      "nog te doen",
-                                      "nog te doen"
+                                      project.TotalHours,
+                                      project.BillableHours,
+                                      project.UnBillableHours,
+                                      project.TotalDefinitiveHours(),
+                                      project.ToInvoice()
                     );
             }
 
