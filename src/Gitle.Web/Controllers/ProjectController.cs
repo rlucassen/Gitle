@@ -266,6 +266,12 @@
         {
             var suggestions = new List<Suggestion>();
             var projects = session.Query<Project>().Where(x => x.IsActive);
+
+            if (!CurrentUser.IsDanielle)
+            {
+                projects = projects.Where(x => x.Type != ProjectType.Administration);
+            }
+
             if (query != null)
             {
                 projects = projects.Where(p => p.Name.Contains(query) || (p.Application != null && (p.Application.Name.Contains(query) || (p.Application.Customer != null && p.Application.Customer.Name.Contains(query)))));
