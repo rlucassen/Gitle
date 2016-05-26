@@ -30,7 +30,7 @@
       </div>
       <div class="row">
         <div class="large-3 columns">Uurprijs</div>
-        <div class="large-9 columns"><input type="number" name="item.HourPrice" value="${?item.HourPrice}" /></div>
+        <div class="large-9 columns"><input type="text" name="item.HourPrice" value="${item.HourPrice}" /></div>
       </div>
       <div class="row">
         <div class="large-3 columns">Totaal uren beschikbaar</div>

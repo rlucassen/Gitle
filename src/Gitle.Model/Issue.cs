@@ -273,9 +273,19 @@
             Pickups.Add(new Pickup() { CreatedAt = DateTime.Now, User = user, Issue = this });
         }
 
+        public virtual double BillableBookingHours()
+        {
+            return Bookings.Where(x => x.IsActive && !x.Unbillable).Sum(x => x.Hours);
+        }
+
         public virtual double BookingHours(DateTime startDate, DateTime endDate)
         {
             return Bookings.Where(x => x.Date >= startDate && x.Date <= endDate).Sum(x => x.Hours);
+        }
+
+        public virtual double MaxOfBookingAndTotalHours()
+        {
+            return Math.Max(TotalHours, BillableBookingHours());
         }
     }
 }

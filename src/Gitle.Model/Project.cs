@@ -23,7 +23,7 @@
         public virtual string Repository { get; set; }
         public virtual int MilestoneId { get; set; }
         public virtual string MilestoneName { get; set; }
-        public virtual int HourPrice { get; set; }
+        public virtual decimal HourPrice { get; set; }
         public virtual int FreckleId { get; set; }
         public virtual string FreckleName { get; set; }
         public virtual string Information { get; set; }
@@ -54,5 +54,14 @@
         public virtual double BillableMinutes => Bookings.Where(x => !x.Unbillable).Sum(x => x.Minutes);
 
         public virtual string CompleteName => $"{Name} ({Application?.Name}, {Application?.Customer?.Name})";
+
+        public virtual double SumMaxOfEstimateAndBooking()
+        {
+            if (Type != ProjectType.Service) return 0.0;
+            var issueMax = Issues.Where(i => i.IsActive).Sum(i => i.MaxOfBookingAndTotalHours());
+            var noIssueBookingsMax = Bookings.Where(b => b.Issue == null && b.IsActive && !b.Unbillable).Sum(b => b.Hours);
+
+            return issueMax + noIssueBookingsMax;
+        }
     }
 }

@@ -34,7 +34,7 @@
                                       issue.Devvers,
                                       issue.Hours,
                                       issue.TotalHours,
-                                      issue.TotalHours*project.HourPrice,
+                                      (decimal)issue.TotalHours*project.HourPrice,
                                       string.IsNullOrEmpty(issue.Body)
                                           ? ""
                                           : issue.Body.Replace(lineEnd, "").TrimStart('-'),
@@ -108,10 +108,10 @@
                                       project.TypeString,
                                       project.HourPrice,
                                       project.BudgetHours,
-                                      "nog te doen",
-                                      project.Bookings.Sum(x => x.Hours),
-                                      project.Bookings.Where(x => !x.Unbillable).Sum(x => x.Hours),
-                                      project.Bookings.Where(x => x.Unbillable).Sum(x => x.Hours),
+                                      project.SumMaxOfEstimateAndBooking(),
+                                      project.Bookings.Where(x => x.IsActive).Sum(x => x.Hours),
+                                      project.Bookings.Where(x => x.IsActive && !x.Unbillable).Sum(x => x.Hours),
+                                      project.Bookings.Where(x => x.IsActive && x.Unbillable).Sum(x => x.Hours),
                                       "nog te doen",
                                       "nog te doen"
                     );

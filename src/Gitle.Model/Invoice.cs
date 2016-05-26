@@ -63,7 +63,7 @@ namespace Gitle.Model
 
         public virtual string Number { get; set; }
         public virtual string Title { get; set; }
-        public virtual int HourPrice { get; set; }
+        public virtual decimal HourPrice { get; set; }
         public virtual DateTime CreatedAt { get; set; }
         public virtual bool VAT { get; set; }
         public virtual string Remarks { get; set; }
@@ -82,9 +82,9 @@ namespace Gitle.Model
         public virtual bool IsArchived { get { return State == InvoiceState.Archived; } }
         public virtual string StateString { get { return State.GetDescription(); } }
 
-        public virtual double TotalExclVat { get { return Lines.Sum(x => x.Price) + Corrections.Sum(x => x.Price); } }
-        public virtual double TotalVat { get { return TotalExclVat * (VAT ? 0.21 : 0); } }
-        public virtual double Total { get { return TotalExclVat + TotalVat; } }
+        public virtual decimal TotalExclVat { get { return Lines.Sum(x => x.Price) + Corrections.Sum(x => x.Price); } }
+        public virtual decimal TotalVat { get { return TotalExclVat * (VAT ? 0.21M : 0); } }
+        public virtual decimal Total { get { return TotalExclVat + TotalVat; } }
 
         public virtual double TotalHours { get { return Lines.Sum(x => x.Hours); } }
 
