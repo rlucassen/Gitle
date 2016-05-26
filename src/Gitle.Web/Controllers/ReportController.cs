@@ -70,7 +70,7 @@ namespace Gitle.Web.Controllers
         {
             var bookings = session.Query<Booking>().Where(x => x.IsActive).ToList();
 
-            var csv = CsvHelper.ReportCsv(bookings);
+            var csv = CsvHelper.BookingsCsv(bookings);
             CancelView();
 
             Response.ClearContent();

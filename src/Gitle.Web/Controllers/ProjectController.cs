@@ -27,7 +27,7 @@
 
             if (!CurrentUser.IsDanielle)
             {
-                projects = projects.Where(x => x.Type.ToString() != "Administration" || x.Type.ToString() == null);
+                projects = projects.Where(x => x.Type != ProjectType.Administration);
             }
             
             if (!CurrentUser.IsAdmin)

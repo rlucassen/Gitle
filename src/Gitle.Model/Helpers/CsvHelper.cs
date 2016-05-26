@@ -46,7 +46,7 @@
             return $"{header}{rows}";
         }
 
-        public static string ReportCsv(IList<Booking> bookings)
+        public static string BookingsCsv(IList<Booking> bookings)
         {
             const string rowTemplate =
                 "\"{2}\"{0}\"{3}\"{0}\"{4}\"{0}\"{5}\"{0}\"{6}\"{0}\"{7}\"{0}\"{8}\"{0}{1}";
