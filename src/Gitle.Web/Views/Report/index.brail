@@ -81,7 +81,7 @@
                   ${customer.Name}
                 </a>
                 <% if isSelected: %>
-                <a href="#" class="remove-filter" data-filter="user:${customer.Name}">
+                <a href="#" class="remove-filter" data-filter="customer:${customer.Slug}">
                   <i class="fa fa-close red"></i>
                 </a>
                 <% end %>
@@ -100,7 +100,7 @@
                   ${application.Name}
                 </a>
                 <% if isSelected: %>
-                <a href="#" class="remove-filter" data-filter="user:${application.Name}">
+                <a href="#" class="remove-filter" data-filter="application:${application.Slug}">
                   <i class="fa fa-close red"></i>
                 </a>
                 <% end %>
@@ -119,7 +119,7 @@
                   ${project.Name}
                 </a>
                 <% if isSelected: %>
-                <a href="#" class="remove-filter" data-filter="user:${project.Name}">
+                <a href="#" class="remove-filter" data-filter="project:${project.Slug}">
                   <i class="fa fa-close red"></i>
                 </a>
                 <% end %>
@@ -128,7 +128,7 @@
             </ul>
           </div>
           <div class="large-0 small-12 columns right">
-            <a class="button tiny" href="/report/exportcsv">Exporteren</a>
+            <button class="button tiny" formaction="exportcsv">Exporteren</button>
           </div>
           <div class="large-0 small-12 columns right">
             <button href="#" data-dropdown="groupbys" aria-controls="groupbys" aria-expanded="false" class="button tiny dropdown no-margin <% if result.GroupedBy: %>warning<% end %>">Groeperen:</button>
