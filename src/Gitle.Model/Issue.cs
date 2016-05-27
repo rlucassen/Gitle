@@ -228,9 +228,9 @@
             get { return InvoiceLines.Select(x => x.Invoice).Where(i => i.IsDefinitive).ToList(); }
         }
 
-        public virtual string CostString(double hourPrice)
+        public virtual string CostString(decimal hourPrice)
         {
-            return TotalHours > 0 ? (TotalHours * hourPrice).ToString("C") : "n.n.b.";
+            return TotalHours > 0 ? ((decimal)TotalHours * hourPrice).ToString("C") : "n.n.b.";
         }
 
         public virtual bool CheckLabel(string label)
