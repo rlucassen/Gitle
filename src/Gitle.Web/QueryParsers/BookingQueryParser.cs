@@ -21,6 +21,11 @@
 
         public List<BookingGroup> GroupedBookings { get; set; }
 
+        public List<Booking> AllBookings()
+        {
+            return GroupedBookings.SelectMany(x => x.Bookings).ToList();
+        }
+
         public string GroupedBy { get; set; }
         public DateTime StartDate { get; set; } = DateTime.Now.StartOfMonth();
         public DateTime EndDate { get; set; } = DateTime.Now.EndOfMonth();

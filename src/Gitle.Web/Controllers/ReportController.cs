@@ -66,9 +66,10 @@ namespace Gitle.Web.Controllers
         }
 
         [Admin]
-        public void ExportCsv()
+        public void ExportCsv(string query)
         {
-            var bookings = session.Query<Booking>().Where(x => x.IsActive).ToList();
+            var parser = new BookingQueryParser(session, $"{query} take:all");
+            var bookings = parser.AllBookings();
 
             var csv = CsvHelper.BookingsCsv(bookings);
             CancelView();
@@ -76,7 +77,7 @@ namespace Gitle.Web.Controllers
             Response.ClearContent();
             Response.Clear();
 
-            var filename = $"bookings_{DateTime.Now:yyyyMMdd_hhmm}.csv";
+            var filename = $"bookings_{parser.StartDate:yyyyMMdd_hhmm}_{parser.EndDate:yyyyMMdd_hhmm}.csv";
 
             Response.AppendHeader("content-disposition", $"attachment; filename={filename}");
             Response.ContentType = "application/csv";
