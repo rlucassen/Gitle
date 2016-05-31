@@ -1,18 +1,22 @@
-﻿[
+[
   {
     "outputFile": "Content/stylesheets/app.css",
-    "inputFile": "Content/stylesheets/app.scss"
+    "inputFile": "Content/stylesheets/app.scss",
+    "sourceMap": false
   },
   {
     "outputFile": "Content/javascript/app.es5.js",
-    "inputFile": "Content/javascript/app.js"
+    "inputFile": "Content/javascript/app.js",
+    "sourceMap": false
   },
   {
     "outputFile": "Content/javascript/auxilium.es5.js",
-    "inputFile": "Content/javascript/auxilium.js"
+    "inputFile": "Content/javascript/auxilium.js",
+    "sourceMap": false
   },
   {
     "outputFile": "Content/javascript/gitle.es5.js",
-    "inputFile": "Content/javascript/gitle.js"
+    "inputFile": "Content/javascript/gitle.js",
+    "sourceMap": false
   }
 ]
