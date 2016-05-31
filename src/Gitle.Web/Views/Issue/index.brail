@@ -167,7 +167,7 @@
                   <% for label in customerLabels: %>
                   <li>
                     <a href="/project/${project.Slug}/addlabel?label=${label.Name}" data-group-action>
-                      <span class="label no-margin<% if label.VisibleForCustomer: %> radius<% end %>" title="${label.Name}" style="background-color: #$ {label.Color}; ">${label.Name}</span>
+                      <span class="label no-margin<% if label.VisibleForCustomer: %> radius<% end %>" title="${label.Name}" style="background-color: #${label.Color}; ">${label.Name}</span>
                     </a>
                   </li>
                   <% end %>

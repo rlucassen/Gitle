@@ -19,7 +19,7 @@
               <li><a class="button tiny success no-margin" href="/customer/${item.Slug}/edit">Bewerk</a></li>
               <li><a class="button tiny no-margin" href="/customer/${item.Slug}/applications">Applicaties</a></li>
               <li><a class="button tiny no-margin" href="/customer/${item.Slug}/projects">Projecten</a></li>
-              <li><a class="button tiny alert no-margin" href="/customer/${item.Slug}/delete">Verwijder</a></li>
+              <li><a class="button tiny alert no-margin" href="/customer/${item.Slug}/delete" data-confirm="Weet je het zeker?">Verwijder</a></li>
             </ul>
           </td>
         </tr>

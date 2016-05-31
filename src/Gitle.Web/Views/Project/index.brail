@@ -43,7 +43,7 @@
               <% if CurrentUser.IsAdmin: %>
               <li><a class="button tiny success no-margin" href="/project/${item.Slug}/edit">Bewerk</a></li><% end %>
               <% if CurrentUser.IsAdmin: %>
-              <li><a class="button tiny alert no-margin" href="/project/${item.Slug}/delete">Verwijder</a></li><% end %>
+              <li><a class="button tiny alert no-margin" href="/project/${item.Slug}/delete" data-confirm="Weet je het zeker?">Verwijder</a></li><% end %>
             </ul>
           </td>
         </tr>
