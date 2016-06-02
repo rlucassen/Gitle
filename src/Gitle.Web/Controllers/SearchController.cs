@@ -20,16 +20,17 @@
         {
             var suggestions = new List<Suggestion>();
 
-            var users = session.Query<User>().Where(x => x.FullName.Contains(query) && !x.IsAdmin);
+            var users = session.Query<User>().Where(x => x.FullName.Contains(query) && !x.IsAdmin && x.IsActive);
             suggestions.AddRange(users.Select(x => new Suggestion($"Persoon: {x.FullName}", $"/user/{x.Id}/view")));
 
-            var customers = session.Query<Customer>().Where(x => x.Name.Contains(query));
+            var customers = session.Query<Customer>().Where(x => x.Name.Contains(query) && x.IsActive);
             suggestions.AddRange(customers.Select(x => new Suggestion($"Klant: {x.Name}", $"/customer/{x.Slug}/view")));
 
-            var projects = session.Query<Project>().Where(x => x.Name.Contains(query));
+            var projects = session.Query<Project>().Where(x => x.Name.Contains(query) && x.IsActive);
             suggestions.AddRange(projects.Select(x => new Suggestion($"Project: {x.Name}", $"/project/{x.Slug}/view")));
+            suggestions.AddRange(projects.Select(x => new Suggestion("Taken: " + x.Name, $"/project/{x.Slug}/issues")));
 
-            var applications = session.Query<Application>().Where(x => x.Name.Contains(query));
+            var applications = session.Query<Application>().Where(x => x.Name.Contains(query) && x.IsActive);
             suggestions.AddRange(applications.Select(x => new Suggestion($"Application: {x.Name}", $"/application/{x.Slug}/view")));
 
             return new {query = query, suggestions = suggestions };

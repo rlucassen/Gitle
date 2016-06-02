@@ -44,15 +44,19 @@ namespace Gitle.Model
                         {
                             Description = $"#{booking.Issue.Number} - {booking.Issue.Name}",
                             Issue = booking.Issue,
-                            Invoice = this,
+                            Invoice = this
                         };
                         Lines.Add(invoiceLine);
                     }
                     invoiceLine.Hours += booking.Hours;
+                    if (booking.Unbillable)
+                    {
+                        invoiceLine.Null = true;
+                    }
                 }
                 else
                 {
-                    Lines.Add(new InvoiceLine() { Description = booking.Comment, Invoice = this, Hours = booking.Hours });
+                    Lines.Add(new InvoiceLine() { Description = booking.Comment, Invoice = this, Hours = booking.Hours, Null = booking.Unbillable });
                 }
             }
             for (var i = Corrections.Count(); i < 5; i++)

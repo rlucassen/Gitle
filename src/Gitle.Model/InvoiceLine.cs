@@ -18,10 +18,7 @@ namespace Gitle.Model
         public virtual double Hours { get; set; }
         public virtual decimal Price => Null ? 0 : (decimal)Hours * Invoice.HourPrice;
 
-        public virtual bool Null
-        {
-            get { return Bookings.All(x => x.Unbillable); }
-        }
+        public virtual bool Null { get; set; }
 
         public virtual IList<Booking> Bookings { get { return Invoice?.Bookings.Where(x => x.Issue == Issue).ToList() ?? new List<Booking>(); } }
 

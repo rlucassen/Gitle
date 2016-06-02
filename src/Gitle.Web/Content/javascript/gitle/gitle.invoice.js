@@ -29,13 +29,14 @@
       var linePrice = parseFloat($(this).find('.invoiceline-price').val().replace(',', '.')) * (1 - parseInt($(this).find('.invoiceline-null').val()));
       subtotalPrice += linePrice;
     });
-    $('#invoice_Subtotal').val(subtotalPrice.toFixed(2).toString().replace(".", ","));
     var correctionTotalPrice = 0.0;
     $('.correctionline').each(function() {
       var correctionValue = $(this).find('.correctionline-price').val();
       if (correctionValue)
         correctionTotalPrice += parseFloat(correctionValue.replace(',', '.'));
     });
+    subtotalPrice += correctionTotalPrice;
+    $('#invoice_Subtotal').val(subtotalPrice.toFixed(2).toString().replace(".", ","));
     var vat = parseInt($('.vatline .vatline-vat').val());
     var vatPrice = (subtotalPrice + correctionTotalPrice) * vat * 0.21;
     $('.vatline-price').val(vatPrice.toFixed(2).toString().toString().replace(".", ","));

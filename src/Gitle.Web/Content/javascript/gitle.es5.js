@@ -238,6 +238,10 @@ $(function () {
   $('[data-dayshift]').each(function () {
     var shift = $(this).data('dayshift');
     var label = '';
+    var date = Date.today().add(shift).days();
+    if (date.toString('dd-MM-yyyy') === $('#booking_Date').val()) {
+      $(this).addClass('active');
+    }
     switch (shift) {
       case 0:
         label = 'Vandaag';
@@ -246,14 +250,13 @@ $(function () {
         label = 'Gisteren';
         break;
       default:
-        label = Date.today().add(shift).days().toString(dayShiftFormat);
+        label = date.toString(dayShiftFormat);
     }
     $(this).text(label);
   }).click(function (e) {
     e.preventDefault();
-    var today = Date.today();
     var shift = $(this).data('dayshift');
-    var date = today.add(shift).days();
+    var date = Date.today().add(shift).days();
     $('#booking_Date').val(date.toString('dd-MM-yyyy'));
     $('[data-dayshift]').removeClass('active');
     $(this).addClass('active');

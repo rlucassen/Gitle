@@ -95,7 +95,7 @@
     <tr>
       <td class="right">${line.Hours.ToString("#0.00")}</td>
       <td>${line.Description}</td>
-      <td class="right">${invoice.HourPrice},00</td>
+      <td class="right">${invoice.HourPrice.ToString("#0.00")}</td>
       <td class="right">${line.Price.ToString("#0.00")}</td>
     </tr>
     <% end %>
