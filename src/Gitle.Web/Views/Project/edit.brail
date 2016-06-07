@@ -17,6 +17,12 @@
         </div>
       </div>
       <div class="row">
+        <div class="large-3 columns">Projectnummer</div>
+        <div class="large-9 columns">
+          <input type="text" name="item.Number" value="${item.Number}" />
+        </div>
+      </div>
+      <div class="row">
         <div class="large-3 columns">Applicatie</div>
         <div class="large-9 columns">
           ${Form.Select("applicationId", applications, {"class": "chosen-select", "value": "Id", "text": "CompleteName", "firstoption": "Kies een applicatie"})}

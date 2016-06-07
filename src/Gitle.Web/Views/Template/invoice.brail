@@ -79,6 +79,10 @@
 <p class="invoice-details">
   Factuurnummer: ${invoice.Number}<br />
   Factuurdatum: ${invoice.CreatedAt.ToString("dd-MM-yyyy")}<br />
+  <% if invoice.Project.Number > 0: %>
+  Projectnummer: ${?invoice.Project.Number}<br />
+  <% end %>
+  Project: ${invoice.Project.Name}<br />
 </p>
 
 <table cellspacing="0">

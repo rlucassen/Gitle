@@ -4,6 +4,7 @@
     {
         public ProjectMap()
         {
+            Map(x => x.Number);
             Map(x => x.Name);
             Map(x => x.Slug);
             Map(x => x.Repository);
