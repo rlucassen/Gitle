@@ -87,7 +87,13 @@
             </div>
           </div>
           <div class="large-5 columns end">
+            <% if booking.Comment == null or booking.Comment == "": %>
+            <% if booking.Issue: %>
+            <span class="booking-comment">${booking.Issue.Name}</span>
+            <% end %>
+            <% else: %>
             <span class="booking-comment">${booking.Comment}</span>
+            <% end %>
             <% for invoice in booking.Invoices: %>
             <% if not invoice.IsDefinitive: %>
             <span class="label round right" title="${invoice.Title}">${invoice.Number}</span>
