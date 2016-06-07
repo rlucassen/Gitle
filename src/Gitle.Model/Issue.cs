@@ -287,5 +287,17 @@
         {
             return Math.Max(TotalHours, BillableBookingHours());
         }
+
+        public virtual string ShortName()
+        {
+            if (Name.Length > 43)
+            {
+                return Name.Substring(0, 40) + "...";
+            }
+            else
+            {
+                return Name;
+            }
+        }
     }
 }
