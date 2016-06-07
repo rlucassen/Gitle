@@ -13,6 +13,13 @@
             <input type="text" name="booking.Date" id="booking_Date" class="date novalidate" placeholder="Eerder" value="${today}" />
           </div>
         </div>
+        <%  if CurrentUser.IsDanielle: %>
+        <div class="row collapse">
+          <div class="large-2 end columns">
+            ${Form.Select("adminId", admins, {"value": "Id", "text": "FullName", "firstoption": "Kies een gebruiker"})}
+          </div>
+        </div>
+        <% end %>
         <div class="row collapse booking-row-new">
           <div class="large-1 columns">
             <input type="hidden" name="booking.Minutes" class="booking_Minutes" />
