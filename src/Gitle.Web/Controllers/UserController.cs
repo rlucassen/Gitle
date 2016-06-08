@@ -3,9 +3,11 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Web.UI;
+    using Castle.MonoRail.Framework;
     using FluentNHibernate.Utils;
     using Helpers;
     using Model;
+    using Model.Helpers;
     using Model.Nested;
     using NHibernate;
     using NHibernate.Linq;
@@ -173,6 +175,18 @@
             }
 
             RenderText(comment);
+        }
+
+        [return: JSONReturnBinder]
+        public object CheckUserName(string name, long userId)
+        {
+            var validName = !session.Query<User>().Any(x => x.IsActive && x.Name == name && x.Id != userId);
+            var message = "Voer een naam in";
+            if (!validName)
+            {
+                message = "Deze naam is al in gebruik, kies een andere";
+            }
+            return new { success = validName, message = message };
         }
 
 

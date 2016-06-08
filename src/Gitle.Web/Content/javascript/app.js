@@ -56,6 +56,7 @@
     $(document).foundation('joyride', 'start');
   });
 
+  
   // Focus on .focus elements
   $('form .focus[value=""]').focus();
 });
