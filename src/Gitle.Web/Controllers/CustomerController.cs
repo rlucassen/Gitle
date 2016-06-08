@@ -98,5 +98,17 @@
 
             RenderText(comment);
         }
+
+        [return: JSONReturnBinder]
+        public object CheckCustomerName(string name, long customerId)
+        {
+            var validName = !session.Query<Customer>().Any(x => x.IsActive && x.Slug == name.Slugify() && x.Id != customerId);
+            var message = "Voer een naam in";
+            if (!validName)
+            {
+                message = "Deze naam is al in gebruik, kies een andere";
+            }
+            return new { success = validName, message = message };
+        }
     }
 }
