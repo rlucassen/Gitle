@@ -145,5 +145,6 @@
             FormsAuthentication.SignOut();
             RedirectToSiteRoot();
         }
+
     }
 }

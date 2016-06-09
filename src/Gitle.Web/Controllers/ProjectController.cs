@@ -274,11 +274,23 @@
 
             if (query != null)
             {
-                projects = projects.Where(p => p.Name.Contains(query) || (p.Application != null && (p.Application.Name.Contains(query) || (p.Application.Customer != null && p.Application.Customer.Name.Contains(query)))));
+                projects = projects.Where(p => p.Name.Contains(query) || p.Number.ToString().Contains(query) || (p.Application != null && (p.Application.Name.Contains(query) || (p.Application.Customer != null && p.Application.Customer.Name.Contains(query)))));
             }
             projects = projects.OrderBy(x => x.Name);
             suggestions.AddRange(projects.ToList().Select(x => new Suggestion(x.CompleteName, x.Id.ToString(), x.TicketRequiredForBooking ? "ticketRequired": string.Empty)));
             return new {query, suggestions };
+        }
+
+        [return: JSONReturnBinder]
+        public object CheckProjectName(string name, long projectId)
+        {
+            var validName = !session.Query<Project>().Any(x => x.IsActive && x.Slug == name.Slugify() && x.Id != projectId);
+            var message = "Voer een naam in";
+            if (!validName)
+            {
+                message = "Deze naam is al in gebruik, kies een andere";
+            }
+            return new { success = validName, message = message };
         }
     }
 }

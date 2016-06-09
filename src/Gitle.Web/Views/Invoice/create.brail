@@ -256,3 +256,16 @@
   </div>
 </form>
 
+<script>
+  $(document).ready(function () {
+    $('.correctionline').hide();
+    $('.correctionline').first().show();
+    $('.correctionline').find('.correctionline-price').change(function () {
+      if ($(this).find('.correctionline-price').val() != "") {
+        $(this).parents('.correctionline').next('.correctionline').show();
+      }
+    });
+
+  });
+
+</script>

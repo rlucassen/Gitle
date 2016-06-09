@@ -59,7 +59,7 @@ namespace Gitle.Model
                     Lines.Add(new InvoiceLine() { Description = booking.Comment, Invoice = this, Hours = booking.Hours, Null = booking.Unbillable });
                 }
             }
-            for (var i = Corrections.Count(); i < 5; i++)
+            for (var i = Corrections.Count(); i < 10; i++)
             {
                 Corrections.Add(new Correction());
             }
