@@ -90,6 +90,7 @@
             <li><a href="/project/${invoice.Project.Slug}/invoice/${invoice.Id}/archive">Archiveren</a></li>
             <% end %>
             <li><a href="/project/${invoice.Project.Slug}/invoice/${invoice.Id}/archiveissues">Taken archiveren</a></li>
+            <li><a href="/project/${invoice.Project.Slug}/invoice/${invoice.Id}/Delete">Verwijderen</a></li>
           </ul>
         </ul>
       </div>

@@ -27,7 +27,7 @@ namespace Gitle.Web.Controllers
         [Danielle]
         public void Index()
         {
-            var invoices = session.Query<Invoice>().OrderBy(x => x.CreatedAt).ToList().OrderBy(x => (int)(x.State));
+            var invoices = session.Query<Invoice>().Where(x => x.IsActive).OrderBy(x => x.CreatedAt).ToList().OrderBy(x => (int)(x.State));
             PropertyBag.Add("invoices", invoices);
         }
 
@@ -137,6 +137,22 @@ namespace Gitle.Web.Controllers
         [Danielle]
         public void Archive(string projectSlug, long invoiceId)
         {
+            ChangeState(projectSlug, invoiceId, InvoiceState.Archived);
+        }
+
+        [Danielle]
+        public void Delete(string projectSlug, long invoiceId)
+        {
+            var project = session.SlugOrDefault<Project>(projectSlug);
+            var invoice = session.Query<Invoice>().First(i => i.Id == invoiceId && i.Project == project);
+
+            invoice.Deactivate();
+
+            using (var tx = session.BeginTransaction())
+            {
+                session.SaveOrUpdate(invoice);
+                tx.Commit();
+            }
             ChangeState(projectSlug, invoiceId, InvoiceState.Archived);
         }
 
