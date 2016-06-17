@@ -42,7 +42,7 @@
             PropertyBag.Add("item", user);
             PropertyBag.Add("selectedprojects", user.Projects.Select(x => x.Project).ToList());
             PropertyBag.Add("customers", session.Query<Customer>().Where(x => x.IsActive).ToList());
-            PropertyBag.Add("projects", session.Query<Project>().OrderBy(x => x.Name).ToList());
+            PropertyBag.Add("projects", session.Query<Project>().Where(x => x.IsActive).OrderBy(x => x.Name).ToList());
             PropertyBag.Add("customerId", user.Customer?.Id ?? 0);
         }
 
