@@ -88,14 +88,10 @@ namespace Gitle.Web.Controllers
                 invoice = BindObject<Invoice>("invoice");
             }
 
-
             var lines = BindObject<InvoiceLine[]>("lines");
             var bindObject = BindObject<Correction[]>("corrections");
             var corrections = bindObject.Where(x => x.Price != 0.0M).ToArray();
-            var bookingIds = BindObject<long[]>("bookings");
-            var bookings = session.Query<Booking>().Where(x => bookingIds.Contains(x.Id)).ToArray();
 
-            invoice.Bookings = bookings;
             invoice.CreatedBy = CurrentUser;
             invoice.CreatedAt = DateTime.Now;
             invoice.State = InvoiceState.Concept;

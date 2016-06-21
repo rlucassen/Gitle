@@ -49,6 +49,7 @@ namespace Gitle.Model
                         Lines.Add(invoiceLine);
                     }
                     invoiceLine.Hours += booking.Hours;
+                    invoiceLine.Bookings.Add(booking);
                     if (booking.Unbillable)
                     {
                         invoiceLine.Null = true;
@@ -58,7 +59,9 @@ namespace Gitle.Model
                 {
                     if (!booking.Invoices.Any(x => x.IsDefinitive))
                     {
-                        Lines.Add(new InvoiceLine { Description = booking.Comment, Invoice = this, Hours = booking.Hours, Null = booking.Unbillable, Booking = booking });
+                        var invoiceLine = new InvoiceLine { Description = booking.Comment, Invoice = this, Hours = booking.Hours, Null = booking.Unbillable };
+                        invoiceLine.Bookings.Add(booking);
+                        Lines.Add(invoiceLine);
                     }
                 }
             }
@@ -84,23 +87,22 @@ namespace Gitle.Model
         public virtual IList<Booking> Bookings { get; set; }
         public virtual IList<Correction> Corrections { get; set; }
 
-        public virtual bool IsConcept { get { return State == InvoiceState.Concept; } }
-        public virtual bool IsDefinitive { get { return State == InvoiceState.Definitive; } }
-        public virtual bool IsArchived { get { return State == InvoiceState.Archived; } }
-        public virtual string StateString { get { return State.GetDescription(); } }
+        public virtual bool IsConcept => State == InvoiceState.Concept;
+        public virtual bool IsDefinitive => State == InvoiceState.Definitive;
+        public virtual bool IsArchived => State == InvoiceState.Archived;
+        public virtual string StateString => State.GetDescription();
 
-        public virtual decimal TotalExclVat { get { return Lines.Sum(x => x.Price) + Corrections.Sum(x => x.Price); } }
-        public virtual decimal TotalVat { get { return TotalExclVat * (VAT ? 0.21M : 0); } }
-        public virtual decimal Total { get { return TotalExclVat + TotalVat; } }
+        public virtual decimal TotalExclVat => Lines.Sum(x => x.Price) + Corrections.Sum(x => x.Price);
+        public virtual decimal TotalVat => TotalExclVat * (VAT ? 0.21M : 0);
+        public virtual decimal Total => TotalExclVat + TotalVat;
 
-        public virtual double TotalHours { get { return Lines.Sum(x => x.Hours); } }
+        public virtual double TotalHours => Lines.Sum(x => x.Hours);
 
-        public virtual int IssueCount { get { return Lines.Count(x => x.Issue != null); } }
+        public virtual int IssueCount => Lines.Count(x => x.Issue != null);
 
-        public virtual IList<InvoiceLine> ProjectLines { get { return Lines.Where(x => x.Issue == null).ToList(); } }
-        public virtual IList<Booking> ProjectBookings { get { return Bookings.Where(x => x.Issue == null).ToList(); } } 
-        public virtual IList<InvoiceLine> IssueLines { get { return Lines.Where(x => x.Issue != null).ToList(); } }
-        public virtual IList<Issue> Issues { get { return Lines.Where(x => x.Issue != null).Select(x => x.Issue).ToList(); } }
+        public virtual IList<InvoiceLine> ProjectLines => Lines.Where(x => x.Issue == null).ToList();
+        public virtual IList<InvoiceLine> IssueLines => Lines.Where(x => x.Issue != null).ToList();
+        public virtual IList<Issue> Issues => Lines.Where(x => x.Issue != null).Select(x => x.Issue).ToList();
 
         public virtual void AddLine(InvoiceLine line)
         {

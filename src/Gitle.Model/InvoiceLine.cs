@@ -10,6 +10,7 @@ namespace Gitle.Model
         public InvoiceLine()
         {
             Hours = 0;
+            Bookings = new List<Booking>();
         }
 
         public virtual Invoice Invoice { get; set; }
@@ -18,19 +19,9 @@ namespace Gitle.Model
         public virtual double Hours { get; set; }
         public virtual decimal Price => Null ? 0 : (decimal)Hours * Invoice.HourPrice;
 
-        public virtual Booking Booking { get; set; }
-
         public virtual bool Null { get; set; }
 
-        public virtual IList<Booking> Bookings { get { return Invoice?.Bookings.Where(x => x.Issue == Issue).ToList() ?? new List<Booking>(); } }
-
-        public virtual IList<Booking> OldBookings
-        {
-            get
-            {
-                return Issue?.Bookings.Where(x => !Bookings.Contains(x) && x.IsActive).ToList() ?? new List<Booking>();
-            }
-        }
+        public virtual IList<Booking> Bookings { get; set; }
 
         public virtual IList<InvoiceLine> OldInvoiceLines => Issue?.InvoiceLines.Where(x => x.Invoice.IsDefinitive).ToList() ?? new List<InvoiceLine>();
 
