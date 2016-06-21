@@ -52,7 +52,9 @@
               <a href="#" class="button prefix secondary remove-line"><i class="fa fa-close red"></i></a>
             </div>
             <div class="small-11 columns">
-              <input type="hidden" name="bookings[${line.Booking.Id}]" id="bookings_${line.Booking.Id}" value="${line.Booking.Id}" />
+              <% if line.Booking != null: %>
+              <input type="hidden" name="bookings[${?line.Booking.Id}]" id="bookings_${?line.Booking.Id}" value="${?line.Booking.Id}" />
+              <% end %>
               <input type="text" name="lines[${count}].Description" id="lines_${count}_Description" value="${line.Description}" />
             </div>
           </div>
