@@ -6,7 +6,7 @@
     {
         public InvoiceLineMap()
         {
-            Map(x => x.Description);
+            Map(x => x.Description).CustomSqlType("nvarchar(500)");
             Map(x => x.Hours);
             Map(x => x.Null).Column("[Null]");
 

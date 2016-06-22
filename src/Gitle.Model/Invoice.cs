@@ -13,7 +13,6 @@ namespace Gitle.Model
             VAT = true;
             State = InvoiceState.Concept;
             Lines = new List<InvoiceLine>();
-            Bookings = new List<Booking>();
             Corrections = new List<Correction>();
         }
 
@@ -30,7 +29,6 @@ namespace Gitle.Model
         public Invoice(Project project, DateTime startDate, DateTime endDate, IList<Booking> bookings)
             : this(project, startDate, endDate)
         {
-            Bookings = bookings;
             foreach (var booking in bookings)
             {
                 if(booking.Issue != null){
@@ -81,7 +79,7 @@ namespace Gitle.Model
         public virtual User CreatedBy { get; set; }
         public virtual Project Project { get; set; }
         public virtual IList<InvoiceLine> Lines { get; set; }
-        public virtual IList<Booking> Bookings { get; set; }
+        public virtual IList<Booking> Bookings => Lines.SelectMany(l => l.Bookings).ToList();
         public virtual IList<Correction> Corrections { get; set; }
 
         public virtual bool IsConcept => State == InvoiceState.Concept;

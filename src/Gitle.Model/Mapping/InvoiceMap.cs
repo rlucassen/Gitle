@@ -21,7 +21,6 @@
 
             HasMany(x => x.Lines).Cascade.AllDeleteOrphan();
             HasMany(x => x.Corrections).Cascade.AllDeleteOrphan();
-            HasManyToMany(x => x.Bookings).Table("InvoiceBooking").ParentKeyColumn("Invoice_id").ChildKeyColumn("Booking_id").Cascade.SaveUpdate();
         }
     }
 }
