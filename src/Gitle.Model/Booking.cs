@@ -25,9 +25,9 @@ namespace Gitle.Model
         public virtual string Comment { get; set; }
         public virtual bool Unbillable { get; set; }
 
-        public virtual IList<Invoice> Invoices { get; set; }
+        public virtual IList<InvoiceLine> InvoiceLines { get; set; }
 
-        public virtual bool IsDefinitive { get { return Invoices.Any(x => x.IsDefinitive); } }
+        public virtual bool IsDefinitive { get { return InvoiceLines.Any(x => x.Invoice.IsDefinitive); } }
 
         public virtual double Hours => Minutes / 60.0;
         public virtual string Time => $"{Math.Floor(Hours)}:{Minutes - (Math.Floor(Hours)*60):00}";

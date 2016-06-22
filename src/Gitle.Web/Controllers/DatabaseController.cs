@@ -64,7 +64,7 @@
                         }
                         else
                         {
-                            var bookings = invoice.Bookings.Where(x => x.Comment == invoiceLine.Description).ToList();
+                            var bookings = invoice.Bookings.Where(x => x.Comment == invoiceLine.Description && x.Minutes == invoiceLine.Minutes).ToList();
                             if (bookings.Count == 1)
                             {
                                 invoiceLine.Bookings.Add(bookings.First());
@@ -83,6 +83,26 @@
             PropertyBag.Add("lostBookings", lostBookings);
             PropertyBag.Add("linesWithoutBookings", linesWithoutBookings);
 
+        }
+
+        public void MigrateStatus()
+        {
+            var invoices = session.Query<Invoice>().ToList();
+
+            var lostBookings = new List<Booking>();
+            var linesWithoutBookings = new List<InvoiceLine>();
+
+            foreach (var invoice in invoices)
+            {
+                lostBookings.AddRange(invoice.Bookings.Where(b => !invoice.Lines.SelectMany(l => l.Bookings).Contains(b)));
+                linesWithoutBookings.AddRange(invoice.Lines.Where(x => x.Bookings.Count == 0));
+
+                session.SaveOrUpdate(invoice);
+            }
+
+            PropertyBag.Add("lostBookings", lostBookings);
+            PropertyBag.Add("linesWithoutBookings", linesWithoutBookings);
+            RenderView("migrateinvoices");
         }
     }
 }

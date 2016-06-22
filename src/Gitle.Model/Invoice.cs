@@ -54,7 +54,7 @@ namespace Gitle.Model
                 }
                 else
                 {
-                    if (!booking.Invoices.Any(x => x.IsDefinitive))
+                    if (!booking.InvoiceLines.Any(x => x.Invoice.IsDefinitive))
                     {
                         var invoiceLine = new InvoiceLine { Description = booking.Comment, Invoice = this, Hours = booking.Hours, Null = booking.Unbillable };
                         invoiceLine.Bookings.Add(booking);

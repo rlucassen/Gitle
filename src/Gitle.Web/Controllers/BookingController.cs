@@ -123,7 +123,7 @@ namespace Gitle.Web.Controllers
         [Admin]
         public void Delete(int id)
         {
-            var booking = session.Query<Booking>().FirstOrDefault(x => x.IsActive && x.Id == id && !x.Invoices.Any());
+            var booking = session.Query<Booking>().FirstOrDefault(x => x.IsActive && x.Id == id && !x.InvoiceLines.Any());
             if (booking != null)
             {
                 booking.Deactivate();
