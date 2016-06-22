@@ -602,7 +602,8 @@ body.admin table#issue-table th#issue-actions {
   #createinvoice .invoiceline .null {
     color: #ccc; }
   #createinvoice .invoiceline .button.tiny {
-    font-size: 0.875rem; }
+    font-size: 0.875rem;
+    padding: 0.66rem 0; }
   #createinvoice .invoiceline .button.active {
     font-weight: bold;
     text-shadow: 2px 2px 0 #666; }

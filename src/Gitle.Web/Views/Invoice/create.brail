@@ -45,7 +45,7 @@
       </div>
       <% count = 0 %>
       <% for line in invoice.ProjectLines: %>
-      <div class="row invoiceline invoiceline-booking">
+      <div class="row invoiceline invoiceline-booking collapse">
         <div class="large-8 columns">
           <div class="row collapse">
             <div class="small-1 columns">
@@ -78,7 +78,7 @@
       <% count = count + 1 %>
       <% end %>
       <% for line in invoice.IssueLines: %>
-      <div class="row invoiceline invoiceline-issue" data-issue="${line.Issue.Number}">
+      <div class="row invoiceline invoiceline-issue collapse" data-issue="${line.Issue.Number}">
         <input type="hidden" name="lines[${count}].Issue.Id" id="lines_${count}_Issue_Id" value="${line.Issue.Id}" />
         <div class="large-8 columns">
           <div class="row collapse">

@@ -279,7 +279,7 @@ $(function () {
   };
 
   var computePriceForInvoiceLine = function computePriceForInvoiceLine(invoiceLine) {
-    var hourPrice = parseFloat($('#invoice_HourPrice').val());
+    var hourPrice = parseFloat($('#invoice_HourPrice').val().replace(',', '.'));
     var hours = parseFloat(invoiceLine.find('.invoiceline-hours-input').val().replace(',', '.'));
     var nill = parseInt(invoiceLine.find('.invoiceline-null').val());
     var price = hours * hourPrice * (1 - nill);
