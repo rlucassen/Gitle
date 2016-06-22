@@ -52,8 +52,10 @@
               <a href="#" class="button prefix secondary remove-line"><i class="fa fa-close red"></i></a>
             </div>
             <div class="small-11 columns">
-              <input type="hidden" name="lines[${count}].Bookings[${line.Bookings[0].Id}].Id" id="lines_${count}_Bookings_${line.Bookings[0].Id}_Id" value="${line.Bookings[0].Id}" />
-              <input type="text" name="lines[${count}].Description" id="lines_${count}_Description" value="${line.Description}" />
+              <% for booking in line.Bookings: %>
+              <input type="hidden" name="lines[${count}].Bookings[${booking.Id}].Id" id="lines_${count}_Bookings_${booking.Id}_Id" value="${booking.Id}"/>
+              <% end %>
+              <input type="text" name="lines[${count}].Description" id="lines_${count}_Description" value="${line.Description}"/>
             </div>
           </div>
         </div>

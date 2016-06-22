@@ -3,12 +3,9 @@ using System;
 using Gitle.Model.Helpers;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Gitle.Model
 {
-    using Newtonsoft.Json.Bson;
-
     public class Invoice : ModelBase
     {
         public Invoice()

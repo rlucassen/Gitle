@@ -27,7 +27,8 @@ namespace Gitle.Model
 
         public virtual double EstimateHours => Issue.Hours - OldInvoiceLines.Sum(x => x.Hours);
         public virtual double FullEstimateHours => Issue.Hours;
-        public virtual double BookingHours { get { return Bookings.Where(x => !x.Unbillable).Sum(x => x.Hours); } }
+        public virtual double BookingHours => Bookings.Where(x => !x.Unbillable).Sum(x => x.Hours);
+        public virtual double Minutes => Hours*60.0;
     }
 
     public class Correction : ModelBase

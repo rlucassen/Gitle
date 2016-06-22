@@ -12,6 +12,8 @@
 
             References(x => x.Invoice).Column("Invoice_id");
             References(x => x.Issue).Column("Issue_id");
+
+            HasManyToMany(x => x.Bookings).Table("InvoiceLineBooking").Cascade.None();
         }
     }
 }

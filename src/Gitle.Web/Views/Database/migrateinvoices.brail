@@ -1,0 +1,16 @@
+﻿<div class="row">
+  <div class="large-6 columns">
+    <ul>
+      <% for booking in lostBookings: %>
+      <li>${booking.Id} - ${booking.Comment} (${booking.Minutes})</li>
+      <% end %>
+    </ul>
+  </div>
+  <div class="large-6 columns">
+    <ul>
+      <% for line in linesWithoutBookings: %>
+      <li>${line.Id} - ${line.Description} (${line.Minutes})</li>
+      <% end %>
+    </ul>
+  </div>
+</div>
