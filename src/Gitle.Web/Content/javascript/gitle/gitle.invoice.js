@@ -15,7 +15,7 @@
   };
 
   var computePriceForInvoiceLine = function(invoiceLine) {
-    var hourPrice = parseFloat($('#invoice_HourPrice').val());
+    var hourPrice = parseFloat($('#invoice_HourPrice').val().replace(',', '.'));
     var hours = parseFloat(invoiceLine.find('.invoiceline-hours-input').val().replace(',', '.'));
     var nill = parseInt(invoiceLine.find('.invoiceline-null').val());
     var price = hours * hourPrice * (1 - nill);
@@ -122,5 +122,32 @@
       line.find('.vatline-price').addClass('null');
     }
     calculateTotals();
+  });
+
+  // All decimal input fields have a class named 'number'
+  $('input').each(function () {
+    $(this).keypress(function(e){
+      // '46' is the keyCode for '.'
+      if(e.keyCode == '46'){
+        // IE
+        if(document.selection){
+          var range = document.selection.createRange();
+          range.text = ',';
+        // Chrome + FF
+        } else if (this.selectionStart || this.selectionStart == '0') {
+          var start = this.selectionStart;
+          var end = this.selectionEnd;
+
+          $(this).val($(this).val().substring(0, start) + ','
+            + $(this).val().substring(end, $(this).val().length));
+
+          this.selectionStart = start + 1;
+          this.selectionEnd = start +1;
+        } else {
+          $(this).val($(this).val() + ',');             
+        }
+        return false;
+      }
+    });
   });
 });
