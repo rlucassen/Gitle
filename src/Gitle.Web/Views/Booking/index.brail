@@ -39,8 +39,8 @@
           <div class="large-5 columns">
             <div class="row collapse">
               <div class="large-10 columns">
-                <input type="text" class="no-margin booking_Comment" name="booking.Comment" placeholder="Opmerking" />
-                <small class="error">Opmerking!</small>
+                <input type="text" class="no-margin booking_Comment" name="booking.Comment" placeholder="Opmerking" pattern="max500" />
+                <small class="error">Opmerking! (max 500 tekens)</small>
               </div>
               <div class="large-2 columns">
                 <input type="hidden" name="booking.Unbillable" class="booking_Unbillable" />
