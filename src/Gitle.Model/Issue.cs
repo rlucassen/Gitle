@@ -205,17 +205,22 @@
 
         public virtual string HoursString
         {
-            get { return Hours > 0 ? Hours <= 3 ? string.Format("{0} uur", Hours) : string.Format("{0} dag", Hours / 8) : "n.n.b."; }
+            get { return Hours > 0 ? Hours <= 3 ? $"{Hours} uur" : $"{Hours/8} dag" : "n.n.b."; }
         }
 
         public virtual string EstimateString
         {
-            get { return Hours > 0 ? string.Format("{0} developer{1} {2}", Devvers, Devvers > 1 ? "s" : "", HoursString) : "n.n.b."; }
+            get { return Hours > 0 ? $"{Devvers} developer{(Devvers > 1 ? "s" : "")} {HoursString}" : "n.n.b."; }
         }
 
         public virtual double TotalHours
         {
             get { return Hours * Devvers; }
+        }
+
+        public virtual string TotalHoursString
+        {
+            get { return TotalHours > 0 ? TotalHours <= 3 ? $"{TotalHours} uur" : $"{TotalHours / 8} dag" : "n.n.b."; }
         }
 
         public virtual IList<Invoice> Invoices
@@ -226,6 +231,16 @@
         public virtual IList<Invoice> DefinitiveInvoices
         {
             get { return InvoiceLines.Select(x => x.Invoice).Where(i => i.IsDefinitive).ToList(); }
+        }
+
+        public virtual double TotalHoursInvoiced
+        {
+            get { return InvoiceLines.Where(x => x.Invoice.IsDefinitive).Sum(x => x.Hours); }
+        }
+
+        public virtual string TotalHoursInvoicedString
+        {
+            get { return TotalHoursInvoiced <= 3 ? $"{TotalHoursInvoiced} uur" : $"{TotalHoursInvoiced/8} dag"; }
         }
 
         public virtual string CostString(decimal hourPrice)

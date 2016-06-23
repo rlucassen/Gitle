@@ -73,7 +73,7 @@
 
         public virtual double TotalDefinitiveHours()
         {
-            return Invoices.Where(i => i.State == InvoiceState.Definitive && i.IsActive).Sum(i => i.TotalHours);
+            return Invoices.Where(i => i.State == InvoiceState.Definitive && i.IsActive).Sum(i => i.TotalBillableHours);
         }
 
         public virtual double ToInvoice()

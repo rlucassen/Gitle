@@ -27,7 +27,7 @@ namespace Gitle.Web.Controllers
         [Danielle]
         public void Index()
         {
-            var invoices = session.Query<Invoice>().Where(x => x.IsActive).OrderBy(x => x.CreatedAt).ToList().OrderBy(x => (int)(x.State));
+            var invoices = session.Query<Invoice>().Where(x => x.IsActive).OrderByDescending(x => x.Number).ToList().OrderBy(x => (int)(x.State));
             PropertyBag.Add("invoices", invoices);
         }
 

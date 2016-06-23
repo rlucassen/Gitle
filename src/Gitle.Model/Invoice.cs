@@ -91,6 +91,8 @@ namespace Gitle.Model
         public virtual decimal TotalVat => TotalExclVat * (VAT ? 0.21M : 0);
         public virtual decimal Total => TotalExclVat + TotalVat;
 
+        public virtual double TotalUnbillableHours => Lines.Where(x => x.Null).Sum(x => x.Hours);
+        public virtual double TotalBillableHours => Lines.Where(x => !x.Null).Sum(x => x.Hours);
         public virtual double TotalHours => Lines.Sum(x => x.Hours);
 
         public virtual int IssueCount => Lines.Count(x => x.Issue != null);
@@ -98,6 +100,9 @@ namespace Gitle.Model
         public virtual IList<InvoiceLine> ProjectLines => Lines.Where(x => x.Issue == null).ToList();
         public virtual IList<InvoiceLine> IssueLines => Lines.Where(x => x.Issue != null).ToList();
         public virtual IList<Issue> Issues => Lines.Where(x => x.Issue != null).Select(x => x.Issue).ToList();
+
+        public virtual IList<InvoiceLine> UnbillableLines => Lines.Where(x => x.Null).ToList();
+        public virtual IList<InvoiceLine> BillableLines => Lines.Where(x => !x.Null).ToList();
 
         public virtual void AddLine(InvoiceLine line)
         {
