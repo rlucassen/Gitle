@@ -34,6 +34,7 @@
         public virtual string GitHubAccessToken { get; set; }
         public virtual string FreckleEmail { get; set; }
         public virtual string Comments { get; set; }
+        public virtual string Color { get; set; }
 
         public virtual Customer Customer { get; set; }
 
@@ -44,7 +45,7 @@
             return Projects.FirstOrDefault(x => x.Project == project) ?? new UserProject();
         }
 
-        public virtual bool IsCustomer { get { return !IsAdmin && !IsDanielle; } }
+        public virtual bool IsCustomer => !IsAdmin && !IsDanielle;
 
         #region Implementation of IPrincipal
 
