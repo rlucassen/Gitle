@@ -55,6 +55,15 @@
             get { return State == IssueState.Open; }
         }
 
+        public virtual bool HasBeenOpenSince(DateTime dateTime)
+        {
+            if (!ChangeStates.Any()) return false;
+            var oldStates = ChangeStates.Where(x => x.CreatedAt <= dateTime);
+            var wasOpenAt = oldStates.Any() ? oldStates.OrderByDescending(x => x.CreatedAt).First().IssueState == IssueState.Open : false;
+            var hasBeenOpenSince = ChangeStates.Any(x => x.CreatedAt >= dateTime && x.IssueState == IssueState.Open);
+            return wasOpenAt || hasBeenOpenSince;
+        }
+
         public virtual bool IsArchived
         {
             get { return State == IssueState.Archived; }
@@ -196,17 +205,22 @@
 
         public virtual string HoursString
         {
-            get { return Hours > 0 ? Hours <= 3 ? string.Format("{0} uur", Hours) : string.Format("{0} dag", Hours / 8) : "n.n.b."; }
+            get { return Hours > 0 ? Hours <= 3 ? $"{Hours} uur" : $"{Hours/8} dag" : "n.n.b."; }
         }
 
         public virtual string EstimateString
         {
-            get { return Hours > 0 ? string.Format("{0} developer{1} {2}", Devvers, Devvers > 1 ? "s" : "", HoursString) : "n.n.b."; }
+            get { return Hours > 0 ? $"{Devvers} developer{(Devvers > 1 ? "s" : "")} {HoursString}" : "n.n.b."; }
         }
 
         public virtual double TotalHours
         {
             get { return Hours * Devvers; }
+        }
+
+        public virtual string TotalHoursString
+        {
+            get { return TotalHours > 0 ? TotalHours <= 3 ? $"{TotalHours} uur" : $"{TotalHours / 8} dag" : "n.n.b."; }
         }
 
         public virtual IList<Invoice> Invoices
@@ -219,9 +233,19 @@
             get { return InvoiceLines.Select(x => x.Invoice).Where(i => i.IsDefinitive).ToList(); }
         }
 
-        public virtual string CostString(double hourPrice)
+        public virtual double TotalHoursInvoiced
         {
-            return TotalHours > 0 ? (TotalHours * hourPrice).ToString("C") : "n.n.b.";
+            get { return InvoiceLines.Where(x => x.Invoice.IsDefinitive).Sum(x => x.Hours); }
+        }
+
+        public virtual string TotalHoursInvoicedString
+        {
+            get { return TotalHoursInvoiced <= 3 ? $"{TotalHoursInvoiced} uur" : $"{TotalHoursInvoiced/8} dag"; }
+        }
+
+        public virtual string CostString(decimal hourPrice)
+        {
+            return TotalHours > 0 ? ((decimal)TotalHours * hourPrice).ToString("C") : "n.n.b.";
         }
 
         public virtual bool CheckLabel(string label)
@@ -264,9 +288,31 @@
             Pickups.Add(new Pickup() { CreatedAt = DateTime.Now, User = user, Issue = this });
         }
 
+        public virtual double BillableBookingHours()
+        {
+            return Bookings.Where(x => x.IsActive && !x.Unbillable).Sum(x => x.Hours);
+        }
+
         public virtual double BookingHours(DateTime startDate, DateTime endDate)
         {
             return Bookings.Where(x => x.Date >= startDate && x.Date <= endDate).Sum(x => x.Hours);
+        }
+
+        public virtual double MaxOfBookingAndTotalHours()
+        {
+            return Math.Max(TotalHours, BillableBookingHours());
+        }
+
+        public virtual string ShortName()
+        {
+            if (Name.Length > 43)
+            {
+                return Name.Substring(0, 40) + "...";
+            }
+            else
+            {
+                return Name;
+            }
         }
     }
 }

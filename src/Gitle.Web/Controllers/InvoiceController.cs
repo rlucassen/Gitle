@@ -12,6 +12,7 @@ using System.Web;
 
 namespace Gitle.Web.Controllers
 {
+    using System.Text;
     using Model.Helpers;
 
     public class InvoiceController : SecureController
@@ -23,14 +24,14 @@ namespace Gitle.Web.Controllers
             this.pdfExportService = pdfExportService;
         }
 
-        [Admin]
+        [Danielle]
         public void Index()
         {
-            var invoices = session.Query<Invoice>().OrderBy(x => x.CreatedAt).ToList().OrderBy(x => (int)(x.State));
+            var invoices = session.Query<Invoice>().Where(x => x.IsActive).OrderByDescending(x => x.Number).ToList().OrderBy(x => (int)(x.State));
             PropertyBag.Add("invoices", invoices);
         }
 
-        [Admin]
+        [Danielle]
         public void Create(long projectId, DateTime startDate, DateTime endDate, bool oldBookings)
         {
             var project = session.Query<Project>().FirstOrDefault(x => x.IsActive && x.Id == projectId);
@@ -38,7 +39,7 @@ namespace Gitle.Web.Controllers
             var bookings = session.Query<Booking>().Where(x => x.IsActive && x.Project == project);
 
             if(oldBookings){
-                bookings = bookings.Where(x => x.Date <= endDate && (x.Date >= startDate || x.Invoices.Count(i => i.State == InvoiceState.Definitive) == 0));
+                bookings = bookings.Where(x => x.Date <= endDate && (x.Date >= startDate || x.InvoiceLines.Count(il => il.Invoice.State == InvoiceState.Definitive) == 0));
             } else {
                 bookings = bookings.Where(x => x.Date <= endDate && x.Date >= startDate);
             }
@@ -49,7 +50,7 @@ namespace Gitle.Web.Controllers
             PropertyBag.Add("project", project);
         }
 
-        [Admin]
+        [Danielle]
         public void Copy(string projectSlug, long invoiceId)
         {
             var project = session.SlugOrDefault<Project>(projectSlug);
@@ -61,7 +62,7 @@ namespace Gitle.Web.Controllers
             RenderView("create");
         }
 
-        [Admin]
+        [Danielle]
         public void Edit(string projectSlug, long invoiceId)
         {
             var project = session.SlugOrDefault<Project>(projectSlug);
@@ -73,7 +74,7 @@ namespace Gitle.Web.Controllers
             RenderView("create");
         }
 
-        [Admin]
+        [Danielle]
         public void Save(string projectSlug, long invoiceId)
         {
             var project = session.SlugOrDefault<Project>(projectSlug);
@@ -87,14 +88,10 @@ namespace Gitle.Web.Controllers
                 invoice = BindObject<Invoice>("invoice");
             }
 
-
             var lines = BindObject<InvoiceLine[]>("lines");
             var bindObject = BindObject<Correction[]>("corrections");
-            var corrections = bindObject.Where(x => x.Price != 0.0).ToArray();
-            var bookingIds = BindObject<long[]>("bookings");
-            var bookings = session.Query<Booking>().Where(x => bookingIds.Contains(x.Id)).ToArray();
+            var corrections = bindObject.Where(x => x.Price != 0.0M).ToArray();
 
-            invoice.Bookings = bookings;
             invoice.CreatedBy = CurrentUser;
             invoice.CreatedAt = DateTime.Now;
             invoice.State = InvoiceState.Concept;
@@ -127,19 +124,35 @@ namespace Gitle.Web.Controllers
             RedirectToAction("index");
         }
 
-        [Admin]
+        [Danielle]
         public void Definitive(string projectSlug, long invoiceId)
         {
             ChangeState(projectSlug, invoiceId, InvoiceState.Definitive);
         }
 
-        [Admin]
+        [Danielle]
         public void Archive(string projectSlug, long invoiceId)
         {
             ChangeState(projectSlug, invoiceId, InvoiceState.Archived);
         }
 
-        [Admin]
+        [Danielle]
+        public void Delete(string projectSlug, long invoiceId)
+        {
+            var project = session.SlugOrDefault<Project>(projectSlug);
+            var invoice = session.Query<Invoice>().First(i => i.Id == invoiceId && i.Project == project);
+
+            invoice.Deactivate();
+
+            using (var tx = session.BeginTransaction())
+            {
+                session.SaveOrUpdate(invoice);
+                tx.Commit();
+            }
+            ChangeState(projectSlug, invoiceId, InvoiceState.Archived);
+        }
+
+        [Danielle]
         public void ArchiveIssues(string projectSlug, long invoiceId)
         {
             var project = session.SlugOrDefault<Project>(projectSlug);
@@ -158,7 +171,7 @@ namespace Gitle.Web.Controllers
             RedirectToReferrer();
         }
 
-        [Admin]
+        [Danielle]
         public void Download(string projectSlug, long invoiceId)
         {
             CancelView();
@@ -185,6 +198,27 @@ namespace Gitle.Web.Controllers
 
             Response.BinaryWrite(pdf);
             Response.AppendHeader("content-disposition", string.Format("filename={0}", filename));
+        }
+
+        [Danielle]
+        public void Export()
+        {
+            var projects = session.Query<Project>().Where(x => x.IsActive).OrderBy(x => x.Application.Customer.Name).ToList();
+
+            var csv = CsvHelper.InvoiceCsv(projects);
+            CancelView();
+
+            Response.ClearContent();
+            Response.Clear();
+
+            var filename = $"invoices_{DateTime.Now:yyyyMMdd_hhmm}.csv";
+
+            Response.AppendHeader("content-disposition", $"attachment; filename={filename}");
+            Response.ContentType = "application/csv";
+
+            var byteArray = Encoding.Default.GetBytes(csv);
+            var stream = new MemoryStream(byteArray);
+            Response.BinaryWrite(stream);
         }
 
         private void ChangeState(string projectSlug, long invoiceId, InvoiceState state)

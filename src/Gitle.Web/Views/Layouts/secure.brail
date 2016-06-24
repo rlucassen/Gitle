@@ -59,18 +59,12 @@
         <% if CurrentUser.IsAdmin: %>
         <li class="divider"></li>
         <li><a href="/booking/index">Uren boeken</a></li>
-        <% end %>
-        <% if CurrentUser.IsDanielle: %>
         <li class="divider"></li>
         <li><a href="/report/index">Urenrapporten</a></li>
-        <% end %>
-        <% if CurrentUser.IsAdmin: %>
         <li class="divider"></li>
         <li><a href="/customers">Klanten</a></li>
-        <% end %>
-        <% if CurrentUser.IsAdmin: %>
         <li class="divider"></li>
-        <li><a href="/applications">Applicatie</a></li>
+        <li><a href="/applications">Applicaties</a></li>
         <% end %>
         <% if CurrentUser.IsAdmin or CurrentUser.Projects.Count > 1: %>
         <li class="divider"></li>
@@ -133,10 +127,89 @@
   <script src="/Content/javascript/vendor/foundation/foundation.abide.js"> </script>
   <script src="/Content/javascript/vendor/foundation/foundation.joyride.js"> </script>
   <script>
-    $(document).foundation()
-               .foundation('abide', {
-                 live_validate: false
-               });
+    $(document).foundation({
+      abide: {
+        live_validate: false,
+        validators: {
+          checkApplicationName: function (el, required, parent) {
+            if (required && el.value == "") {
+              return false;
+            }
+            var success = true;
+            var message = "";
+            jQuery.ajax({
+              url: '/application/checkApplicationName?name=' + el.value + '&applicationId=' + $(el).data('applicationid'), async: false, dataType: 'json', success: function (data) {
+                success = data.success;
+                message = data.message;
+              }
+            });
+            if (!success)
+            {
+              $(parent).find("small.error").html(message);
+            }
+            return success;
+          },
+          checkProjectName: function (el, required, parent) {
+            if (required && el.value == "") {
+              return false;
+            }
+            var success = true;
+            var message = "";
+            jQuery.ajax({
+              url: '/project/checkProjectName?name=' + el.value + '&projectId=' + $(el).data('projectid'), async: false, dataType: 'json', success: function (data) {
+                success = data.success;
+                message = data.message;
+              }
+            });
+            if (!success) {
+              $(parent).find("small.error").html(message);
+            }
+            return success;
+          },
+          checkCustomerName: function (el, required, parent) {
+            if (required && el.value == "") {
+              return false;
+            }
+            var success = true;
+            var message = "";
+            jQuery.ajax({
+              url: '/customer/checkCustomerName?name=' + el.value + '&customerId=' + $(el).data('customerid'), async: false, dataType: 'json', success: function (data) {
+                success = data.success;
+                message = data.message;
+              }
+            });
+            if (!success) {
+              $(parent).find("small.error").html(message);
+            }
+            return success;
+          },
+          checkUserName: function (el, required, parent) {
+            if (required && el.value == "") {
+              return false;
+            }
+            var success = true;
+            var message = "";
+            jQuery.ajax({
+              url: '/user/checkUserName?name=' + el.value + '&userId=' + $(el).data('userid'), async: false, dataType: 'json', success: function (data) {
+                success = data.success;
+                message = data.message;
+              }
+            });
+            if (!success) {
+              $(parent).find("small.error").html(message);
+            }
+            return success;
+          }
+        },
+        patterns: {
+          select: /^[1-9]+[0-9]*$/,
+          max500: /^[\s\S]{0,500}$/
+        }
+      },
+    });
+    //$('form[data-abide]').off('submit.fndtn.abide').on('submit.fndtn.abide', function (e) {
+    //  return Foundation.libs.abide.validate($(this).find('input, textarea, select').not("[data-abide-ignore]").get(), e, false);
+    //});
   </script>
   <% if RELEASE: %>
   <script src="/Content/javascript/auxilium.min.js"> </script>

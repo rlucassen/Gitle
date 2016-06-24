@@ -25,6 +25,7 @@ $(function () {
   $(document).ctrlS();
   $("table.row-clickable").tableRowClickable();
   $('.marked').markdownify();
+  $('[data-confirm]').confirm();
 
   /* 
    * Auxilium.upload

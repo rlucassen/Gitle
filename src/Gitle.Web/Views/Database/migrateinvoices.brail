@@ -1,0 +1,25 @@
+﻿<div class="row">
+  <div class="large-6 columns">
+    <h3>${lostBookings.Count} Boekingen niet op regels</h3>
+    <ul>
+      <% for booking in lostBookings: %>
+      <li>
+        ${booking.Id} - ${booking.Date.ToString("dd-MM-yyyy")} - ${booking.Comment} (${booking.Minutes}) - ${booking.Project.Name}
+        <ul>
+          <% for invoice in booking.Invoices: %>
+          <li>${invoice.Number} - ${invoice.Title}</li>
+          <% end %>
+        </ul>
+      </li>
+      <% end %>
+    </ul>
+  </div>
+  <div class="large-6 columns">
+    <h3>${linesWithoutBookings.Count} Regels zonder bookingen</h3>
+    <ul>
+      <% for line in linesWithoutBookings: %>
+      <li>${line.Id} - ${line.Description} (${line.Minutes}) - ${line.Invoice.Number} (${line.Invoice.Project.Name})</li>
+      <% end %>
+    </ul>
+  </div>
+</div>

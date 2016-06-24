@@ -4,6 +4,7 @@
     using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
+    using Castle.MonoRail.Framework;
     using Helpers;
     using Model;
     using Model.Helpers;
@@ -48,7 +49,7 @@
             var application = session.SlugOrDefault<Application>(applicationSlug);
             PropertyBag.Add("item", application );
             PropertyBag.Add("customers", session.Query<Customer>().Where(x => x.IsActive).OrderBy(x => x.Name).ToList());
-            if (application != null) PropertyBag.Add("customerId", application.Customer.Id);
+            PropertyBag.Add("customerId", application?.Customer?.Id);
         }
 
         [Admin]
@@ -110,5 +111,18 @@
 
             RenderText(comment);
         }
+
+        [return: JSONReturnBinder]
+        public object CheckApplicationName(string name, long applicationId)
+        {
+            var validName = !session.Query<Application>().Any(x => x.IsActive && x.Slug == name.Slugify() && x.Id != applicationId);
+            var message = "Voer een naam in";
+            if (!validName)
+            {
+                message = "Deze naam is al in gebruik, kies een andere";
+            }
+            return new { success = validName, message = message };
+        }
+
     }
 }

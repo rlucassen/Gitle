@@ -23,6 +23,7 @@
   $(document).ctrlS();
   $("table.row-clickable").tableRowClickable();
   $('.marked').markdownify();
+  $('[data-confirm]').confirm();
 
   /* 
    * Auxilium.upload
@@ -55,6 +56,7 @@
     $(document).foundation('joyride', 'start');
   });
 
+  
   // Focus on .focus elements
   $('form .focus[value=""]').focus();
 });

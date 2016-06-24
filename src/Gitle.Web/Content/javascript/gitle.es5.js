@@ -180,11 +180,17 @@ $(function () {
       params: { projectId: row.find('.booking_Project_Id').val() },
       autoSelectFirst: true,
       noCache: true,
-      minChars: 0,
+      minChars: 1,
       width: row.find('.project-chooser').width(),
       onSelect: function onSelect(suggestion) {
         row.find('.booking_Issue_Id').val(suggestion.data);
         row.find('.issue-chooser').val(suggestion.value);
+        row.find('.booking_Comment').prop("required", false);
+        $(document).foundation('abide', 'reflow');
+      }
+    }).blur(function () {
+      if ($(this).val() == '') {
+        row.find('.booking_Issue_Id').val('');
       }
     });
 
@@ -200,6 +206,8 @@ $(function () {
     });
 
     row.find('.date').fdatepicker(datepickerOptions);
+
+    row.find('.booking-parser').bookingParser();
   };
 
   bookingRowInit($('.booking-row-new'));
@@ -230,6 +238,10 @@ $(function () {
   $('[data-dayshift]').each(function () {
     var shift = $(this).data('dayshift');
     var label = '';
+    var date = Date.today().add(shift).days();
+    if (date.toString('dd-MM-yyyy') === $('#booking_Date').val()) {
+      $(this).addClass('active');
+    }
     switch (shift) {
       case 0:
         label = 'Vandaag';
@@ -238,18 +250,17 @@ $(function () {
         label = 'Gisteren';
         break;
       default:
-        label = Date.today().add(shift).days().toString(dayShiftFormat);
+        label = date.toString(dayShiftFormat);
     }
     $(this).text(label);
   }).click(function (e) {
     e.preventDefault();
-    var today = Date.today();
     var shift = $(this).data('dayshift');
-    var date = today.add(shift).days();
+    var date = Date.today().add(shift).days();
     $('#booking_Date').val(date.toString('dd-MM-yyyy'));
     $('[data-dayshift]').removeClass('active');
     $(this).addClass('active');
-  }).filter('[data-dayshift=0]').click();
+  });
 });
 $(function () {
   var computeHoursForIssue = function computeHoursForIssue(issueNumber) {
@@ -268,7 +279,7 @@ $(function () {
   };
 
   var computePriceForInvoiceLine = function computePriceForInvoiceLine(invoiceLine) {
-    var hourPrice = parseFloat($('#invoice_HourPrice').val());
+    var hourPrice = parseFloat($('#invoice_HourPrice').val().replace(',', '.'));
     var hours = parseFloat(invoiceLine.find('.invoiceline-hours-input').val().replace(',', '.'));
     var nill = parseInt(invoiceLine.find('.invoiceline-null').val());
     var price = hours * hourPrice * (1 - nill);
@@ -282,12 +293,13 @@ $(function () {
       var linePrice = parseFloat($(this).find('.invoiceline-price').val().replace(',', '.')) * (1 - parseInt($(this).find('.invoiceline-null').val()));
       subtotalPrice += linePrice;
     });
-    $('#invoice_Subtotal').val(subtotalPrice.toFixed(2).toString().replace(".", ","));
     var correctionTotalPrice = 0.0;
     $('.correctionline').each(function () {
       var correctionValue = $(this).find('.correctionline-price').val();
       if (correctionValue) correctionTotalPrice += parseFloat(correctionValue.replace(',', '.'));
     });
+    subtotalPrice += correctionTotalPrice;
+    $('#invoice_Subtotal').val(subtotalPrice.toFixed(2).toString().replace(".", ","));
     var vat = parseInt($('.vatline .vatline-vat').val());
     var vatPrice = (subtotalPrice + correctionTotalPrice) * vat * 0.21;
     $('.vatline-price').val(vatPrice.toFixed(2).toString().toString().replace(".", ","));
@@ -373,6 +385,32 @@ $(function () {
       line.find('.vatline-price').addClass('null');
     }
     calculateTotals();
+  });
+
+  // All decimal input fields have a class named 'number'
+  $('input').each(function () {
+    $(this).keypress(function (e) {
+      // '46' is the keyCode for '.'
+      if (e.keyCode == '46') {
+        // IE
+        if (document.selection) {
+          var range = document.selection.createRange();
+          range.text = ',';
+          // Chrome + FF
+        } else if (this.selectionStart || this.selectionStart == '0') {
+            var start = this.selectionStart;
+            var end = this.selectionEnd;
+
+            $(this).val($(this).val().substring(0, start) + ',' + $(this).val().substring(end, $(this).val().length));
+
+            this.selectionStart = start + 1;
+            this.selectionEnd = start + 1;
+          } else {
+            $(this).val($(this).val() + ',');
+          }
+        return false;
+      }
+    });
   });
 });
 function GitleIssues() {}

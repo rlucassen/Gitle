@@ -25,7 +25,7 @@
             <a class="button tiny secondary no-margin" href="/application/${item.Slug}/view">Details</a>
             <a class="button tiny success no-margin" href="/application/${item.Slug}/edit">Bewerk</a>
             <a class="button tiny no-margin" href="/application/${item.Slug}/projects">Projecten</a>
-            <a class="button tiny alert no-margin" href="/application/${item.Slug}/delete">Verwijder</a>
+            <a class="button tiny alert no-margin" href="/application/${item.Slug}/delete" data-confirm="Weet je het zeker?">Verwijder</a>
           </td>
         </tr>
         <% end %>

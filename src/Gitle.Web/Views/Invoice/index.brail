@@ -1,4 +1,13 @@
-﻿<h1>Nieuwe bijlage maken</h1>
+﻿<h1>Overzicht bijlagen</h1>
+<form action="/invoice/export" method="POST">
+  <div class="row">
+    <div class="large-12 columns">
+      <input type="submit" class="button" value="Export" />
+    </div>
+  </div>
+</form>
+
+<h1>Nieuwe bijlage maken</h1>
 <form action="/invoice/create" method="POST">
   <div class="row booking-row-new">
     <div class="large-12 columns">
@@ -28,17 +37,20 @@
 
 <h1>Bijlagen</h1>
 <div class="row">
-  <div class="large-12 columns">
+  <div class="large-8 columns">
     <p>
       <span class="label round secondary">Concept</span>
       <span class="label round">Definitief</span>
       <span class="label round alert">Gearchiveerd</span>
     </p>
   </div>
+  <div class="large-4 columns">
+    <input type="text" id="invoiceSearch" placeholder="Zoeken op factuurnummer"/>
+  </div>
 </div>
 <div class="invoices">
   <% for invoice in invoices: %>
-  <div class="invoice">
+  <div class="invoice" data-invoice-number="${invoice.Number}">
     <div class="row">
       <div class="large-1 columns">
         <div class="row">
@@ -81,6 +93,7 @@
             <li><a href="/project/${invoice.Project.Slug}/invoice/${invoice.Id}/archive">Archiveren</a></li>
             <% end %>
             <li><a href="/project/${invoice.Project.Slug}/invoice/${invoice.Id}/archiveissues">Taken archiveren</a></li>
+            <li><a href="/project/${invoice.Project.Slug}/invoice/${invoice.Id}/Delete">Verwijderen</a></li>
           </ul>
         </ul>
       </div>
@@ -89,3 +102,14 @@
   <% end %>
 </div>
 
+<script>
+  $(function() {
+    $('#invoiceSearch').keyup(function() {
+      var query = $(this).val();
+      $(".invoices .invoice").show();
+      if (query.length >= 2) {
+        $(".invoices .invoice:not([data-invoice-number*='" + query + "'])").hide();
+      }
+    });
+  });
+</script>

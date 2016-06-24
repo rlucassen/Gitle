@@ -19,18 +19,24 @@
       <thead>
         <tr>
           <th>Project</th>
+          <th>#</th>
           <% if CurrentUser.IsAdmin: %>
           <th>Applicatie</th>
           <th>Klant</th>
           <th>Type</th>
           <% end %>
-          <th id="project-actions" class="{sorter: false}" style="width: 345px;"></th>
+          <th id="project-actions" class="{sorter: false}" style="width: 440px;"></th>
         </tr>
       </thead>
       <tbody>
         <% for item in items: %>
         <tr>
           <td class="name">${item.Name}</td>
+          <% if item.Number > 0: %>
+          <td class="number">${item.Number}</td>
+          <% else: %>
+          <td class="number"></td>
+          <% end %>
           <% if CurrentUser.IsAdmin: %>
           <td class="application">${?item.Application.Name}</td>
           <td class="customer">${?item.Application.Customer.Name}</td>
@@ -43,7 +49,7 @@
               <% if CurrentUser.IsAdmin: %>
               <li><a class="button tiny success no-margin" href="/project/${item.Slug}/edit">Bewerk</a></li><% end %>
               <% if CurrentUser.IsAdmin: %>
-              <li><a class="button tiny alert no-margin" href="/project/${item.Slug}/delete">Verwijder</a></li><% end %>
+              <li><a class="button tiny alert no-margin" href="/project/${item.Slug}/delete" data-confirm="Weet je het zeker?">Verwijder</a></li><% end %>
             </ul>
           </td>
         </tr>

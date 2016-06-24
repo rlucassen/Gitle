@@ -45,14 +45,17 @@
       </div>
       <% count = 0 %>
       <% for line in invoice.ProjectLines: %>
-      <div class="row invoiceline invoiceline-booking">
+      <div class="row invoiceline invoiceline-booking collapse">
         <div class="large-8 columns">
           <div class="row collapse">
             <div class="small-1 columns">
               <a href="#" class="button prefix secondary remove-line"><i class="fa fa-close red"></i></a>
             </div>
             <div class="small-11 columns">
-              <input type="text" name="lines[${count}].Description" id="lines_${count}_Description" value="${line.Description}" />
+              <% for booking in line.Bookings: %>
+              <input type="hidden" name="lines[${count}].Bookings[${booking.Id}].Id" id="lines_${count}_Bookings_${booking.Id}_Id" value="${booking.Id}"/>
+              <% end %>
+              <input type="text" name="lines[${count}].Description" id="lines_${count}_Description" value="${line.Description}"/>
             </div>
           </div>
         </div>
@@ -75,7 +78,7 @@
       <% count = count + 1 %>
       <% end %>
       <% for line in invoice.IssueLines: %>
-      <div class="row invoiceline invoiceline-issue" data-issue="${line.Issue.Number}">
+      <div class="row invoiceline invoiceline-issue collapse" data-issue="${line.Issue.Number}">
         <input type="hidden" name="lines[${count}].Issue.Id" id="lines_${count}_Issue_Id" value="${line.Issue.Id}" />
         <div class="large-8 columns">
           <div class="row collapse">
@@ -129,7 +132,7 @@
       <div class="bookings">
         <% for booking in line.Bookings: %>
         <div class="row booking" data-issue="${line.Issue.Number}">
-          <input type="hidden" name="bookings[${booking.Id}]" id="bookings_${booking.Id}" value="${booking.Id}" />
+          <input type="hidden" name="lines[${count}].Bookings[${booking.Id}].Id" id="lines_${count}_Bookings_${booking.Id}_Id" value="${booking.Id}" />
           <div class="large-7 large-offset-1 columns">
             <span class="booking-date <% if invoice.StartDate > booking.Date: %>old<% end %>">${booking.Date.ToString("dd-MM-yyyy")}</span> <span class="booking-info">${booking.User.FullName}</span>:
             <span class="booking-comment">${booking.Comment}</span>
@@ -147,13 +150,12 @@
           </div>
         </div>
         <% end %>
-        <% if line.OldBookings.Count > 0: %>
+        <% if line.OldInvoiceLines.Count > 0: %>
         <div class="row">
           <div class="large-11 large-offset-1 columns">
             <h5>Eerder al gefactureerd:</h5>
           </div>
         </div>
-        <% end %>
         <% for invoiceLine in line.OldInvoiceLines: %>
         <div class="row booking old-booking" data-issue="${line.Issue.Number}">
           <div class="large-8 large-offset-1 columns">
@@ -164,6 +166,7 @@
             <span class="booking-hours-span">${invoiceLine.Hours}</span>
           </div>
         </div>
+        <% end %>
         <% end %>
       </div>
       <% count = count + 1 %>
@@ -256,3 +259,16 @@
   </div>
 </form>
 
+<script>
+  $(document).ready(function () {
+    $('.correctionline').hide();
+    $('.correctionline').first().show();
+    $('.correctionline').find('.correctionline-price').change(function () {
+      if ($(this).find('.correctionline-price').val() != "") {
+        $(this).parents('.correctionline').next('.correctionline').show();
+      }
+    });
+
+  });
+
+</script>

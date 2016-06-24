@@ -28,6 +28,7 @@
   <brail debug="false" saveToDisk="false" saveDirectory="BrailGen" batch="false" commonScriptsDirectory="CommonScripts">
     <import namespace="Gitle.Model" />
     <import namespace="System" />
+    <import namespace="Boo.Lang.Builtins" />
   </brail>
   <castle configSource="castle.config" />
   <system.net>

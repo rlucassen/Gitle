@@ -9,6 +9,8 @@ using System.Text;
 
 namespace Gitle.Service
 {
+    using System.Configuration;
+
     public class TemplateParserService : ITemplateParserService
     {
         private readonly FileAssemblyViewSourceLoader viewSourceLoader;
@@ -26,6 +28,7 @@ namespace Gitle.Service
             {
                 using (var writer = new StringWriter())
                 {
+                    propertyBag.Add("webPath", ConfigurationManager.AppSettings["webPath"]);
                     standaloneBooViewEngine.Process(templateName, writer, propertyBag);
                     return writer.GetStringBuilder().ToString();
                 }

@@ -4,6 +4,7 @@
     {
         public ProjectMap()
         {
+            Map(x => x.Number);
             Map(x => x.Name);
             Map(x => x.Slug);
             Map(x => x.Repository);
@@ -19,8 +20,9 @@
             Map(x => x.BudgetMinutes);
             HasMany(x => x.Users).Cascade.All();
             HasMany(x => x.Labels).Cascade.AllDeleteOrphan();
-            HasMany(x => x.Issues).Cascade.AllDeleteOrphan();
-            HasMany(x => x.Bookings).Cascade.AllDeleteOrphan();
+            HasMany(x => x.Issues).Cascade.None();
+            HasMany(x => x.Invoices).Cascade.None();
+            HasMany(x => x.Bookings).Cascade.None();
             HasManyToMany(x => x.Documents).Table("ProjectDocument").Cascade.AllDeleteOrphan();
             References(x => x.Customer);
             References(x => x.Application);

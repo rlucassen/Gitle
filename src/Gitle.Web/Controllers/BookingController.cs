@@ -19,12 +19,20 @@ namespace Gitle.Web.Controllers
         [Admin]
         public void Index()
         {
+            Index(DateTime.Today);
+        }
+
+        [Admin]
+        public void Index(DateTime date)
+        {
             var bookings = session.Query<Booking>()
                 .Where(x => x.IsActive && x.User == CurrentUser && x.Date > DateTime.Today.AddDays(-14))
                 .OrderByDescending(x => x.Date)
                 .GroupBy(x => x.Date.Date)
                 .ToDictionary(g => new { date = g.Key, total = g.ToList().Sum(x => x.Minutes) }, g => g.ToList());
             PropertyBag.Add("bookings", bookings);
+            PropertyBag.Add("today", date.ToString("dd-MM-yyyy"));
+            PropertyBag.Add("admins", session.Query<User>().Where(x => x.IsActive && x.IsAdmin));
         }
 
         [Admin]
@@ -55,11 +63,22 @@ namespace Gitle.Web.Controllers
         }
 
         [Admin]
-        public void Save()
+        public void Save(int adminId = 0)
         {
             var booking = BindObject<Booking>("booking");
 
-            booking.User = CurrentUser;
+            if (adminId > 0)
+            {
+                if (CurrentUser.IsDanielle)
+                {
+                    booking.User = session.Query<User>().FirstOrDefault(x => x.IsActive && x.Id == adminId && x.IsAdmin);
+                }
+                else { return; }
+            }
+            else
+            {
+                booking.User = CurrentUser;
+            }
             if (booking.Issue.Id == 0)
             {
                 booking.Issue = null;
@@ -70,8 +89,9 @@ namespace Gitle.Web.Controllers
                 session.SaveOrUpdate(booking);
                 transaction.Commit();
             }
-            RedirectToReferrer();
+            RedirectToAction("index", new {date = booking.Date.ToShortDateString()});
         }
+
         [Admin]
         public void Save(int id, int projectId, int issueId)
         {
@@ -103,7 +123,7 @@ namespace Gitle.Web.Controllers
         [Admin]
         public void Delete(int id)
         {
-            var booking = session.Query<Booking>().FirstOrDefault(x => x.IsActive && x.Id == id && !x.Invoices.Any());
+            var booking = session.Query<Booking>().FirstOrDefault(x => x.IsActive && x.Id == id && !x.InvoiceLines.Any());
             if (booking != null)
             {
                 booking.Deactivate();

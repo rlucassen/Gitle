@@ -71,11 +71,18 @@
       params: { projectId: row.find('.booking_Project_Id').val() },
       autoSelectFirst: true,
       noCache: true,
-      minChars: 0,
+      minChars: 1,
       width: row.find('.project-chooser').width(),
       onSelect: function (suggestion) {
         row.find('.booking_Issue_Id').val(suggestion.data);
         row.find('.issue-chooser').val(suggestion.value);
+        row.find('.booking_Comment').prop("required", false);
+        $(document).foundation('abide', 'reflow');
+
+      }
+    }).blur(function() {
+      if ($(this).val() == '') {
+        row.find('.booking_Issue_Id').val('');
       }
     });
 
@@ -91,6 +98,8 @@
     });
 
     row.find('.date').fdatepicker(datepickerOptions);
+
+    row.find('.booking-parser').bookingParser();
 
   };
 
@@ -124,6 +133,10 @@
   $('[data-dayshift]').each(function () {
     var shift = $(this).data('dayshift');
     var label = '';
+    var date = Date.today().add(shift).days();
+    if (date.toString('dd-MM-yyyy') === $('#booking_Date').val()) {
+      $(this).addClass('active');
+    }
     switch (shift) {
       case 0:
         label = 'Vandaag';
@@ -132,16 +145,15 @@
         label = 'Gisteren';
         break;
       default:
-        label = Date.today().add(shift).days().toString(dayShiftFormat);
+        label = date.toString(dayShiftFormat);
     }
     $(this).text(label);
   }).click(function (e) {
     e.preventDefault();
-    var today = Date.today();
     var shift = $(this).data('dayshift');
-    var date = today.add(shift).days();
+    var date = Date.today().add(shift).days();
     $('#booking_Date').val(date.toString('dd-MM-yyyy'));
     $('[data-dayshift]').removeClass('active');
     $(this).addClass('active');
-  }).filter('[data-dayshift=0]').click();
+  });
 });

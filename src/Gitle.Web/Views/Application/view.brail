@@ -26,6 +26,7 @@
           <thead>
             <tr>
               <th>Naam</th>
+              <th>Type</th>
             </tr>
           </thead>
           <tbody>
@@ -34,6 +35,7 @@
               <td class="name">
                 <a href="/project/${project.Slug}/view">${?project.Name}</a>
               </td>
+              <td>${?project.TypeString}</td>
             </tr>
             <% end %>
             

@@ -103,6 +103,19 @@ $.fn.tableRowClickable = function() {
 };
 
 /*
+ * Make a link ask for confirmation before following link
+ */
+$.fn.confirm = function() {
+  return this.each(function() {
+    $(this).click(function() {
+      var message = $(this).data('confirm');
+      return confirm(message);
+    });
+  });
+};
+
+
+/*
  * Markdownify the contents of the element
  */
 $.fn.markdownify = function() {

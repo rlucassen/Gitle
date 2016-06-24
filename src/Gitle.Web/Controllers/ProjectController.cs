@@ -1,11 +1,9 @@
 ﻿namespace Gitle.Web.Controllers
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Web.UI.WebControls.Expressions;
     using Castle.MonoRail.Framework;
-    using Clients.Freckle.Interfaces;
-    using FluentNHibernate.Utils;
     using Model;
     using Helpers;
     using Model.Enum;
@@ -27,6 +25,11 @@
 
             var projects = session.Query<Project>().Where(x => x.IsActive);
 
+            if (!CurrentUser.IsDanielle)
+            {
+                projects = projects.Where(x => x.Type != ProjectType.Administration);
+            }
+            
             if (!CurrentUser.IsAdmin)
             {
                 projects = projects.Where(p => p.Users.Any(x => x.User == CurrentUser));
@@ -146,9 +149,14 @@
                 item = BindObject<Project>("item");
             }
 
-            var application = session.Get<Application>(applicationId);
-            application.Projects.Add(item);
-            session.SaveOrUpdate(application);
+            if (applicationId > 0)
+            {
+                var application = session.Get<Application>(applicationId);
+                item.Application = application;
+                application.Projects.Add(item);
+                session.SaveOrUpdate(application);
+            }
+
             var labels = BindObject<Label[]>("label");
 
             var labelsToDelete = item.Labels.Where(l => !labels.Select(x => x.Id).Contains(l.Id)).ToList();
@@ -257,14 +265,32 @@
         public object Autocomplete(string query)
         {
             var suggestions = new List<Suggestion>();
-            var projects = session.Query<Project>();
+            var projects = session.Query<Project>().Where(x => x.IsActive);
+
+            if (!CurrentUser.IsDanielle)
+            {
+                projects = projects.Where(x => x.Type != ProjectType.Administration);
+            }
+
             if (query != null)
             {
-                projects = projects.Where(p => p.Name.Contains(query) || (p.Application != null && (p.Application.Name.Contains(query) || (p.Application.Customer != null && p.Application.Customer.Name.Contains(query)))));
+                projects = projects.Where(p => p.Name.Contains(query) || p.Number.ToString().Contains(query) || (p.Application != null && (p.Application.Name.Contains(query) || (p.Application.Customer != null && p.Application.Customer.Name.Contains(query)))));
             }
             projects = projects.OrderBy(x => x.Name);
             suggestions.AddRange(projects.ToList().Select(x => new Suggestion(x.CompleteName, x.Id.ToString(), x.TicketRequiredForBooking ? "ticketRequired": string.Empty)));
-            return new { query = query, suggestions = suggestions };
+            return new {query, suggestions };
+        }
+
+        [return: JSONReturnBinder]
+        public object CheckProjectName(string name, long projectId)
+        {
+            var validName = !session.Query<Project>().Any(x => x.IsActive && x.Slug == name.Slugify() && x.Id != projectId);
+            var message = "Voer een naam in";
+            if (!validName)
+            {
+                message = "Deze naam is al in gebruik, kies een andere";
+            }
+            return new { success = validName, message = message };
         }
     }
 }

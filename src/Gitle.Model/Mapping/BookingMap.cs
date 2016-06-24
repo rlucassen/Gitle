@@ -16,7 +16,7 @@
              References(x => x.User).Column("User_id");
              References(x => x.Issue).Column("Issue_id");
 
-             HasManyToMany(x => x.Invoices).Inverse();
+             HasManyToMany(x => x.InvoiceLines).Table("InvoiceLineBooking").Cascade.None().Inverse();
          }
     }
 }

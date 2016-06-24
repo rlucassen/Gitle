@@ -341,6 +341,7 @@
     <Content Include="Views\Invoice\create.brail" />
     <Content Include="Views\Booking\_row.brail" />
     <Content Include="Views\Booking\overview.brail" />
+    <Content Include="Views\Database\migrateinvoices.brail" />
     <None Include="Views\Issue\index.brail" />
     <None Include="Views\Issue\exportimport.brail" />
     <None Include="Views\Issue\quickview.brail" />
@@ -371,7 +372,6 @@
     <None Include="Views\Issue\view.brail" />
     <None Include="Views\Project\edit.brail" />
     <None Include="Views\Project\index.brail" />
-    <None Include="Views\Repository\index.brail" />
     <None Include="Views\Authentication\index.brail" />
     <None Include="Views\Authentication\forgotpassword.brail" />
     <None Include="Views\Layouts\default.brail" />
@@ -394,11 +394,11 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>False</UseIIS>
+          <UseIIS>True</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>51459</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:50026/</IISUrl>
+          <IISUrl>http://localhost:51461/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

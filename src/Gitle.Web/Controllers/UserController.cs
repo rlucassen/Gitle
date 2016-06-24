@@ -3,9 +3,11 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Web.UI;
+    using Castle.MonoRail.Framework;
     using FluentNHibernate.Utils;
     using Helpers;
     using Model;
+    using Model.Helpers;
     using Model.Nested;
     using NHibernate;
     using NHibernate.Linq;
@@ -40,7 +42,7 @@
             PropertyBag.Add("item", user);
             PropertyBag.Add("selectedprojects", user.Projects.Select(x => x.Project).ToList());
             PropertyBag.Add("customers", session.Query<Customer>().Where(x => x.IsActive).ToList());
-            PropertyBag.Add("projects", session.Query<Project>().OrderBy(x => x.Name).ToList());
+            PropertyBag.Add("projects", session.Query<Project>().Where(x => x.IsActive).OrderBy(x => x.Name).ToList());
             PropertyBag.Add("customerId", user.Customer?.Id ?? 0);
         }
 
@@ -173,6 +175,18 @@
             }
 
             RenderText(comment);
+        }
+
+        [return: JSONReturnBinder]
+        public object CheckUserName(string name, long userId)
+        {
+            var validName = !session.Query<User>().Any(x => x.IsActive && x.Name == name && x.Id != userId);
+            var message = "Voer een naam in";
+            if (!validName)
+            {
+                message = "Deze naam is al in gebruik, kies een andere";
+            }
+            return new { success = validName, message = message };
         }
 
 
