@@ -1,7 +1,9 @@
 ﻿<div class="row">
   <div class="large-12 columns">
     <h1>${project.Name}</h1>
-
+    <% if project.Closed: %>
+    <p class="red">Dit project is gesloten, er kunnen geen taken meer aangemaakt worden.</p>
+    <% end %>
     <span>Comments</span>
     <textarea data-live-comments="/project/${project.Slug}/comments">${?project.Comments}</textarea>
 

@@ -184,6 +184,7 @@
     <Compile Include="Helpers\DayHelper.cs" />
     <Compile Include="Helpers\FileBinderAttribute.cs" />
     <Compile Include="Helpers\ProjectAttribute.cs" />
+    <Compile Include="Helpers\ProjectClosedException.cs" />
     <Compile Include="Helpers\SaveFeedback.cs" />
     <Compile Include="Helpers\DocumentUploadFeedback.cs" />
     <Compile Include="Helpers\UploadFeedback.cs" />

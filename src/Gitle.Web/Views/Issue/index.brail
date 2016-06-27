@@ -1,7 +1,11 @@
 ﻿<div class="row">
   <div class="large-12 columns">
     <h1>${project.Name}: ${result.TotalResultCount} Taken</h1>
+    <% if not project.Closed: %>
     <a class="button" href="/project/${project.Slug}/issue/new">Nieuwe taak</a>
+    <% else: %>
+    <p class="red">Dit project is gesloten, er kunnen geen taken meer aangemaakt worden.</p>
+    <% end %>
     <a class="button secondary" href="/project/${project.Slug}/view">Projectdetails</a>
     <% if CurrentUser.IsAdmin: %>
     <a class="button split success" href="/project/${project.Slug}/issue/exportimport">Exporteren / Importeren<span data-dropdown="exportimport"></span></a>
@@ -161,18 +165,20 @@
               <div class="large-0 small-12 columns text-right small-text-left">
                 <label>Geselecteerde taken:</label>
               </div>
+              <% if not project.Closed: %>
               <div class="large-0 small-12 columns">
                 <button href="#" data-dropdown="addLabels" aria-controls="addLabels" aria-expanded="false" class="button tiny dropdown success">Label toevoegen</button>
                 <ul id="addLabels" data-dropdown-content class="f-dropdown" aria-hidden="true" tabindex="-1">
                   <% for label in customerLabels: %>
                   <li>
                     <a href="/project/${project.Slug}/addlabel?label=${label.Name}" data-group-action>
-                      <span class="label no-margin<% if label.VisibleForCustomer: %> radius<% end %>" title="${label.Name}" style="background-color: #${label.Color}; ">${label.Name}</span>
+                      <span class="label no-margin<% if label.VisibleForCustomer: %> radius<% end %>" title="${label.Name}" style="background-color: #$ {label.Color}; ">${label.Name}</span>
                     </a>
                   </li>
                   <% end %>
                 </ul>
               </div>
+              <% end %>
               <div class="large-0 small-12 columns">
                 <a href="/project/${project.Slug}/changestate?state=2" data-group-action class="button tiny no-margin alert">Sluiten</a>
                 <% if CurrentUser.IsAdmin: %>

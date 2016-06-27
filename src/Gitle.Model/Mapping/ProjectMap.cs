@@ -19,6 +19,7 @@
             Map(x => x.TicketRequiredForBooking);
             Map(x => x.BudgetMinutes);
             Map(x => x.Unbillable);
+            Map(x => x.Closed);
             HasMany(x => x.Users).Cascade.All();
             HasMany(x => x.Labels).Cascade.AllDeleteOrphan();
             HasMany(x => x.Issues).Cascade.None();

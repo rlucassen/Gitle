@@ -184,6 +184,10 @@
         public void AddLabel(string projectSlug, string issues, string label)
         {
             var project = session.SlugOrDefault<Project>(projectSlug);
+            if (project.Closed)
+            {
+                throw new ProjectClosedException(project);
+            }
             var issueIds = issues.Split(',');
             var realLabel = session.Query<Label>().FirstOrDefault(x => x.Name == label);
             if (!realLabel.ApplicableByCustomer && !CurrentUser.IsAdmin)
@@ -211,6 +215,10 @@
         public void ChangeState(string projectSlug, string issues, IssueState state)
         {
             var project = session.SlugOrDefault<Project>(projectSlug);
+            if (project.Closed)
+            {
+                throw new ProjectClosedException(project);
+            }
             var issueIds = issues.Split(',');
 
             using (var transaction = session.BeginTransaction())
@@ -265,7 +273,7 @@
         public object Autocomplete(string query)
         {
             var suggestions = new List<Suggestion>();
-            var projects = session.Query<Project>().Where(x => x.IsActive);
+            var projects = session.Query<Project>().Where(x => x.IsActive && !x.Closed);
 
             if (!CurrentUser.IsDanielle)
             {

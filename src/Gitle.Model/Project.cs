@@ -37,6 +37,8 @@
 
         public virtual bool Unbillable { get; set; }
 
+        public virtual bool Closed { get; set; }
+
         public virtual ProjectType Type { get; set; }
         public virtual string TypeString => Type.GetDescription();
 

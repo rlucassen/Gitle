@@ -31,9 +31,9 @@
       <tbody>
         <% for item in items: %>
         <tr>
-          <td class="name">${item.Name}</td>
+          <td class="name <% if item.Closed: %>red<% end %>">${item.Name}</td>
           <% if item.Number > 0: %>
-          <td class="number">${item.Number}</td>
+          <td class="number <% if item.Closed: %>red<% end %>">${item.Number}</td>
           <% else: %>
           <td class="number"></td>
           <% end %>
@@ -47,7 +47,7 @@
               <li><a class="button tiny secondary no-margin" href="/project/${item.Slug}/view">Details</a></li>
               <% if CurrentUser.IsDanielle: %>
               <li>
-                <a href="/project/${item.Slug}/issues" class="button tiny split">Takenlijst <span data-dropdown="issuedrop-${item.Id}"></span></a><br>
+                <a href="/project/${item.Slug}/issues" class="button tiny split no-margin">Takenlijst <span data-dropdown="issuedrop-${item.Id}"></span></a><br>
                 <ul id="issuedrop-${item.Id}" class="f-dropdown" data-dropdown-content>
                   <li><a href="/project/${item.Slug}/issue/exportcsv">CSV Export</a></li>
                 </ul>

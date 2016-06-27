@@ -114,7 +114,7 @@
               <div class="large-10 small-12 columns">
                 <ul class="button-group actions">
                   <li><a class="button tiny no-margin" href="/project/${project.Slug}/issue/${issue.Number}/view">Open</a></li>
-                  <% if CurrentUser.IsAdmin and not issue.IsArchived: %>
+                  <% if CurrentUser.IsAdmin and not issue.IsArchived and not project.Closed: %>
                   <li><a class="button tiny success no-margin" href="/project/${project.Slug}/issue/${issue.Number}/pickup">Oppakken</a></li>
                   <li><a class="button tiny success no-margin" href="/project/${project.Slug}/issue/${issue.Number}/edit">Bewerk</a></li>
                   <% end %>
