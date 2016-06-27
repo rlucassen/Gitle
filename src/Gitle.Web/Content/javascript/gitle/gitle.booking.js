@@ -38,6 +38,17 @@
     weekStart: 1
   };
 
+  var setUnbillable = function (row) {
+    row.find('.booking-row-null-toggle').addClass('null');
+    row.find('.booking_Unbillable').val(1);
+
+  }
+
+  var setBillable = function (row) {
+    row.find('.booking-row-null-toggle').removeClass('null');
+    row.find('.booking_Unbillable').val(0);
+  }
+
   var bookingRowInit = function (row) {
 
     row.find('.project-chooser').data('suggestion', undefined);
@@ -55,11 +66,16 @@
         row.find('.issue-chooser').val('').autocomplete('setOptions', { params: { projectId: suggestion.data } });
         row.find('.booking_Issue_Id').val('');
         if (suggestion.extraValue == "ticketRequired") {
-          row.find('.booking_Issue_Id').prop("required", true);
+          row.find('.issue-chooser').prop("required", true);
           $(document).foundation('abide', 'reflow');
         } else {
           row.find('.booking_Comment').prop("required", true);
           $(document).foundation('abide', 'reflow');
+        }
+        if (suggestion.extraValue2 == "unbillable") {
+          setUnbillable(row);
+        } else {
+          setBillable(row);
         }
       }
     }).on('focus', function () {
@@ -86,16 +102,17 @@
       }
     });
 
+
     row.find('.booking-row-null-toggle').click(function (e) {
       e.preventDefault();
       if ($(this).hasClass('null')) {
-        $(this).removeClass('null');
-        row.find('.booking_Unbillable').val(0);
+        setBillable(row);
       } else {
-        $(this).addClass('null');
-        row.find('.booking_Unbillable').val(1);
+        setUnbillable(row);
       }
     });
+
+    
 
     row.find('.date').fdatepicker(datepickerOptions);
 

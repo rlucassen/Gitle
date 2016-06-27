@@ -35,6 +35,8 @@
         public virtual double BudgetHours => BudgetMinutes / 60.0;
         public virtual string BudgetTime => $"{Math.Floor(BudgetHours)}:{BudgetMinutes - (Math.Floor(BudgetHours)*60):00}";
 
+        public virtual bool Unbillable { get; set; }
+
         public virtual ProjectType Type { get; set; }
         public virtual string TypeString => Type.GetDescription();
 

@@ -277,7 +277,7 @@
                 projects = projects.Where(p => p.Name.Contains(query) || p.Number.ToString().Contains(query) || (p.Application != null && (p.Application.Name.Contains(query) || (p.Application.Customer != null && p.Application.Customer.Name.Contains(query)))));
             }
             projects = projects.OrderBy(x => x.Name);
-            suggestions.AddRange(projects.ToList().Select(x => new Suggestion(x.CompleteName, x.Id.ToString(), x.TicketRequiredForBooking ? "ticketRequired": string.Empty)));
+            suggestions.AddRange(projects.ToList().Select(x => new Suggestion(x.CompleteName, x.Id.ToString(), x.TicketRequiredForBooking ? "ticketRequired": string.Empty, x.Unbillable ? "unbillable":string.Empty)));
             return new {query, suggestions };
         }
 

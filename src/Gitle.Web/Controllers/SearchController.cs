@@ -44,14 +44,16 @@
             this.value = value;
             this.data = data;
         }
-        public Suggestion(string value, string data, string extraValue)
+        public Suggestion(string value, string data, string extraValue, string extraValue2 = "")
         {
             this.value = value;
             this.data = data;
             this.extraValue = extraValue;
+            this.extraValue2 = extraValue2;
         }
         public string value;
         public string data;
         public string extraValue;
+        public string extraValue2;
     }
 }

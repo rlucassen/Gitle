@@ -52,6 +52,10 @@
         <div class="large-9 columns">${Form.CheckboxField("item.TicketRequiredForBooking")}</div>
       </div>
       <div class="row">
+        <div class="large-3 columns">Unbillable</div>
+        <div class="large-9 columns">${Form.CheckboxField("item.Unbillable")}</div>
+      </div>
+      <div class="row">
         <div class="large-3 columns">Comments</div>
         <div class="large-9 columns">
           <textarea type="text" id="item_Comments" name="item.Comments" value="" class="focus">${?item.Comments}</textarea>
