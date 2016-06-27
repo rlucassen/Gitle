@@ -45,5 +45,10 @@
                                                        project.Slug, match.Groups["hash"], match.Groups["number"]));
             return txt;
         }
+
+        public static string ToHourDayNotation(this double hours)
+        {
+            return hours <= 3 ? $"{hours} uur" : $"{hours/8} dag";
+        }
     }
 }

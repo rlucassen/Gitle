@@ -240,6 +240,7 @@
   <a class="close-reveal-modal">&#215;</a>
 </div>
 <script>
+  var prioInterval;
   $(function () {
 
     $('#query-form .submit').click(function (e) {
@@ -279,7 +280,7 @@
         handle: ".draghandle"
       });
 
-      window.setInterval(function () {
+      prioInterval = window.setInterval(function () {
         if (!dragging) {
           updatePrio();
         }
