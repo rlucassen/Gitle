@@ -25,7 +25,7 @@
           <th>Klant</th>
           <th>Type</th>
           <% end %>
-          <th id="project-actions" class="{sorter: false}" style="width: 440px;"></th>
+          <th id="project-actions" class="{sorter: false}" style="width: 580px;"></th>
         </tr>
       </thead>
       <tbody>
@@ -45,11 +45,22 @@
           <td class="actions">
             <ul class="button-group">
               <li><a class="button tiny secondary no-margin" href="/project/${item.Slug}/view">Details</a></li>
+              <% if CurrentUser.IsDanielle: %>
+              <li>
+                <a href="/project/${item.Slug}/issues" class="button tiny split">Takenlijst <span data-dropdown="issuedrop-${item.Id}"></span></a><br>
+                <ul id="issuedrop-${item.Id}" class="f-dropdown" data-dropdown-content>
+                  <li><a href="/project/${item.Slug}/issue/exportcsv">CSV Export</a></li>
+                </ul>
+              </li>
+              <% else: %>
               <li><a class="button tiny no-margin" href="/project/${item.Slug}/issues">Takenlijst</a></li>
+              <% end %>
               <% if CurrentUser.IsAdmin: %>
-              <li><a class="button tiny success no-margin" href="/project/${item.Slug}/edit">Bewerk</a></li><% end %>
+              <li><a class="button tiny success no-margin" href="/project/${item.Slug}/edit">Bewerk</a></li>
+              <% end %>
               <% if CurrentUser.IsAdmin: %>
-              <li><a class="button tiny alert no-margin" href="/project/${item.Slug}/delete" data-confirm="Weet je het zeker?">Verwijder</a></li><% end %>
+              <li><a class="button tiny alert no-margin" href="/project/${item.Slug}/delete" data-confirm="Weet je het zeker?">Verwijder</a></li>
+              <% end %>
             </ul>
           </td>
         </tr>

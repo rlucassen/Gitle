@@ -293,6 +293,11 @@
             return Bookings.Where(x => x.IsActive && !x.Unbillable).Sum(x => x.Hours);
         }
 
+        public virtual double UnbillableBookingHours()
+        {
+            return Bookings.Where(x => x.IsActive && x.Unbillable).Sum(x => x.Hours);
+        }
+
         public virtual double BookingHours(DateTime startDate, DateTime endDate)
         {
             return Bookings.Where(x => x.Date >= startDate && x.Date <= endDate).Sum(x => x.Hours);

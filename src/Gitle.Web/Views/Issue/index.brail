@@ -7,7 +7,7 @@
     <a class="button split success" href="/project/${project.Slug}/issue/exportimport">Exporteren / Importeren<span data-dropdown="exportimport"></span></a>
     <ul id="exportimport" data-dropdown-content class="f-dropdown">
       <li><a href="/project/${project.Slug}/issue/exportcsv">Exporteer alles (.csv)</a></li>
-      <li id="exportselection" data-group-action><a href="/project/${project.Slug}/issue/exportcsv">Exporteer selectie (.csv)</a></li>
+      <li id="exportselection"><a href="/project/${project.Slug}/issue/exportcsv" data-group-action>Exporteer selectie (.csv)</a></li>
     </ul>
     <% end %>
     <div class="row">
