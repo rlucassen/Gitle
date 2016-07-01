@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Linq.Expressions;
     using System.Text.RegularExpressions;
+    using FluentNHibernate.Utils;
     using Model;
     using Model.Helpers;
     using NHibernate;
@@ -18,6 +19,7 @@
         public IList<Project> Projects { get; set; } = new List<Project>();
         public IList<Application> Applications { get; set; } = new List<Application>();
         public IList<Customer> Customers { get; set; } = new List<Customer>();
+        public IList<Issue> Issues { get; set; } = new List<Issue>();
 
         public List<BookingGroup> GroupedBookings { get; set; }
 
@@ -57,6 +59,7 @@
             IList<string> projects = new List<string>();
             IList<string> applications = new List<string>();
             IList<string> customers = new List<string>();
+            IList<string> issues = new List<string>();
             var searchQuery = Query;
             var take = MaxResults;
             var all = false;
@@ -79,6 +82,9 @@
                         break;
                     case "customer":
                         customers.Add(value);
+                        break;
+                    case "issue":
+                        issues.Add(value);
                         break;
                     case "groupby":
                         GroupedBy = value;
@@ -137,6 +143,15 @@
                 foreach (var customer in customers)
                 {
                     Customers.Add(session.SlugOrDefault<Customer>(customer));
+                }
+            }
+
+            if (issues.Count > 0)
+            {
+                bookings = bookings.Where(x => x.Project != null && x.Project.Application != null && issues.Contains(x.Issue.Number.ToString()));
+                foreach (var issue in issues)
+                {
+                    Issues.Add(session.Query<Issue>().FirstOrDefault(x => x.Number.ToString().Equals(issue)));
                 }
             }
 

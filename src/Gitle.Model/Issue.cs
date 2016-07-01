@@ -320,13 +320,20 @@
 
         public virtual string ShortName()
         {
-            if (Name.Length > 43)
+            if (Name != null)
             {
-                return Name.Substring(0, 40) + "...";
+                if (Name.Length > 43)
+                {
+                    return Name.Substring(0, 40) + "...";
+                }
+                else
+                {
+                    return Name;
+                }
             }
             else
             {
-                return Name;
+                return "ERROR - Issue heeft geen naam!";
             }
         }
     }
