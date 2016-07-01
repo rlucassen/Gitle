@@ -50,6 +50,7 @@ namespace Gitle.Web.Controllers
             PropertyBag.Add("allCustomers", allCustomers.OrderBy(x => x.Name).ToList());
             PropertyBag.Add("allApplications", allApplications.OrderBy(x => x.Name).ToList());
             PropertyBag.Add("allProjects", allProjects.OrderBy(x => x.Name).ToList());
+            PropertyBag.Add("selectedProjects", parser.Projects);
 
             var presetDates = new List<dynamic>();
             var today = DateTime.Today;

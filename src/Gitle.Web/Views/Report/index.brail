@@ -127,6 +127,31 @@
               <% end %>
             </ul>
           </div>
+        <% if selectedProjects.Count > 0: %>
+          <div class="large-0 small-12 columns">
+            <button href="#" data-dropdown="issues" aria-controls="issues" aria-expanded="false" class="button tiny dropdown no-margin"
+              <% if result.Projects.Count > 0: %>warning<% end %>">Issues:</button>
+            <ul id="issues" data-dropdown-content="" class="f-dropdown wide" aria-hidden="true" tabindex="-1">
+              <% for project in selectedProjects: %>
+              <% for issue in project.Issues: %>
+              <% isSelected = result.Issues.Contains(issue) %>
+              <li>
+                <a href="#" data-filter="issue:${issue.Number}">
+                  <% if isSelected: %><i class="fa fa-check"></i>
+                  <% end %>
+                  #${issue.Number} - ${issue.ShortName()}
+                </a>
+                <% if isSelected: %>
+                <a href="#" class="remove-filter" data-filter="issue:${issue.Number}">
+                  <i class="fa fa-close red"></i>
+                </a>
+                <% end %>
+              </li>
+              <% end %>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
           <div class="large-0 small-12 columns right">
             <button class="button tiny" formaction="exportcsv">Exporteren</button>
           </div>
