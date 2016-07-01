@@ -38,6 +38,8 @@
         public int TotalResultCount { get; set; }
         public int OmmitedResults => TotalResultCount - ResultCount;
 
+        public Project SelectedProject;
+
         public string Query { get; set; }
 
         public Dictionary<string, string> AllGroupbys = new Dictionary<string, string>()
@@ -146,12 +148,13 @@
                 }
             }
 
-            if (issues.Count > 0)
+            if (issues.Count > 0 && Projects.Count == 1) //Er mag maar één project selecteerd zijn, anders wordt het heel onoverzichtelijk met dubbele Issue Numbers
             {
+                SelectedProject = Projects.First();
                 bookings = bookings.Where(x => x.Project != null && x.Project.Application != null && issues.Contains(x.Issue.Number.ToString()));
                 foreach (var issue in issues)
                 {
-                    Issues.Add(session.Query<Issue>().FirstOrDefault(x => x.Number.ToString().Equals(issue)));
+                    Issues.Add(session.Query<Issue>().FirstOrDefault(x => x.Number.ToString().Equals(issue) && x.Project == SelectedProject));
                 }
             }
 
