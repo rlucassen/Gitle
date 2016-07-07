@@ -24,7 +24,7 @@
               <span class="prefix"><i class="fa fa-euro"></i></span>
             </div>
             <div class="large-9 columns">
-              <input type="text" name="invoice.HourPrice" id="invoice_HourPrice" value="${invoice.HourPrice}" />
+              <input type="text" class="comma" name="invoice.HourPrice" id="invoice_HourPrice" value="${invoice.HourPrice}" />
             </div>
           </div>
         </div>
@@ -60,7 +60,7 @@
           </div>
         </div>
         <div class="large-1 large-offset-1 columns">
-          <input type="text" name="lines[${count}].Hours" id="lines_${count}_Hours" class="invoiceline-hours-input text-right" value="${line.Hours.ToString("#0.##")}" />
+          <input type="text" name="lines[${count}].Hours" id="lines_${count}_Hours" class="invoiceline-hours-input text-right comma" value="${line.Hours.ToString("#0.##")}" />
         </div>
         <div class="large-2 columns">
           <input type="hidden" name="lines[${count}].Null" class="invoiceline-null" value="<% if line.Null: %>1<% else: %>0<% end %>" />
@@ -69,7 +69,7 @@
               <a href="#" class="prefix invoiceline-null-toggle <% if line.Null: %>null<% end %>" title="Billable/Unbillable"><i class="fa fa-euro"></i></a>
             </div>
             <div class="large-9 columns">
-              <input type="text" class="invoiceline-price" disabled />
+              <input type="text" class="comma invoiceline-price" disabled />
             </div>
           </div>
         </div>
@@ -115,7 +115,7 @@
           </div>
         </div>
         <div class="large-1 columns">
-          <input type="text" name="lines[${count}].Hours" id="lines_${count}_Hours" class="invoiceline-hours-input text-right" value="${line.Hours.ToString("#0.##")}" />
+          <input type="text" name="lines[${count}].Hours" id="lines_${count}_Hours" class="invoiceline-hours-input text-right comma" value="${line.Hours.ToString("#0.##")}" />
         </div>
         <div class="large-2 columns">
           <input type="hidden" name="lines[${count}].Null" class="invoiceline-null" value="<% if line.Null: %>1<% else: %>0<% end %>" />
@@ -184,7 +184,7 @@
                 <span class="prefix"><i class="fa fa-euro"></i></span>
               </div>
               <div class="large-9 columns">
-                <input type="text" name="corrections[${correctionCount}].Price" id="corrections_${correctionCount}_Price" value="${correction.Price}" class="correctionline-price" />
+                <input type="text" name="corrections[${correctionCount}].Price" id="corrections_${correctionCount}_Price" value="${correction.Price}" class="correctionline-price comma" />
               </div>
             </div>
           </div>
@@ -203,7 +203,7 @@
                 <span class="prefix"><i class="fa fa-euro"></i></span>
               </div>
               <div class="large-9 columns">
-                <input type="text" name="invoice.Subtotal" id="invoice_Subtotal" disabled />
+                <input class="comma" type="text" name="invoice.Subtotal" id="invoice_Subtotal" disabled />
               </div>
             </div>
           </div>
@@ -219,7 +219,7 @@
                 <a href="#" class="prefix vatline-toggle"><i class="fa fa-euro"></i></a>
               </div>
               <div class="large-9 columns">
-                <input type="text" class="vatline-price" disabled />
+                <input class="comma" type="text" class="vatline-price" disabled />
               </div>
             </div>
           </div>
@@ -236,7 +236,7 @@
                 <span class="prefix"><i class="fa fa-euro"></i></span>
               </div>
               <div class="large-9 columns">
-                <input type="text" name="invoice.Total" id="invoice_Total" disabled />
+                <input class="comma" type="text" name="invoice.Total" id="invoice_Total" disabled />
               </div>
             </div>
           </div>

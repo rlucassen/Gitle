@@ -410,7 +410,7 @@ $(function () {
   });
 
   // All decimal input fields have a class named 'number'
-  $('input').each(function () {
+  $('#createinvoice input.comma').each(function () {
     $(this).keypress(function(e){
       // '46' is the keyCode for '.'
       if(e.keyCode == '46'){
