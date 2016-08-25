@@ -283,6 +283,36 @@ $(function () {
     $(this).addClass('active');
   });
 });
+
+$('.filter-select').prepend('<li><input type="text" class="filter-field" style="margin-bottom:0;"></li>').each(function () {
+  var filterselect = $(this);
+  var filterfield = filterselect.find('.filter-field');
+  filterfield.attr('placeholder', 'Filter');
+
+  filterfield.keyup(function () {
+
+    filterselect.find('a')
+      .each(function () {
+        if (filterfield.val().length > 0 && !($(this).hasClass('remove-filter')) && !($(this).html().toLowerCase().indexOf(filterfield.val().toLowerCase()) > 0)) {
+          $(this).parent('li').hide();
+        } else {
+          $(this).parent('li').show();
+        }
+      });
+  });
+});
+
+$('.dropdown').each(function () {
+  $(this).next().on('opened.fndtn.dropdown', function (e) {
+    var filterfield = $(this).find('.filter-field').val('').trigger('keyup');
+    setTimeout(function () {
+      filterfield.focus();
+    }, 50);
+  });
+});
+
+
+
 $(function () {
   var computeHoursForIssue = function (issueNumber) {
     var issueLine = $('.invoiceline[data-issue=' + issueNumber + ']');
