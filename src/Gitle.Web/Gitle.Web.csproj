@@ -362,7 +362,9 @@
     <Content Include="Views\Customer\view.brail" />
     <None Include="Views\Project\view.brail" />
     <Content Include="Views\Template\invoice.brail" />
-    <Content Include="Views\Report\index.brail" />
+    <Content Include="Views\Report\index.brail">
+      <SubType>Designer</SubType>
+    </Content>
     <None Include="Views\User\profile.brail" />
     <None Include="Views\User\edit.brail" />
     <None Include="Views\User\index.brail" />

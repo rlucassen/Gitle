@@ -33,7 +33,7 @@
           </div>
           <div class="large-1 columns">
             <input type="text" class="no-margin issue-chooser" placeholder="Taak" />
-            <input type="hidden" name="booking.Issue.Id" class="booking_Issue_Id" />
+            <input type="hidden" name="booking.Issue.Id" class="booking_Issue_Id" required />
             <small class="error">Taak!</small>
           </div>
           <div class="large-5 columns">
