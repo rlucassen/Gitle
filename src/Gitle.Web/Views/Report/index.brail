@@ -127,7 +127,7 @@
               <% end %>
             </ul>
           </div>
-          <% if selectedProjects.Count == 1: %>
+        <% if selectedProjects.Count == 1: %>
           <div class="large-0 small-12 columns">
             <button href="#" data-dropdown="issues" aria-controls="issues" aria-expanded="false" class="button tiny dropdown no-margin
               <% if result.Issues.Count > 0: %>warning<% end %>">Issues:</button>
@@ -151,7 +151,7 @@
               <% end %>
             </ul>
           </div>
-          <% end %>
+        <% end %>
           <div class="large-0 small-12 columns right">
             <button class="button tiny" formaction="exportcsv">Exporteren</button>
           </div>
