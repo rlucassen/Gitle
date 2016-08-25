@@ -371,7 +371,9 @@
     <None Include="Views\Issue\edit.brail" />
     <None Include="Views\Issue\invoice.brail" />
     <None Include="Views\Issue\view.brail" />
-    <None Include="Views\Project\edit.brail" />
+    <None Include="Views\Project\edit.brail">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Views\Project\index.brail" />
     <None Include="Views\Authentication\index.brail" />
     <None Include="Views\Authentication\forgotpassword.brail" />
