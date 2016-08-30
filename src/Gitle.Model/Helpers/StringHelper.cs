@@ -48,7 +48,7 @@
 
         public static string ToHourDayNotation(this double hours)
         {
-            return hours <= 3 ? $"{hours} uur" : $"{hours/8} dag";
+            return hours < 8 ? $"{hours} uur" : $"{hours/8} dag";
         }
     }
 }
