@@ -135,9 +135,33 @@
             {
                 throw new ProjectClosedException(project);
             }
+
             var issue = session.Query<Issue>().SingleOrDefault(i => i.Number == issueId && i.Project == project);
 
-            var hash = "";
+            var savedIssue = SaveIssue(project, issue, labels);
+
+            var hash = $"#issue{savedIssue.Number}";
+            RedirectToUrl($"/project/{project.Slug}/issue/index{hash}");
+        }
+
+        [return: JSONReturnBinder]
+        public object AjaxSave(string projectSlug, int issueId, string[] labels)
+        {
+            var project = session.Slug<Project>(projectSlug);
+            if (project.Closed)
+            {
+                throw new ProjectClosedException(project);
+            }
+
+            var issue = session.Query<Issue>().SingleOrDefault(i => i.Number == issueId && i.Project == project);
+
+            var savedIssue = SaveIssue(project, issue, labels);
+
+            return new {savedIssue.Id, savedIssue.Number, savedIssue.Name};
+        }
+
+        private Issue SaveIssue(Project project, Issue issue, string[] labels)
+        {
             if (issue != null)
             {
                 BindObjectInstance(issue, "item");
@@ -149,7 +173,6 @@
                 issue.Number = project.NewIssueNumber;
                 issue.Project = project;
                 issue.Open(CurrentUser);
-                hash = $"#issue{issue.Number}";
             }
 
             issue.Labels = labels.Select(label => session.Query<Label>().FirstOrDefault(l => l.Name == label)).ToList();
@@ -159,8 +182,9 @@
                 session.SaveOrUpdate(issue);
                 transaction.Commit();
             }
-            RedirectToUrl($"/project/{project.Slug}/issue/index{hash}");
+            return issue;
         }
+
 
         [Admin]
         public void Pickup(string projectSlug, int issueId)

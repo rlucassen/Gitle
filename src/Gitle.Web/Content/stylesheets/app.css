@@ -746,6 +746,10 @@ input[type=checkbox].inline {
 .booking-row-new .null {
   color: #ccc; }
 
+.booking-row-new .new-issue {
+  border-bottom: 1px solid #ccc;
+  border-top: 1px solid #ccc; }
+
 .booking-row :hover {
   background-color: #E6E6E6; }
   .booking-row :hover .booking-buttons {
