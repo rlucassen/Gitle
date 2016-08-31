@@ -19,7 +19,6 @@
         row.prepend(data);
         addEditListeners(row);
         bookingRowInit(row);
-
       }
     });
   });
@@ -63,6 +62,7 @@
         if (projectChooser.data('suggestion') != undefined && projectChooser.data('suggestion') == suggestion.data) return false;
         projectChooser.data('suggestion', suggestion.data).val(suggestion.value);
         row.find('.booking_Project_Id').val(suggestion.data);
+        row.find('.booking_Project_Slug').val(suggestion.extraValue3);
         row.find('.issue-chooser').val('').autocomplete('setOptions', { params: { projectId: suggestion.data } });
         row.find('.booking_Issue_Id').val('');
         if (suggestion.extraValue == "ticketRequired") {
@@ -112,7 +112,36 @@
       }
     });
 
-    
+    row.find('.new-issue').click(function() {
+      var projectSlug = row.find('.booking_Project_Slug').val();
+      if (projectSlug == "") {
+        return false;
+      }
+      $('#newIssue').foundation('reveal', 'open', {
+        url: '/project/' + projectSlug + '/issue/new?cancelLayout=true',
+        success: function (data) {
+          setTimeout(function() {
+            $('#newIssue').find('form').submit(function(e) {
+              e.preventDefault();
+              $.ajax({
+                url: '/project/' + projectSlug + '/issue/0/ajaxsave',
+                method: 'POST',
+                data: $(this).serialize(),
+                success: function(data) {
+                  row.find('.booking_Issue_Id').val(data.Id).parent().removeClass('error');
+                  row.find('.issue-chooser').val('#' + data.Number + ' - ' + data.Name);
+                  row.find('.booking_Comment').prop("required", false).focus();
+                  $(document).foundation('abide', 'reflow');
+                  $('#newIssue').foundation('reveal', 'close');
+                }
+              });
+            });
+          }, 100);
+        }
+      }).on('opened.fndtn.reveal', function() {
+        $(this).find('[name="item.Name"]').focus();
+      });
+    });
 
     row.find('.date').fdatepicker(datepickerOptions);
 
