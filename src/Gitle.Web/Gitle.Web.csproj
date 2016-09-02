@@ -153,6 +153,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\ApplicationController.cs" />
+    <Compile Include="Controllers\DashboardController.cs" />
     <Compile Include="Controllers\ReportPresetController.cs" />
     <Compile Include="Controllers\ReportController.cs" />
     <Compile Include="Controllers\BookingController.cs" />
@@ -342,6 +343,7 @@
     <Content Include="Views\Booking\_row.brail" />
     <Content Include="Views\Booking\overview.brail" />
     <Content Include="Views\Database\migrateinvoices.brail" />
+    <Content Include="Views\Dashboard\index.brail" />
     <None Include="Views\Issue\index.brail" />
     <None Include="Views\Issue\exportimport.brail" />
     <None Include="Views\Issue\quickview.brail" />

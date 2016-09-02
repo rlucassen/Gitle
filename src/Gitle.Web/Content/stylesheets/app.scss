@@ -171,12 +171,80 @@ body.scroll .footer {
   }
 }
 
-.progress.round .meter {
-  font-size: 0.8em;
-  padding: 3px 10px;
-  color: #fff;
-  text-align: right;
+table.progress-table tr td {
+  padding: 0.3em 0.5em;
 }
+
+table.tickets-table {
+  tbody {
+    td:nth-child(1){
+      padding: 0.1rem 0.5rem;
+    }
+    td:nth-child(2){
+      padding: 0;
+    }
+    tr:nth-of-type(even) {
+      background: #e7e7e7;
+    }
+  }
+}
+
+.progress {
+  position: relative;
+  margin-bottom: 0;
+  &.progress-border {
+  border: 1px solid #ccc;
+  }
+  &.progress-tickets {
+    padding: 0;
+    .meter {
+      text-align: center;
+    }
+    .open {
+      color: #dedede;
+      background-color: #a05f55;
+      text-align: left;
+      padding-left: 0.5em;
+    }
+    .closed {
+      color: #dedede;
+      background-color: #4c8ca0;
+      text-align: right;
+      padding-right: 0.5em;
+    }
+  }
+  &.progress-status {
+    .overbudget {
+      background-color: #d09890;
+    }
+    .noestimate {
+      background-color: #75b1c3;
+    }
+    .inbudget {
+      background-color: #73b971;
+    }
+  }
+  .meter {
+    font-size: 0.8em;
+    color: #fff;
+    text-align: right;
+  }
+  .left-value, .right-value {
+    position: absolute;
+    font-size: 0.8em;
+    padding: 0 0.2em;
+    color: #333;
+  }
+
+  .left-value {
+    left: 0;
+  }
+  .right-value {
+    right: 0;
+  }
+}
+
+
 
 textarea {
   height: 200px;
