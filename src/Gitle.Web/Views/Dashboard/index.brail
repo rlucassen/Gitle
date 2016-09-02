@@ -1,0 +1,65 @@
+﻿<h1>Dashboard</h1>
+
+<ul class="tabs" data-tab>
+  <li class="tab-title active"><a href="#initial">Initiele projecten</a></li>
+  <li class="tab-title"><a href="#service">Service projecten</a></li>
+</ul>
+<div class="tabs-content">
+  <div class="content active" id="initial">
+    <table class="progress-table">
+      <thead>
+        <tr>
+          <th>Project</th>
+          <th>Unbillable uren</th>
+          <th style="width: 70%;">Voortang</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for project in initialProjects: %>
+        <tr>
+          <td>${project.Name}</td>
+          <td>${project.UnBillableHours}</td>
+          <td>
+            <div class="progress progress-border progress-status">
+              <% if project.BillableHours > project.TotalEstimateAllTickets() and project.TotalEstimateAllTickets() != 0: %>
+              <span class="meter overbudget" style="width: ${project.Progress().ToString().Replace(",", "." )}% "></span>
+              <% elif project.TotalEstimateAllTickets() == 0: %>
+              <span class="meter noestimate" style="width: 100%"></span>
+              <% else: %>
+              <span class="meter inbudget" style="width: ${project.Progress().ToString().Replace(",", "." )}% "></span>
+              <% end %>
+              <span class="left-value">${project.TotalEstimateAllTickets()} beschikbare uren</span>
+              <span class="right-value">${project.BillableHours} uur gemaakt</span>
+            </div>
+          </td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+  <div class="content" id="service">
+    <table class="tickets-table striped">
+      <thead>
+        <tr>
+          <th>Project</th>
+          <th style="width: 80%;">Tickets</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for project in serviceProjects: %>
+        <tr>
+          <td>${project.Name}</td>
+          <td>
+            <div class="progress progress-tickets">
+              <% if project.OpenIssues > 0: %><span class="meter open" style="width: ${project.OpenIssuesPercentage.ToString().Replace(",", ".")}%">${project.OpenIssues} open</span><% end %>
+              <% if project.ClosedIssues > 0: %><span class="meter closed" style="width: ${project.ClosedIssuesPercentage.ToString().Replace(",", ".")}%">${project.ClosedIssues} gesloten</span><% end %>
+            </div>
+          </td>
+
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+

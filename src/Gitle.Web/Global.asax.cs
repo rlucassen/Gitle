@@ -231,6 +231,7 @@
             RoutingModuleEx.Engine.Add<BookingController>();
             RoutingModuleEx.Engine.Add<InvoiceController>();
             RoutingModuleEx.Engine.Add<ReportController>();
+            RoutingModuleEx.Engine.Add<DashboardController>();
         }
 
         protected void Application_End(object sender, EventArgs e)

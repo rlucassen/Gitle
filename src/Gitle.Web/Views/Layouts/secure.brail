@@ -50,6 +50,8 @@
       <ul class="left">
         <% if CurrentUser.IsAdmin: %>
         <li class="divider"></li>
+        <li><a href="/dashboard/index">Dashboard</a></li>
+        <li class="divider"></li>
         <li><a href="/booking/index">Uren boeken</a></li>
         <li class="divider"></li>
         <li><a href="/report/index">Urenrapporten</a></li>

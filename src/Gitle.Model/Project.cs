@@ -66,6 +66,23 @@
 
         public virtual string CompleteName => $"{Name} ({Application?.Name}, {Application?.Customer?.Name})";
 
+        public virtual int OpenIssues => Issues.Count(x => x.IsOpen && !x.IsArchived);
+        public virtual int ClosedIssues => Issues.Count(x => !x.IsOpen && !x.IsArchived);
+        public virtual int TotalIssues => Issues.Count(x => !x.IsArchived);
+
+        public virtual double OpenIssuesPercentage => TotalIssues == 0 ? 0 : OpenIssues / (TotalIssues * 1.0) * 100;
+        public virtual double ClosedIssuesPercentage => TotalIssues == 0 ? 0 : ClosedIssues / (TotalIssues * 1.0) * 100;
+
+        public virtual double TotalEstimateAllTickets()
+        {
+            return Issues.Where(x => !x.IsArchived).Sum(x => x.TotalHours);
+        }
+
+        public virtual double Progress()
+        {
+            return BillableHours / TotalEstimateAllTickets() * 100;
+        }
+
         public virtual double SumMaxOfEstimateAndBooking()
         {
             if (Type != ProjectType.Service) return 0.0;
