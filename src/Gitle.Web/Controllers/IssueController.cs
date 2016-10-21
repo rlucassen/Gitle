@@ -103,6 +103,10 @@
         public void New(string projectSlug)
         {
             var project = session.Slug<Project>(projectSlug);
+            if (project.Closed)
+            {
+                throw new ProjectClosedException(project);
+            }
             PropertyBag.Add("project", project);
             PropertyBag.Add("item", new Issue());
             PropertyBag.Add("labels", CurrentUser.IsAdmin ? project.Labels : project.Labels.Where(l => l.ApplicableByCustomer));
@@ -113,6 +117,10 @@
         public void Edit(string projectSlug, int issueId)
         {
             var project = session.Slug<Project>(projectSlug);
+            if (project.Closed)
+            {
+                throw new ProjectClosedException(project);
+            }
             PropertyBag.Add("project", project);
             var item = session.Query<Issue>().Single(i => i.Number == issueId && i.Project == project);
             PropertyBag.Add("item", item);
@@ -123,9 +131,37 @@
         public void Save(string projectSlug, int issueId, string[] labels)
         {
             var project = session.Slug<Project>(projectSlug);
+            if (project.Closed)
+            {
+                throw new ProjectClosedException(project);
+            }
+
             var issue = session.Query<Issue>().SingleOrDefault(i => i.Number == issueId && i.Project == project);
 
-            var hash = "";
+            var savedIssue = SaveIssue(project, issue, labels);
+
+            var hash = $"#issue{savedIssue.Number}";
+            RedirectToUrl($"/project/{project.Slug}/issue/index{hash}");
+        }
+
+        [return: JSONReturnBinder]
+        public object AjaxSave(string projectSlug, int issueId, string[] labels)
+        {
+            var project = session.Slug<Project>(projectSlug);
+            if (project.Closed)
+            {
+                throw new ProjectClosedException(project);
+            }
+
+            var issue = session.Query<Issue>().SingleOrDefault(i => i.Number == issueId && i.Project == project);
+
+            var savedIssue = SaveIssue(project, issue, labels);
+
+            return new {savedIssue.Id, savedIssue.Number, savedIssue.Name};
+        }
+
+        private Issue SaveIssue(Project project, Issue issue, string[] labels)
+        {
             if (issue != null)
             {
                 BindObjectInstance(issue, "item");
@@ -137,7 +173,6 @@
                 issue.Number = project.NewIssueNumber;
                 issue.Project = project;
                 issue.Open(CurrentUser);
-                hash = $"#issue{issue.Number}";
             }
 
             issue.Labels = labels.Select(label => session.Query<Label>().FirstOrDefault(l => l.Name == label)).ToList();
@@ -147,13 +182,18 @@
                 session.SaveOrUpdate(issue);
                 transaction.Commit();
             }
-            RedirectToUrl($"/project/{project.Slug}/issue/index{hash}");
+            return issue;
         }
+
 
         [Admin]
         public void Pickup(string projectSlug, int issueId)
         {
             var project = session.Slug<Project>(projectSlug);
+            if (project.Closed)
+            {
+                throw new ProjectClosedException(project);
+            }
             var issue = session.Query<Issue>().Single(i => i.Number == issueId && i.Project == project);
             if (!issue.IsArchived && issue.PickedUpBy != CurrentUser)
             {
@@ -172,6 +212,10 @@
         {
             RedirectToReferrer();
             var project = session.Slug<Project>(projectSlug);
+            if (project.Closed)
+            {
+                throw new ProjectClosedException(project);
+            }
             var issue = session.Query<Issue>().Single(i => i.Number == issueId && i.Project == project);
             if (issue.IsArchived) return;
             var comment = new Comment
@@ -193,6 +237,10 @@
         {
             RedirectToReferrer();
             var project = session.Slug<Project>(projectSlug);
+            if (project.Closed)
+            {
+                throw new ProjectClosedException(project);
+            }
             var issue = session.Query<Issue>().Single(i => i.Number == issueId && i.Project == project);
             if (issue.IsArchived) return;
             var label = project.Labels.First(l => l.Id == param);
@@ -211,6 +259,10 @@
         {
             RedirectToReferrer();
             var project = session.Slug<Project>(projectSlug);
+            if (project.Closed)
+            {
+                throw new ProjectClosedException(project);
+            }
             var issue = session.Query<Issue>().Single(i => i.Number == issueId && i.Project == project);
             if (issue.IsArchived) return;
             var booking = new Booking {User = CurrentUser, Date = date, Minutes = minutes, Issue = issue, Project = project, Comment = comment};
@@ -249,6 +301,10 @@
         {
             RedirectToReferrer();
             var project = session.Slug<Project>(projectSlug);
+            if (project.Closed)
+            {
+                throw new ProjectClosedException(project);
+            }
             var issue = session.Query<Issue>().Single(i => i.Number == issueId && i.Project == project);
             if (issue.State == IssueState.Closed || issue.State == IssueState.Unknown)
             {

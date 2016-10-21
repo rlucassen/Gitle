@@ -35,6 +35,10 @@
         public virtual double BudgetHours => BudgetMinutes / 60.0;
         public virtual string BudgetTime => $"{Math.Floor(BudgetHours)}:{BudgetMinutes - (Math.Floor(BudgetHours)*60):00}";
 
+        public virtual bool Unbillable { get; set; }
+
+        public virtual bool Closed { get; set; }
+
         public virtual ProjectType Type { get; set; }
         public virtual string TypeString => Type.GetDescription();
 
@@ -61,6 +65,23 @@
         public virtual double TotalHours => Bookings.Where(x => x.IsActive).Sum(x => x.Hours);
 
         public virtual string CompleteName => $"{Name} ({Application?.Name}, {Application?.Customer?.Name})";
+
+        public virtual int OpenIssues => Issues.Count(x => x.IsOpen && !x.IsArchived);
+        public virtual int ClosedIssues => Issues.Count(x => !x.IsOpen && !x.IsArchived);
+        public virtual int TotalIssues => Issues.Count(x => !x.IsArchived);
+
+        public virtual double OpenIssuesPercentage => TotalIssues == 0 ? 0 : OpenIssues / (TotalIssues * 1.0) * 100;
+        public virtual double ClosedIssuesPercentage => TotalIssues == 0 ? 0 : ClosedIssues / (TotalIssues * 1.0) * 100;
+
+        public virtual double TotalEstimateAllTickets()
+        {
+            return Issues.Where(x => !x.IsArchived).Sum(x => x.TotalHours);
+        }
+
+        public virtual double Progress()
+        {
+            return BillableHours / TotalEstimateAllTickets() * 100;
+        }
 
         public virtual double SumMaxOfEstimateAndBooking()
         {

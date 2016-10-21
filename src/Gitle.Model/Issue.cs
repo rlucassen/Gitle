@@ -205,7 +205,7 @@
 
         public virtual string HoursString
         {
-            get { return Hours > 0 ? Hours <= 3 ? $"{Hours} uur" : $"{Hours/8} dag" : "n.n.b."; }
+            get { return Hours > 0 ? Hours.ToHourDayNotation() : "n.n.b."; }
         }
 
         public virtual string EstimateString
@@ -220,7 +220,7 @@
 
         public virtual string TotalHoursString
         {
-            get { return TotalHours > 0 ? TotalHours <= 3 ? $"{TotalHours} uur" : $"{TotalHours / 8} dag" : "n.n.b."; }
+            get { return TotalHours > 0 ? TotalHours.ToHourDayNotation() : "n.n.b."; }
         }
 
         public virtual IList<Invoice> Invoices
@@ -240,7 +240,7 @@
 
         public virtual string TotalHoursInvoicedString
         {
-            get { return TotalHoursInvoiced <= 3 ? $"{TotalHoursInvoiced} uur" : $"{TotalHoursInvoiced/8} dag"; }
+            get { return TotalHoursInvoiced.ToHourDayNotation(); }
         }
 
         public virtual string CostString(decimal hourPrice)
@@ -293,6 +293,21 @@
             return Bookings.Where(x => x.IsActive && !x.Unbillable).Sum(x => x.Hours);
         }
 
+        public virtual string BillableBookingHoursString()
+        {
+            return BillableBookingHours().ToHourDayNotation();
+        }
+
+        public virtual double UnbillableBookingHours()
+        {
+            return Bookings.Where(x => x.IsActive && x.Unbillable).Sum(x => x.Hours);
+        }
+
+        public virtual string UnbillableBookingHoursString()
+        {
+            return UnbillableBookingHours().ToHourDayNotation();
+        }
+
         public virtual double BookingHours(DateTime startDate, DateTime endDate)
         {
             return Bookings.Where(x => x.Date >= startDate && x.Date <= endDate).Sum(x => x.Hours);
@@ -305,13 +320,20 @@
 
         public virtual string ShortName()
         {
-            if (Name.Length > 43)
+            if (Name != null)
             {
-                return Name.Substring(0, 40) + "...";
+                if (Name.Length > 43)
+                {
+                    return Name.Substring(0, 40) + "...";
+                }
+                else
+                {
+                    return Name;
+                }
             }
             else
             {
-                return Name;
+                return "ERROR - Issue heeft geen naam!";
             }
         }
     }

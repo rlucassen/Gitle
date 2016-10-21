@@ -153,6 +153,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\ApplicationController.cs" />
+    <Compile Include="Controllers\DashboardController.cs" />
     <Compile Include="Controllers\ReportPresetController.cs" />
     <Compile Include="Controllers\ReportController.cs" />
     <Compile Include="Controllers\BookingController.cs" />
@@ -185,6 +186,7 @@
     <Compile Include="Helpers\DayHelper.cs" />
     <Compile Include="Helpers\FileBinderAttribute.cs" />
     <Compile Include="Helpers\ProjectAttribute.cs" />
+    <Compile Include="Helpers\ProjectClosedException.cs" />
     <Compile Include="Helpers\SaveFeedback.cs" />
     <Compile Include="Helpers\DocumentUploadFeedback.cs" />
     <Compile Include="Helpers\UploadFeedback.cs" />
@@ -342,6 +344,7 @@
     <Content Include="Views\Booking\_row.brail" />
     <Content Include="Views\Booking\overview.brail" />
     <Content Include="Views\Database\migrateinvoices.brail" />
+    <Content Include="Views\Dashboard\index.brail" />
     <None Include="Views\Issue\index.brail" />
     <None Include="Views\Issue\exportimport.brail" />
     <None Include="Views\Issue\quickview.brail" />
@@ -363,14 +366,18 @@
     <Content Include="Views\Planning\index.brail" />
     <None Include="Views\Project\view.brail" />
     <Content Include="Views\Template\invoice.brail" />
-    <Content Include="Views\Report\index.brail" />
+    <Content Include="Views\Report\index.brail">
+      <SubType>Designer</SubType>
+    </Content>
     <None Include="Views\User\profile.brail" />
     <None Include="Views\User\edit.brail" />
     <None Include="Views\User\index.brail" />
     <None Include="Views\Issue\edit.brail" />
     <None Include="Views\Issue\invoice.brail" />
     <None Include="Views\Issue\view.brail" />
-    <None Include="Views\Project\edit.brail" />
+    <None Include="Views\Project\edit.brail">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Views\Project\index.brail" />
     <None Include="Views\Authentication\index.brail" />
     <None Include="Views\Authentication\forgotpassword.brail" />

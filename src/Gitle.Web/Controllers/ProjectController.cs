@@ -184,6 +184,10 @@
         public void AddLabel(string projectSlug, string issues, string label)
         {
             var project = session.SlugOrDefault<Project>(projectSlug);
+            if (project.Closed)
+            {
+                throw new ProjectClosedException(project);
+            }
             var issueIds = issues.Split(',');
             var realLabel = session.Query<Label>().FirstOrDefault(x => x.Name == label);
             if (!realLabel.ApplicableByCustomer && !CurrentUser.IsAdmin)
@@ -211,6 +215,10 @@
         public void ChangeState(string projectSlug, string issues, IssueState state)
         {
             var project = session.SlugOrDefault<Project>(projectSlug);
+            if (project.Closed)
+            {
+                throw new ProjectClosedException(project);
+            }
             var issueIds = issues.Split(',');
 
             using (var transaction = session.BeginTransaction())
@@ -265,7 +273,7 @@
         public object Autocomplete(string query)
         {
             var suggestions = new List<Suggestion>();
-            var projects = session.Query<Project>().Where(x => x.IsActive);
+            var projects = session.Query<Project>().Where(x => x.IsActive && !x.Closed);
 
             if (!CurrentUser.IsDanielle)
             {
@@ -277,7 +285,7 @@
                 projects = projects.Where(p => p.Name.Contains(query) || p.Number.ToString().Contains(query) || (p.Application != null && (p.Application.Name.Contains(query) || (p.Application.Customer != null && p.Application.Customer.Name.Contains(query)))));
             }
             projects = projects.OrderBy(x => x.Name);
-            suggestions.AddRange(projects.ToList().Select(x => new Suggestion(x.CompleteName, x.Id.ToString(), x.TicketRequiredForBooking ? "ticketRequired": string.Empty)));
+            suggestions.AddRange(projects.ToList().Select(x => new Suggestion(x.CompleteName, x.Id.ToString(), x.TicketRequiredForBooking ? "ticketRequired": string.Empty, x.Unbillable ? "unbillable":string.Empty, x.Slug)));
             return new {query, suggestions };
         }
 

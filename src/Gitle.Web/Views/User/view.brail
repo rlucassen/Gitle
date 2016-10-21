@@ -3,7 +3,7 @@
     <h1>${item.FullName}</h1>
 
     <span>Comments</span>
-    <textarea data-live-comments="/user/${item.Slug}/comments">${?item.Comments}</textarea>
+    <textarea data-live-comments="/user/${item.Id}/comments">${?item.Comments}</textarea>
 
     <div class="row">
       <div class="large-2 columns">Klant</div>

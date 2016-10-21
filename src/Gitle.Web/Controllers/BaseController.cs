@@ -2,6 +2,7 @@
 {
     #region Usings
 
+    using System;
     using System.Collections.Generic;
     using System.Reflection;
     using Castle.MonoRail.Framework;
@@ -52,6 +53,12 @@
             release = false;
 #endif
             PropertyBag.Add("RELEASE", release);
+
+            if (Convert.ToBoolean(request.Params["cancelLayout"]))
+            {
+                CancelLayout();
+            }
+
             return base.InvokeMethod(method, request, extraArgs);
         }
     }

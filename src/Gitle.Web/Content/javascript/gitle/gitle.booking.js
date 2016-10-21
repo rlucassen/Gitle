@@ -19,7 +19,6 @@
         row.prepend(data);
         addEditListeners(row);
         bookingRowInit(row);
-
       }
     });
   });
@@ -38,6 +37,17 @@
     weekStart: 1
   };
 
+  var setUnbillable = function (row) {
+    row.find('.booking-row-null-toggle').addClass('null');
+    row.find('.booking_Unbillable').val(1);
+
+  }
+
+  var setBillable = function (row) {
+    row.find('.booking-row-null-toggle').removeClass('null');
+    row.find('.booking_Unbillable').val(0);
+  }
+
   var bookingRowInit = function (row) {
 
     row.find('.project-chooser').data('suggestion', undefined);
@@ -52,14 +62,20 @@
         if (projectChooser.data('suggestion') != undefined && projectChooser.data('suggestion') == suggestion.data) return false;
         projectChooser.data('suggestion', suggestion.data).val(suggestion.value);
         row.find('.booking_Project_Id').val(suggestion.data);
+        row.find('.booking_Project_Slug').val(suggestion.extraValue3);
         row.find('.issue-chooser').val('').autocomplete('setOptions', { params: { projectId: suggestion.data } });
         row.find('.booking_Issue_Id').val('');
         if (suggestion.extraValue == "ticketRequired") {
-          row.find('.booking_Issue_Id').prop("required", true);
+          row.find('.issue-chooser').prop("required", true);
           $(document).foundation('abide', 'reflow');
         } else {
           row.find('.booking_Comment').prop("required", true);
           $(document).foundation('abide', 'reflow');
+        }
+        if (suggestion.extraValue2 == "unbillable") {
+          setUnbillable(row);
+        } else {
+          setBillable(row);
         }
       }
     }).on('focus', function () {
@@ -86,15 +102,45 @@
       }
     });
 
+
     row.find('.booking-row-null-toggle').click(function (e) {
       e.preventDefault();
       if ($(this).hasClass('null')) {
-        $(this).removeClass('null');
-        row.find('.booking_Unbillable').val(0);
+        setBillable(row);
       } else {
-        $(this).addClass('null');
-        row.find('.booking_Unbillable').val(1);
+        setUnbillable(row);
       }
+    });
+
+    row.find('.new-issue').click(function() {
+      var projectSlug = row.find('.booking_Project_Slug').val();
+      if (projectSlug == "") {
+        return false;
+      }
+      $('#newIssue').foundation('reveal', 'open', {
+        url: '/project/' + projectSlug + '/issue/new?cancelLayout=true',
+        success: function (data) {
+          setTimeout(function() {
+            $('#newIssue').find('form').submit(function(e) {
+              e.preventDefault();
+              $.ajax({
+                url: '/project/' + projectSlug + '/issue/0/ajaxsave',
+                method: 'POST',
+                data: $(this).serialize(),
+                success: function(data) {
+                  row.find('.booking_Issue_Id').val(data.Id).parent().removeClass('error');
+                  row.find('.issue-chooser').val('#' + data.Number + ' - ' + data.Name);
+                  row.find('.booking_Comment').prop("required", false).focus();
+                  $(document).foundation('abide', 'reflow');
+                  $('#newIssue').foundation('reveal', 'close');
+                }
+              });
+            });
+          }, 100);
+        }
+      }).on('opened.fndtn.reveal', function() {
+        $(this).find('[name="item.Name"]').focus();
+      });
     });
 
     row.find('.date').fdatepicker(datepickerOptions);
@@ -157,3 +203,32 @@
     $(this).addClass('active');
   });
 });
+
+$('.filter-select').prepend('<li><input type="text" class="filter-field" style="margin-bottom:0;"></li>').each(function () {
+  var filterselect = $(this);
+  var filterfield = filterselect.find('.filter-field');
+  filterfield.attr('placeholder', 'Filter');
+
+  filterfield.keyup(function () {
+
+    filterselect.find('a')
+      .each(function () {
+        if (filterfield.val().length > 0 && !($(this).hasClass('remove-filter')) && !($(this).html().toLowerCase().indexOf(filterfield.val().toLowerCase()) > 0)) {
+          $(this).parent('li').hide();
+        } else {
+          $(this).parent('li').show();
+        }
+      });
+  });
+});
+
+$('.dropdown').each(function () {
+  $(this).next().on('opened.fndtn.dropdown', function (e) {
+    var filterfield = $(this).find('.filter-field').val('').trigger('keyup');
+    setTimeout(function () {
+      filterfield.focus();
+    }, 50);
+  });
+});
+
+

@@ -13,17 +13,19 @@
         public static string IssuesCsv(Project project, IList<Issue> issues)
         {
             const string rowTemplate =
-                "\"{2}\"{0}\"{3}\"{0}\"{4}\"{0}\"{5}\"{0}\"{6}\"{0}\"{7}\"{0}\"{8}\"{0}\"{9}\"{0}\"{10}\"{0}{1}";
+                "\"{2}\"{0}\"{3}\"{0}\"{4}\"{0}\"{5}\"{0}\"{6}\"{0}\"{7}\"{0}\"{8}\"{0}\"{9}\"{0}\"{10}\"{0}\"{11}\"{0}\"{12}\"{0}{1}";
 
             var header = string.Format(rowTemplate, fieldseparator, lineEnd,
-                                          "Id",
+                                          "Taaknummer",
                                           "Naam",
-                                          "Developers",
-                                          "Uren",
-                                          "Totale schatting",
-                                          "Prijs",
-                                          "Beschrijving",
-                                          "Voltooid",
+                                          "Geopend op",
+                                          "Geopend door",
+                                          "Gesloten op",
+                                          "Gesloten door",
+                                          "Totale schatting in uren",
+                                          "Totaal billable boekingen in uren",
+                                          "Totaal unbillable boekingen in uren",
+                                          "Totaal gefactureerd in uren",
                                           "Labels");
 
             var rows = "";
@@ -32,14 +34,14 @@
                 rows += string.Format(rowTemplate, fieldseparator, lineEnd,
                                       issue.Number,
                                       issue.Name,
-                                      issue.Devvers,
-                                      issue.Hours,
+                                      issue.CreatedAt?.ToString("yyyy-MM-dd"),
+                                      issue.CreatedBy?.FullName,
+                                      !issue.IsOpen ? issue.ClosedAt?.ToString("yyyy-MM-dd") : "",
+                                      !issue.IsOpen ? issue.ClosedBy?.FullName : "",
                                       issue.TotalHours,
-                                      (decimal)issue.TotalHours*project.HourPrice,
-                                      string.IsNullOrEmpty(issue.Body)
-                                          ? ""
-                                          : issue.Body.Replace(lineEnd, "").TrimStart('-'),
-                                      issue.IsOpen ? "Nee" : "Ja",
+                                      issue.BillableBookingHours(),
+                                      issue.UnbillableBookingHours(),
+                                      issue.TotalHoursInvoiced,
                                       string.Join(", ", issue.Labels.Select(l => l.Name))
                     );
             }

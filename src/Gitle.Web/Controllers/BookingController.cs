@@ -79,9 +79,12 @@ namespace Gitle.Web.Controllers
             {
                 booking.User = CurrentUser;
             }
-            if (booking.Issue.Id == 0)
+            if (booking.Issue.Id == 0 || booking.Project.Id == 0) //project moet nu ook verplicht zijn
             {
-                booking.Issue = null;
+                //issue is verplicht!
+                RedirectToAction("index", new { date = booking.Date.ToShortDateString() });
+                return;
+                //booking.Issue = null;
             }
 
             using (var transaction = session.BeginTransaction())
