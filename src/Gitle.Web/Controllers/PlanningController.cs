@@ -48,11 +48,6 @@
                 .Select(x => new Resource(x)).ToList();
         }
 
-        public void AddResource()
-        {
-            
-        }
-
         [return: JSONReturnBinder]
         public Resource SaveResource(int year, int week, long projectId, long[] issueIds)
         {
@@ -71,6 +66,27 @@
             }
 
             return new Resource(planningResource);
+        }
+
+        public void DeleteResource(long id, long issueId)
+        {
+            var planningResource = session.Get<PlanningResource>(id);
+
+            using (var tx = session.BeginTransaction())
+            {
+                if (issueId > 0)
+                {
+                    planningResource.Issues.Remove(planningResource.Issues.FirstOrDefault(x => x.Id == issueId));
+                    session.SaveOrUpdate(planningResource);
+                }
+                else
+                {
+                    session.Delete(planningResource);
+                }
+
+                tx.Commit();
+            }
+            RenderText("ok");
         }
 
         public void UpdateEvent(long eventId, long userId, string resource, DateTime start, DateTime end)
@@ -125,15 +141,18 @@
 
         public Resource(PlanningResource resource)
         {
+            originalId = resource.Id;
             id = $"p{resource.Project.Id}";
             title = resource.Project.Name;
             children = resource.Issues.Select(i => new Resource
             {
                 id = $"i{i.Id}",
-                title = i.Name
+                title = $"#{i.Number} - {i.Name}",
+                originalId = i.Id
             }).ToList();
         }
 
+        public long originalId;
         public string id;
         public string title;
         public IList<Resource> children = new List<Resource>();

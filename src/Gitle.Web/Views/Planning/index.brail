@@ -34,6 +34,7 @@
 
 <div id="addResource" class="reveal-modal" data-reveal>
   <form action="#" data-abide>
+    <h2>Project toevoegen</h2>
     <div class="row">
       <div class="large-3 columns">Project</div>
       <div class="large-9 columns">
@@ -41,42 +42,68 @@
         <input type="hidden" name="projectId" id="projectId" required />
       </div>
     </div>
-    <div class="large-3 columns">Issue toevoegen</div>
-    <div class="large-9 columns">
-      <input type="text" class="no-margin issue-chooser" placeholder="Issue" />
+    <div class="row">
+      <div class="large-3 columns">Issue toevoegen</div>
+      <div class="large-9 columns">
+        <input type="text" class="no-margin issue-chooser" placeholder="Issue" />
+        <ul id="resourceIssues"></ul>
+      </div>
+    </div>
+    <div class="row">
+      <div class="large-12 columns">
+        <input class="button success" type="submit" value="Project toevoegen">
+      </div>
     </div>
   </form>
 </div>
 
+<script id="" type="text/template">
+  <li>
+    <input name="issueIds" value="{{id}}">
+  </li>
+</script>
+
 <script>
-
-  $('.project-chooser').autocomplete({
-    serviceUrl: '/project/autocomplete',
-    autoSelectFirst: true,
-    noCache: true,
-    minChars: 0,
-    onSelect: function (suggestion) {
-      $('#projectId').val(suggention.data);
-      $('.issue-chooser').val('').autocomplete('setOptions', { params: { projectId: suggestion.data } });
-    }
-  });
-
-  $('.issue-chooser').autocomplete({
-    serviceUrl: '/issue/autocomplete',
-    params: { projectId: $('#projectId').val() },
-    autoSelectFirst: true,
-    noCache: true,
-    minChars: 1,
-    onSelect: function (suggestion) {
-      $(this).val('').after('<input name="issueIds" value="' + suggestion.data + '">');
-    }
-  });
-
 
   var employees = [];
   $(function () {
 
     var calendar = $('#calendar');
+
+    $('.project-chooser').autocomplete({
+      serviceUrl: '/project/autocomplete',
+      autoSelectFirst: true,
+      noCache: true,
+      minChars: 0,
+      onSelect: function (suggestion) {
+        $('#projectId').val(suggestion.data);
+        $('.issue-chooser').val('').autocomplete('setOptions', { params: { projectId: suggestion.data } });
+      }
+    });
+
+    $('.issue-chooser').autocomplete({
+      serviceUrl: '/issue/autocomplete',
+      params: { projectId: $('#projectId').val() },
+      autoSelectFirst: true,
+      noCache: true,
+      minChars: 1,
+      onSelect: function (suggestion) {
+        $('#resourceIssues').append('<li><input type="hidden" name="issueIds" value="' + suggestion.data + '">' + suggestion.value + '</li>');
+        $(this).val('');
+      }
+    });
+
+    $('#addResource').find('form').submit(function (e) {
+      e.preventDefault();
+      $.ajax({
+        url: '/planning/saveresource',
+        data: $(this).serialize() + '&year=' + calendar.fullCalendar('getView').start.format('YYYY') + '&week=' + calendar.fullCalendar('getView').start.format('W'),
+        success: function (data) {
+          calendar.fullCalendar('addResource', data);
+          $('#addResource').foundation('reveal', 'close');
+        }
+      })
+    });
 
     $('#external-events .employee').each(function () {
 
@@ -105,7 +132,7 @@
         url: '/planning/updateevent',
         data: {
           eventId: event.id,
-          projectSlug: event.resourceId,
+          resource: event.resourceId,
           userId: event.userId,
           start: event.start.format('YYYY-MM-DD HH:mm'),
           end: event.end.format('YYYY-MM-DD HH:mm'),
@@ -145,17 +172,30 @@
           text: 'Add project',
           click: function () {
             $('#addResource').foundation('reveal', 'open');
-            //var projectName = prompt('Project name:');
-            //if (projectName) {
-            //  calendar.fullCalendar('addResource', { title: projectName }, true);
-            //}
           }
         }
       },
       resourceRender: function (resource, elem) {
         elem.on('click', function () {
           if (confirm('Are you sure you want to delete ' + resource.title + '?')) {
-            calendar.fullCalendar('removeResource', resource);
+            var resourceId = resource.originalId;
+            var issueId = 0;
+            if (resource.parent != undefined) {
+              resourceId = resource.parent.originalId;
+              issueId = resource.originalId;
+            }
+            $.ajax({
+              url: '/planning/deleteresource',
+              data: {
+                id: resourceId,
+                issueId: issueId
+              },
+              success: function (data) {
+                calendar.fullCalendar('removeResource', resource);
+                console.log('removeResource', data);
+
+              }
+            });
           }
         });
       },
