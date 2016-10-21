@@ -5,6 +5,7 @@
     using System.Linq;
     using Castle.MonoRail.Framework;
     using Model;
+    using Model.Helpers;
     using NHibernate;
     using NHibernate.Linq;
 
@@ -16,42 +17,99 @@
 
         public void Index()
         {
-            
+            var employees = session.Query<User>().Where(x => x.IsActive && x.IsAdmin);
+            PropertyBag.Add("employees", employees);
         }
 
         [return: JSONReturnBinder]
         public List<Event> Events(DateTime start, DateTime end)
         {
             return session.Query<PlanningItem>()
-                .Where(x => x.End > start && x.Start < end)
+                .Where(x => x.End > start && x.Start < end).ToList()
                 .Select(x => new Event
                 {
-                    id = x.Id.ToString(),
-                    resourceId = x.Project.Slug,
-                    start = x.Start.ToString("K"),
-                    end = x.End.ToString("K"),
+                    id = x.Id,
+                    resourceId = x.Resource,
+                    start = x.Start.ToString("yyyy-MM-dd HH:mm"),
+                    end = x.End.ToString("yyyy-MM-dd HH:mm"),
                     title = x.User.FullName,
-                    color = x.User.Color
+                    color = $"#{x.User.Color}",
+                    userId = x.User.Id.ToString(),
                 }).ToList();
         }
 
         [return: JSONReturnBinder]
         public List<Resource> Projects(DateTime start, DateTime end)
         {
-            return session.Query<PlanningItem>()
-                .Where(x => x.End > start && x.Start < end)
-                .Select(x => x.Project).Distinct().Select(x => new Resource
+            var year = start.Year;
+            var week = start.WeekNr();
+            return session.Query<PlanningResource>()
+                .Where(x => x.Year == year && x.Week == week).ToList()
+                .Select(x => new Resource(x)).ToList();
+        }
+
+        public void AddResource()
+        {
+            
+        }
+
+        [return: JSONReturnBinder]
+        public Resource SaveResource(int year, int week, long projectId, long[] issueIds)
+        {
+            var planningResource = new PlanningResource
+            {
+                Year = year,
+                Week = week,
+                Project = session.Get<Project>(projectId),
+                Issues = session.Query<Issue>().Where(x => issueIds.Contains(x.Id)).ToList()
+            };
+
+            using (var tx = session.BeginTransaction())
+            {
+                session.SaveOrUpdate(planningResource);
+                tx.Commit();
+            }
+
+            return new Resource(planningResource);
+        }
+
+        public void UpdateEvent(long eventId, long userId, string resource, DateTime start, DateTime end)
+        {
+            var planningItem = session.Get<PlanningItem>(eventId);
+
+            if (planningItem == null)
+            {
+                planningItem = new PlanningItem()
                 {
-                    id = x.Slug,
-                    title = x.Name
-                }).ToList();
+                    User = session.Get<User>(userId),
+                    Resource = resource,
+                    Start = start,
+                    End = end
+                };
+            }
+            else
+            {
+                planningItem.User = session.Get<User>(userId);
+                planningItem.Resource = resource;
+                planningItem.Start = start;
+                planningItem.End = end;
+            }
+
+            using (var tx = session.BeginTransaction())
+            {
+                session.SaveOrUpdate(planningItem);
+                tx.Commit();
+            }
+
+            RenderText("ok");
         }
     }
 
     public class Event
     {
-        public string id;
+        public long id;
         public string resourceId;
+        public string userId;
         public string start;
         public string end;
         public string title;
@@ -61,7 +119,23 @@
 
     public class Resource
     {
+        public Resource()
+        {
+        }
+
+        public Resource(PlanningResource resource)
+        {
+            id = $"p{resource.Project.Id}";
+            title = resource.Project.Name;
+            children = resource.Issues.Select(i => new Resource
+            {
+                id = $"i{i.Id}",
+                title = i.Name
+            }).ToList();
+        }
+
         public string id;
         public string title;
+        public IList<Resource> children = new List<Resource>();
     }
 }

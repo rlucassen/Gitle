@@ -90,8 +90,10 @@
     <Compile Include="Interfaces\Model\ISlugger.cs" />
     <Compile Include="Interfaces\Service\IBookingQueryParserService.cs" />
     <Compile Include="Mapping\PlanningItemMap.cs" />
+    <Compile Include="Mapping\PlanningResourceMap.cs" />
     <Compile Include="Mapping\ReportPresetMap.cs" />
     <Compile Include="PlanningItem.cs" />
+    <Compile Include="PlanningResource.cs" />
     <Compile Include="ReportPreset.cs" />
     <Compile Include="FilterPreset.cs" />
     <Compile Include="Helpers\CsvHelper.cs" />

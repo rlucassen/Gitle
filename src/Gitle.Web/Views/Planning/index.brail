@@ -13,62 +13,16 @@
         <div class="large-8 columns"><strong>Employee</strong></div>
         <div class="large-4 columns"><strong>Workload</strong></div>
       </div>
-      <div data-employee="Robin" class="row">
+      <% for employee in employees: %>
+      <div data-employee="${employee.FullName}" class="row">
         <div class="large-8 columns">
-          <div class="employee" data-color="#008CBA" style="background-color: #008CBA;">Robin</div>
+          <div class="employee" data-userid="${employee.Id}" data-color="#${employee.Color}" style="background-color: #${employee.Color};">${employee.FullName}</div>
         </div>
         <div class="large-4 columns">
           <span class="duration">0</span>
         </div>
       </div>
-      <div data-employee="Edwin" class="row">
-        <div class="large-8 columns">
-          <div class="employee" data-color="#f04124" style="background-color: rgb(240, 65, 36);">Edwin</div>
-        </div>
-        <div class="large-4 columns">
-          <span class="duration">0</span>
-        </div>
-      </div>
-      <div data-employee="Arjan" class="row">
-        <div class="large-8 columns">
-          <div class="employee" data-color="#f08a24" style="background-color: #f08a24;">Arjan</div>
-        </div>
-        <div class="large-4 columns">
-          <span class="duration">0</span>
-        </div>
-      </div>
-      <div data-employee="Chris" class="row">
-        <div class="large-8 columns">
-          <div class="employee" data-color="#43AC6A" style="background-color: #43AC6A;">Chris</div>
-        </div>
-        <div class="large-4 columns">
-          <span class="duration">0</span>
-        </div>
-      </div>
-      <div data-employee="Martin" class="row">
-        <div class="large-8 columns">
-          <div class="employee" data-color="#a0d3e8" style="background-color: #a0d3e8;">Martin</div>
-        </div>
-        <div class="large-4 columns">
-          <span class="duration">0</span>
-        </div>
-      </div>
-      <div data-employee="Frank" class="row">
-        <div class="large-8 columns">
-          <div class="employee" data-color="#d36dff" style="background-color: #d36dff;">Frank</div>
-        </div>
-        <div class="large-4 columns">
-          <span class="duration">0</span>
-        </div>
-      </div>
-      <div data-employee="Marvin" class="row">
-        <div class="large-8 columns">
-          <div class="employee" data-color="#e7e7e7" style="background-color: #e7e7e7;">Marvin</div>
-        </div>
-        <div class="large-4 columns">
-          <span class="duration">0</span>
-        </div>
-      </div>
+      <% end %>
     </div>
   </div>
   <div class="large-9 columns">
@@ -78,8 +32,46 @@
   </div>
 </div>
 
+<div id="addResource" class="reveal-modal" data-reveal>
+  <form action="#" data-abide>
+    <div class="row">
+      <div class="large-3 columns">Project</div>
+      <div class="large-9 columns">
+        <input type="text" class="no-margin project-chooser" placeholder="Project" />
+        <input type="hidden" name="projectId" id="projectId" required />
+      </div>
+    </div>
+    <div class="large-3 columns">Issue toevoegen</div>
+    <div class="large-9 columns">
+      <input type="text" class="no-margin issue-chooser" placeholder="Issue" />
+    </div>
+  </form>
+</div>
 
 <script>
+
+  $('.project-chooser').autocomplete({
+    serviceUrl: '/project/autocomplete',
+    autoSelectFirst: true,
+    noCache: true,
+    minChars: 0,
+    onSelect: function (suggestion) {
+      $('#projectId').val(suggention.data);
+      $('.issue-chooser').val('').autocomplete('setOptions', { params: { projectId: suggestion.data } });
+    }
+  });
+
+  $('.issue-chooser').autocomplete({
+    serviceUrl: '/issue/autocomplete',
+    params: { projectId: $('#projectId').val() },
+    autoSelectFirst: true,
+    noCache: true,
+    minChars: 1,
+    onSelect: function (suggestion) {
+      $(this).val('').after('<input name="issueIds" value="' + suggestion.data + '">');
+    }
+  });
+
 
   var employees = [];
   $(function () {
@@ -94,7 +86,8 @@
         stick: true,
         duration: '24:00',
         color: $(this).data('color'),
-        borderColor: '#666'
+        borderColor: '#666',
+        userId: $(this).data('userid'),
       });
 
       employees[employeeName] = 0;
@@ -106,6 +99,22 @@
       });
 
     });
+
+    var updateEvent = function(event, jsEvent, ui, view){
+      $.ajax({
+        url: '/planning/updateevent',
+        data: {
+          eventId: event.id,
+          projectSlug: event.resourceId,
+          userId: event.userId,
+          start: event.start.format('YYYY-MM-DD HH:mm'),
+          end: event.end.format('YYYY-MM-DD HH:mm'),
+        },
+        success: function (data) {
+          console.log('eventUpdated', data);
+        }
+      })
+    };
 
     calendar.fullCalendar({
       now: '2016-05-02',
@@ -135,10 +144,11 @@
         addProject: {
           text: 'Add project',
           click: function () {
-            var projectName = prompt('Project name:');
-            if (projectName) {
-              calendar.fullCalendar('addResource', { title: projectName }, true);
-            }
+            $('#addResource').foundation('reveal', 'open');
+            //var projectName = prompt('Project name:');
+            //if (projectName) {
+            //  calendar.fullCalendar('addResource', { title: projectName }, true);
+            //}
           }
         }
       },
@@ -168,31 +178,29 @@
 
         for (var i in employees) {
           var employee = employees[i];
-          $('#external-events [data-employee=' + i + '] .duration').html(employee);
+          $('#external-events [data-employee=\"' + i + '\"] .duration').html(employee);
         }
 
       },
       resourceLabelText: 'Projects',
-      resources: [
-				{ id: 'a', title: 'Pay4People' },
-				{ id: 'b', title: 'GTM' },
-				{ id: 'c', title: 'NOF - Uitjes' },
-				{
-				  id: 'd', title: 'Jeeves', children: [
-					{ id: 'd1', title: 'Fontend' },
-					{ id: 'd2', title: 'Backend' }
-				  ]
-				},
-				{ id: 'e', title: 'AppOnline' },
-				{ id: 'f', title: 'PwCAssist' },
-				{ id: 'g', title: 'RVOB' },
-      ],
-      events: [
-				{ id: '1', resourceId: 'a', start: '2016-05-02', end: '2016-05-05T24:00:00', title: 'Chris', color: '#43AC6A', borderColor: '#666' },
-				{ id: '2', resourceId: 'a', start: '2016-05-02', end: '2016-05-06T24:00:00', title: 'Martin', color: '#a0d3e8', borderColor: '#666' },
-				{ id: '3', resourceId: 'a', start: '2016-05-04', end: '2016-05-04T24:00:00', title: 'Edwin', color: '#f04124', borderColor: '#666' },
-				{ id: '4', resourceId: 'b', start: '2016-05-02', end: '2016-05-03T24:00:00', title: 'Edwin', color: '#f04124', borderColor: '#666' },
-      ],
+      resources: function (callback) {
+        var start = calendar.fullCalendar('getView').start.format('YYYY-MM-DD');
+        var end = calendar.fullCalendar('getView').end.format('YYYY-MM-DD');
+        $.ajax({
+          url: '/planning/projects',
+          method: 'post',
+          data: {
+            start: start,
+            end: end,
+            toeter: 'toeter'
+          },
+          success: function (data) {
+            callback(data);
+          }
+        });
+
+      },
+      events: '/planning/events',
       eventClick: function (calEvent, jsEvent, view) {
         if (confirm('Delete?')) {
           calendar.fullCalendar('removeEvents', [calEvent.id]);
@@ -202,10 +210,16 @@
         console.log('drop', date.format(), resourceId);
       },
       eventReceive: function (event) { // called when a proper external event is dropped
+        updateEvent(event);
         console.log('eventReceive', event);
       },
       eventDrop: function (event) { // called when an event (already on the calendar) is moved
+        updateEvent(event);
         console.log('eventDrop', event);
+      },
+      eventResize: function (event) {
+        updateEvent(event);
+        console.log('eventResize', event);
       }
     });
 

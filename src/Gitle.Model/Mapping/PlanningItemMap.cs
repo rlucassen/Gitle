@@ -5,9 +5,9 @@
         public PlanningItemMap()
         {
             Map(x => x.Start);
-            Map(x => x.End);
+            Map(x => x.End).Column("[End]");
             References(x => x.User);
-            References(x => x.Project);
+            Map(x => x.Resource);
         }
     }
 }
