@@ -7,25 +7,27 @@
 </div>
 
 <div class="row">
-  <div class="large-3 columns">
+  <div class="large-12 columns">
     <div id="external-events">
-      <div class="row">
-        <div class="large-8 columns"><strong>Employee</strong></div>
-        <div class="large-4 columns"><strong>Workload</strong></div>
-      </div>
-      <% for employee in employees: %>
-      <div data-employee="${employee.FullName}" class="row">
-        <div class="large-8 columns">
-          <div class="employee" data-userid="${employee.Id}" data-color="#${employee.Color}" style="background-color: #${employee.Color};">${employee.FullName}</div>
+      <div class="row collapse">
+        <% for employee in employees: %>
+        <div class="large-1 columns end">
+          <div data-employee="${employee.FullName}" class="row collapse">
+            <div class="large-12 columns">
+              <div class="employee" data-userid="${employee.Id}" data-color="#${employee.Color}" style="background-color: #${employee.Color};">${employee.FullName}</div>
+            </div>
+            <div class="large-12 columns">
+              <span class="duration">0</span>
+            </div>
+          </div>
         </div>
-        <div class="large-4 columns">
-          <span class="duration">0</span>
-        </div>
+        <% end %>
       </div>
-      <% end %>
     </div>
   </div>
-  <div class="large-9 columns">
+</div>
+<div class="row">
+  <div class="large-12 columns">
     <div class="panel">
       <div id="calendar"></div>
     </div>
@@ -157,7 +159,7 @@
         center: 'title',
         right: 'today prev,next'
       },
-      defaultView: 'timelineWeek',
+      defaultView: 'timelineFourWeeks',
       views: {
         timelineWeek: {
           type: 'timeline',
@@ -165,6 +167,13 @@
           slotDuration: '12:00',
           snapDuration: '12:00',
           slotWidth: 40
+        },
+        timelineFourWeeks: {
+          type: 'timeline',
+          duration: { days: 28 },
+          slotDuration: '12:00',
+          snapDuration: '12:00',
+          slotWidth: 20
         }
       },
       customButtons: {

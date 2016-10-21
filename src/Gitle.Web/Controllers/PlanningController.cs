@@ -17,7 +17,7 @@
 
         public void Index()
         {
-            var employees = session.Query<User>().Where(x => x.IsActive && x.IsAdmin);
+            var employees = session.Query<User>().Where(x => x.IsActive && x.IsAdmin && x.Color != null);
             PropertyBag.Add("employees", employees);
         }
 
