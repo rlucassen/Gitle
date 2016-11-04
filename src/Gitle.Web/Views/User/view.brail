@@ -29,6 +29,7 @@
               <th>Naam</th>
               <th>Applicatie</th>
               <th>Klant</th>
+              <th>Acties</th>
             </tr>
           </thead>
           <tbody>
@@ -37,6 +38,10 @@
               <td class="name"><a href="/project/${project.Project.Slug}/view">${project.Project.Name}</a></td>
               <td class="application">${?project.Project.Application.Name}</td>
               <td class="customer">${?project.Project.Application.Customer.Name}</td>
+              <td>
+                <a class="button tiny no-margin" href="/project/${project.Project.Slug}/issues">Takenlijst</a>
+                <a class="button tiny success no-margin" href="/project/${project.Project.Slug}/edit">Bewerk</a>
+              </td>
             </tr>
             <% end %>
           </tbody>
