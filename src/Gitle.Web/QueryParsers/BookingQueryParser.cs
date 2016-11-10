@@ -13,7 +13,7 @@
 
     public class BookingQueryParser
     {
-        private const string queryRegex = @"[a-zA-Z0-9_]+:(([a-zA-Z0-9-_,.]+)|('[a-zA-Z0-9_,. ]+'))";
+        private const string queryRegex = @"[a-zA-Z0-9_]+:(([a-zA-Z0-9-_,.]+)|('[a-zA-Z0-9-_,. ]+'))";
 
         public IList<User> Users { get; set; } = new List<User>();
         public IList<Project> Projects { get; set; } = new List<Project>();
