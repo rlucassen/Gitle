@@ -55,6 +55,21 @@
             PropertyBag.Add("pickupany", parser.PickupAny);
             PropertyBag.Add("pickupnone", parser.PickupNone);
             PropertyBag.Add("prioritizable", parser.Prioritizable);
+            PropertyBag.Add("dump", CreateDummyIssue(project));
+        }
+
+        public DummyIssue CreateDummyIssue(Project project)
+        {
+            var dumpBookings = session.Query<Booking>().Where(b => b.Project == project && b.Issue == null);
+            DummyIssue dummy = new DummyIssue {Name = "DUMP: " + project.Name, Bookings = dumpBookings.ToList()};
+            return dummy;
+        }
+
+        public void Dump(int projectId)
+        {
+            var dumpBookings = session.Query<Booking>().Where(b => b.Project.Id == projectId && b.Issue == null);
+            PropertyBag.Add("dumpBookings", dumpBookings);
+
         }
 
         [MustHaveProject]

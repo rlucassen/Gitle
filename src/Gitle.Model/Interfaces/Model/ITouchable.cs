@@ -7,5 +7,6 @@ namespace Gitle.Model.Interfaces.Model
 {
     public interface ITouchable
     {
+        IList<Touch> Touches { get; set; }
     }
 }

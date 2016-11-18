@@ -61,7 +61,8 @@
             IList<string> projects = new List<string>();
             IList<string> applications = new List<string>();
             IList<string> customers = new List<string>();
-            IList<string> issues = new List<string>();
+            IList<int> issues = new List<int>();
+            bool nullIssues = false;
             var searchQuery = Query;
             var take = MaxResults;
             var all = false;
@@ -86,7 +87,16 @@
                         customers.Add(value);
                         break;
                     case "issue":
-                        issues.Add(value);
+                        int issueNumber;
+                        if (int.TryParse(value, out issueNumber))
+                        {
+                            issues.Add(issueNumber);
+                        }
+                        else
+                        {
+                            if (value == "null")
+                                nullIssues = true;
+                        }
                         break;
                     case "groupby":
                         GroupedBy = value;
@@ -148,14 +158,36 @@
                 }
             }
 
+            
+
+            Expression<Func<Booking, bool>> issueExpression = null;
             if (issues.Count > 0 && Projects.Count == 1) //Er mag maar één project selecteerd zijn, anders wordt het heel onoverzichtelijk met dubbele Issue Numbers
             {
                 SelectedProject = Projects.First();
-                bookings = bookings.Where(x => x.Project != null && x.Project.Application != null && issues.Contains(x.Issue.Number.ToString()));
                 foreach (var issue in issues)
                 {
-                    Issues.Add(session.Query<Issue>().FirstOrDefault(x => x.Number.ToString().Equals(issue) && x.Project == SelectedProject));
+                    Issues.Add(session.Query<Issue>().FirstOrDefault(x => x.Number == issue && x.Project == SelectedProject));
                 }
+                issueExpression = x => issues.Contains(x.Issue.Number);
+            }
+
+            if (nullIssues)
+            {
+                Expression<Func<Booking, bool>> nullIssueExpression = x => x.Issue == null;
+                if (issueExpression != null)
+                {
+                    var binaryExpression = Expression.OrElse(issueExpression, nullIssueExpression);
+                    var boolExpression = Expression.Lambda<Func<Booking, bool>>(binaryExpression, issueExpression.Parameters[0]);
+                    bookings = bookings.Where(boolExpression);
+                }
+                else
+                {
+                    bookings = bookings.Where(nullIssueExpression);
+                }
+            }
+            else if(issueExpression != null)
+            {
+                bookings = bookings.Where(issueExpression);
             }
 
             if (!string.IsNullOrWhiteSpace(searchQuery))

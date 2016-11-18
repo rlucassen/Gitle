@@ -190,6 +190,9 @@
         </div>
       </div>
     </div>
+      <% if dump != null: %>
+      <% OutputSubView("_dummyissue") %>
+      <% end %>
     <% OutputSubView("_issuetable", {"actions": true}) %>
   </div>
 </div>

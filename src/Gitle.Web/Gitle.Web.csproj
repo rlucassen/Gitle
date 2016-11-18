@@ -348,6 +348,9 @@
     <None Include="Views\Issue\exportimport.brail" />
     <None Include="Views\Issue\quickview.brail" />
     <None Include="Views\Issue\readjson.brail" />
+    <Content Include="Views\Issue\_dummyissue.brail">
+      <SubType>Designer</SubType>
+    </Content>
     <None Include="Views\Issue\_issuetable.brail">
       <SubType>Designer</SubType>
     </None>

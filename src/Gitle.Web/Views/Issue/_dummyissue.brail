@@ -1,0 +1,40 @@
+﻿  <div class="row">
+    <div class="large-12 columns">
+      <div class="issue">
+        <div class="row">
+          <div class="large-1 columns issuestate">
+            <div class="row">
+              <div class="small-6 columns">
+                <span class="number">-</span>
+              </div>
+              <div class="small-6 columns large-text-center medium-text-right">
+                <i class="fa fa-trash" title="Dump"></i>
+              </div>
+            </div>
+          </div>
+          <div class="large-8 columns end">
+            <div class="row namerow">
+              <div class="large-11 columns end">
+                <a href="/report/index?query=end%3A2016-11-18+start%3A2016-06-01+issue%3Anull+project%3A${project.Slug}">${dump.Name}</a>
+              </div>
+            </div>
+            <% if CurrentUser.IsDanielle: %>
+            <% if dump.Bookings.Count > 0: %>
+            <div class="row detailsrow">
+              <div class="large-1 large-offset-7 columns">
+                <strong>Geboekt: </strong>
+              </div>
+              <div class="large-2 columns text-right">
+                ${dump.BillableBookingHoursString()}
+              </div>
+              <div class="large-2 columns text-right">
+                (${dump.UnbillableBookingHoursString()} unbillable)
+              </div>
+            </div>
+            <% end %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
