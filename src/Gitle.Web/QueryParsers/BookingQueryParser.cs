@@ -20,6 +20,7 @@
         public IList<Application> Applications { get; set; } = new List<Application>();
         public IList<Customer> Customers { get; set; } = new List<Customer>();
         public IList<Issue> Issues { get; set; } = new List<Issue>();
+        public bool Dump { get; set; }
 
         public List<BookingGroup> GroupedBookings { get; set; }
 
@@ -158,7 +159,7 @@
                 }
             }
 
-            
+            Dump = nullIssues;
 
             Expression<Func<Booking, bool>> issueExpression = null;
             if (issues.Count > 0 && Projects.Count == 1) //Er mag maar één Project selecteerd zijn, anders wordt het heel onoverzichtelijk met dubbele Issue Numbers
@@ -168,15 +169,15 @@
                 {
                     Issues.Add(session.Query<Issue>().FirstOrDefault(x => x.Number == issue && x.Project == SelectedProject));
                 }
-                issueExpression = booking => issues.Contains(booking.Issue.Number);
+                issueExpression = x => issues.Contains(x.Issue.Number);
             }
 
             if (nullIssues)
             {
-                Expression<Func<Booking, bool>> nullIssueExpression = booking => booking.Issue == null;
+                Expression<Func<Booking, bool>> nullIssueExpression = x => x.Issue == null;
                 if (issueExpression != null)
                 {
-                    var binaryExpression = Expression.OrElse(nullIssueExpression, issueExpression); //Zowel boekingen zonder Issue als boekingen met gekozen Issue(s) zoeken, hierbij wordt dezelfde (booking =>) als parameter meegegeven aan beide expressies
+                    var binaryExpression = Expression.OrElse(nullIssueExpression.Body, issueExpression.Body); //Zowel boekingen zonder Issue als boekingen met gekozen Issue(s) zoeken, hierbij wordt dezelfde (booking =>) als parameter meegegeven aan beide expressies
                     var boolExpression = Expression.Lambda<Func<Booking, bool>>(binaryExpression, issueExpression.Parameters[0]);
                     bookings = bookings.Where(boolExpression);
                 }

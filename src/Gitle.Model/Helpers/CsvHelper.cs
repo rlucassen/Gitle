@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using Enum;
+    using NHibernate.Validator.Cfg.Loquacious.Impl;
 
     public static class CsvHelper
     {
@@ -67,13 +68,17 @@
             var rows = "";
             foreach (var booking in bookings)
             {
+                string issueNumber;
+                if (booking.Issue != null) issueNumber = booking.Issue.Number.ToString();
+                else issueNumber = "DUMP";
+
                 rows += string.Format(rowTemplate, fieldseparator, lineEnd,
                                       booking.Minutes,
                                       booking.Date.ToShortDateString(),
                                       booking.User.FullName,
                                       booking.Project.Number,
                                       booking.Project.Name,
-                                      booking.Issue?.Number,
+                                      issueNumber,
                                       booking.Unbillable ? "Nee" : "Ja",
                                       booking.Comment
                     );
