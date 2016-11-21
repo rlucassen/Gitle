@@ -337,14 +337,18 @@
     <Content Include="Views\Application\view.brail" />
     <None Include="Views\Authentication\changepassword.brail" />
     <None Include="Views\Authentication\requestreset.brail" />
-    <Content Include="Views\Booking\index.brail" />
+    <Content Include="Views\Booking\index.brail">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Views\Invoice\index.brail" />
     <Content Include="Views\Invoice\create.brail" />
     <Content Include="Views\Booking\_row.brail" />
     <Content Include="Views\Booking\overview.brail" />
     <Content Include="Views\Database\migrateinvoices.brail" />
     <Content Include="Views\Dashboard\index.brail" />
-    <None Include="Views\Issue\index.brail" />
+    <None Include="Views\Issue\index.brail">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Views\Issue\exportimport.brail" />
     <None Include="Views\Issue\quickview.brail" />
     <None Include="Views\Issue\readjson.brail" />

@@ -190,7 +190,7 @@
         </div>
       </div>
     </div>
-      <% if dump != null: %>
+      <% if dump != null and CurrentUser.IsDanielle: %>
       <% OutputSubView("_dummyissue") %>
       <% end %>
     <% OutputSubView("_issuetable", {"actions": true}) %>
