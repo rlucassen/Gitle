@@ -161,33 +161,33 @@
             
 
             Expression<Func<Booking, bool>> issueExpression = null;
-            if (issues.Count > 0 && Projects.Count == 1) //Er mag maar één project selecteerd zijn, anders wordt het heel onoverzichtelijk met dubbele Issue Numbers
+            if (issues.Count > 0 && Projects.Count == 1) //Er mag maar één Project selecteerd zijn, anders wordt het heel onoverzichtelijk met dubbele Issue Numbers
             {
-                SelectedProject = Projects.First();
+                SelectedProject = Projects.Single(); //Het is er altijd maar één
                 foreach (var issue in issues)
                 {
                     Issues.Add(session.Query<Issue>().FirstOrDefault(x => x.Number == issue && x.Project == SelectedProject));
                 }
-                issueExpression = x => issues.Contains(x.Issue.Number);
+                issueExpression = booking => issues.Contains(booking.Issue.Number);
             }
 
             if (nullIssues)
             {
-                Expression<Func<Booking, bool>> nullIssueExpression = x => x.Issue == null;
+                Expression<Func<Booking, bool>> nullIssueExpression = booking => booking.Issue == null;
                 if (issueExpression != null)
                 {
-                    var binaryExpression = Expression.OrElse(issueExpression, nullIssueExpression);
+                    var binaryExpression = Expression.OrElse(nullIssueExpression, issueExpression); //Zowel boekingen zonder Issue als boekingen met gekozen Issue(s) zoeken, hierbij wordt dezelfde (booking =>) als parameter meegegeven aan beide expressies
                     var boolExpression = Expression.Lambda<Func<Booking, bool>>(binaryExpression, issueExpression.Parameters[0]);
                     bookings = bookings.Where(boolExpression);
                 }
                 else
                 {
-                    bookings = bookings.Where(nullIssueExpression);
+                    bookings = bookings.Where(nullIssueExpression); //Geen Issue(s) geselecteerd: haal alle boekingen op zonder Issue, van alle projecten
                 }
             }
             else if(issueExpression != null)
             {
-                bookings = bookings.Where(issueExpression);
+                bookings = bookings.Where(issueExpression); //Boekingen zonder Issue niet weergeven, wel filteren op gekozen Issue(s)
             }
 
             if (!string.IsNullOrWhiteSpace(searchQuery))
