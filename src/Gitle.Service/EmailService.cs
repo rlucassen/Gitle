@@ -3,7 +3,6 @@
     using System;
     using System.Collections;
     using System.Collections.Generic;
-    using System.Configuration;
     using System.IO;
     using System.Linq;
     using System.Net.Mail;
@@ -11,7 +10,6 @@
     using Castle.Core.Smtp;
     using Castle.MonoRail.Framework;
     using Castle.MonoRail.Views.Brail;
-    using Clients.GitHub.Models.Hooks;
     using Model;
     using Model.Interfaces.Model;
     using Model.Interfaces.Service;
@@ -19,43 +17,41 @@
 
     public class EmailService : IEmailService
     {
-        private readonly ILogger logger;
-        private readonly bool testMode;
-        private readonly string sourceAddress;
-        private readonly DefaultSmtpSender defaultSmtpSender;
+        private readonly ILogger _logger;
+        private readonly bool _testMode;
+        private readonly string _sourceAddress;
+        private readonly DefaultSmtpSender _defaultSmtpSender;
 
         private static readonly FileAssemblyViewSourceLoader ViewSourceLoader =
             new FileAssemblyViewSourceLoader(Path.Combine(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Views"), "Mail"));
 
         private static readonly StandaloneBooViewEngine StandaloneBooViewEngine = new StandaloneBooViewEngine(ViewSourceLoader, null);
 
-        private readonly ISession session;
+        private readonly ISession _session;
 
         public EmailService(string hostname, string sourceAddress, bool testMode, ILogger logger, ISessionFactory sessionFactory)
         {
-            defaultSmtpSender = new DefaultSmtpSender(hostname);
+            _defaultSmtpSender = new DefaultSmtpSender(hostname);
 
-            this.sourceAddress = sourceAddress;
-            this.testMode = testMode;
-            this.logger = logger;
-            this.session = sessionFactory.GetCurrentSession();
+            this._sourceAddress = sourceAddress;
+            this._testMode = testMode;
+            this._logger = logger;
+            this._session = sessionFactory.GetCurrentSession();
         }
         #region IEmailService Members
 
         public void SendIssueActionNotification(IIssueAction action)
         {
             if (action is ChangeState)
-                action = session.Get<ChangeState>(((ChangeState)action).Id);
+                action = _session.Get<ChangeState>(((ChangeState)action).Id);
             var project = action.Issue.Project;
-            IList<User> users = (from userProject in project.Users where userProject.Notifications && (!userProject.OnlyOwnIssues || action.Issue.CreatedBy == userProject.User) && userProject.User != action.User select userProject.User).ToList();
+            IList<User> users = (from userProject in project.Users where userProject.Notifications && (!userProject.OnlyOwnIssues || action.Issue.CreatedBy == userProject.User) && userProject.User != action.User && userProject.IsActive select userProject.User).ToList();
 
             foreach (var user in users)
             {
-                var message = new MailMessage(sourceAddress, user.EmailAddress)
+                var message = new MailMessage(_sourceAddress, user.EmailAddress)
                 {
-                    Subject =
-                        string.Format("Gitle: {0} - {1}",
-                                        action.EmailSubject, action.Issue.Project.Name),
+                    Subject = $"Gitle: {action.EmailSubject} - {action.Issue.Project.Name}",
                     IsBodyHtml = true
                 };
 
@@ -67,14 +63,13 @@
 
         public void SendPasswordLink(User user)
         {
-            var message = new MailMessage(sourceAddress, user.EmailAddress)
+            var message = new MailMessage(_sourceAddress, user.EmailAddress)
             {
                 Subject = string.Format("Gitle: Aanvraag wachtwoord wijzigen"),
                 IsBodyHtml = true
             };
 
-            message.Body = GetBody("password",
-                                   new Hashtable { { "user", user } });
+            message.Body = GetBody("password", new Hashtable { { "user", user } });
 
             SendMessage(message);
         }
@@ -94,15 +89,15 @@
 
         private void SendMessage(MailMessage message)
         {
-            if (testMode)
+            if (_testMode)
             {
-                logger.DebugFormat("Email service staat in testmodus");
-                logger.DebugFormat("Bericht: {0}, naar: {1}", message.Subject, message.To);
-                logger.Debug(message.Body);
+                _logger.DebugFormat("Email service staat in testmodus");
+                _logger.DebugFormat("Bericht: {0}, naar: {1}", message.Subject, message.To);
+                _logger.Debug(message.Body);
             }
             else
             {
-                defaultSmtpSender.Send(message);
+                _defaultSmtpSender.Send(message);
             }
         }
 
