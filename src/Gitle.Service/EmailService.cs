@@ -49,15 +49,18 @@
 
             foreach (var user in users)
             {
-                var message = new MailMessage(_sourceAddress, user.EmailAddress)
+                if (!string.IsNullOrEmpty(user.EmailAddress))
                 {
-                    Subject = $"Gitle: {action.EmailSubject} - {action.Issue.Project.Name}",
-                    IsBodyHtml = true
-                };
+                    var message = new MailMessage(_sourceAddress, user.EmailAddress)
+                    {
+                        Subject = $"Gitle: {action.EmailSubject} - {action.Issue.Project.Name}",
+                        IsBodyHtml = true
+                    };
 
-                message.Body = GetBody("issue-action", new Hashtable { { "item", action }, { "user", user } });
+                    message.Body = GetBody("issue-action", new Hashtable { { "item", action }, { "user", user } });
 
-                SendMessage(message);
+                    SendMessage(message);
+                }
             }
         }
 
