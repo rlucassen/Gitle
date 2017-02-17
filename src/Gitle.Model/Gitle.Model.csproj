@@ -82,6 +82,7 @@
     <Compile Include="ChangeState.cs" />
     <Compile Include="Comment.cs" />
     <Compile Include="Document.cs" />
+    <Compile Include="DummyIssue.cs" />
     <Compile Include="Enum\InvoiceState.cs" />
     <Compile Include="Customer.cs" />
     <Compile Include="Enum\ProjectType.cs" />

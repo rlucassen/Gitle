@@ -1,4 +1,4 @@
-﻿<div class="issues <% if prioritizable: %>prioritizable<% end %>" id="issueContainer"> 
+﻿<div class="issues <% if prioritizable: %>prioritizable<% end %>" id="issueContainer">
   <% for issue in result.Items: %>
   <div class="row <% if issue.IsOpen: %><% if issue.PickedUpBy == null:%>orderable<% else: %>pickedup<% end %><% end %>">
     <div class="large-12 columns">

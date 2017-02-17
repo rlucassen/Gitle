@@ -13,13 +13,14 @@
 
     public class BookingQueryParser
     {
-        private const string queryRegex = @"[a-zA-Z0-9_]+:(([a-zA-Z0-9-_,.]+)|('[a-zA-Z0-9_,. ]+'))";
+        private const string queryRegex = @"[a-zA-Z0-9_]+:(([a-zA-Z0-9-_,.]+)|('[a-zA-Z0-9-_,. ]+'))";
 
         public IList<User> Users { get; set; } = new List<User>();
         public IList<Project> Projects { get; set; } = new List<Project>();
         public IList<Application> Applications { get; set; } = new List<Application>();
         public IList<Customer> Customers { get; set; } = new List<Customer>();
         public IList<Issue> Issues { get; set; } = new List<Issue>();
+        public bool Dump { get; set; }
 
         public List<BookingGroup> GroupedBookings { get; set; }
 
@@ -61,7 +62,8 @@
             IList<string> projects = new List<string>();
             IList<string> applications = new List<string>();
             IList<string> customers = new List<string>();
-            IList<string> issues = new List<string>();
+            IList<int> issues = new List<int>();
+            bool nullIssues = false;
             var searchQuery = Query;
             var take = MaxResults;
             var all = false;
@@ -86,7 +88,16 @@
                         customers.Add(value);
                         break;
                     case "issue":
-                        issues.Add(value);
+                        int issueNumber;
+                        if (int.TryParse(value, out issueNumber))
+                        {
+                            issues.Add(issueNumber);
+                        }
+                        else
+                        {
+                            if (value == "null")
+                                nullIssues = true;
+                        }
                         break;
                     case "groupby":
                         GroupedBy = value;
@@ -148,14 +159,36 @@
                 }
             }
 
-            if (issues.Count > 0 && Projects.Count == 1) //Er mag maar één project selecteerd zijn, anders wordt het heel onoverzichtelijk met dubbele Issue Numbers
+            Dump = nullIssues;
+
+            Expression<Func<Booking, bool>> issueExpression = null;
+            if (issues.Count > 0 && Projects.Count == 1) //Er mag maar één Project selecteerd zijn, anders wordt het heel onoverzichtelijk met dubbele Issue Numbers
             {
-                SelectedProject = Projects.First();
-                bookings = bookings.Where(x => x.Project != null && x.Project.Application != null && issues.Contains(x.Issue.Number.ToString()));
+                SelectedProject = Projects.Single(); //Het is er altijd maar één
                 foreach (var issue in issues)
                 {
-                    Issues.Add(session.Query<Issue>().FirstOrDefault(x => x.Number.ToString().Equals(issue) && x.Project == SelectedProject));
+                    Issues.Add(session.Query<Issue>().FirstOrDefault(x => x.Number == issue && x.Project == SelectedProject));
                 }
+                issueExpression = x => issues.Contains(x.Issue.Number);
+            }
+
+            if (nullIssues)
+            {
+                Expression<Func<Booking, bool>> nullIssueExpression = x => x.Issue == null;
+                if (issueExpression != null)
+                {
+                    var binaryExpression = Expression.OrElse(nullIssueExpression.Body, issueExpression.Body); //Zowel boekingen zonder Issue als boekingen met gekozen Issue(s) zoeken, hierbij wordt dezelfde (booking =>) als parameter meegegeven aan beide expressies
+                    var boolExpression = Expression.Lambda<Func<Booking, bool>>(binaryExpression, issueExpression.Parameters[0]);
+                    bookings = bookings.Where(boolExpression);
+                }
+                else
+                {
+                    bookings = bookings.Where(nullIssueExpression); //Geen Issue(s) geselecteerd: haal alle boekingen op zonder Issue, van alle projecten
+                }
+            }
+            else if(issueExpression != null)
+            {
+                bookings = bookings.Where(issueExpression); //Boekingen zonder Issue niet weergeven, wel filteren op gekozen Issue(s)
             }
 
             if (!string.IsNullOrWhiteSpace(searchQuery))

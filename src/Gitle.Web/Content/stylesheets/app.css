@@ -818,7 +818,8 @@ input[type=checkbox].inline {
       color: #ccc; }
   .booking-row-edit .booking-edit-field {
     height: 1rem !important;
-    margin: 0.15rem 0 0 0 !important; }
+    margin: 0.15rem 0 0 0 !important;
+    padding: 0 0.5em; }
 
 .indent-td {
   width: 25px; }
