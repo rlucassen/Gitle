@@ -97,14 +97,17 @@
 
     $('#addResource').find('form').submit(function (e) {
       e.preventDefault();
+      var form = $(this);
       $.ajax({
         url: '/planning/saveresource',
         data: $(this).serialize() + '&year=' + calendar.fullCalendar('getView').start.format('YYYY') + '&week=' + calendar.fullCalendar('getView').start.format('W'),
-        success: function (data) {
-          calendar.fullCalendar('addResource', data);
+        success: function () {
+          calendar.fullCalendar('refetchResources');
+          form.trigger('reset');
+          form.find('#resourceIssues').html('');
           $('#addResource').foundation('reveal', 'close');
         }
-      })
+      });
     });
 
     $('#external-events .employee').each(function () {
@@ -116,7 +119,7 @@
         duration: '24:00',
         color: $(this).data('color'),
         borderColor: '#666',
-        userId: $(this).data('userid'),
+        userId: $(this).data('userid')
       });
 
       employees[employeeName] = 0;
@@ -129,7 +132,7 @@
 
     });
 
-    var updateEvent = function(event, jsEvent, ui, view){
+    var updateEvent = function(event) {
       $.ajax({
         url: '/planning/updateevent',
         data: {
@@ -137,16 +140,72 @@
           resource: event.resourceId,
           userId: event.userId,
           start: event.start.format('YYYY-MM-DD HH:mm'),
-          end: event.end.format('YYYY-MM-DD HH:mm'),
+          end: event.end.format('YYYY-MM-DD HH:mm')
         },
-        success: function (data) {
+        success: function(data) {
+          event.id = data;
           console.log('eventUpdated', data);
         }
-      })
+      });
     };
 
+    var deleteEvent = function(event) {
+      $.ajax({
+        url: '/planning/deleteevent',
+        data: {
+          eventId: event.id
+        },
+        success: function(data) {
+          console.log('eventDeleted', data);
+        }
+      });
+    };
+
+    var calculateHours = function() {
+      var i;
+      for (i in employees) {
+        if (employees.hasOwnProperty(i)) {
+          employees[i] = 0;
+        }
+      }
+
+      var events = calendar.fullCalendar('clientEvents', function (event) {
+        var resources = calendar.fullCalendar('getResources');
+        for (var ri in resources) {
+          if (resources.hasOwnProperty(ri)) {
+            if (resources[ri].id === event.resourceId) return true;
+            var children = resources[ri].children;
+            for (var j in children) {
+              if (children.hasOwnProperty(j)) {
+                if (children[j].id === event.resourceId) return true;
+              }
+            }
+          }
+        }
+        return false;
+      });
+
+      var view = calendar.fullCalendar('getView');
+      var start = view.intervalStart;
+      var end = view.intervalEnd;
+      for (i in events) {
+        if (events.hasOwnProperty(i)) {
+          var event = events[i];
+          if (event.start >= start && event.end <= end) {
+            employees[event.title] += (event.end - event.start) / 3600000 / 3;
+          }
+        }
+      }
+
+      for (i in employees) {
+        if (employees.hasOwnProperty(i)) {
+          var employee = employees[i];
+          $('#external-events [data-employee=\"' + i + '\"] .duration').html(employee);
+        }
+      }
+    }
+
     calendar.fullCalendar({
-      now: '2016-05-02',
       editable: true, // enable draggable events
       droppable: true, // this allows things to be dropped onto the calendar
       aspectRatio: 2,
@@ -159,7 +218,7 @@
         center: 'title',
         right: 'today prev,next'
       },
-      defaultView: 'timelineFourWeeks',
+      defaultView: 'timelineWeek',
       views: {
         timelineWeek: {
           type: 'timeline',
@@ -202,34 +261,14 @@
               success: function (data) {
                 calendar.fullCalendar('removeResource', resource);
                 console.log('removeResource', data);
-
+                calculateHours();
               }
             });
           }
         });
       },
-      eventAfterAllRender: function (a, b, c) {
-        for (var i in employees) {
-          employees[i] = 0;
-        }
-
-        var events = calendar.fullCalendar('clientEvents');
-
-        var view = calendar.fullCalendar('getView');
-        var start = view.intervalStart;
-        var end = view.intervalEnd;
-        for (var i in events) {
-          var event = events[i];
-          if (event.start >= start && event.end <= end) {
-            employees[event.title] += (event.end - event.start) / 3600000 / 3;
-          }
-        }
-
-        for (var i in employees) {
-          var employee = employees[i];
-          $('#external-events [data-employee=\"' + i + '\"] .duration').html(employee);
-        }
-
+      eventAfterAllRender: function () {
+        calculateHours();
       },
       resourceLabelText: 'Projects',
       resources: function (callback) {
@@ -250,9 +289,10 @@
 
       },
       events: '/planning/events',
-      eventClick: function (calEvent, jsEvent, view) {
+      eventClick: function (event) {
         if (confirm('Delete?')) {
-          calendar.fullCalendar('removeEvents', [calEvent.id]);
+          calendar.fullCalendar('removeEvents', [event.id]);
+          deleteEvent(event);
         }
       },
       drop: function (date, jsEvent, ui, resourceId) {

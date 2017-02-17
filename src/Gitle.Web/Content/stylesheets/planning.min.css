@@ -1,1 +1,1 @@
-﻿.employee{margin-bottom:.2em;padding:.2em;border:1px solid #666}.fc-event:after{content:attr(data-color)}
+﻿.employee{padding:.2em;margin:0 .2em;border:1px solid #666;height:3.6em}.duration{display:block;padding:.2em;margin:0 .2em;text-align:center}.duration:after{content:' uur'}.fc-event:after{content:attr(data-color)}

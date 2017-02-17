@@ -9,6 +9,17 @@
     using NHibernate;
     using NHibernate.Linq;
 
+    // Colors
+        //008CBA
+        //F04124
+        //43AC6A
+        //FFBF00
+        //9FFFCB
+        //FFFFFF
+        //F966FF
+        //B96ECC
+        //E83F6F
+
     public class PlanningController : SecureController
     {
         public PlanningController(ISessionFactory sessionFactory) : base(sessionFactory)
@@ -25,7 +36,7 @@
         public List<Event> Events(DateTime start, DateTime end)
         {
             return session.Query<PlanningItem>()
-                .Where(x => x.End > start && x.Start < end).ToList()
+                .Where(x => x.End > start && x.Start < end && x.IsActive).ToList()
                 .Select(x => new Event
                 {
                     id = x.Id,
@@ -51,13 +62,27 @@
         [return: JSONReturnBinder]
         public Resource SaveResource(int year, int week, long projectId, long[] issueIds)
         {
-            var planningResource = new PlanningResource
+            var planningResource = session.Query<PlanningResource>().FirstOrDefault(x => x.Project.Id == projectId && x.Year == year && x.Week == week);
+
+            if (planningResource == null)
             {
-                Year = year,
-                Week = week,
-                Project = session.Get<Project>(projectId),
-                Issues = session.Query<Issue>().Where(x => issueIds.Contains(x.Id)).ToList()
-            };
+                planningResource = new PlanningResource
+                {
+                    Year = year,
+                    Week = week,
+                    Project = session.Get<Project>(projectId),
+                    Issues = session.Query<Issue>().Where(x => issueIds.Contains(x.Id)).ToList()
+                };
+            }
+            else
+            {
+                foreach (var issueId in issueIds)
+                {
+                    if(!planningResource.Issues.Select(x => x.Id).Contains(issueId))
+                        planningResource.Issues.Add(session.Get<Issue>(issueId));
+                }
+            }
+
 
             using (var tx = session.BeginTransaction())
             {
@@ -110,6 +135,20 @@
                 planningItem.Start = start;
                 planningItem.End = end;
             }
+
+            using (var tx = session.BeginTransaction())
+            {
+                session.SaveOrUpdate(planningItem);
+                tx.Commit();
+            }
+
+            RenderText(planningItem.Id.ToString());
+        }
+
+        public void DeleteEvent(long eventId)
+        {
+            var planningItem = session.Get<PlanningItem>(eventId);
+            planningItem.Deactivate();
 
             using (var tx = session.BeginTransaction())
             {
