@@ -59,12 +59,6 @@
   </form>
 </div>
 
-<script id="" type="text/template">
-  <li>
-    <input name="issueIds" value="{{id}}">
-  </li>
-</script>
-
 <script>
 
   var employees = [];
@@ -132,7 +126,7 @@
 
     });
 
-    var updateEvent = function(event) {
+    var updateEvent = function (event) {
       $.ajax({
         url: '/planning/updateevent',
         data: {
@@ -142,34 +136,28 @@
           start: event.start.format('YYYY-MM-DD HH:mm'),
           end: event.end.format('YYYY-MM-DD HH:mm')
         },
-        success: function(data) {
+        success: function (data) {
           event.id = data;
           console.log('eventUpdated', data);
+          calendar.fullCalendar('rerenderEvents');
         }
       });
     };
 
-    var deleteEvent = function(event) {
+    var deleteEvent = function (event) {
       $.ajax({
         url: '/planning/deleteevent',
         data: {
           eventId: event.id
         },
-        success: function(data) {
+        success: function (data) {
           console.log('eventDeleted', data);
         }
       });
     };
 
-    var calculateHours = function() {
-      var i;
-      for (i in employees) {
-        if (employees.hasOwnProperty(i)) {
-          employees[i] = 0;
-        }
-      }
-
-      var events = calendar.fullCalendar('clientEvents', function (event) {
+    var getVisibleEvents = function () {
+      return calendar.fullCalendar('clientEvents', function (event) {
         var resources = calendar.fullCalendar('getResources');
         for (var ri in resources) {
           if (resources.hasOwnProperty(ri)) {
@@ -184,6 +172,63 @@
         }
         return false;
       });
+    }
+
+    var getChildEventsForResource = function(resource) {
+      return calendar.fullCalendar('clientEvents', function (event) {
+        for (var ri in resource.children) {
+          if (resource.children.hasOwnProperty(ri)) {
+            if (resource.children[ri].id === event.resourceId) return true;
+          }
+        }
+        return false;
+      });
+    }
+
+    var calculateOverlap = function () {
+      var events = getVisibleEvents();
+
+      for (var i1 in events) {
+        var event1 = events[i1];
+        for (var i2 in events) {
+          var event2 = events[i2];
+          if (event1.start < event2.end && event2.start < event1.end && event1._id != event2._id && event1.userId == event2.userId) {
+            var event2Resource = calendar.fullCalendar('getResourceById', event2.resourceId);
+            event1.overlapWith = event2Resource.title;
+            $('[data-event-id=' + event1._id + ']').addClass('overlap');
+          }
+        }
+      }
+    }
+
+    var postRenderChildren = function() {
+      var events = getVisibleEvents();
+
+      for (var i in events) {
+        var event = events[i];
+        var eventObject = $('[data-event-id=' + event._id + ']');
+        var alt = event.title;
+        if (event.overlapWith != undefined) {
+          alt += ' (overlap met \'' + event.overlapWith + '\')';
+        }
+        eventObject.attr('title', alt);
+        if (event.originalResourceId != undefined) {
+          eventObject.addClass('child');
+        } else {
+          eventObject.removeClass('child');
+        }
+      }
+    }
+
+    var calculateHours = function () {
+      var i;
+      for (i in employees) {
+        if (employees.hasOwnProperty(i)) {
+          employees[i] = 0;
+        }
+      }
+
+      var events = getVisibleEvents();
 
       var view = calendar.fullCalendar('getView');
       var start = view.intervalStart;
@@ -200,7 +245,12 @@
       for (i in employees) {
         if (employees.hasOwnProperty(i)) {
           var employee = employees[i];
-          $('#external-events [data-employee=\"' + i + '\"] .duration').html(employee);
+          var employeeDuration = $('#external-events [data-employee=\"' + i + '\"] .duration').html(employee);
+          if (employee > 40) {
+            employeeDuration.addClass('overload');
+          } else {
+            employeeDuration.removeClass('overload');
+          }
         }
       }
     }
@@ -212,7 +262,8 @@
       scrollTime: '00:00', // undo default 6am scrollTime
       weekends: false,
       eventTextColor: '#000',
-      titleFormat: '[Week] WW',
+      titleFormat: 'D-MMM',
+      firstDay: 1,
       header: {
         left: 'addProject',
         center: 'title',
@@ -243,34 +294,88 @@
           }
         }
       },
-      resourceRender: function (resource, elem) {
-        elem.on('click', function () {
-          if (confirm('Are you sure you want to delete ' + resource.title + '?')) {
-            var resourceId = resource.originalId;
-            var issueId = 0;
-            if (resource.parent != undefined) {
-              resourceId = resource.parent.originalId;
-              issueId = resource.originalId;
-            }
-            $.ajax({
-              url: '/planning/deleteresource',
-              data: {
-                id: resourceId,
-                issueId: issueId
-              },
-              success: function (data) {
-                calendar.fullCalendar('removeResource', resource);
-                console.log('removeResource', data);
-                calculateHours();
+      viewRender: function () {
+        calendar.fullCalendar('refetchResources');
+      },
+      resourceColumns: [
+        {
+          labelText: 'Projects',
+          field: 'title',
+          render: function(resource, elem) {
+            elem.find('.fc-expander-space').click({ resource: resource, elem: elem }, function(e) {
+              if ($(this).hasClass('fc-expander')) { // collapse
+                var icon = $(this).find('.fc-icon');
+                if (icon.hasClass('fc-icon-down-triangle')) {
+                  var childEvents = getChildEventsForResource(e.data.resource);
+                  for(var cei in childEvents) {
+                    if (childEvents.hasOwnProperty(cei)) {
+                      var childEvent = childEvents[cei];
+                      childEvent.originalResourceId = childEvent.resourceId;
+                      childEvent.resourceId = e.data.resource.id;
+                      childEvent.originalTitle = childEvent.title;
+                      var eventResource = calendar.fullCalendar('getResourceById', childEvent.originalResourceId);
+                      childEvent.title = childEvent.originalTitle + ' (' + eventResource.title + ')';
+                    }
+                  }
+                  setTimeout(function() { calendar.fullCalendar('rerenderEvents'); }, 20);
+                } else { //expand
+                  var events = calendar.fullCalendar('getResourceEvents', e.data.resource);
+                  for (var ei in events) {
+                    if (events.hasOwnProperty(ei)) {
+                      var event = events[ei];
+                      if (event.originalResourceId != undefined) {
+                        event.resourceId = event.originalResourceId;
+                        event.originalResourceId = undefined;
+                        event.title = event.originalTitle;
+                        event.originalTitle = undefined;
+                      }
+                    }
+                  }
+                  setTimeout(function () { calendar.fullCalendar('rerenderEvents'); }, 20);
+                }
               }
             });
           }
-        });
+        },
+        {
+          render: function(resource, elem) {
+            elem.on('click', function (e) {
+              e.stopPropagation();
+              if (confirm('Are you sure you want to delete ' + resource.title + '?')) {
+                var resourceId = resource.originalId;
+                var issueId = 0;
+                if (resource.parent != undefined) {
+                  resourceId = resource.parent.originalId;
+                  issueId = resource.originalId;
+                }
+                $.ajax({
+                  url: '/planning/deleteresource',
+                  data: {
+                    id: resourceId,
+                    issueId: issueId
+                  },
+                  success: function (data) {
+                    calendar.fullCalendar('removeResource', resource);
+                    console.log('removeResource', data);
+                    calculateHours();
+                  }
+                });
+              }
+            }).find('.fc-cell-text').html('<i class="fa fa-trash"></i>');
+          },
+          width: '30px'
+        }
+      ],
+      resourceRender: function (resource, elem) {
+      },
+      eventRender: function (event, element) {
+        element.attr('data-event-id', event._id);
       },
       eventAfterAllRender: function () {
         calculateHours();
+        calculateOverlap();
+        postRenderChildren();
       },
-      resourceLabelText: 'Projects',
       resources: function (callback) {
         var start = calendar.fullCalendar('getView').start.format('YYYY-MM-DD');
         var end = calendar.fullCalendar('getView').end.format('YYYY-MM-DD');
@@ -291,7 +396,7 @@
       events: '/planning/events',
       eventClick: function (event) {
         if (confirm('Delete?')) {
-          calendar.fullCalendar('removeEvents', [event.id]);
+          calendar.fullCalendar('removeEvents', [event._id]);
           deleteEvent(event);
         }
       },
@@ -303,6 +408,8 @@
         console.log('eventReceive', event);
       },
       eventDrop: function (event) { // called when an event (already on the calendar) is moved
+        event.originalResourceId = undefined;
+        event.title = event.originalTitle != undefined ? event.originalTitle : event.title;
         updateEvent(event);
         console.log('eventDrop', event);
       },

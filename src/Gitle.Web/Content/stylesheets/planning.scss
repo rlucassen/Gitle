@@ -10,11 +10,33 @@
   padding: 0.2em;
   margin: 0 0.2em;
   text-align: center;
+
   &:after {
     content: ' uur';
   }
+
+  &.overload {
+    text-shadow: 0px 0px 5px red;
+  }
 }
 
-.fc-event:after { 
+.fc-event:after {
   content: attr(data-color);
+}
+
+[data-event-id].overlap .fc-content .fc-title::after {
+  content: '';
+  font-family: FontAwesome;
+  color: gold;
+  text-shadow: 0px 0px 5px #000;
+  float: right;
+  margin-right: 0.5em;
+}
+
+[data-event-id].child .fc-content .fc-title::before {
+  content: '';
+  font-family: FontAwesome;
+  color: white;
+  text-shadow: 0px 0px 5px #000;
+  margin-right: 0.5em;
 }
