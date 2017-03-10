@@ -107,6 +107,7 @@
   <ItemGroup>
     <Compile Include="EmailService.cs" />
     <Compile Include="PdfExportService.cs" />
+    <Compile Include="ProjectNumberService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TemplateParserService.cs" />
   </ItemGroup>

@@ -8,14 +8,18 @@
     using Helpers;
     using Model.Enum;
     using Model.Helpers;
+    using Model.Interfaces.Service;
     using NHibernate;
     using NHibernate.Linq;
+    using ViewModel;
 
     public class ProjectController : SecureController
     {
+        private readonly IProjectNumberService _projectNumberService;
 
-        public ProjectController(ISessionFactory sessionFactory) : base(sessionFactory)
+        public ProjectController(ISessionFactory sessionFactory, IProjectNumberService projectNumberService) : base(sessionFactory)
         {
+            _projectNumberService = projectNumberService;
         }
 
         public void Index(string customerSlug, string applicationSlug)
@@ -51,6 +55,29 @@
             }
 
             PropertyBag.Add("items", projects);
+        }
+
+        [return: JSONReturnBinder]
+        public object List(int start, int length, int draw, string orderColumn, string orderDir)
+        {
+            var projects = session.Query<Project>();
+            var recordsTotal = projects.Count();
+
+            if (!string.IsNullOrEmpty(orderColumn))
+            {
+                projects = projects.OrderByProperty(orderColumn, orderDir != "asc");
+            }
+
+            var recordsFiltered = projects.Count();
+
+            if (length > 0)
+            {
+                projects = projects.Skip(start).Take(length);
+            }
+
+            var data = projects.Select(x => new ProjectListViewModel(x));
+
+            return new { draw, start, length, recordsTotal, recordsFiltered, data };
         }
 
         [MustHaveProject]
@@ -107,7 +134,7 @@
                 PropertyBag.Add("applicationId", session.Slug<Application>(applicationSlug));
             }
             PropertyBag.Add("types", EnumHelper.ToList(typeof(ProjectType)));
-            PropertyBag.Add("item", new Project());
+            PropertyBag.Add("item", new Project() {Number = _projectNumberService.GetNextProjectNumber()});
             RenderView("edit");
         }
 

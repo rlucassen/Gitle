@@ -24,6 +24,7 @@
   <link rel="stylesheet" href="/Content/javascript/vendor/jqueryui/jquery-ui.css">
   <link rel="stylesheet" href="/Content/javascript/vendor/fullcalendar/fullcalendar.css">
   <link rel="stylesheet" href="/Content/javascript/vendor/scheduler/scheduler.css">
+  <link rel="stylesheet" href="/Content/stylesheets/vendor/datatables.min.css">
 
   <script src="/Content/javascript/vendor/jquery.js"> </script>
   <script>jQuery.migrateMute = true;</script>
@@ -44,6 +45,7 @@
   <script src="/Content/javascript/vendor/fullcalendar/fullcalendar.js"></script>
   <script src="/Content/javascript/vendor/scheduler/scheduler.js"></script>
   <script src="/Content/javascript/vendor/jquery.autocomplete.js"> </script>
+  <script src="/Content/javascript/vendor/datatables.min.js"> </script>
 
 </head>
 <body class="<% if CurrentUser.IsAdmin: %>admin<% end %> scroll">

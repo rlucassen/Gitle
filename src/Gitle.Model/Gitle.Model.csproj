@@ -90,6 +90,7 @@
     <Compile Include="Helpers\ISessionExtension.cs" />
     <Compile Include="Interfaces\Model\ISlugger.cs" />
     <Compile Include="Interfaces\Service\IBookingQueryParserService.cs" />
+    <Compile Include="Interfaces\Service\IProjectNumberService.cs" />
     <Compile Include="Mapping\PlanningItemMap.cs" />
     <Compile Include="Mapping\PlanningResourceMap.cs" />
     <Compile Include="Mapping\ReportPresetMap.cs" />
