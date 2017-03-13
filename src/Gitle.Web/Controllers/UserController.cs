@@ -138,18 +138,26 @@
 
             var subscriptions = userProjects.Where(x => x.Subscribed).ToList();
 
-            var userProjectsToAdd = subscriptions.Where(subscription => item.Projects.All(project => project.Id != subscription.Id)).ToList();
             var userProjectsToDelete = item.Projects.Where(project => subscriptions.All(subscription => subscription.Id != project.Id)).ToList();
+
+            foreach (var subscription in subscriptions)
+            {
+                var userProject = item.Projects.FirstOrDefault(x => x.Id == subscription.Id);
+                if (userProject != null)
+                {
+                    userProject.Notifications = subscription.Notifications;
+                    userProject.OnlyOwnIssues = subscription.OnlyOwnIssues;
+                }
+                else
+                {
+                    item.Projects.Add(subscription);
+                }
+            }
 
             using (var tx = session.BeginTransaction())
             {
                 session.SaveOrUpdate(item);
 
-                foreach (var userProject in userProjectsToAdd)
-                {
-                    userProject.User = item;
-                    item.Projects.Add(userProject);
-                }
                 foreach (var userProject in userProjectsToDelete)
                 {
                     userProject.User = null;

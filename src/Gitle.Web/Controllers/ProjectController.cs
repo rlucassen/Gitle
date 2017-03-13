@@ -2,7 +2,6 @@
 {
     using System.Collections.Generic;
     using System.Linq;
-    using System.Web.UI.WebControls.Expressions;
     using Castle.MonoRail.Framework;
     using Model;
     using Helpers;
@@ -58,7 +57,7 @@
         }
 
         [return: JSONReturnBinder]
-        public object List(int start, int length, int draw, string orderColumn, string orderDir)
+        public object List(int start, int length, int draw, string orderColumn, string orderDir, bool closed)
         {
             var projects = session.Query<Project>();
             var recordsTotal = projects.Count();
@@ -66,6 +65,16 @@
             if (!string.IsNullOrEmpty(orderColumn))
             {
                 projects = projects.OrderByProperty(orderColumn, orderDir != "asc");
+            }
+
+            if (!closed)
+            {
+                projects = projects.Where(x => !x.Closed);
+            }
+
+            if (!CurrentUser.IsAdmin)
+            {
+                projects = projects.Where(p => p.Users.Any(x => x.User == CurrentUser));
             }
 
             var recordsFiltered = projects.Count();

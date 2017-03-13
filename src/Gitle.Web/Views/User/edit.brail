@@ -107,13 +107,22 @@
                     ${?project.Application.Customer.Name}
                   </td>
                   <td>
-                    <div class="inline-checkbox"><input type="checkbox" name="userProject[${count}].Subscribed" value="true" <% if selectedprojects.Contains(project): %>checked<% end %>/> Project is zichtbaar</div>
+                    <div class="inline-checkbox">
+                      <input type="checkbox" name="userProject[${count}].Subscribed" value="true" <% if selectedprojects.Contains(project): %>checked<% end %>/> Project is zichtbaar
+                      <input type="hidden" name="userProject[${count}].Subscribed" value="false"/>
+                    </div>
                   </td>
                   <td>
-                    <div class="inline-checkbox"><input type="checkbox" name="userProject[${count}].Notifications" value="true" <% if userProject.Notifications: %>checked<% end %>/> Notificaties ontvangen</div>
+                    <div class="inline-checkbox">
+                      <input type="checkbox" name="userProject[${count}].Notifications" value="true" <% if userProject.Notifications: %>checked<% end %>/> Notificaties ontvangen
+                       <input type="hidden" name="userProject[${count}].Notifications" value="false"/>
+                   </div>
                   </td>
                   <td>
-                    <div class="inline-checkbox"><input type="checkbox" name="userProject[${count}].OnlyOwnIssues" value="true" <% if userProject.OnlyOwnIssues: %>checked<% end %>/> Alleen van zelf aangemaakte tickets</div>
+                    <div class="inline-checkbox">
+                      <input type="checkbox" name="userProject[${count}].OnlyOwnIssues" value="true" <% if userProject.OnlyOwnIssues: %>checked<% end %>/> Alleen van zelf aangemaakte tickets
+                      <input type="hidden" name="userProject[${count}].OnlyOwnIssues" value="false"/>
+                    </div>
                   </td>
                 </tr>
                 <% count++ %>

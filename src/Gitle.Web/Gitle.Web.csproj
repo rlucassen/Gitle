@@ -326,6 +326,32 @@
     <Content Include="Content\stylesheets\vendor\jquery-ui.min.css" />
     <Content Include="Content\stylesheets\vendor\jquery.autocomplete.css" />
     <Content Include="Content\stylesheets\vendor\normalize.css" />
+    <Content Include="Content\vendor\DataTables-1.10.13\css\dataTables.bootstrap.css" />
+    <Content Include="Content\vendor\DataTables-1.10.13\css\dataTables.bootstrap.min.css" />
+    <Content Include="Content\vendor\DataTables-1.10.13\css\dataTables.foundation.css" />
+    <Content Include="Content\vendor\DataTables-1.10.13\css\dataTables.foundation.min.css" />
+    <Content Include="Content\vendor\DataTables-1.10.13\css\dataTables.jqueryui.css" />
+    <Content Include="Content\vendor\DataTables-1.10.13\css\dataTables.jqueryui.min.css" />
+    <Content Include="Content\vendor\DataTables-1.10.13\css\dataTables.semanticui.css" />
+    <Content Include="Content\vendor\DataTables-1.10.13\css\dataTables.semanticui.min.css" />
+    <Content Include="Content\vendor\DataTables-1.10.13\css\jquery.dataTables.css" />
+    <Content Include="Content\vendor\DataTables-1.10.13\css\jquery.dataTables.min.css" />
+    <Content Include="Content\vendor\DataTables-1.10.13\css\jquery.dataTables_themeroller.css" />
+    <Content Include="Content\vendor\DataTables-1.10.13\images\sort_asc.png" />
+    <Content Include="Content\vendor\DataTables-1.10.13\images\sort_asc_disabled.png" />
+    <Content Include="Content\vendor\DataTables-1.10.13\images\sort_both.png" />
+    <Content Include="Content\vendor\DataTables-1.10.13\images\sort_desc.png" />
+    <Content Include="Content\vendor\DataTables-1.10.13\images\sort_desc_disabled.png" />
+    <Content Include="Content\vendor\DataTables-1.10.13\js\dataTables.bootstrap.js" />
+    <Content Include="Content\vendor\DataTables-1.10.13\js\dataTables.bootstrap.min.js" />
+    <Content Include="Content\vendor\DataTables-1.10.13\js\dataTables.foundation.js" />
+    <Content Include="Content\vendor\DataTables-1.10.13\js\dataTables.foundation.min.js" />
+    <Content Include="Content\vendor\DataTables-1.10.13\js\dataTables.jqueryui.js" />
+    <Content Include="Content\vendor\DataTables-1.10.13\js\dataTables.jqueryui.min.js" />
+    <Content Include="Content\vendor\DataTables-1.10.13\js\dataTables.semanticui.js" />
+    <Content Include="Content\vendor\DataTables-1.10.13\js\dataTables.semanticui.min.js" />
+    <Content Include="Content\vendor\DataTables-1.10.13\js\jquery.dataTables.js" />
+    <Content Include="Content\vendor\DataTables-1.10.13\js\jquery.dataTables.min.js" />
     <Content Include="Global.asax" />
   </ItemGroup>
   <ItemGroup>
@@ -432,6 +458,10 @@
       <HintPath>..\packages\FluentNHibernate.2.0.3.0\lib\net40\FluentNHibernate.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Gitle.ViewModel, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Gitle.ViewModel\bin\Debug\Gitle.ViewModel.dll</HintPath>
+    </Reference>
     <Reference Include="Iesi.Collections, Version=4.0.0.0, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <HintPath>..\packages\Iesi.Collections.4.0.1.4000\lib\net40\Iesi.Collections.dll</HintPath>
       <Private>True</Private>
@@ -469,7 +499,7 @@
   <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\Gitle.Clients.Freckle\Gitle.Clients.Freckle.csproj">
-      <Project>{79178042-4CA8-4F5C-ABAB-8F0928854322}</Project>
+      <Project>{79178042-4ca8-4f5c-abab-8f0928854322}</Project>
       <Name>Gitle.Clients.Freckle</Name>
     </ProjectReference>
     <ProjectReference Include="..\Gitle.Clients.GitHub\Gitle.Clients.GitHub.csproj">
@@ -481,16 +511,12 @@
       <Name>Gitle.Localization</Name>
     </ProjectReference>
     <ProjectReference Include="..\Gitle.Model\Gitle.Model.csproj">
-      <Project>{10247283-4DAB-4008-9E68-FEE82305A6FC}</Project>
+      <Project>{10247283-4dab-4008-9e68-fee82305a6fc}</Project>
       <Name>Gitle.Model</Name>
     </ProjectReference>
     <ProjectReference Include="..\Gitle.Service\Gitle.Service.csproj">
       <Project>{83DEC67C-B367-4EB5-873F-AC4BDA8E3281}</Project>
       <Name>Gitle.Service</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Gitle.ViewModel\Gitle.ViewModel.csproj">
-      <Project>{8fb7e4a1-2d5b-4ef7-b44e-b643e5912d9f}</Project>
-      <Name>Gitle.ViewModel</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
