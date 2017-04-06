@@ -835,6 +835,7 @@ table {
   border-top: 1px solid #ccc;
 }
 
+
 .issue {
   padding: 1em 1em 0.2em;
   border-bottom: 1px solid #ccc;
@@ -850,6 +851,22 @@ table {
     &:hover {
       opacity: 1;
     }
+  }
+
+  @keyframes blink {
+    0% {
+      background-color: none;
+    }
+    25% {
+      background-color: #008CBA;
+    }
+    100% {
+      background-color: none;
+    }
+
+  }
+  &.blink {
+    animation: blink 1.5s;
   }
 
   &:hover {
@@ -1331,3 +1348,17 @@ input[type=checkbox].inline {
   margin-bottom: 0.25rem !important;
 } 
 
+#back-to-top-button {
+  background-color: #008CBA;
+  position: fixed;
+  top: 10%;
+  right: 5%;
+  z-index: 100;
+  border-radius: 10px;
+  box-shadow: 3px 3px 6px 1px rgba(0, 0, 0, 0.25);
+  i{
+    padding: 5px 6px 3px 5px;
+    font-size: 3em;
+    color: white;
+  }
+}

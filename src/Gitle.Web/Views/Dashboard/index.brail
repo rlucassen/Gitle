@@ -22,7 +22,13 @@
           <td>
             <div class="progress progress-border progress-status">
               <% if project.BillableHours > project.TotalEstimateAllTickets() and project.TotalEstimateAllTickets() != 0: %>
+              <% if project.Progress() < 125: %>
               <span class="meter overbudget" style="width: ${project.Progress().ToString().Replace(",", "." )}% "></span>
+              <% else: %>
+              <span class="meter overbudget" style="width: 125% ">
+                <i class="fa fa-exclamation-circle" style="font-size:1.7em; margin-right:2px"></i>
+              </span>
+              <% end %>
               <% elif project.TotalEstimateAllTickets() == 0: %>
               <span class="meter noestimate" style="width: 100%"></span>
               <% else: %>

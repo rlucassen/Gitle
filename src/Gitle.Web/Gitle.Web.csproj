@@ -599,7 +599,9 @@
     <None Include="Views\Project\edit.brail">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Views\Project\index.brail" />
+    <None Include="Views\Project\index.brail">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Views\Authentication\index.brail" />
     <None Include="Views\Authentication\forgotpassword.brail" />
     <None Include="Views\Layouts\default.brail" />

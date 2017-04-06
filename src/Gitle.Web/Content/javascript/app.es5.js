@@ -60,5 +60,42 @@ $(function () {
 
   // Focus on .focus elements
   $('form .focus[value=""]').focus();
+
+  // Back to top button
+  $("#back-to-top-button").hide();
+
+  $(function () {
+    $(window).scroll(function () {
+      if ($(this).scrollTop() > 150) {
+        $('#back-to-top-button').fadeIn(200);
+      } else {
+        $('#back-to-top-button').fadeOut(200);
+      }
+    });
+
+    $('#back-to-top-button a').click(function (e) {
+      e.preventDefault();
+      $('body,html').animate({
+        scrollTop: 0
+      }, 500);
+      $("#jump-to-ticket").focus();
+      return false;
+    });
+  });
+
+  // Jump to ticket
+  $("#jump-to-ticket").on('keyup', function (e) {
+    if (e.keyCode == 13) {
+      var target = $('div[data-issueid=' + $("#jump-to-ticket").val() + ']');
+      if (target != null) {
+        target.removeClass("blink");
+        $('html, body').animate({
+          scrollTop: target.offset().top
+        }, 500);
+        target.addClass("blink");
+        $("#jump-to-ticket").val("");
+      }
+    }
+  });
 });
 
