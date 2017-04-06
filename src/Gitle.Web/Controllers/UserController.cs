@@ -150,6 +150,8 @@
                 }
                 else
                 {
+                    subscription.Project = session.Get<Project>(subscription.Project.Id);
+                    subscription.User = item;
                     item.Projects.Add(subscription);
                 }
             }

@@ -7,6 +7,7 @@
     using System.Linq;
     using System.Text;
     using System.Text.RegularExpressions;
+    using System.Web;
     using Castle.MonoRail.Framework;
     using Castle.MonoRail.Framework.Routing;
     using Clients.Freckle.Interfaces;
@@ -38,6 +39,11 @@
         public void Index(string projectSlug, string query)
         {
             var project = session.SlugOrDefault<Project>(projectSlug);
+
+            if (project == null)
+            {
+                throw new HttpException(404, "Dit project bestaat niet (meer)");
+            }
 
             var parser = new IssueQueryParser(sessionFactory, query, project, CurrentUser);
 

@@ -2,6 +2,6 @@
 {
     public interface IProjectNumberService
     {
-        int GetNextProjectNumber();
+        (int Initial, int Service, int Internal) GetNextProjectNumbers();
     }
 }

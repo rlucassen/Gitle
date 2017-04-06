@@ -1,11 +1,5 @@
 [
   {
-    "outputFileName": "Content/javascript/app.js",
-    "inputFiles": [
-      "Content/javascript/app.js"
-    ]
-  },
-  {
     "outputFileName": "Content/stylesheets/vendor/bundle.css",
     "inputFiles": [
       "Content/stylesheets/vendor/foundation.css",
@@ -30,6 +24,12 @@
       "Content/javascript/auxilium/auxilium.upload.js",
       "Content/javascript/auxilium/auxilium.foundationhelper.js",
       "Content/javascript/auxilium/auxilium.nestedtable.js"
+    ]
+  },
+  {
+    "outputFileName": "Content/javascript/app.min.js",
+    "inputFiles": [
+      "Content/javascript/app.js"
     ]
   }
 ]

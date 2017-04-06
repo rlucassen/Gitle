@@ -1,26 +1,22 @@
-[
+﻿[
   {
     "outputFile": "Content/stylesheets/app.css",
-    "inputFile": "Content/stylesheets/app.scss",
-    "sourceMap": false
+    "inputFile": "Content/stylesheets/app.scss"
   },
   {
     "outputFile": "Content/stylesheets/planning.css",
     "inputFile": "Content/stylesheets/planning.scss"
   },
   {
-    "outputFile": "Content/javascript/app.es5.js",
-    "inputFile": "Content/javascript/app.js",
-    "sourceMap": false
-  },
-  {
     "outputFile": "Content/javascript/auxilium.es5.js",
-    "inputFile": "Content/javascript/auxilium.js",
-    "sourceMap": false
+    "inputFile": "Content/javascript/auxilium.js"
   },
   {
     "outputFile": "Content/javascript/gitle.es5.js",
-    "inputFile": "Content/javascript/gitle.js",
-    "sourceMap": false
+    "inputFile": "Content/javascript/gitle.js"
+  },
+  {
+    "outputFile": "Content/javascript/app.es5.js",
+    "inputFile": "Content/javascript/app.js"
   }
 ]

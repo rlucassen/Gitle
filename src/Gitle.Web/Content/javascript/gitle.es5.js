@@ -108,6 +108,32 @@ $.fn.startEndDatePreset = function () {
   });
 };
 
+$.fn.initProjectTypeNumbers = function () {
+  return this.change(function () {
+    var numberField = $($(this).data('numberfield'));
+
+    var value = $(this).val();
+
+    switch (value) {
+      case "1":
+        numberField.val(numberField.data('initial-number'));
+        break;
+      case "2":
+      case "4":
+        numberField.val(numberField.data('service-number'));
+        break;
+      case "3":
+        numberField.val(numberField.data('internal-number'));
+        break;
+      default:
+        numberField.val('');
+    }
+
+    $($(this).data('insert-startdate-to')).val($(this).data('insert-startdate'));
+    $($(this).data('insert-enddate-to')).val($(this).data('insert-enddate'));
+  });
+};
+
 $(function () {
   var activeRow = undefined;
   $('.booking-edit').on('click', function (e) {
