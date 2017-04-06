@@ -2,7 +2,7 @@
  * input element that needs to parse its value into something of a readable time, writes the number of minutes to [data-minutes-field]
  */
 $.fn.bookingParser = function () {
-  return this.change(function() {
+  return this.change(function () {
     var bookingInput = $($(this).data('minutes-field'));
     var value = $(this).val().replace(',', '.');
 
@@ -47,7 +47,7 @@ $.fn.bookingParser = function () {
 /*
  * Initializes the element with Gitle search functionality
  */
-$.fn.gitleSearch = function() {
+$.fn.gitleSearch = function () {
   return this.each(function () {
     var searchField = $(this);
     searchField.autocomplete({
@@ -70,17 +70,17 @@ $.fn.gitleSearch = function() {
 /*
  * Initializes the textarea as a gitle live comments textarea
  */
-$.fn.liveComments = function() {
-  return this.each(function() {
+$.fn.liveComments = function () {
+  return this.each(function () {
     var url = $(this).data('live-comments');
     var textarea = $(this);
     var staticComments = $('<div>').addClass('comments').html(marked(textarea.val()));
     var container = $('<div>').addClass('comments-container').insertAfter(textarea).append(staticComments).append(textarea);
-    staticComments.click(function() {
+    staticComments.click(function () {
       container.addClass('edit');
       textarea.focus();
     });
-    textarea.blur(function() {
+    textarea.blur(function () {
       $.ajax({
         url: url,
         method: 'POST',
@@ -88,11 +88,11 @@ $.fn.liveComments = function() {
         data: {
           comment: textarea.val()
         },
-        success: function(data) {
+        success: function (data) {
           staticComments.html(marked(data));
           container.removeClass('edit');
         },
-        error: function() {
+        error: function () {
           console.log('niet opgeslagen');
         }
       });
@@ -100,9 +100,38 @@ $.fn.liveComments = function() {
   });
 };
 
-$.fn.startEndDatePreset = function() {
+$.fn.startEndDatePreset = function () {
   return this.click(function () {
     $($(this).data('insert-startdate-to')).val($(this).data('insert-startdate'));
     $($(this).data('insert-enddate-to')).val($(this).data('insert-enddate'));
   })
 }
+
+
+
+$.fn.initProjectTypeNumbers = function () {
+  return this.change(function () {
+    var numberField = $($(this).data('numberfield'));
+
+    var value = $(this).val();
+
+    switch (value) {
+      case "1":
+        numberField.val(numberField.data('initial-number'));
+        break;
+      case "2":
+      case "4":
+        numberField.val(numberField.data('service-number'));
+        break;
+      case "3":
+        numberField.val(numberField.data('internal-number'));
+        break;
+      default:
+          numberField.val('');
+    }
+
+    $($(this).data('insert-startdate-to')).val($(this).data('insert-startdate'));
+    $($(this).data('insert-enddate-to')).val($(this).data('insert-enddate'));
+  });
+}
+

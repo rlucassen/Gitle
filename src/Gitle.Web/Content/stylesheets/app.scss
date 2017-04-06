@@ -1329,5 +1329,35 @@ input[type=checkbox].inline {
   margin-bottom: 0.25rem;
   }
   margin-bottom: 0.25rem !important;
-} 
+}
 
+.dataTables_wrapper {
+  input, select {
+    width: auto;
+    display: inline;
+  }
+}
+
+select.hide-disabled {
+  option[disabled]{
+    display: none;
+  }
+}
+
+@media only screen and (min-device-width : 320px) and (max-device-width : 568px) {
+
+  .booking-row {
+    border-top: 1px solid #ccc;
+    padding-bottom: 0.5em;
+
+    .booking-buttons {
+      padding-right: 0.9375rem !important;
+      display: block;
+    }
+  }
+
+  .supertiny {
+    padding: 0.5em;
+  }
+
+}

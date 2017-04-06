@@ -26,40 +26,32 @@
             if (CurrentUser.Projects.Count == 1 && !CurrentUser.IsAdmin)
                 RedirectUsingNamedRoute("issues", new {projectSlug = CurrentUser.Projects.First().Project.Slug});
 
-            var projects = session.Query<Project>().Where(x => x.IsActive);
-
-            if (!CurrentUser.IsDanielle)
+            if (!string.IsNullOrEmpty(applicationSlug))
             {
-                projects = projects.Where(x => x.Type != ProjectType.Administration);
+                var application = session.Slug<Application>(applicationSlug);
+                PropertyBag.Add("application", application);
             }
-            
-            if (!CurrentUser.IsAdmin)
+            else if (!string.IsNullOrEmpty(customerSlug))
             {
-                projects = projects.Where(p => p.Users.Any(x => x.User == CurrentUser));
-            }
-            else
-            {
-                if (!string.IsNullOrEmpty(applicationSlug))
-                {
-                    var application = session.Slug<Application>(applicationSlug);
-                    PropertyBag.Add("application", application);
-                    projects = projects.Where(x => x.Application == application);
-                }
-                else if (!string.IsNullOrEmpty(customerSlug))
-                {
-                    var customer = session.Slug<Customer>(customerSlug);
-                    PropertyBag.Add("customer", customer);
-                    projects = projects.Where(x => x.Application != null && x.Application.Customer == customer);
-                }
+                var customer = session.Slug<Customer>(customerSlug);
+                PropertyBag.Add("customer", customer);
             }
 
-            PropertyBag.Add("items", projects);
+            var allCustomers = session.Query<Customer>().Where(x => x.IsActive && x.Projects.Any(p => p.IsActive) || x.Applications.SelectMany(a => a.Projects).Any(a => a.IsActive));
+            PropertyBag.Add("allCustomers", allCustomers.OrderBy(x => x.Name).ToList());
+
+            var allApplications = session.Query<Application>().Where(x => x.IsActive);
+            PropertyBag.Add("allApplications", allApplications.OrderBy(x => x.Name).ToList());
+
+            var allTypes = EnumHelper.ToDictionary(typeof(ProjectType)).Where(x => x.Key != 0);
+            PropertyBag.Add("allTypes", allTypes);
+
         }
 
         [return: JSONReturnBinder]
-        public object List(int start, int length, int draw, string orderColumn, string orderDir, bool closed)
+        public object List(int start, int length, int draw, string orderColumn, string orderDir,string search, long customer, long application, ProjectType type, bool closed)
         {
-            var projects = session.Query<Project>();
+            var projects = session.Query<Project>().Where(x => x.IsActive);
             var recordsTotal = projects.Count();
 
             if (!string.IsNullOrEmpty(orderColumn))
@@ -72,6 +64,30 @@
                 projects = projects.Where(x => !x.Closed);
             }
 
+            if (customer > 0)
+            {
+                projects = projects.Where(x => x.Application.Customer.Id == customer || x.Customer.Id == customer);
+            }
+
+            if (application > 0)
+            {
+                projects = projects.Where(x => x.Application.Id == application);
+            }
+
+            if (type != ProjectType.Unknown)
+            {
+                projects = projects.Where(x => x.Type == type);
+            }
+
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                projects = projects.Where(x => x.Name.Contains(search) || x.Number.ToString().Contains(search));
+            }
+
+            if (!CurrentUser.IsDanielle)
+            {
+                projects = projects.Where(x => x.Type != ProjectType.Administration);
+            }
             if (!CurrentUser.IsAdmin)
             {
                 projects = projects.Where(p => p.Users.Any(x => x.User == CurrentUser));
@@ -143,7 +159,8 @@
                 PropertyBag.Add("applicationId", session.Slug<Application>(applicationSlug));
             }
             PropertyBag.Add("types", EnumHelper.ToList(typeof(ProjectType)));
-            PropertyBag.Add("item", new Project() {Number = _projectNumberService.GetNextProjectNumber()});
+            PropertyBag.Add("item", new Project());
+            PropertyBag.Add("newNumbers", _projectNumberService.GetNextProjectNumbers());
             RenderView("edit");
         }
 
@@ -157,6 +174,7 @@
             PropertyBag.Add("types", EnumHelper.ToList(typeof(ProjectType)));
             PropertyBag.Add("item", project);
             PropertyBag.Add("customerId", project.Customer?.Id);
+            PropertyBag.Add("newNumbers", _projectNumberService.GetNextProjectNumbers());
         }
 
         [Admin]

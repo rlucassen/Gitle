@@ -10,14 +10,35 @@
     <a class="button" href="/project/new">Nieuw</a>
     <% end %>
     <% end %>
-    <input type="checkbox" id="closedProjects"/> Laat gesloten projecten zien
+    <% if CurrentUser.IsAdmin or CurrentUser.IsDanielle: %>
+    <div class="panel">
+      <div class="row">
+        <div class="large-0 small-12 columns">
+          ${Form.Select("customer", allCustomers, {"text": "Name", "value": "Id", "class": "no-margin", "firstoption": "Kies een klant..."})}
+        </div>
+        <div class="large-0 small-12 columns">
+          <select id="application" name="application" class="hide-disabled no-margin">
+            <option value="0">Kies een applicatie...</option>
+            <% for item in allApplications: %>
+            <% if IsDefined("application") and item == application: %>
+            <option value="${item.Id}" data-customer="${item.Customer.Id}" selected>${item.Name}</option>
+            <% else: %>
+            <option value="${item.Id}" data-customer="${item.Customer.Id}">${item.Name}</option>
+            <% end %>
+            <% end %>
+          </select>
+        </div>
+        <div class="large-0 small-12 columns">
+          ${Form.Select("type", allTypes, {"text": "Value", "value": "Key", "class": "no-margin", "firstoption": "Kies een projecttype..."})}
+        </div>
+        <div class="large-0 small-12 columns">
+          <input type="checkbox" id="closedProjects"/> Laat gesloten projecten zien
+        </div>
+
+      </div>
+    </div>
+    <% end %>
     <table id="project-table" class="small-blocks">
-      <thead>
-        <tr>
-        </tr>
-      </thead>
-      <tbody>
-      </tbody>
     </table>
   </div>
 </div>
@@ -38,22 +59,27 @@
     var table = $('#project-table').DataTable({
       pageLength: 50,
       serverSide: true,
-      dom: 'lrtip',
-
+      autoWidth: false,
       ajax: {
         url: '/project/list',
         type: 'POSt',
         data: function (d) {
-          d.search = [];
+          d.search = d.search.value;
           for (var column in d.columns) {
             if (d.columns.hasOwnProperty(column)) {
               delete d.columns[column].search;
             }
           }
+          d.customer = $('#customer').val();
+          d.application = $('#application').val();
+          d.type = $('#type').val();
           d.closed = $('#closedProjects').is(':checked');
           d.orderColumn = d.columns[d.order[0].column].name;
           d.orderDir = d.order[0].dir;
         }
+      },
+      initComplete(settins, json) {
+        $(document).foundation('reflow');
       },
       columns: [
         { data: 'Name', title: 'Project', name: 'Name', render: function(data, type, full, meta) {
@@ -86,7 +112,7 @@
 
             if (isDanielle) {
               html +=
-                '<li><a href="/project' + data + '/issues" class="button tiny split no-margin">Takenlijst <span data-dropdown="issuedrop-' + full.Id + '"></span></a><ul id="issuedrop-' + full.Id + '" class="f-dropdown" data-dropdown-content><li><a href="/project/' + data +'/issue/exportcsv">CSV Export</a></li></ul></li>';
+                '<li><a href="/project/' + data + '/issues" class="button tiny split no-margin">Takenlijst <span data-dropdown="issuedrop-' + full.Id + '"></span></a><ul id="issuedrop-' + full.Id + '" class="f-dropdown" data-dropdown-content><li><a href="/project/' + data +'/issue/exportcsv">CSV Export</a></li></ul></li>';
             } else {
               html += '<li><a class="button tiny no-margin" href="/project/' + data+'/issues">Takenlijst</a></li>';
             }
@@ -105,9 +131,25 @@
 
     });
 
-    $('#closedProjects').change(function () {
+    $('#closedProjects, #customer, #application, #type').change(function () {
       table.ajax.reload();
     });
+
+    $('#customer').change(function () {
+      $('#application').val('0');
+      if ($(this).val() != '0') {
+        $('#application [data-customer][data-customer!="' + $(this).val() + '"]').attr('disabled', true);
+        $('#application [data-customer][data-customer="' + $(this).val() + '"]').removeAttr('disabled');
+        var visibleOptions = $('#application option[data-customer]:not([disabled])');
+        if (visibleOptions.length == 1) {
+          $('#application').val(visibleOptions.attr('value'));
+        }
+      } else {
+        $('#application option').removeAttr('disabled');
+      }
+    });
+
+
 
   })
 </script>

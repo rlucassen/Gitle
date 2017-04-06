@@ -11,7 +11,7 @@
             Name = project.Name;
             Number = project.Number;
             Application = project.Application?.Name;
-            Customer = project.Customer?.Name;
+            Customer = project.Application?.Customer?.Name ?? project.Customer?.Name;
             Type = project.TypeString;
             Closed = project.Closed;
         }

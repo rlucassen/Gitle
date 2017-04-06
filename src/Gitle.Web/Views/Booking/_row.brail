@@ -1,11 +1,11 @@
 ﻿<div class="row booking-row-edit">
   <form id="booking" action="/booking/save" method="POST">
     <input type="hidden" name="id" value="${booking.Id}" />
-    <div class="large-1 columns no-padding">
+    <div class="large-1 small-2 columns no-padding">
       <input type="hidden" name="booking.Minutes" id="booking_Minutes" value="${booking.Time}" />
       <input type="text" class="booking-minutes-edit booking-edit-field booking-parser" data-minutes-field="#booking_Minutes" value="${booking.Time}">
     </div>
-    <div class="large-3 columns no-padding">
+    <div class="large-3 small-10 columns no-padding">
       <input type="hidden" name="projectId" class="booking_Project_Id" value="${booking.Project.Id}" />
       <input type="text" data-suggestion="${?suggestion.data}" class="booking-project-edit booking-edit-field project-chooser" value="${booking.Project.Name}">
     </div>

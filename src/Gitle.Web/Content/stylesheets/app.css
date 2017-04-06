@@ -842,3 +842,20 @@ input[type=checkbox].inline {
   .user-booking-total h5 {
     margin-bottom: 0.25rem; }
 
+.dataTables_wrapper input, .dataTables_wrapper select {
+  width: auto;
+  display: inline; }
+
+select.hide-disabled option[disabled] {
+  display: none; }
+
+@media only screen and (min-device-width: 320px) and (max-device-width: 568px) {
+  .booking-row {
+    border-top: 1px solid #ccc;
+    padding-bottom: 0.5em; }
+    .booking-row .booking-buttons {
+      padding-right: 0.9375rem !important;
+      display: block; }
+  .supertiny {
+    padding: 0.5em; } }
+

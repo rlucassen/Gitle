@@ -50,6 +50,7 @@ $(function () {
   $('#search').gitleSearch();
   $('[data-live-comments]').liveComments();
   $('[data-insert-startdate][data-insert-enddate]').startEndDatePreset();
+  $('[data-numberfield]').initProjectTypeNumbers();
 
   /*
    * Joyride start button
