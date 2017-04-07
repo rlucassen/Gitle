@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using Castle.MonoRail.Framework;
+    using Helpers;
     using Model;
     using Model.Helpers;
     using NHibernate;
@@ -30,6 +31,7 @@
         {
             var employees = session.Query<User>().Where(x => x.IsActive && x.IsAdmin && x.Color != null);
             PropertyBag.Add("employees", employees);
+            PropertyBag.Add("comments", session.Query<PlanningComment>().Where(x => x.IsActive));
         }
 
         [return: JSONReturnBinder]
@@ -157,6 +159,23 @@
             }
 
             RenderText("ok");
+        }
+
+        [Admin]
+        public void Comment(string slug, string comment)
+        {
+            var item = session.SlugOrDefault<PlanningComment>(slug);
+
+            item.Comment = comment;
+            item.User = CurrentUser;
+
+            using (var tx = session.BeginTransaction())
+            {
+                session.SaveOrUpdate(item);
+                tx.Commit();
+            }
+
+            RenderText(comment);
         }
     }
 

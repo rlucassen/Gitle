@@ -34,6 +34,14 @@
   </div>
 </div>
 
+<div class="row collapse">
+  <% for comment in comments: %>
+  <div class="large-4 columns">
+    <textarea data-live-comments="/planning/${comment.Slug}/comment">${comment.Comment}</textarea>
+  </div>
+  <% end %>
+</div>
+
 <div id="addResource" class="reveal-modal" data-reveal>
   <form action="#" data-abide>
     <h2>Project toevoegen</h2>
