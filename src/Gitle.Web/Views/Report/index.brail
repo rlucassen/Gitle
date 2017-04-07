@@ -254,7 +254,7 @@
             <span class="booking-comment">${booking.Comment}</span>
             <% end %>
             <% for invoice in booking.Invoices: %>
-            <% if not invoice.IsDefinitive: %>
+            <% if invoice.IsDefinitive: %>
             <span class="label round right" title="${invoice.Title}">${invoice.Number}</span>
             <% end %>
             <% end %>
