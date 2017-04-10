@@ -1,20 +1,5 @@
 [
   {
-    "outputFileName": "Content/javascript/app.js",
-    "inputFiles": [
-      "Content/javascript/app.js"
-    ]
-  },
-  {
-    "outputFileName": "Content/stylesheets/vendor/bundle.css",
-    "inputFiles": [
-      "Content/stylesheets/vendor/foundation.css",
-      "Content/stylesheets/vendor/foundation.min.css",
-      "Content/stylesheets/vendor/jquery.autocomplete.css",
-      "Content/stylesheets/vendor/normalize.css"
-    ]
-  },
-  {
     "outputFileName": "Content/javascript/gitle.js",
     "inputFiles": [
       "Content/javascript/gitle/gitle.functions.js",
@@ -30,6 +15,12 @@
       "Content/javascript/auxilium/auxilium.upload.js",
       "Content/javascript/auxilium/auxilium.foundationhelper.js",
       "Content/javascript/auxilium/auxilium.nestedtable.js"
+    ]
+  },
+  {
+    "outputFileName": "Content/javascript/app.min.js",
+    "inputFiles": [
+      "Content/javascript/app.js"
     ]
   }
 ]

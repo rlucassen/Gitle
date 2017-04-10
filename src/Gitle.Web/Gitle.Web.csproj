@@ -51,20 +51,8 @@
   <ItemGroup>
     <Content Include="Content\images\chosen-sprite%402x.png" />
     <Content Include="Content\images\chosen-sprite.png" />
-    <Content Include="Content\javascript\app.es5.js">
-      <DependentUpon>app.js</DependentUpon>
-    </Content>
-    <Content Include="Content\javascript\app.es5.min.js">
-      <DependentUpon>app.es5.js</DependentUpon>
-    </Content>
     <Content Include="Content\javascript\app.min.js">
       <DependentUpon>app.js</DependentUpon>
-    </Content>
-    <Content Include="Content\javascript\auxilium.es5.js">
-      <DependentUpon>auxilium.js</DependentUpon>
-    </Content>
-    <Content Include="Content\javascript\auxilium.es5.min.js">
-      <DependentUpon>auxilium.es5.js</DependentUpon>
     </Content>
     <Content Include="Content\javascript\auxilium.js" />
     <Content Include="Content\javascript\auxilium.min.js">
@@ -72,30 +60,16 @@
     </Content>
     <Content Include="Content\javascript\auxilium\auxilium.functions.js" />
     <Content Include="Content\javascript\auxilium\auxilium.upload.js" />
-    <Content Include="Content\javascript\bundles\auxilium.js" />
-    <Content Include="Content\javascript\bundles\auxilium.min.js">
-      <DependentUpon>auxilium.js</DependentUpon>
-    </Content>
     <Content Include="Content\javascript\auxilium\auxilium.nestedtable.js" />
-    <Content Include="Content\javascript\gitle.es5.js">
+    <Content Include="Content\javascript\gitle.min.js">
       <DependentUpon>gitle.js</DependentUpon>
-    </Content>
-    <Content Include="Content\javascript\gitle.es5.min.js">
-      <DependentUpon>gitle.es5.js</DependentUpon>
     </Content>
     <Content Include="Content\javascript\gitle\gitle.booking.js" />
     <Content Include="Content\javascript\auxilium\auxilium.foundationhelper.js" />
     <Content Include="Content\javascript\gitle\gitle.functions.js" />
     <Content Include="Content\javascript\gitle\gitle.issues.js" />
     <Content Include="Content\javascript\gitle\gitle.invoice.js" />
-    <Content Include="Content\javascript\bundles\gitle.js" />
-    <Content Include="Content\javascript\bundles\gitle.min.js">
-      <DependentUpon>gitle.js</DependentUpon>
-    </Content>
     <Content Include="Content\javascript\gitle.js" />
-    <Content Include="Content\javascript\gitle.min.js">
-      <DependentUpon>gitle.js</DependentUpon>
-    </Content>
     <Content Include="Content\javascript\vendor\datatables.js" />
     <Content Include="Content\javascript\vendor\datatables.min.js" />
     <Content Include="Content\javascript\vendor\fastclick.js" />
@@ -272,10 +246,6 @@
     </Content>
     <Content Include="Content\stylesheets\planning.min.css">
       <DependentUpon>planning.css</DependentUpon>
-    </Content>
-    <Content Include="Content\stylesheets\vendor\bundle.css" />
-    <Content Include="Content\stylesheets\vendor\bundle.min.css">
-      <DependentUpon>bundle.css</DependentUpon>
     </Content>
     <Content Include="Content\stylesheets\vendor\datatables.css" />
     <Content Include="Content\stylesheets\vendor\datatables.min.css" />

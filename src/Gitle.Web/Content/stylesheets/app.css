@@ -564,16 +564,6 @@ table {
     opacity: 0.2; }
     .issue.Archived:hover {
       opacity: 1; }
-
-@keyframes blink {
-  0% {
-    background-color: none; }
-  25% {
-    background-color: #008CBA; }
-  100% {
-    background-color: none; } }
-  .issue.blink {
-    animation: blink 1.5s; }
   .issue:hover {
     background-color: #efefef; }
   .issue .issuestate .number {
@@ -851,34 +841,4 @@ input[type=checkbox].inline {
   margin-bottom: 0.25rem !important; }
   .user-booking-total h5 {
     margin-bottom: 0.25rem; }
-
-.dataTables_wrapper input, .dataTables_wrapper select {
-  width: auto;
-  display: inline; }
-
-select.hide-disabled option[disabled] {
-  display: none; }
-
-@media only screen and (min-device-width: 320px) and (max-device-width: 568px) {
-  .booking-row {
-    border-top: 1px solid #ccc;
-    padding-bottom: 0.5em; }
-    .booking-row .booking-buttons {
-      padding-right: 0.9375rem !important;
-      display: block; }
-  .supertiny {
-    padding: 0.5em; } }
-
-#back-to-top-button {
-  background-color: #008CBA;
-  position: fixed;
-  top: 10%;
-  right: 5%;
-  z-index: 100;
-  border-radius: 10px;
-  box-shadow: 3px 3px 6px 1px rgba(0, 0, 0, 0.25); }
-  #back-to-top-button i {
-    padding: 5px 6px 3px 5px;
-    font-size: 3em;
-    color: white; }
 

@@ -155,7 +155,6 @@
     <Compile Include="UserProject.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
     <None Include="diagram.cd" />
     <None Include="packages.config" />
   </ItemGroup>
