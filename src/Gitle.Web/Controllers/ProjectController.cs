@@ -142,8 +142,9 @@
             {
                 PropertyBag.Add("applicationId", session.Slug<Application>(applicationSlug));
             }
+            PropertyBag.Add("newNumbers", _projectNumberService.GetNextProjectNumbers());
             PropertyBag.Add("types", EnumHelper.ToList(typeof(ProjectType)));
-            PropertyBag.Add("item", new Project() {Number = _projectNumberService.GetNextProjectNumber()});
+            PropertyBag.Add("item", new Project());
             RenderView("edit");
         }
 
@@ -157,6 +158,7 @@
             PropertyBag.Add("types", EnumHelper.ToList(typeof(ProjectType)));
             PropertyBag.Add("item", project);
             PropertyBag.Add("customerId", project.Customer?.Id);
+            PropertyBag.Add("newNumbers", _projectNumberService.GetNextProjectNumbers());
         }
 
         [Admin]

@@ -17,9 +17,16 @@
         </div>
       </div>
       <div class="row">
+        <div class="large-3 columns">Type project</div>
+        <div class="large-9 columns">
+          ${Form.Select("item.Type", types, {"text": "text", "value": "value", "firstoption": "Kies een type project", "pattern":"select", "data-numberfield":"#item_Number"})}
+          <small class="error">Kies een type project</small>
+        </div>
+      </div>
+      <div class="row">
         <div class="large-3 columns">Projectnummer</div>
         <div class="large-9 columns">
-          <input type="text" name="item.Number" value="${item.Number}" />
+          <input type="text" id="item_Number" name="item.Number" data-initial-number="${?newNumbers.Item1}" data-service-number="${?newNumbers.Item2}" data-internal-number="${?newNumbers.Item3}" value="${item.Number}" />
         </div>
       </div>
       <div class="row">
@@ -27,13 +34,6 @@
         <div class="large-9 columns">
           ${Form.Select("applicationId", applications, {"class": "chosen-select", "value": "Id", "text": "CompleteName", "firstoption": "Kies een applicatie", "pattern":"select"})}
           <small class="error">Kies een applicatie</small>
-        </div>
-      </div>
-      <div class="row">
-        <div class="large-3 columns">Type project</div>
-        <div class="large-9 columns">
-          ${Form.Select("item.Type", types, {"text": "text", "value": "value", "firstoption": "Kies een type project", "pattern":"select"})}
-          <small class="error">Kies een project</small>
         </div>
       </div>
       <div class="row">

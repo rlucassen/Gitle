@@ -16,18 +16,21 @@
             _session = sessionFactory.GetCurrentSession();
         }
 
-        public int GetNextProjectNumber()
+        public (int Initial, int Service, int Internal) GetNextProjectNumbers()
         {
-            var maxNumber = _session.Query<Project>().Max(x => x.Number);
+            int year = DateTime.Now.Year;
 
-            var year = maxNumber.ToString().Substring(0, 4);
+            var projects = _session.Query<Project>().Where(x => x.IsActive && x.Number.ToString().Substring(0, 4) == year.ToString());
 
-            if (year != DateTime.Today.Year.ToString())
-            {
-                return int.Parse($"{DateTime.Today.Year}001");
-            }
+            var initialProjects = projects.Where(x => x.Number < year * 1000 + 600);
+            var initialNumber = initialProjects.Any() ? initialProjects.Max(x => x.Number) + 1 : year * 1000 + 1;
 
-            return maxNumber + 1;
+            var serviceProjects = projects.Where(x => x.Number >= year * 1000 + 600 && x.Number < year * 1000 + 900);
+            var serviceNumber = serviceProjects.Any() ? serviceProjects.Max(x => x.Number) + 1 : year * 1000 + 601;
+
+            var internalNumber = year * 1000 + 900;
+
+            return (initialNumber, serviceNumber, internalNumber);
         }
     }
 }
