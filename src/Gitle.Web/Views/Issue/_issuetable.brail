@@ -1,4 +1,4 @@
-﻿<div class="issues <% if prioritizable: %>prioritizable<% end %>" id="issueContainer">
+﻿<div class="issues" id="issueContainer">
   <% for issue in result.Items: %>
   <div class="row <% if issue.IsOpen: %><% if issue.PickedUpBy == null:%>orderable<% else: %>pickedup<% end %><% end %>">
     <div class="large-12 columns">
@@ -92,9 +92,11 @@
                 <strong>Gefactureerd: </strong>
               </div>
               <div class="large-2 columns text-right">
-                ${issue.TotalHoursInvoicedString}
+                ${issue.TotalBillableHoursInvoicedString}
               </div>
-              <div class="large-2 columns"></div>
+              <div class="large-2 columns text-right">
+                (${issue.TotalUnbillableHoursInvoicedString} unbillable)
+              </div>
             </div>
             <% end %>
             <% end %>
@@ -111,7 +113,7 @@
           </div>
           <div class="large-3 columns text-right">
             <div class="row collapse">
-              <div class="large-10 small-12 columns">
+              <div class="large-12 small-12 columns">
                 <ul class="button-group actions">
                   <li><a class="button tiny no-margin" href="/project/${project.Slug}/issue/${issue.Number}/view">Open</a></li>
                   <% if CurrentUser.IsAdmin and not issue.IsArchived and not project.Closed: %>
@@ -120,14 +122,6 @@
                   <% end %>
                 </ul>
               </div>
-              <% if issue.PickedUpBy == null and issue.IsOpen: %>
-              <div class="large-2 columns text-center show-for-large-up draghandle<% if not prioritizable: %> disabled<% end %>" <% if not prioritizable: %> title="Om prioriteiten aan te geven zul je de sortering uit moeten zetten"<% end %>>
-                <i class="fa fa-arrow-up"></i>
-                <i class="fa fa-arrow-down"></i>
-              </div>
-              <% else: %>
-              <div class="large-2 columns show-for-large-up"></div>
-              <% end %>
             </div>
           </div>
         </div>

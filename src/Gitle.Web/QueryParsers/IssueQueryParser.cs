@@ -32,7 +32,6 @@
         public IList<User> SelectedPickupbys = new List<User>();
         public bool PickupAny;
         public bool PickupNone;
-        public bool Prioritizable;
 
         public Dictionary<string, string> AllSorts = new Dictionary<string, string>()
                             {
@@ -218,7 +217,6 @@
             }
             if (querySorts.Count == 0 && linqSorts.Count == 0)
             {
-                Prioritizable = true;
                 items = items.OrderBy(x => x.State).ThenBy(x => x.Pickups.Count == 0).ThenBy(x => x.PrioOrder == 0).ThenBy(x => x.PrioOrder).ThenByDescending(x => x.ChangeStates.Max(cs => cs.CreatedAt)).ToList();
             }
 

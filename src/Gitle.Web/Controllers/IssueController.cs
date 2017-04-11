@@ -54,7 +54,6 @@
             PropertyBag.Add("selectedPickupbys", parser.SelectedPickupbys);
             PropertyBag.Add("pickupany", parser.PickupAny);
             PropertyBag.Add("pickupnone", parser.PickupNone);
-            PropertyBag.Add("prioritizable", parser.Prioritizable);
             PropertyBag.Add("dump", CreateDummyIssue(project));
         }
 

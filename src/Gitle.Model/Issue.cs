@@ -237,11 +237,19 @@
         {
             get { return InvoiceLines.Where(x => x.Invoice.IsDefinitive).Sum(x => x.Hours); }
         }
+        public virtual string TotalHoursInvoicedString => TotalHoursInvoiced.ToHourDayNotation();
 
-        public virtual string TotalHoursInvoicedString
+        public virtual double TotalBillableHoursInvoiced
         {
-            get { return TotalHoursInvoiced.ToHourDayNotation(); }
+            get { return InvoiceLines.Where(x => x.Invoice.IsDefinitive && !x.Null).Sum(x => x.Hours); }
         }
+        public virtual string TotalBillableHoursInvoicedString => TotalBillableHoursInvoiced.ToHourDayNotation();
+
+        public virtual double TotalUnbillableHoursInvoiced
+        {
+            get { return InvoiceLines.Where(x => x.Invoice.IsDefinitive && x.Null).Sum(x => x.Hours); }
+        }
+        public virtual string TotalUnbillableHoursInvoicedString => TotalUnbillableHoursInvoiced.ToHourDayNotation();
 
         public virtual string CostString(decimal hourPrice)
         {
