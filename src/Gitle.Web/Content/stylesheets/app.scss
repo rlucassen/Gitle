@@ -189,23 +189,38 @@ table.tickets-table {
   }
 }
 
+.dataTables_wrapper {
+  select, input {
+    width: auto;
+  }
+
+  #project-table_filter input {
+    display: inline;
+  }
+}
+
 .progress {
   position: relative;
   margin-bottom: 0;
+
   &.progress-border {
-  border: 1px solid #ccc;
+    border: 1px solid #ccc;
   }
+
   &.progress-tickets {
     padding: 0;
+
     .meter {
       text-align: center;
     }
+
     .open {
       color: #dedede;
       background-color: #a05f55;
       text-align: left;
       padding-left: 0.5em;
     }
+
     .closed {
       color: #dedede;
       background-color: #4c8ca0;
@@ -213,22 +228,27 @@ table.tickets-table {
       padding-right: 0.5em;
     }
   }
+
   &.progress-status {
     .overbudget {
       background-color: #d09890;
     }
+
     .noestimate {
       background-color: #75b1c3;
     }
+
     .inbudget {
       background-color: #73b971;
     }
   }
+
   .meter {
     font-size: 0.8em;
     color: #fff;
     text-align: right;
   }
+
   .left-value, .right-value {
     position: absolute;
     font-size: 0.8em;
@@ -239,6 +259,7 @@ table.tickets-table {
   .left-value {
     left: 0;
   }
+
   .right-value {
     right: 0;
   }
