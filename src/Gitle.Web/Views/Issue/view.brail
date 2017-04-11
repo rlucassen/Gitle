@@ -19,6 +19,7 @@
         <p class="created no-margin"><strong>Gesloten op:</strong> <span title="${Helpers.DateTimeHelper.Readable(item.ClosedAt)}">${Helpers.DateTimeHelper.Readable(item.ClosedAt)}</span></p>
         <% end %>
         <p class="hours no-margin"><strong>Geschatte tijd:</strong> ${item.EstimateString}</p>
+        <p class="price no-margin"><strong>Geschatte prijs:</strong> ${item.CostString(project.HourPrice)}</p>
         <p class="state no-margin"><strong>Status:</strong> ${item.StateString}</p>
         <p class="labels no-margin">
           <strong>Labels:</strong>

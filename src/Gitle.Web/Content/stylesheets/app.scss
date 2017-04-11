@@ -67,6 +67,10 @@ ul.f-dropdown.wide {
 .large-0 {
   width: auto;
 
+  &:not(:first-child):not(:last-child) {
+    padding: 0 0.5rem;
+  }
+
   &[class*="column"] + [class*="column"]:last-child {
     float: left;
   }

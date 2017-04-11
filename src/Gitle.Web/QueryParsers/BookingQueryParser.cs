@@ -19,6 +19,7 @@
         public IList<Project> Projects { get; set; } = new List<Project>();
         public IList<Application> Applications { get; set; } = new List<Application>();
         public IList<Customer> Customers { get; set; } = new List<Customer>();
+        public IList<string> Labels { get; set; } = new List<string>();
         public IList<Issue> Issues { get; set; } = new List<Issue>();
         public bool Dump { get; set; }
 
@@ -98,6 +99,9 @@
                             if (value == "null")
                                 nullIssues = true;
                         }
+                        break;
+                    case "label":
+                        Labels.Add(value);
                         break;
                     case "groupby":
                         GroupedBy = value;
@@ -189,6 +193,11 @@
             else if(issueExpression != null)
             {
                 bookings = bookings.Where(issueExpression); //Boekingen zonder Issue niet weergeven, wel filteren op gekozen Issue(s)
+            }
+
+            if (Labels.Count > 0)
+            {
+                bookings = bookings.Where(x => x.Issue.Labels.Any(l => Labels.Contains(l.Name)));
             }
 
             if (!string.IsNullOrWhiteSpace(searchQuery))
