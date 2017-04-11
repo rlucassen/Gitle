@@ -131,9 +131,12 @@
       </div>
       <div class="bookings">
         <% for booking in line.Bookings: %>
-        <div class="row booking" data-issue="${line.Issue.Number}">
+        <div class="row booking" data-booking="${booking.Id}" data-issue="${line.Issue.Number}">
           <input type="hidden" name="lines[${count}].Bookings[${booking.Id}].Id" id="lines_${count}_Bookings_${booking.Id}_Id" value="${booking.Id}" />
-          <div class="large-7 large-offset-1 columns">
+          <div class="large-1 columns text-right">
+            <a href="#" class="delete-booking"><i class="fa fa-close red"></i></a>
+          </div>
+          <div class="large-7 columns">
             <span class="booking-date <% if invoice.StartDate > booking.Date: %>old<% end %>">${booking.Date.ToString("dd-MM-yyyy")}</span> <span class="booking-info">${booking.User.FullName}</span>:
             <span class="booking-comment">${booking.Comment}</span>
           </div>
@@ -258,17 +261,3 @@
     </div>
   </div>
 </form>
-
-<script>
-  $(document).ready(function () {
-    $('.correctionline').hide();
-    $('.correctionline').first().show();
-    $('.correctionline').find('.correctionline-price').change(function () {
-      if ($(this).find('.correctionline-price').val() != "") {
-        $(this).parents('.correctionline').next('.correctionline').show();
-      }
-    });
-
-  });
-
-</script>

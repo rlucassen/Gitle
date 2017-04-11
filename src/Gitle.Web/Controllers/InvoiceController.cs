@@ -39,9 +39,9 @@ namespace Gitle.Web.Controllers
             var bookings = session.Query<Booking>().Where(x => x.IsActive && x.Project == project);
 
             if(oldBookings){
-                bookings = bookings.Where(x => x.Date <= endDate && (x.Date >= startDate || x.InvoiceLines.Count(il => il.Invoice.State == InvoiceState.Definitive) == 0));
+                bookings = bookings.Where(x => x.Date <= endDate && x.InvoiceLines.Count(il => il.Invoice.State == InvoiceState.Definitive) == 0);
             } else {
-                bookings = bookings.Where(x => x.Date <= endDate && x.Date >= startDate);
+                bookings = bookings.Where(x => x.Date <= endDate && x.Date >= startDate && x.InvoiceLines.Count(il => il.Invoice.State == InvoiceState.Definitive) == 0);
             }
 
             var invoice = new Invoice(project, startDate, endDate, bookings.ToList());

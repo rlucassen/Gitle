@@ -384,7 +384,7 @@ $(function () {
     }
   };
 
-  var computePriceForInvoiceLine = function(invoiceLine) {
+  var computePriceForInvoiceLine = function (invoiceLine) {
     var hourPrice = parseFloat($('#invoice_HourPrice').val().replace(',', '.'));
     var hours = parseFloat(invoiceLine.find('.invoiceline-hours-input').val().replace(',', '.'));
     var nill = parseInt(invoiceLine.find('.invoiceline-null').val());
@@ -393,14 +393,14 @@ $(function () {
     calculateTotals();
   };
 
-  var calculateTotals = function() {
+  var calculateTotals = function () {
     var subtotalPrice = 0.0;
-    $('.invoiceline').each(function() {
+    $('.invoiceline').each(function () {
       var linePrice = parseFloat($(this).find('.invoiceline-price').val().replace(',', '.')) * (1 - parseInt($(this).find('.invoiceline-null').val()));
       subtotalPrice += linePrice;
     });
     var correctionTotalPrice = 0.0;
-    $('.correctionline').each(function() {
+    $('.correctionline').each(function () {
       var correctionValue = $(this).find('.correctionline-price').val();
       if (correctionValue)
         correctionTotalPrice += parseFloat(correctionValue.replace(',', '.'));
@@ -496,14 +496,14 @@ $(function () {
 
   // All decimal input fields have a class named 'number'
   $('#createinvoice input.comma').each(function () {
-    $(this).keypress(function(e){
+    $(this).keypress(function (e) {
       // '46' is the keyCode for '.'
-      if(e.keyCode == '46'){
+      if (e.keyCode == '46') {
         // IE
-        if(document.selection){
+        if (document.selection) {
           var range = document.selection.createRange();
           range.text = ',';
-        // Chrome + FF
+          // Chrome + FF
         } else if (this.selectionStart || this.selectionStart == '0') {
           var start = this.selectionStart;
           var end = this.selectionEnd;
@@ -512,12 +512,36 @@ $(function () {
             + $(this).val().substring(end, $(this).val().length));
 
           this.selectionStart = start + 1;
-          this.selectionEnd = start +1;
+          this.selectionEnd = start + 1;
         } else {
-          $(this).val($(this).val() + ',');             
+          $(this).val($(this).val() + ',');
         }
         return false;
       }
+    });
+  });
+
+  $('.correctionline').hide();
+  $('.correctionline').first().show();
+  $('.correctionline').find('.correctionline-price').change(function () {
+    if ($(this).find('.correctionline-price').val() != "") {
+      $(this).parents('.correctionline').next('.correctionline').show();
+    }
+  });
+
+
+  $('[data-booking]').each(function () {
+    var bookingRow = $(this);
+    var bookingHours = bookingRow.find('.booking-hours').val();
+    var issueId = bookingRow.data('issue');
+    var invoiceLine = $('.invoiceline-issue[data-issue=' + issueId + ']');
+    var invoiceLineHoursInput = invoiceLine.find('.invoiceline-hours-input');
+    bookingRow.find('.delete-booking').click(function (e) {
+      e.preventDefault();
+      bookingRow.remove();
+      var newInvoiceLineHours = parseFloat(invoiceLineHoursInput.val().replace(',', '.')) - parseFloat(bookingHours);
+      invoiceLineHoursInput.val(newInvoiceLineHours.toString().replace(".", ","));
+      computePriceForInvoiceLine(invoiceLine);
     });
   });
 });
