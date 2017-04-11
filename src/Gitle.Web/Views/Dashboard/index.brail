@@ -21,14 +21,14 @@
           <td>${project.UnBillableHours}</td>
           <td>
             <div class="progress progress-border progress-status">
-              <% if project.BillableHours > project.TotalEstimateAllTickets() and project.TotalEstimateAllTickets() != 0: %>
+              <% if project.BillableHours > project.BudgetHours and project.BudgetHours != 0: %>
               <span class="meter overbudget" style="width: ${project.Progress().ToString().Replace(",", "." )}% "></span>
-              <% elif project.TotalEstimateAllTickets() == 0: %>
+              <% elif project.BudgetHours == 0: %>
               <span class="meter noestimate" style="width: 100%"></span>
               <% else: %>
               <span class="meter inbudget" style="width: ${project.Progress().ToString().Replace(",", "." )}% "></span>
               <% end %>
-              <span class="left-value">${project.TotalEstimateAllTickets()} beschikbare uren</span>
+              <span class="left-value">${project.BudgetHours} beschikbare uren</span>
               <span class="right-value">${project.BillableHours} uur gemaakt</span>
             </div>
           </td>
