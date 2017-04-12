@@ -23,7 +23,7 @@ namespace Gitle.Web.Controllers
         [Admin]
         public void Index(string query)
         {
-            var parser = new BookingQueryParser(session, query);
+            var parser = new BookingQueryParser(session, query, CurrentUser);
 
             var reportPresets = session.Query<ReportPreset>().Where(x => x.User == CurrentUser && x.IsActive);
             var globalReportPresets = session.Query<ReportPreset>().Where(x => x.User == null && x.IsActive);
@@ -69,7 +69,7 @@ namespace Gitle.Web.Controllers
         [Admin]
         public void ExportCsv(string query)
         {
-            var parser = new BookingQueryParser(session, $"{query} take:all");
+            var parser = new BookingQueryParser(session, $"{query} take:all", CurrentUser);
             var bookings = parser.AllBookings();
 
             var csv = CsvHelper.BookingsCsv(bookings);

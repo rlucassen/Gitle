@@ -1,6 +1,6 @@
 ﻿  <div class="row">
     <div class="large-12 columns">
-      <div class="issue">
+      <div class="issue touched">
         <div class="row">
           <div class="large-1 columns issuestate">
             <div class="row">

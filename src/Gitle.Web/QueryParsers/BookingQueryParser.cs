@@ -53,7 +53,7 @@
                             };
 
 
-        public BookingQueryParser(ISession session, string query)
+        public BookingQueryParser(ISession session, string query, User currentUser)
         {
             Query = query ?? string.Empty;
 
@@ -64,6 +64,7 @@
             IList<string> applications = new List<string>();
             IList<string> customers = new List<string>();
             IList<int> issues = new List<int>();
+            string period = null;
             bool nullIssues = false;
             var searchQuery = Query;
             var take = MaxResults;
@@ -77,7 +78,7 @@
                 switch (parts[0])
                 {
                     case "user":
-                        userStrings.Add(value);
+                        userStrings.Add(value == "me" ? currentUser.Name : value);
                         break;
                     case "project":
                         projects.Add(value);
@@ -121,6 +122,32 @@
                         DateTime endDate;
                         if(DateTime.TryParse(value, out endDate))
                             EndDate = endDate;
+                        break;
+                    case "period":
+                        period = value;
+                        break;
+                }
+            }
+
+            if (!string.IsNullOrEmpty(period))
+            {
+                switch (period)
+                {
+                    case "thisweek":
+                        StartDate = DateTime.Today.StartOfWeek();
+                        EndDate = DateTime.Today.EndOfWeek();
+                        break;
+                    case "lastweek":
+                        StartDate = DateTime.Today.AddDays(-7).StartOfWeek();
+                        EndDate = DateTime.Today.AddDays(-7).EndOfWeek();
+                        break;
+                    case "thismonth":
+                        StartDate = DateTime.Today.StartOfMonth();
+                        EndDate = DateTime.Today.EndOfMonth();
+                        break;
+                    case "lastmonth":
+                        StartDate = DateTime.Today.AddMonths(-1).StartOfMonth();
+                        EndDate = DateTime.Today.AddMonths(-1).EndOfMonth();
                         break;
                 }
             }
