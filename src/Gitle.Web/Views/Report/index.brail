@@ -9,28 +9,28 @@
     <div class="panel">
       <form id="query-form" method="GET">
         <div class="row collapse">
-          <div class="large-1 columns">
+          <div class="large-1 medium-2 small-4 columns">
             <input type="text" id="startDate" data-filter-prefix="start" class="reportdate no-margin" placeholder="Vanaf" value="${result.StartDate.ToString("yyyy-MM-dd")}" />
           </div>
-          <div class="large-1 columns">
+          <div class="large-1 medium-2 small-4 columns">
             <input type="text" id="endDate" data-filter-prefix="end" class="reportdate no-margin" placeholder="Tot" value="${result.EndDate.ToString("yyyy-MM-dd")}" />
           </div>
           <% for date in presetDates: %>
-          <div class="large-1 columns">
+          <div class="large-1 medium-2 small-4 columns">
             <a href="#" class="button secondary prefix" data-insert-startdate="${date.startDate.ToString("yyyy-MM-dd")}" data-insert-startdate-to="#startDate" data-insert-enddate="${date.endDate.ToString("yyyy-MM-dd")}" data-insert-enddate-to="#endDate" data-filter="start:${date.startDate.ToString("yyyy-MM-dd")} end:${date.endDate.ToString("yyyy-MM-dd")}" data-filter-opposite="start,end">${date.title}</a>
           </div>
           <% end %>
         </div>
         <div class="row collapse">
-          <div class="large-9 columns">
+          <div class="large-9 small-12 columns">
             <input type="text" id="query" name="query" value="${result.Query}" />
           </div>
-          <div class="large-1 small-1 columns">
+          <div class="large-1 small-2 columns">
             <a href="#" data-filter="" data-filter-clear="" class="button postfix alert">
               <i class="fa fa-close"></i>
             </a>
           </div>
-          <div class="large-2 small-5 columns">
+          <div class="large-2 small-10 columns">
             <span class="button split postfix"><a href="#" class="submit">Report</a> <span data-dropdown="drop"></span></span>
             <ul id="drop" class="f-dropdown medium" data-dropdown-content>
               <% for reportPreset in reportPresets: %>
@@ -51,7 +51,7 @@
           </div>
         </div>
         <div class="row filters">
-          <div class="large-0 small-12 columns">
+          <div class="large-0 small-6 columns">
             <button href="#" data-dropdown="users" aria-controls="users" aria-expanded="false" class="button tiny dropdown no-margin <% if result.Users.Count > 0: %>warning<% end %>">Medewerker:</button>
             <ul id="users" data-dropdown-content="" class="f-dropdown wide filter-select" aria-hidden="true" tabindex="-1">
               <% for user in allUsers: %>
@@ -70,7 +70,7 @@
               <% end %>
             </ul>
           </div>
-          <div class="large-0 small-12 columns">
+          <div class="large-0 small-6 columns">
             <button href="#" data-dropdown="customers" aria-controls="customers" aria-expanded="false" class="button tiny dropdown no-margin <% if result.Customers.Count > 0: %>warning<% end %>">Klanten:</button>
             <ul id="customers" data-dropdown-content="" class="f-dropdown wide filter-select" aria-hidden="true" tabindex="-1">
               <% for customer in allCustomers: %>
@@ -89,7 +89,7 @@
               <% end %>
             </ul>
           </div>
-          <div class="large-0 small-12 columns">
+          <div class="large-0 small-6 columns">
             <button href="#" data-dropdown="applications" aria-controls="applications" aria-expanded="false" class="button tiny dropdown no-margin <% if result.Applications.Count > 0: %>warning<% end %>">Applicaties:</button>
             <ul id="applications" data-dropdown-content="" class="f-dropdown wide filter-select" aria-hidden="true" tabindex="-1">
               <% for application in allApplications: %>
@@ -108,7 +108,7 @@
               <% end %>
             </ul>
           </div>
-          <div class="large-0 small-12 columns">
+          <div class="large-0 small-6 columns">
             <button href="#" data-dropdown="projects" aria-controls="projects" aria-expanded="false" class="button tiny dropdown no-margin <% if result.Projects.Count > 0: %>warning<% end %>">Projecten:</button>
             <ul id="projects" data-dropdown-content="" class="f-dropdown wide filter-select" aria-hidden="true" tabindex="-1">
               <% for project in allProjects: %>
@@ -128,7 +128,7 @@
             </ul>
           </div>
           <% if selectedProjects.Count == 1: %>
-          <div class="large-0 small-12 columns">
+          <div class="large-0 small-6 columns">
             <button href="#" data-dropdown="issues" aria-controls="issues" aria-expanded="false" class="button tiny dropdown no-margin <% if result.Issues.Count > 0: %>warning<% end %>">Issues:</button>
             <ul id="issues" data-dropdown-content="" class="f-dropdown wide filter-select" aria-hidden="true" tabindex="-1">
               <% for project in selectedProjects: %>
@@ -150,7 +150,7 @@
               <% end %>
             </ul>
           </div>
-          <div class="large-0 small-12 columns">
+          <div class="large-0 small-6 columns">
             <button href="#" data-dropdown="labels" aria-controls="labels" aria-expanded="false" class="button tiny dropdown no-margin <% if result.Labels.Count > 0: %>warning<% end %>">Labels:</button>
             <ul id="labels" data-dropdown-content="" class="f-dropdown wide filter-select" aria-hidden="true" tabindex="-1">
               <% for project in selectedProjects: %>
@@ -172,10 +172,10 @@
             </ul>
           </div>
           <% end %>
-          <div class="large-0 small-12 columns right">
-            <button class="button tiny" formaction="exportcsv">Exporteren</button>
+          <div class="large-0 small-6 columns right">
+            <button class="button no-margin tiny" formaction="exportcsv">Exporteren</button>
           </div>
-          <div class="large-0 small-12 columns right">
+          <div class="large-0 small-6 columns right">
             <button href="#" data-dropdown="groupbys" aria-controls="groupbys" aria-expanded="false" class="button tiny dropdown no-margin <% if result.GroupedBy: %>warning<% end %>">Groeperen:</button>
             <ul id="groupbys" data-dropdown-content class="f-dropdown" aria-hidden="true" tabindex="-1">
               <% for groupby in result.AllGroupbys: %>
@@ -194,7 +194,7 @@
             </ul>
           </div>
             <% isSelected = result.Dump %>
-            <div class="large-0 small-12 columns">
+            <div class="large-0 small-6 columns">
               <button href="#" data-dropdown="extra" aria-controls="extra" aria-expanded="false" class="button tiny dropdown no-margin
                 <% if result.Dump: %>warning<% end %>">Extra:</button>
               <ul id="extra" data-dropdown-content="" class="f-dropdown wide" aria-hidden="true" tabindex="-1">
@@ -235,28 +235,28 @@
       <% for booking in groupedBooking.Bookings: %>
       <div class="booking-row" data-id="${booking.Id}">
         <div class="row booking-row-content">
-          <div class="large-1 columns">
+          <div class="large-1 small-6 columns">
             <span class="booking-minutes">${booking.Time}</span>
           </div>
-          <div class="large-1 columns">
-            <div class="booking-project">${booking.Date.ToString("dd-MM-yy")}</div>
+          <div class="large-1 small-6 small-text-right columns">
+            <div class="booking-date">${booking.Date.ToString("dd-MM-yy")}</div>
           </div>
           <div class="large-2 columns">
-            <div class="booking-project">${booking.User.FullName}</div>
+            <div class="booking-user">${booking.User.FullName}</div>
           </div>
           <div class="large-2 columns">
             <div class="booking-project">${booking.Project.Name}</div>
           </div>
-          <div class="large-1 columns">
+          <div class="large-1 small-3 columns">
             <div class=" row booking-issue">
-              <div class="small-8 columns">
+              <div class="small-6 columns">
                 <% if booking.Issue: %>
                 <a href="/project/${booking.Issue.Project.Slug}/issue/${booking.Issue.Number}/view" data-quickview="/project/${booking.Issue.Project.Slug}/issue/${booking.Issue.Number}/quickview">#${booking.Issue.Number}</a>
                 <% else: %>
                 <span class="booking-comment" title="Niet gebonden aan een ticket">DUMP</span>
                 <% end %>
               </div>
-              <div class="small-4 columns">
+              <div class="small-6 columns">
                 <% if not booking.Unbillable: %>
                 <i class="fa fa-euro green" title="billable"></i>
                 <% else: %>
@@ -265,7 +265,7 @@
               </div>
             </div>
           </div>
-          <div class="large-4 columns end">
+          <div class="large-4 small-9 columns end">
             <% if booking.Comment == null or booking.Comment == "": %>
             <% if booking.Issue: %>
             <span class="booking-comment" title="#${booking.Issue.Number} - ${booking.Issue.Name}">#${booking.Issue.Number} - ${booking.Issue.ShortName()}</span>

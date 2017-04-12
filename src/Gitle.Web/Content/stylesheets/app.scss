@@ -66,10 +66,7 @@ ul.f-dropdown.wide {
 
 .large-0 {
   width: auto;
-
-  &:not(:first-child):not(:last-child) {
-    padding: 0 0.5rem;
-  }
+  padding: 0 0.5rem;
 
   &[class*="column"] + [class*="column"]:last-child {
     float: left;
@@ -181,12 +178,14 @@ table.progress-table tr td {
 
 table.tickets-table {
   tbody {
-    td:nth-child(1){
+    td:nth-child(1) {
       padding: 0.1rem 0.5rem;
     }
-    td:nth-child(2){
+
+    td:nth-child(2) {
       padding: 0;
     }
+
     tr:nth-of-type(even) {
       background: #e7e7e7;
     }
@@ -332,6 +331,7 @@ a.quickview-delay {
 
 .quickview {
   width: 60em;
+  max-width: 80vw;
   color: #666;
   background-color: #f3f3f3;
   border: 1px solid #ddd;
@@ -689,12 +689,13 @@ table {
   }
 }
 
-.filters {
+.row.filters {
+  margin: 0 -0.4375rem;
+
   .button.active {
     background-color: #b9b9b9;
     color: #333;
   }
-
 }
 
 .f-dropdown {
@@ -852,10 +853,6 @@ table {
   }
 }
 
-.row.filters {
-  margin-bottom: 1em;
-}
-
 .issues {
   border-top: 1px solid #ccc;
 }
@@ -890,14 +887,17 @@ table {
     i {
       font-size: 1.6em;
     }
+
     i.pickedup {
       margin-top: 0.2em;
-  }
+    }
+
     i.noprio {
       font-size: 1.3em;
       margin-top: 0.2em;
     }
   }
+
   .namerow a {
     margin-right: 0.5em;
   }
@@ -913,18 +913,22 @@ table {
       font-size: 1.4em;
     }
   }
+
   .actions {
     .button {
       padding-left: 0.9em;
       padding-right: 0.9em;
-}
+    }
   }
+
   .draghandle {
     padding-top: 2px;
     cursor: move;
+
     * {
       display: block;
     }
+
     &.disabled {
       cursor: not-allowed;
       opacity: 0.2;
@@ -932,9 +936,9 @@ table {
   }
 }
 
-  .chosen-ghost {
-    background-color: green !important;
-  }
+.chosen-ghost {
+  background-color: green !important;
+}
 
 
 .issueaction {
@@ -1110,12 +1114,22 @@ input[type=checkbox].inline {
 }
 
 @media only screen and (max-width: 64em) {
-  .large-0.small-12 {
-    width: 100% !important;
-    margin-bottom: 0.5em;
+  .large-0 {
+    &.small-12 {
+      width: 100% !important;
+      margin-bottom: 0.5em;
 
-    > * {
-      width: 100%;
+      > * {
+        width: 100%;
+      }
+    }
+    &.small-6 {
+      width: 50% !important;
+      margin-bottom: 0.5em;
+
+      > * {
+        width: 100%;
+      }
     }
   }
 
@@ -1278,6 +1292,7 @@ input[type=checkbox].inline {
   .null {
     color: #ccc;
   }
+
   .new-issue {
     border-bottom: 1px solid #ccc;
     border-top: 1px solid #ccc;
@@ -1313,20 +1328,22 @@ input[type=checkbox].inline {
 .booking-row-edit {
   background-color: #E8B087;
   padding-left: 0.5rem;
+
   .booking-row-null-toggle {
     line-height: 1.25em;
     height: 1.25em;
     margin-top: 0.2em;
+
     &.null {
       color: #ccc;
     }
   }
+
   .booking-edit-field {
     height: 1rem !important;
     margin: 0.15rem 0 0 0 !important;
     padding: 0 0.5em;
   }
-
 }
 
 
@@ -1340,7 +1357,7 @@ input[type=checkbox].inline {
   box-shadow: 0 0 3px 3px rgba(0,140,186,0.46);
 }
 
-.booking-user-row{
+.booking-user-row {
   background-color: #FAFAFA;
   border: 1px solid #d8d8d8;
   margin-bottom: 1.25rem;
@@ -1348,11 +1365,35 @@ input[type=checkbox].inline {
   padding-bottom: 0.5rem;
 }
 
-.user-booking-total{
+.user-booking-total {
   border-bottom: 1px solid #d8d8d8;
-  h5{
-  margin-bottom: 0.25rem;
-  }
-  margin-bottom: 0.25rem !important;
-} 
 
+  h5 {
+    margin-bottom: 0.25rem;
+  }
+
+  margin-bottom: 0.25rem !important;
+}
+
+select.hide-disabled {
+  option[disabled] {
+    display: none;
+  }
+}
+
+@media only screen and (min-width : 320px) and (max-width : 568px) {
+
+  .booking-row {
+    border-top: 1px solid #ccc;
+    padding-bottom: 0.5em;
+
+    .booking-buttons {
+      padding-right: 0.9375rem !important;
+      display: block;
+    }
+  }
+
+  .supertiny {
+    padding: 0.5em;
+  }
+}

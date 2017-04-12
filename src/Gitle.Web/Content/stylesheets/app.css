@@ -50,9 +50,8 @@ ul.f-dropdown.wide {
   width: 400px; }
 
 .large-0 {
-  width: auto; }
-  .large-0:not(:first-child):not(:last-child) {
-    padding: 0 0.5rem; }
+  width: auto;
+  padding: 0 0.5rem; }
   .large-0[class*="column"] + [class*="column"]:last-child {
     float: left; }
 
@@ -229,6 +228,7 @@ a.quickview-delay {
 
 .quickview {
   width: 60em;
+  max-width: 80vw;
   color: #666;
   background-color: #f3f3f3;
   border: 1px solid #ddd;
@@ -445,9 +445,11 @@ table {
 .filter-row .button {
   font-size: 0.8em; }
 
-.filters .button.active {
-  background-color: #b9b9b9;
-  color: #333; }
+.row.filters {
+  margin: 0 -0.4375rem; }
+  .row.filters .button.active {
+    background-color: #b9b9b9;
+    color: #333; }
 
 .f-dropdown li {
   position: relative; }
@@ -555,9 +557,6 @@ table {
         border: 1px solid #aaa; }
         .colorpicker-popup ul li a:hover {
           border-color: #000; }
-
-.row.filters {
-  margin-bottom: 1em; }
 
 .issues {
   border-top: 1px solid #ccc; }
@@ -711,6 +710,11 @@ input[type=checkbox].inline {
     margin-bottom: 0.5em; }
     .large-0.small-12 > * {
       width: 100%; }
+  .large-0.small-6 {
+    width: 50% !important;
+    margin-bottom: 0.5em; }
+    .large-0.small-6 > * {
+      width: 100%; }
   table.small-blocks {
     display: block;
     border: none; }
@@ -849,4 +853,17 @@ input[type=checkbox].inline {
   margin-bottom: 0.25rem !important; }
   .user-booking-total h5 {
     margin-bottom: 0.25rem; }
+
+select.hide-disabled option[disabled] {
+  display: none; }
+
+@media only screen and (min-width: 320px) and (max-width: 568px) {
+  .booking-row {
+    border-top: 1px solid #ccc;
+    padding-bottom: 0.5em; }
+    .booking-row .booking-buttons {
+      padding-right: 0.9375rem !important;
+      display: block; }
+  .supertiny {
+    padding: 0.5em; } }
 
