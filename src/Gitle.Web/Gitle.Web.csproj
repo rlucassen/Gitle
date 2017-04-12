@@ -493,10 +493,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="castle.config">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="log4net.config" />
+    <None Include="castle.config" />
+    <None Include="log4net.config" />
   </ItemGroup>
   <ItemGroup>
     <None Include="bundleconfig.json" />
@@ -504,48 +502,40 @@
     <None Include="compilerconfig.json.defaults">
       <DependentUpon>compilerconfig.json</DependentUpon>
     </None>
-    <Content Include="Content\stylesheets\planning.scss" />
-    <Content Include="Content\javascript\vendor\fullcalendar\demos\json\events.json" />
-    <Content Include="Content\javascript\vendor\fullcalendar\demos\php\get-events.php" />
-    <Content Include="Content\javascript\vendor\fullcalendar\demos\php\get-timezones.php" />
-    <Content Include="Content\javascript\vendor\fullcalendar\demos\php\utils.php" />
-    <Content Include="Content\javascript\vendor\scheduler\demos\json\events.json" />
-    <Content Include="Content\javascript\vendor\scheduler\demos\json\resources.json" />
+    <None Include="Content\stylesheets\planning.scss" />
+    <None Include="Content\javascript\vendor\fullcalendar\demos\json\events.json" />
+    <None Include="Content\javascript\vendor\fullcalendar\demos\php\get-events.php" />
+    <None Include="Content\javascript\vendor\fullcalendar\demos\php\get-timezones.php" />
+    <None Include="Content\javascript\vendor\fullcalendar\demos\php\utils.php" />
+    <None Include="Content\javascript\vendor\scheduler\demos\json\events.json" />
+    <None Include="Content\javascript\vendor\scheduler\demos\json\resources.json" />
     <None Include="Content\stylesheets\vendor\fonts\fontawesome-webfont.eot" />
     <None Include="Content\stylesheets\vendor\fonts\fontawesome-webfont.ttf" />
     <None Include="Content\stylesheets\vendor\fonts\fontawesome-webfont.woff" />
-    <Content Include="Content\stylesheets\vendor\fonts\fontawesome-webfont.woff2" />
+    <None Include="Content\stylesheets\vendor\fonts\fontawesome-webfont.woff2" />
     <None Include="Content\stylesheets\vendor\fonts\FontAwesome.otf" />
     <Content Include="Content\stylesheets\app.scss" />
-    <Content Include="Content\stylesheets\app.css.map">
+    <None Include="Content\stylesheets\app.css.map">
       <DependentUpon>app.css</DependentUpon>
-    </Content>
-    <Content Include="Views\Application\Index.brail" />
-    <Content Include="Views\Application\edit.brail" />
-    <Content Include="Views\Application\view.brail" />
+    </None>
+    <None Include="Views\Application\Index.brail" />
+    <None Include="Views\Application\edit.brail" />
+    <None Include="Views\Application\view.brail" />
     <None Include="Views\Authentication\changepassword.brail" />
     <None Include="Views\Authentication\requestreset.brail" />
-    <Content Include="Views\Booking\index.brail">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Views\Invoice\index.brail" />
-    <Content Include="Views\Invoice\create.brail" />
-    <Content Include="Views\Booking\_row.brail" />
-    <Content Include="Views\Booking\overview.brail" />
-    <Content Include="Views\Database\migrateinvoices.brail" />
-    <Content Include="Views\Dashboard\index.brail" />
-    <None Include="Views\Issue\index.brail">
-      <SubType>Designer</SubType>
-    </None>
+    <None Include="Views\Booking\index.brail" />    
+    <None Include="Views\Invoice\index.brail" />
+    <None Include="Views\Invoice\create.brail" />
+    <None Include="Views\Booking\_row.brail" />
+    <None Include="Views\Booking\overview.brail" />
+    <None Include="Views\Database\migrateinvoices.brail" />
+    <None Include="Views\Dashboard\index.brail" />
+    <None Include="Views\Issue\index.brail" />
     <None Include="Views\Issue\exportimport.brail" />
     <None Include="Views\Issue\quickview.brail" />
     <None Include="Views\Issue\readjson.brail" />
-    <Content Include="Views\Issue\_dummyissue.brail">
-      <SubType>Designer</SubType>
-    </Content>
-    <None Include="Views\Issue\_issuetable.brail">
-      <SubType>Designer</SubType>
-    </None>
+    <None Include="Views\Issue\_dummyissue.brail" />
+    <None Include="Views\Issue\_issuetable.brail" />
     <None Include="Views\Issue\_timeline.brail" />
     <None Include="Views\Mail\comment.brail" />
     <None Include="Views\Mail\issue-action.brail" />
@@ -554,34 +544,28 @@
     <None Include="Views\OAuth\codeexpired.brail" />
     <None Include="Views\OAuth\stateincorrect.brail" />
     <None Include="Views\OAuth\nogitleuser.brail" />
-    <Content Include="Views\Customer\edit.brail" />
-    <Content Include="Views\Customer\index.brail" />
-    <Content Include="Views\Customer\view.brail" />
-    <Content Include="Views\Planning\index.brail" />
+    <None Include="Views\Customer\edit.brail" />
+    <None Include="Views\Customer\index.brail" />
+    <None Include="Views\Customer\view.brail" />
+    <None Include="Views\Planning\index.brail" />
     <None Include="Views\Project\view.brail" />
-    <Content Include="Views\Template\invoice.brail" />
-    <Content Include="Views\Report\index.brail">
-      <SubType>Designer</SubType>
-    </Content>
+    <None Include="Views\Template\invoice.brail" />
+    <None Include="Views\Report\index.brail" />
     <None Include="Views\User\profile.brail" />
     <None Include="Views\User\edit.brail" />
     <None Include="Views\User\index.brail" />
     <None Include="Views\Issue\edit.brail" />
     <None Include="Views\Issue\invoice.brail" />
     <None Include="Views\Issue\view.brail" />
-    <None Include="Views\Project\edit.brail">
-      <SubType>Designer</SubType>
-    </None>
+    <None Include="Views\Project\edit.brail" />
     <None Include="Views\Project\index.brail" />
     <None Include="Views\Authentication\index.brail" />
     <None Include="Views\Authentication\forgotpassword.brail" />
     <None Include="Views\Layouts\default.brail" />
     <None Include="Views\Layouts\secure.brail" />
     <None Include="Views\shared\forbidden.brail" />
-    <Content Include="Web.config">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Views\User\view.brail" />
+    <None Include="Web.config" />
+    <None Include="Views\User\view.brail" />
     <None Include="Web.config.sample" />
   </ItemGroup>
   <PropertyGroup>

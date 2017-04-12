@@ -221,7 +221,8 @@ ul.no-style {
     font-weight: bold; }
 
 #search {
-  width: 300px; }
+  width: 300px;
+  min-width: 100%; }
 
 a.quickview-delay {
   cursor: progress; }
