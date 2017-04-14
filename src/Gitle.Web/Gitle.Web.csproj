@@ -13,7 +13,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Gitle.Web</RootNamespace>
     <AssemblyName>Gitle.Web</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <UseIISExpress>true</UseIISExpress>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
@@ -523,7 +523,7 @@
     <None Include="Views\Application\view.brail" />
     <None Include="Views\Authentication\changepassword.brail" />
     <None Include="Views\Authentication\requestreset.brail" />
-    <None Include="Views\Booking\index.brail" />    
+    <None Include="Views\Booking\index.brail" />
     <None Include="Views\Invoice\index.brail" />
     <None Include="Views\Invoice\create.brail" />
     <None Include="Views\Booking\_row.brail" />
