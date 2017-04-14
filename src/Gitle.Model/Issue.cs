@@ -18,6 +18,7 @@
             Pickups = new List<Pickup>();
             Bookings = new List<Booking>();
             InvoiceLines = new List<InvoiceLine>();
+            EstimatePublic = true;
         }
 
         public virtual int Number { get; set; }
@@ -25,6 +26,7 @@
         public virtual string Body { get; set; }
         public virtual double Hours { get; set; }
         public virtual int Devvers { get; set; }
+        public virtual bool EstimatePublic { get; set; }
 
         public virtual bool Prioritized { get; set; }
         public virtual int PrioOrder { get; set; }

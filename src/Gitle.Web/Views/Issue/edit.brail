@@ -19,12 +19,39 @@
       </div>
       <% if CurrentUser.IsAdmin: %>
       <div class="row">
-        <div class="large-3 columns">Developers</div>
-        <div class="large-9 columns"><input type="text" name="item.Devvers" value="${?item.Devvers}"/></div>
-      </div>
-      <div class="row">
-        <div class="large-3 columns">Uren</div>
-        <div class="large-9 columns"><input type="text" name="item.Hours" value="${?item.Hours}" class="time-parser"/></div>
+        <div class="large-3 columns">Schatting</div>
+        <div class="large-3 columns">
+          <div class="row collapse">
+            <div class="small-3 large-2 columns">
+              <span class="prefix" title="Aantal developers"><i class="fa fa-group"></i></span>
+            </div>
+            <div class="small-9 large-10 columns">
+              <input type="text" name="item.Devvers" value="${?item.Devvers}"/>
+            </div>
+          </div>
+        </div>
+        <div class="large-3 end columns">
+          <div class="row collapse">
+            <div class="small-3 large-2 columns">
+              <span class="prefix" title="Aantal uren"><i class="fa fa-clock-o"></i></span>
+            </div>
+            <div class="small-9 large-10 columns">
+              <input type="text" name="item.Hours" value="${?item.Hours}" class="time-parser"/>
+            </div>
+          </div>
+        </div>
+        <div class="large-3 end columns">
+          <div class="row collapse">
+            <div class="small-3 large-2 columns">
+              <span class="prefix">
+                ${Form.CheckboxField("item.EstimatePublic")}
+              </span>
+            </div>
+            <div class="small-9 large-10 columns">
+              <label for="item_EstimatePublic" class="postfix text-left">Schatting publiek</label>
+            </div>
+          </div>
+        </div>
       </div>
       <% end %>
       <div class="row">

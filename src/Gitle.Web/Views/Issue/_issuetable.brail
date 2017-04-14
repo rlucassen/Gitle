@@ -54,12 +54,12 @@
                 <% end %>
                 &nbsp;
               </div>
-              <% if issue.Devvers > 0 and issue.Hours > 0: %>
+              <% if issue.Devvers > 0 and issue.Hours > 0 and (issue.EstimatePublic or CurrentUser.IsAdmin): %>
               <div class="large-1 columns">
                 <strong>Schatting:</strong>
               </div>
               <div class="large-2 columns text-right">
-                ${issue.TotalHoursString}
+                <% if not issue.EstimatePublic: %><i class="fa fa-exclamation-triangle" title="schatting nog niet publiek"></i><% end %> ${issue.TotalHoursString}
               </div>
               <div class="large-2 columns text-right">
                 ${issue.CostString(project.HourPrice)}

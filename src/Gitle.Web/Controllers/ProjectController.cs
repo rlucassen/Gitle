@@ -48,7 +48,7 @@
         [return: JSONReturnBinder]
         public object List(int start, int length, int draw, string orderColumn, string orderDir, string search, long customer, long application, ProjectType type, bool closed)
         {
-            var projects = session.Query<Project>();
+            var projects = session.Query<Project>().Where(x => x.IsActive);
             var recordsTotal = projects.Count();
 
             if (!string.IsNullOrEmpty(orderColumn))

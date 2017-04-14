@@ -41,8 +41,8 @@
 
             var parser = new IssueQueryParser(sessionFactory, query, project, CurrentUser);
 
-            var filterPresets = session.Query<FilterPreset>().Where(x => x.User == CurrentUser && x.IsActive && (x.Project == null || x.Project.Id == project.Id)).ToList();
-            var globalFilterPresets = session.Query<FilterPreset>().Where(x => x.User == null && x.IsActive && (x.Project == null || x.Project.Id == project.Id)).ToList();
+            var filterPresets = session.Query<FilterPreset>().Where(x => x.User == CurrentUser && x.IsActive && (x.Project == null || (x.Project != null && x.Project.Id == project.Id))).ToList();
+            var globalFilterPresets = session.Query<FilterPreset>().Where(x => x.User == null && x.IsActive && (x.Project == null || (x.Project != null && x.Project.Id == project.Id))).ToList();
 
             PropertyBag.Add("project", project);
             PropertyBag.Add("result", parser);
