@@ -228,6 +228,27 @@
       }
     }
 
+    var weekdaysBetween = function(d1, d2, isoWeekday) {
+      // ensure we have valid moment instances
+      // add -1 hours because times go to 0.00 of next day
+      d1 = moment(d1);
+      d2 = moment(d2).add(-1, 'hours');
+      // figure out how many days to advance to get to the next
+      // specified weekday (might be 0 if d1 is already the 
+      // specified weekday).
+      var daysToAdd = ((7 + isoWeekday) - d1.isoWeekday()) % 7;
+      var nextTuesday = d1.clone().add(daysToAdd, 'days');
+      // if we are already passed the end date, there must not
+      // be any of that day in the given period.
+      if (nextTuesday.isAfter(d2)) {
+        return 0;
+      }
+      // otherwise, just return the whole number of weeks
+      // difference plus one for the day we already advanced to
+      var weeksBetween = d2.diff(nextTuesday, 'weeks');
+      return weeksBetween + 1;
+    }
+
     var calculateHours = function () {
       var i;
       for (i in employees) {
@@ -235,6 +256,14 @@
           employees[i] = 0;
         }
       }
+
+      var visibleHours = 40;
+      var showOverload = false;
+      if (calendar.fullCalendar('getView').name === 'timelineWeek') {
+        showOverload = true;
+      }
+
+
 
       var events = getVisibleEvents();
 
@@ -245,16 +274,20 @@
         if (events.hasOwnProperty(i)) {
           var event = events[i];
           if (event.start >= start && event.end <= end) {
-            employees[event.title] += (event.end - event.start) / 3600000 / 3;
+            var saturdays = weekdaysBetween(event.start, event.end, 6);
+            var sundays = weekdaysBetween(event.start, event.end, 7);
+            var days = (event.end - event.start) / 3600000 / 24;
+            employees[event.title] += (days - saturdays - sundays) * 8;
           }
         }
       }
+
 
       for (i in employees) {
         if (employees.hasOwnProperty(i)) {
           var employee = employees[i];
           var employeeDuration = $('#external-events [data-employee=\"' + i + '\"] .duration').html(employee);
-          if (employee > 40) {
+          if (employee > visibleHours && showOverload) {
             employeeDuration.addClass('overload');
           } else {
             employeeDuration.removeClass('overload');
@@ -275,9 +308,12 @@
       header: {
         left: 'addProject',
         center: 'title',
-        right: 'today prev,next'
+        right: 'today timelineWeek,timelineFourWeeks,timelineThreeMonths prev,next'
       },
       defaultView: 'timelineWeek',
+      buttonText: {
+        timelineFourWeeks: '4 weeks'
+      },
       views: {
         timelineWeek: {
           type: 'timeline',
@@ -292,6 +328,14 @@
           slotDuration: '12:00',
           snapDuration: '12:00',
           slotWidth: 20
+        },
+        timelineThreeMonths: {
+          type: 'timeline',
+          duration: { months: 3 },
+          slotDuration: '12:00',
+          snapDuration: '12:00',
+          slotWidth: 20,
+          dateIncrement: {months: 1}
         }
       },
       customButtons: {

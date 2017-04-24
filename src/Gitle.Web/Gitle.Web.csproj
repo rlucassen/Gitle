@@ -428,10 +428,6 @@
       <HintPath>..\packages\FluentNHibernate.2.0.3.0\lib\net40\FluentNHibernate.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Gitle.ViewModel, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Gitle.ViewModel\bin\Debug\Gitle.ViewModel.dll</HintPath>
-    </Reference>
     <Reference Include="Iesi.Collections, Version=4.0.0.0, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <HintPath>..\packages\Iesi.Collections.4.0.1.4000\lib\net40\Iesi.Collections.dll</HintPath>
       <Private>True</Private>
@@ -491,6 +487,10 @@
       <Project>{83DEC67C-B367-4EB5-873F-AC4BDA8E3281}</Project>
       <Name>Gitle.Service</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Gitle.ViewModel\Gitle.ViewModel.csproj">
+      <Project>{8fb7e4a1-2d5b-4ef7-b44e-b643e5912d9f}</Project>
+      <Name>Gitle.ViewModel</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="castle.config" />
@@ -523,7 +523,7 @@
     <None Include="Views\Application\view.brail" />
     <None Include="Views\Authentication\changepassword.brail" />
     <None Include="Views\Authentication\requestreset.brail" />
-    <None Include="Views\Booking\index.brail" />    
+    <None Include="Views\Booking\index.brail" />
     <None Include="Views\Invoice\index.brail" />
     <None Include="Views\Invoice\create.brail" />
     <None Include="Views\Booking\_row.brail" />

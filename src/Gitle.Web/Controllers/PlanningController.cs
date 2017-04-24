@@ -1,13 +1,16 @@
 ﻿namespace Gitle.Web.Controllers
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Linq.Expressions;
     using Castle.MonoRail.Framework;
     using Helpers;
     using Model;
     using Model.Helpers;
     using NHibernate;
+    using NHibernate.Criterion;
     using NHibernate.Linq;
 
     // Colors
@@ -54,10 +57,27 @@
         [return: JSONReturnBinder]
         public List<Resource> Projects(DateTime start, DateTime end)
         {
-            var year = start.Year;
-            var week = start.WeekNr();
-            return session.Query<PlanningResource>()
-                .Where(x => x.Year == year && x.Week == week).ToList()
+            //var year = start.Year;
+            //var week = start.WeekNr();
+
+            IList<(int year, int startWeek, int endWeek)> list = new List<(int, int, int)>();
+
+            for (int yearIndex = start.Year; yearIndex <= end.Year; yearIndex++)
+            {
+                var startWeek = yearIndex == start.Year ? start.WeekNr() : 1;
+                var endWeek = yearIndex == end.Year ? end.WeekNr() : 53;
+                list.Add((yearIndex, startWeek, endWeek));
+            }
+
+            var disjunction = Restrictions.Disjunction();
+
+            foreach (var tuple in list)
+            {
+                disjunction.Add<PlanningResource>(x => x.Year == tuple.year && x.Week >= tuple.startWeek && x.Week <= tuple.endWeek);
+            }
+
+            return session.QueryOver<PlanningResource>().Where(disjunction).List()
+                //.Where(x => x.Year >= year && x.Week == week).List()
                 .Select(x => new Resource(x)).ToList();
         }
 
