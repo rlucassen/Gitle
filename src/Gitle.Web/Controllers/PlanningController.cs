@@ -48,37 +48,38 @@
                     resourceId = x.Resource,
                     start = x.Start.ToString("yyyy-MM-dd HH:mm"),
                     end = x.End.ToString("yyyy-MM-dd HH:mm"),
-                    title = x.User.FullName,
-                    color = $"#{x.User.Color}",
-                    userId = x.User.Id.ToString(),
+                    title = x.User?.FullName ?? x.Text,
+                    color = x.User != null ? $"#{x.User?.Color}" : "#ccc",
+                    userId = x.User?.Id.ToString(),
                 }).ToList();
         }
 
         [return: JSONReturnBinder]
         public List<Resource> Projects(DateTime start, DateTime end)
         {
-            //var year = start.Year;
-            //var week = start.WeekNr();
-
-            IList<(int year, int startWeek, int endWeek)> list = new List<(int, int, int)>();
+            IList<(int year, int startWeek, int endWeek)> yearParts = new List<(int, int, int)>();
 
             for (int yearIndex = start.Year; yearIndex <= end.Year; yearIndex++)
             {
                 var startWeek = yearIndex == start.Year ? start.WeekNr() : 1;
                 var endWeek = yearIndex == end.Year ? end.WeekNr() : 53;
-                list.Add((yearIndex, startWeek, endWeek));
+                yearParts.Add((yearIndex, startWeek, endWeek));
             }
 
             var disjunction = Restrictions.Disjunction();
 
-            foreach (var tuple in list)
+            foreach (var yearPart in yearParts)
             {
-                disjunction.Add<PlanningResource>(x => x.Year == tuple.year && x.Week >= tuple.startWeek && x.Week <= tuple.endWeek);
+                disjunction.Add<PlanningResource>(x => x.Year == yearPart.year && x.Week >= yearPart.startWeek && x.Week <= yearPart.endWeek);
             }
 
-            return session.QueryOver<PlanningResource>().Where(disjunction).List()
-                //.Where(x => x.Year >= year && x.Week == week).List()
+            var resources = session.QueryOver<PlanningResource>().Where(disjunction).List()
                 .Select(x => new Resource(x)).ToList();
+
+            resources.Insert(0, new Resource() {title = "Algemeen", id = "general"});
+            //resources.Insert(1, new Resource(){title = "Vakanties", id="holiday"});
+
+            return resources;
         }
 
         [return: JSONReturnBinder]
@@ -136,7 +137,7 @@
             RenderText("ok");
         }
 
-        public void UpdateEvent(long eventId, long userId, string resource, DateTime start, DateTime end)
+        public void UpdateEvent(long eventId, long userId, string resource, string text, DateTime start, DateTime end)
         {
             var planningItem = session.Get<PlanningItem>(eventId);
 
@@ -147,7 +148,8 @@
                     User = session.Get<User>(userId),
                     Resource = resource,
                     Start = start,
-                    End = end
+                    End = end,
+                    Text = text
                 };
             }
             else
@@ -156,6 +158,7 @@
                 planningItem.Resource = resource;
                 planningItem.Start = start;
                 planningItem.End = end;
+                planningItem.Text = text;
             }
 
             using (var tx = session.BeginTransaction())

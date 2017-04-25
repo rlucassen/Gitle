@@ -1,27 +1,35 @@
 
 /*!
-FullCalendar Scheduler v1.3.0
-Docs & License: http://fullcalendar.io/scheduler/
-(c) 2015 Adam Shaw
+FullCalendar Scheduler v1.6.1
+Docs & License: https://fullcalendar.io/scheduler/
+(c) 2017 Adam Shaw
  */
 (function(factory) {
 	if (typeof define === 'function' && define.amd) {
-		define([ 'jquery', 'moment' ], factory);
+		define([ 'jquery', 'moment', 'fullcalendar' ], factory);
+	}
+	else if (typeof exports === 'object') { // Node/CommonJS
+		module.exports = factory(
+			require('jquery'),
+			require('moment'),
+			require('fullcalendar')
+		);
 	}
 	else {
 		factory(jQuery, moment);
 	}
 })(function($, moment) {;
-var COL_MIN_WIDTH, Calendar, CalendarExtension, Class, ClippedScroller, CoordCache, DEFAULT_GRID_DURATION, DragListener, EmitterMixin, EnhancedScroller, EventRow, FC, Grid, HRowGroup, LICENSE_INFO_URL, ListenerMixin, MAX_AUTO_CELLS, MAX_AUTO_SLOTS_PER_LABEL, MAX_CELLS, MIN_AUTO_LABELS, PRESET_LICENSE_KEYS, RELEASE_DATE, ResourceAgendaView, ResourceBasicView, ResourceDayGrid, ResourceDayTableMixin, ResourceGridMixin, ResourceManager, ResourceMonthView, ResourceRow, ResourceTimeGrid, ResourceTimelineGrid, ResourceTimelineView, ResourceViewMixin, RowGroup, RowParent, STOCK_SUB_DURATIONS, ScrollFollower, ScrollFollowerSprite, ScrollJoiner, ScrollerCanvas, Spreadsheet, TimelineGrid, TimelineView, UPGRADE_WINDOW, VRowGroup, View, applyAll, capitaliseFirstLetter, compareByFieldSpecs, computeIntervalUnit, computeOffsetForSeg, computeOffsetForSegs, copyRect, cssToStr, debounce, detectWarningInContainer, divideDurationByDuration, divideRangeByDuration, durationHasTime, flexibleCompare, getContentRect, getOuterRect, getOwnCells, getRectHeight, getRectWidth, getScrollbarWidths, hContainRect, htmlEscape, intersectRanges, intersectRects, isImmuneUrl, isInt, isValidKey, joinRects, multiplyDuration, origDisplayEvents, origDisplayView, origGetSegClasses, origRenderSkeleton, origUnrenderSkeleton, parseFieldSpecs, processLicenseKey, proxy, renderingWarningInContainer, testRectContains, testRectHContains, testRectVContains, timeRowSegsCollide, vContainRect,
+var COL_MIN_WIDTH, Calendar, CalendarExtension, Class, ClippedScroller, CoordCache, DEFAULT_GRID_DURATION, DragListener, EmitterMixin, EnhancedScroller, EventRow, FC, Grid, HRowGroup, LICENSE_INFO_URL, ListenerMixin, MAX_AUTO_CELLS, MAX_AUTO_SLOTS_PER_LABEL, MAX_CELLS, MIN_AUTO_LABELS, PRESET_LICENSE_KEYS, Promise, RELEASE_DATE, ResourceAgendaView, ResourceBasicView, ResourceDayGrid, ResourceDayTableMixin, ResourceGridMixin, ResourceManager, ResourceMonthView, ResourceRow, ResourceTimeGrid, ResourceTimelineGrid, ResourceTimelineView, ResourceViewMixin, RowGroup, RowParent, STOCK_SUB_DURATIONS, ScrollFollower, ScrollFollowerSprite, ScrollJoiner, ScrollerCanvas, Spreadsheet, TaskQueue, TimelineGrid, TimelineView, UPGRADE_WINDOW, VRowGroup, VertResourceViewMixin, View, _filterResourcesWithEvents, applyAll, capitaliseFirstLetter, compareByFieldSpecs, computeGreatestUnit, computeOffsetForSeg, computeOffsetForSegs, copyRect, createObject, cssToStr, debounce, detectWarningInContainer, divideDurationByDuration, divideRangeByDuration, durationHasTime, flexibleCompare, getContentRect, getOuterRect, getOwnCells, getRectHeight, getRectWidth, getScrollbarWidths, hContainRect, htmlEscape, intersectRanges, intersectRects, isImmuneUrl, isInt, isValidKey, joinRects, multiplyDuration, origExecuteEventsRender, origGetSegCustomClasses, origGetSegDefaultBackgroundColor, origGetSegDefaultBorderColor, origGetSegDefaultTextColor, origOnDateRender, origRemoveElement, origSetElement, parseFieldSpecs, processLicenseKey, proxy, renderingWarningInContainer, testRectContains, testRectHContains, testRectVContains, timeRowSegsCollide, vContainRect,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty,
+  indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; },
   slice = [].slice;
 
 FC = $.fullCalendar;
 
-FC.schedulerVersion = "1.3.0";
+FC.schedulerVersion = "1.6.1";
 
-if (FC.internalApiVersion !== 3) {
+if (FC.internalApiVersion !== 9) {
   FC.warn('v' + FC.schedulerVersion + ' of FullCalendar Scheduler ' + 'is incompatible with v' + FC.version + ' of the core.\n' + 'Please see http://fullcalendar.io/support/ for more information.');
   return;
 }
@@ -46,7 +54,7 @@ DragListener = FC.DragListener;
 
 htmlEscape = FC.htmlEscape;
 
-computeIntervalUnit = FC.computeIntervalUnit;
+computeGreatestUnit = FC.computeGreatestUnit;
 
 proxy = FC.proxy;
 
@@ -79,6 +87,12 @@ CoordCache = FC.CoordCache;
 getContentRect = FC.getContentRect;
 
 getOuterRect = FC.getOuterRect;
+
+createObject = FC.createObject;
+
+Promise = FC.Promise;
+
+TaskQueue = FC.TaskQueue;
 
 
 /*
@@ -114,6 +128,8 @@ EnhancedScroller = (function(superClass) {
   EnhancedScroller.prototype.isScrolling = false;
 
   EnhancedScroller.prototype.isTouching = false;
+
+  EnhancedScroller.prototype.isTouchedEver = false;
 
   EnhancedScroller.prototype.isMoving = false;
 
@@ -210,7 +226,8 @@ EnhancedScroller = (function(superClass) {
   };
 
   EnhancedScroller.prototype.reportTouchStart = function() {
-    return this.isTouching = true;
+    this.isTouching = true;
+    return this.isTouchedEver = true;
   };
 
   EnhancedScroller.prototype.reportTouchEnd = function() {
@@ -628,6 +645,8 @@ ScrollFollower = (function() {
 
   ScrollFollower.prototype.isVFollowing = false;
 
+  ScrollFollower.prototype.allowPointerEvents = false;
+
   ScrollFollower.prototype.containOnNaturalLeft = false;
 
   ScrollFollower.prototype.containOnNaturalRight = false;
@@ -638,14 +657,23 @@ ScrollFollower = (function() {
 
   ScrollFollower.prototype.isForcedRelative = false;
 
-  function ScrollFollower(scroller, isTouch) {
-    this.isTouch = isTouch;
+  function ScrollFollower(scroller, allowPointerEvents) {
+    this.allowPointerEvents = allowPointerEvents != null ? allowPointerEvents : false;
     this.scroller = scroller;
     this.sprites = [];
-    if (this.isTouch) {
-      this.isForcedRelative = true;
-    }
-    scroller.on((this.isTouch ? 'scrollEnd' : 'scroll'), (function(_this) {
+    scroller.on('scroll', (function(_this) {
+      return function() {
+        if (scroller.isTouchedEver) {
+          _this.isTouch = true;
+          return _this.isForcedRelative = true;
+        } else {
+          _this.isTouch = false;
+          _this.isForcedRelative = false;
+          return _this.handleScroll();
+        }
+      };
+    })(this));
+    scroller.on('scrollEnd', (function(_this) {
       return function() {
         return _this.handleScroll();
       };
@@ -966,19 +994,25 @@ ScrollFollowerSprite = (function() {
   };
 
   ScrollFollowerSprite.prototype.buildAbsoluteEl = function() {
-    return this.el.clone().addClass('fc-following').css({
+    var el;
+    el = this.el.clone().addClass('fc-following');
+    el.css({
       'position': 'absolute',
       'z-index': 1000,
       'font-weight': this.el.css('font-weight'),
       'font-size': this.el.css('font-size'),
       'font-family': this.el.css('font-family'),
+      'text-decoration': this.el.css('text-decoration'),
       'color': this.el.css('color'),
       'padding-top': this.el.css('padding-top'),
       'padding-bottom': this.el.css('padding-bottom'),
       'padding-left': this.el.css('padding-left'),
-      'padding-right': this.el.css('padding-right'),
-      'pointer-events': 'none'
+      'padding-right': this.el.css('padding-right')
     });
+    if (!this.follower.allowPointerEvents) {
+      el.css('pointer-events', 'none');
+    }
+    return el;
   };
 
   return ScrollFollowerSprite;
@@ -1075,11 +1109,11 @@ CalendarExtension = (function(superClass) {
         viewClass = spec.resourceClass;
       }
     }
-    return new viewClass(this, viewType, spec.options, spec.duration);
+    return new viewClass(this, spec);
   };
 
   CalendarExtension.prototype.getResources = function() {
-    return this.resourceManager.topLevelResources;
+    return Array.prototype.slice.call(this.resourceManager.topLevelResources);
   };
 
   CalendarExtension.prototype.addResource = function(resourceInput, scroll) {
@@ -1089,7 +1123,7 @@ CalendarExtension = (function(superClass) {
     }
     promise = this.resourceManager.addResource(resourceInput);
     if (scroll && this.view.scrollToResource) {
-      promise.done((function(_this) {
+      promise.then((function(_this) {
         return function(resource) {
           return _this.view.scrollToResource(resource);
         };
@@ -1106,7 +1140,36 @@ CalendarExtension = (function(superClass) {
   };
 
   CalendarExtension.prototype.rerenderResources = function() {
-    this.resourceManager.resetResources();
+    this.resourceManager.resetCurrentResources();
+  };
+
+  CalendarExtension.prototype.isSpanAllowed = function(span, constraint) {
+    var constrainToResourceIds, ref;
+    if (typeof constraint === 'object') {
+      constrainToResourceIds = this.getEventResourceIds(constraint);
+      if (constrainToResourceIds.length && (!span.resourceId || !(ref = span.resourceId, indexOf.call(constrainToResourceIds, ref) >= 0))) {
+        return false;
+      }
+    }
+    return CalendarExtension.__super__.isSpanAllowed.apply(this, arguments);
+  };
+
+  CalendarExtension.prototype.mutateSeg = function(span, newProps, largeUnit) {
+    var mutatedResourceIds, newResourceId, oldResourceId, ref;
+    if (newProps.resourceId) {
+      oldResourceId = ((ref = span.resource) != null ? ref.id : void 0) || span.resourceId;
+      newResourceId = newProps.resourceId;
+      mutatedResourceIds = this.getEventResourceIds(span.event);
+      if (oldResourceId !== newResourceId) {
+        mutatedResourceIds = mutatedResourceIds.filter(function(resourceId) {
+          return resourceId !== oldResourceId && resourceId !== newResourceId;
+        });
+        mutatedResourceIds.push(newResourceId);
+      }
+      newProps = $.extend({}, newProps);
+      this.setEventResourceIds(newProps, mutatedResourceIds);
+    }
+    return this.mutateEvent(span.event, newProps, largeUnit);
   };
 
   CalendarExtension.prototype.getPeerEvents = function(span, event) {
@@ -1139,6 +1202,41 @@ CalendarExtension = (function(superClass) {
     return filteredPeerEvents;
   };
 
+  CalendarExtension.prototype.spanContainsSpan = function(outerSpan, innerSpan) {
+    if (outerSpan.resourceId && outerSpan.resourceId !== innerSpan.resourceId) {
+      return false;
+    } else {
+      return CalendarExtension.__super__.spanContainsSpan.apply(this, arguments);
+    }
+  };
+
+  CalendarExtension.prototype.getCurrentBusinessHourEvents = function(wholeDay) {
+    var allEvents, anyCustomBusinessHours, event, events, flatResources, j, k, l, len, len1, len2, resource;
+    flatResources = this.resourceManager.getFlatResources();
+    anyCustomBusinessHours = false;
+    for (j = 0, len = flatResources.length; j < len; j++) {
+      resource = flatResources[j];
+      if (resource.businessHours) {
+        anyCustomBusinessHours = true;
+      }
+    }
+    if (anyCustomBusinessHours) {
+      allEvents = [];
+      for (k = 0, len1 = flatResources.length; k < len1; k++) {
+        resource = flatResources[k];
+        events = this.computeBusinessHourEvents(wholeDay, resource.businessHours || this.options.businessHours);
+        for (l = 0, len2 = events.length; l < len2; l++) {
+          event = events[l];
+          event.resourceId = resource.id;
+          allEvents.push(event);
+        }
+      }
+      return allEvents;
+    } else {
+      return CalendarExtension.__super__.getCurrentBusinessHourEvents.apply(this, arguments);
+    }
+  };
+
   CalendarExtension.prototype.buildSelectSpan = function(startInput, endInput, resourceId) {
     var span;
     span = CalendarExtension.__super__.buildSelectSpan.apply(this, arguments);
@@ -1150,6 +1248,14 @@ CalendarExtension = (function(superClass) {
 
   CalendarExtension.prototype.getResourceById = function(id) {
     return this.resourceManager.getResourceById(id);
+  };
+
+  CalendarExtension.prototype.normalizeEvent = function(event) {
+    CalendarExtension.__super__.normalizeEvent.apply(this, arguments);
+    if (event.resourceId == null) {
+      event.resourceId = null;
+    }
+    return event.resourceIds != null ? event.resourceIds : event.resourceIds = null;
   };
 
   CalendarExtension.prototype.getEventResourceId = function(event) {
@@ -1178,7 +1284,12 @@ CalendarExtension = (function(superClass) {
   };
 
   CalendarExtension.prototype.setEventResourceId = function(event, resourceId) {
-    return event[this.getEventResourceField()] = String(resourceId != null ? resourceId : '');
+    return this.setEventResourceIds(event, resourceId ? [resourceId] : []);
+  };
+
+  CalendarExtension.prototype.setEventResourceIds = function(event, resourceIds) {
+    event[this.getEventResourceField()] = resourceIds.length === 1 ? resourceIds[0] : null;
+    return event.resourceIds = resourceIds.length > 1 ? resourceIds : null;
   };
 
   CalendarExtension.prototype.getEventResourceField = function() {
@@ -1226,106 +1337,214 @@ CalendarExtension = (function(superClass) {
 
 Calendar.prototype = CalendarExtension.prototype;
 
-origDisplayView = View.prototype.displayView;
+origSetElement = View.prototype.setElement;
 
-origRenderSkeleton = View.prototype.renderSkeleton;
+origRemoveElement = View.prototype.removeElement;
 
-origUnrenderSkeleton = View.prototype.unrenderSkeleton;
+origOnDateRender = View.prototype.onDateRender;
 
-origDisplayEvents = View.prototype.displayEvents;
+origExecuteEventsRender = View.prototype.executeEventsRender;
 
 View.prototype.isResourcesBound = false;
 
-View.prototype.settingResources = null;
+View.prototype.isResourcesSet = false;
 
-View.prototype.displayView = function() {
-  origDisplayView.apply(this, arguments);
-  processLicenseKey(this.calendar.options.schedulerLicenseKey, this.el);
-  this.bindResources();
-  return this.whenResources();
+Calendar.defaults.refetchResourcesOnNavigate = false;
+
+View.prototype.setElement = function() {
+  var promise;
+  promise = origSetElement.apply(this, arguments);
+  if (!this.opt('refetchResourcesOnNavigate')) {
+    this.bindResources();
+  }
+  return promise;
 };
 
-View.prototype.unrenderSkeleton = function() {
-  origUnrenderSkeleton.apply(this, arguments);
-  return this.unbindResources();
+View.prototype.removeElement = function() {
+  this.unbindResources({
+    skipRerender: true
+  });
+  return origRemoveElement.apply(this, arguments);
 };
 
-View.prototype.displayEvents = function(events) {
-  return this.whenResources((function(_this) {
+
+/*
+Replace the supermethod's logic. Important to unbind/bind *events* (TODO: make more DRY)
+ */
+
+View.prototype.handleDate = function(dateProfile) {
+  var resourcesNeedDate;
+  resourcesNeedDate = this.opt('refetchResourcesOnNavigate');
+  this.unbindEvents();
+  if (resourcesNeedDate) {
+    this.unbindResources({
+      skipUnrender: true
+    });
+  }
+  return this.requestDateRender(dateProfile).then((function(_this) {
     return function() {
-      return origDisplayEvents.call(_this, events);
+      _this.bindEvents();
+      if (resourcesNeedDate) {
+        return _this.bindResources(true);
+      }
     };
   })(this));
 };
 
-View.prototype.bindResources = function() {
-  var setResources;
+View.prototype.onDateRender = function() {
+  processLicenseKey(this.calendar.options.schedulerLicenseKey, this.el);
+  return origOnDateRender.apply(this, arguments);
+};
+
+View.prototype.executeEventsRender = function(events) {
+  return this.whenResourcesSet().then((function(_this) {
+    return function() {
+      return origExecuteEventsRender.call(_this, events);
+    };
+  })(this));
+};
+
+View.prototype.bindResources = function(forceInitialFetch) {
+  var promise;
   if (!this.isResourcesBound) {
     this.isResourcesBound = true;
-    this.settingResources = $.Deferred();
-    setResources = (function(_this) {
+    this.trigger('resourcesBind');
+    promise = forceInitialFetch ? this.fetchResources() : this.requestResources();
+    return this.rejectOn('resourcesUnbind', promise).then((function(_this) {
       return function(resources) {
-        _this.setResources(resources);
-        return _this.settingResources.resolve();
+        _this.listenTo(_this.calendar.resourceManager, {
+          set: _this.setResources,
+          reset: _this.setResources,
+          unset: _this.unsetResources,
+          add: _this.addResource,
+          remove: _this.removeResource
+        });
+        return _this.setResources(resources);
       };
-    })(this);
-    this.listenTo(this.calendar.resourceManager, {
-      set: setResources,
-      unset: this.unsetResources,
-      reset: this.resetResources,
-      add: this.addResource,
-      remove: this.removeResource
-    });
-    if (this.calendar.resourceManager.hasFetched()) {
-      return setResources(this.calendar.resourceManager.topLevelResources);
-    } else {
-      return this.calendar.resourceManager.getResources();
-    }
+    })(this));
   }
 };
 
-View.prototype.unbindResources = function() {
+View.prototype.unbindResources = function(teardownOptions) {
   if (this.isResourcesBound) {
+    this.isResourcesBound = false;
     this.stopListeningTo(this.calendar.resourceManager);
-    if (this.settingResources.state() === 'resolved') {
-      this.unsetResources();
-    }
-    this.settingResources = null;
-    return this.isResourcesBound = false;
+    this.unsetResources(teardownOptions);
+    return this.trigger('resourcesUnbind');
   }
 };
 
-View.prototype.whenResources = function(thenFunc) {
-  if (this.settingResources.state() === 'resolved') {
-    return $.when(thenFunc ? thenFunc() : void 0);
-  } else if (thenFunc) {
-    return this.settingResources.then(thenFunc);
+View.prototype.setResources = function(resources) {
+  var isReset;
+  isReset = this.isResourcesSet;
+  this.isResourcesSet = true;
+  this.handleResources(resources, isReset);
+  return this.trigger(isReset ? 'resourcesReset' : 'resourcesSet', resources);
+};
+
+View.prototype.unsetResources = function(teardownOptions) {
+  if (this.isResourcesSet) {
+    this.isResourcesSet = false;
+    this.handleResourcesUnset(teardownOptions);
+    return this.trigger('resourcesUnset');
+  }
+};
+
+View.prototype.whenResourcesSet = function() {
+  if (this.isResourcesSet) {
+    return Promise.resolve();
   } else {
-    return this.settingResources.promise();
+    return new Promise((function(_this) {
+      return function(resolve) {
+        return _this.one('resourcesSet', resolve);
+      };
+    })(this));
   }
-};
-
-View.prototype.setResources = function(resources) {};
-
-View.prototype.unsetResources = function() {};
-
-View.prototype.resetResources = function(resources) {
-  return this.calendar.rerenderEvents();
 };
 
 View.prototype.addResource = function(resource) {
-  return this.resetResources(this.calendar.resourceManager.topLevelResources);
+  if (this.isResourcesSet) {
+    this.handleResourceAdd(resource);
+    return this.trigger('resourceAdd', resource);
+  }
 };
 
 View.prototype.removeResource = function(resource) {
-  return this.resetResources(this.calendar.resourceManager.topLevelResources);
+  if (this.isResourcesSet) {
+    this.handleResourceRemove(resource);
+    return this.trigger('resourceRemove', resource);
+  }
 };
 
-origGetSegClasses = Grid.prototype.getSegClasses;
+View.prototype.handleResources = function(resources) {
+  if (this.isEventsRendered) {
+    return this.requestCurrentEventsRender();
+  }
+};
 
-Grid.prototype.getSegClasses = function(seg) {
+View.prototype.handleResourcesUnset = function(teardownOptions) {
+  if (teardownOptions == null) {
+    teardownOptions = {};
+  }
+  return this.requestEventsUnrender();
+};
+
+View.prototype.handleResourceAdd = function(resource) {
+  if (this.isEventsRendered) {
+    return this.requestCurrentEventsRender();
+  }
+};
+
+View.prototype.handleResourceRemove = function(resource) {
+  if (this.isEventsRendered) {
+    return this.requestCurrentEventsRender();
+  }
+};
+
+
+/*
+Like fetchResources, but won't refetch if already fetched (regardless of start/end).
+If refetchResourcesOnNavigate is enabled,
+this function expects the view's start/end to be already populated.
+ */
+
+View.prototype.requestResources = function() {
+  if (this.opt('refetchResourcesOnNavigate')) {
+    return this.calendar.resourceManager.getResources(this.activeRange.start, this.activeRange.end);
+  } else {
+    return this.calendar.resourceManager.getResources();
+  }
+};
+
+
+/*
+If refetchResourcesOnNavigate is enabled,
+this function expects the view's start/end to be already populated.
+ */
+
+View.prototype.fetchResources = function() {
+  if (this.opt('refetchResourcesOnNavigate')) {
+    return this.calendar.resourceManager.fetchResources(this.activeRange.start, this.activeRange.end);
+  } else {
+    return this.calendar.resourceManager.fetchResources();
+  }
+};
+
+View.prototype.getCurrentResources = function() {
+  return this.calendar.resourceManager.topLevelResources;
+};
+
+origGetSegCustomClasses = Grid.prototype.getSegCustomClasses;
+
+origGetSegDefaultBackgroundColor = Grid.prototype.getSegDefaultBackgroundColor;
+
+origGetSegDefaultBorderColor = Grid.prototype.getSegDefaultBorderColor;
+
+origGetSegDefaultTextColor = Grid.prototype.getSegDefaultTextColor;
+
+Grid.prototype.getSegCustomClasses = function(seg) {
   var classes, j, len, ref, resource;
-  classes = origGetSegClasses.apply(this, arguments);
+  classes = origGetSegCustomClasses.apply(this, arguments);
   ref = this.getSegResources(seg);
   for (j = 0, len = ref.length; j < len; j++) {
     resource = ref[j];
@@ -1334,56 +1553,52 @@ Grid.prototype.getSegClasses = function(seg) {
   return classes;
 };
 
-Grid.prototype.getSegSkinCss = function(seg) {
-  var event, eventColor, getResourceBackgroundColor, getResourceBorderColor, getResourceTextColor, optionColor, resources, source, sourceColor, view;
-  view = this.view;
-  event = seg.event;
-  source = event.source || {};
-  eventColor = event.color;
-  sourceColor = source.color;
-  optionColor = view.opt('eventColor');
+Grid.prototype.getSegDefaultBackgroundColor = function(seg) {
+  var currentResource, j, len, resources, val;
   resources = this.getSegResources(seg);
-  getResourceBackgroundColor = function() {
-    var currentResource, j, len, val;
-    val = null;
-    for (j = 0, len = resources.length; j < len; j++) {
-      currentResource = resources[j];
-      while (currentResource && !val) {
-        val = currentResource.eventBackgroundColor || currentResource.eventColor;
-        currentResource = currentResource._parent;
+  for (j = 0, len = resources.length; j < len; j++) {
+    currentResource = resources[j];
+    while (currentResource) {
+      val = currentResource.eventBackgroundColor || currentResource.eventColor;
+      if (val) {
+        return val;
       }
+      currentResource = currentResource._parent;
     }
-    return val;
-  };
-  getResourceBorderColor = function() {
-    var currentResource, j, len, val;
-    val = null;
-    for (j = 0, len = resources.length; j < len; j++) {
-      currentResource = resources[j];
-      while (currentResource && !val) {
-        val = currentResource.eventBorderColor || currentResource.eventColor;
-        currentResource = currentResource._parent;
+  }
+  return origGetSegDefaultBackgroundColor.apply(this, arguments);
+};
+
+Grid.prototype.getSegDefaultBorderColor = function(seg) {
+  var currentResource, j, len, resources, val;
+  resources = this.getSegResources(seg);
+  for (j = 0, len = resources.length; j < len; j++) {
+    currentResource = resources[j];
+    while (currentResource) {
+      val = currentResource.eventBorderColor || currentResource.eventColor;
+      if (val) {
+        return val;
       }
+      currentResource = currentResource._parent;
     }
-    return val;
-  };
-  getResourceTextColor = function() {
-    var currentResource, j, len, val;
-    val = null;
-    for (j = 0, len = resources.length; j < len; j++) {
-      currentResource = resources[j];
-      while (currentResource && !val) {
-        val = currentResource.eventTextColor;
-        currentResource = currentResource._parent;
+  }
+  return origGetSegDefaultBorderColor.apply(this, arguments);
+};
+
+Grid.prototype.getSegDefaultTextColor = function(seg) {
+  var currentResource, j, len, resources, val;
+  resources = this.getSegResources(seg);
+  for (j = 0, len = resources.length; j < len; j++) {
+    currentResource = resources[j];
+    while (currentResource) {
+      val = currentResource.eventTextColor;
+      if (val) {
+        return val;
       }
+      currentResource = currentResource._parent;
     }
-    return val;
-  };
-  return {
-    'background-color': event.backgroundColor || eventColor || getResourceBackgroundColor() || source.backgroundColor || sourceColor || view.opt('eventBackgroundColor') || optionColor,
-    'border-color': event.borderColor || eventColor || getResourceBorderColor() || source.borderColor || sourceColor || view.opt('eventBorderColor') || optionColor,
-    'color': event.textColor || getResourceTextColor() || source.textColor || view.opt('eventTextColor')
-  };
+  }
+  return origGetSegDefaultTextColor.apply(this, arguments);
 };
 
 Grid.prototype.getSegResources = function(seg) {
@@ -1408,6 +1623,8 @@ ResourceManager = (function(superClass) {
 
   ResourceManager.prototype.calendar = null;
 
+  ResourceManager.prototype.fetchId = 0;
+
   ResourceManager.prototype.topLevelResources = null;
 
   ResourceManager.prototype.resourcesById = null;
@@ -1419,42 +1636,50 @@ ResourceManager = (function(superClass) {
     this.initializeCache();
   }
 
-  ResourceManager.prototype.hasFetched = function() {
-    return this.fetching && this.fetching.state() === 'resolved';
+
+  /*
+  	Like fetchResources, but won't refetch if already fetched (regardless of start/end).
+   */
+
+  ResourceManager.prototype.getResources = function(start, end) {
+    return this.fetching || this.fetchResources(start, end);
   };
 
-  ResourceManager.prototype.getResources = function() {
-    var getting;
-    if (!this.fetching) {
-      getting = $.Deferred();
-      this.fetchResources().done(function(resources) {
-        return getting.resolve(resources);
-      }).fail(function() {
-        return getting.resolve([]);
-      });
-      return getting;
-    } else {
-      return $.Deferred().resolve(this.topLevelResources).promise();
-    }
-  };
 
-  ResourceManager.prototype.fetchResources = function() {
-    var prevFetching;
-    prevFetching = this.fetching;
-    return $.when(prevFetching).then((function(_this) {
-      return function() {
-        return _this.fetching = _this.fetchResourceInputs().then(function(resourceInputs) {
-          _this.setResources(resourceInputs, Boolean(prevFetching));
-          return _this.topLevelResources;
-        });
+  /*
+  	Will always fetch, even if done previously.
+  	Accepts optional chrono-related params to pass on to the raw resource sources.
+  	Returns a promise.
+   */
+
+  ResourceManager.prototype.fetchResources = function(start, end) {
+    var currentFetchId;
+    currentFetchId = (this.fetchId += 1);
+    return this.fetching = new Promise((function(_this) {
+      return function(resolve, reject) {
+        return _this.fetchResourceInputs(function(resourceInputs) {
+          if (currentFetchId === _this.fetchId) {
+            _this.setResources(resourceInputs);
+            return resolve(_this.topLevelResources);
+          } else {
+            return reject();
+          }
+        }, start, end);
       };
     })(this));
   };
 
-  ResourceManager.prototype.fetchResourceInputs = function() {
-    var deferred, promise, source;
-    deferred = $.Deferred();
-    source = this.calendar.options['resources'];
+
+  /*
+  	Accepts optional chrono-related params to pass on to the raw resource sources.
+  	Calls callback when done.
+   */
+
+  ResourceManager.prototype.fetchResourceInputs = function(callback, start, end) {
+    var calendar, options, requestParams, source;
+    calendar = this.calendar;
+    options = calendar.options;
+    source = options.resources;
     if ($.type(source) === 'string') {
       source = {
         url: source
@@ -1462,41 +1687,49 @@ ResourceManager = (function(superClass) {
     }
     switch ($.type(source)) {
       case 'function':
-        source((function(_this) {
+        this.calendar.pushLoading();
+        return source((function(_this) {
           return function(resourceInputs) {
-            return deferred.resolve(resourceInputs);
+            _this.calendar.popLoading();
+            return callback(resourceInputs);
+          };
+        })(this), start, end, options.timezone);
+      case 'object':
+        calendar.pushLoading();
+        requestParams = {};
+        if (start && end) {
+          requestParams[options.startParam] = start.format();
+          requestParams[options.endParam] = end.format();
+          if (options.timezone && options.timezone !== 'local') {
+            requestParams[options.timezoneParam] = options.timezone;
+          }
+        }
+        return $.ajax($.extend({
+          data: requestParams
+        }, ResourceManager.ajaxDefaults, source)).then((function(_this) {
+          return function(resourceInputs) {
+            calendar.popLoading();
+            return callback(resourceInputs);
           };
         })(this));
-        break;
-      case 'object':
-        promise = $.ajax($.extend({}, ResourceManager.ajaxDefaults, source));
-        break;
       case 'array':
-        deferred.resolve(source);
-        break;
+        return callback(source);
       default:
-        deferred.resolve([]);
+        return callback([]);
     }
-    promise || (promise = deferred.promise());
-    if (!promise.state() === 'pending') {
-      this.calendar.pushLoading();
-      promise.always(function() {
-        return this.calendar.popLoading();
-      });
-    }
-    return promise;
-  };
-
-  ResourceManager.prototype.resetResources = function() {
-    return this.getResources().then((function(_this) {
-      return function() {
-        return _this.trigger('reset', _this.topLevelResources);
-      };
-    })(this));
   };
 
   ResourceManager.prototype.getResourceById = function(id) {
     return this.resourcesById[id];
+  };
+
+  ResourceManager.prototype.getFlatResources = function() {
+    var id, results;
+    results = [];
+    for (id in this.resourcesById) {
+      results.push(this.resourcesById[id]);
+    }
+    return results;
   };
 
   ResourceManager.prototype.initializeCache = function() {
@@ -1504,8 +1737,9 @@ ResourceManager = (function(superClass) {
     return this.resourcesById = {};
   };
 
-  ResourceManager.prototype.setResources = function(resourceInputs, isReset) {
-    var j, len, resource, resourceInput, resources, validResources;
+  ResourceManager.prototype.setResources = function(resourceInputs) {
+    var j, len, resource, resourceInput, resources, validResources, wasSet;
+    wasSet = Boolean(this.topLevelResources);
     this.initializeCache();
     resources = (function() {
       var j, len, results;
@@ -1531,16 +1765,22 @@ ResourceManager = (function(superClass) {
       resource = validResources[j];
       this.addResourceToTree(resource);
     }
-    if (isReset) {
+    if (wasSet) {
       this.trigger('reset', this.topLevelResources);
     } else {
       this.trigger('set', this.topLevelResources);
     }
-    return this.calendar.trigger('resourcesSet', null, this.topLevelResources);
+    return this.calendar.publiclyTrigger('resourcesSet', null, this.topLevelResources);
+  };
+
+  ResourceManager.prototype.resetCurrentResources = function() {
+    if (this.topLevelResources) {
+      return this.trigger('reset', this.topLevelResources);
+    }
   };
 
   ResourceManager.prototype.addResource = function(resourceInput) {
-    return $.when(this.fetching).then((function(_this) {
+    return this.getResources().then((function(_this) {
       return function() {
         var resource;
         resource = _this.buildResource(resourceInput);
@@ -1593,7 +1833,7 @@ ResourceManager = (function(superClass) {
   ResourceManager.prototype.removeResource = function(idOrResource) {
     var id;
     id = typeof idOrResource === 'object' ? idOrResource.id : idOrResource;
-    return $.when(this.fetching).then((function(_this) {
+    return this.getResources().then((function(_this) {
       return function() {
         var resource;
         resource = _this.removeResourceFromIndex(id);
@@ -1675,18 +1915,205 @@ ResourceManager = (function(superClass) {
 
 })(Class);
 
+Calendar.defaults.filterResourcesWithEvents = false;
+
+
+/*
+A view that structurally distinguishes events by resource
+ */
+
 ResourceViewMixin = {
+  isResourcesRendered: false,
+  isResourcesDirty: false,
+  resourceRenderQueue: null,
   resourceTextFunc: null,
-  unsetResources: function() {
-    return this.clearEvents();
+  canRenderSpecificResources: false,
+  setElement: function() {
+    this.resourceRenderQueue = new TaskQueue();
+    return View.prototype.setElement.apply(this, arguments);
   },
-  resetResources: function(resources) {
-    var scrollState;
-    scrollState = this.queryScroll();
-    this.unsetResources();
-    this.setResources(resources);
-    this.setScroll(scrollState);
-    return this.calendar.rerenderEvents();
+  onDateRender: function() {
+    return this.rejectOn('dateUnrender', this.whenResourcesRendered()).then((function(_this) {
+      return function() {
+        return View.prototype.onDateRender.apply(_this, arguments);
+      };
+    })(this));
+  },
+  handleEvents: function(events) {
+    var filteredResources, resources;
+    if (this.opt('filterResourcesWithEvents')) {
+      if (this.isResourcesSet) {
+        resources = this.getCurrentResources();
+        filteredResources = this.filterResourcesWithEvents(resources, events);
+        return this.requestResourcesRender(filteredResources);
+      }
+    } else {
+      if (this.isResourcesRendered && !this.isResourcesDirty) {
+        return this.requestEventsRender(events);
+      }
+    }
+  },
+  handleResources: function(resources) {
+    var events, filteredResources;
+    if (this.opt('filterResourcesWithEvents')) {
+      if (this.isEventsSet) {
+        events = this.getCurrentEvents();
+        filteredResources = this.filterResourcesWithEvents(resources, events);
+        return this.requestResourcesRender(filteredResources);
+      }
+    } else {
+      return this.requestResourcesRender(resources);
+    }
+  },
+  handleResourcesUnset: function(teardownOptions) {
+    if (teardownOptions == null) {
+      teardownOptions = {};
+    }
+    if (teardownOptions.skipUnrender) {
+      return this.isResourcesDirty = this.isResourcesRendered;
+    } else {
+      return this.requestResourcesUnrender(teardownOptions);
+    }
+  },
+  handleResourceAdd: function(resource) {
+    var a, events;
+    if (this.canRenderSpecificResources) {
+      if (this.opt('filterResourcesWithEvents')) {
+        if (this.isEventsSet) {
+          events = this.getCurrentEvents();
+          a = this.filterResourcesWithEvents([resource], events);
+          if (a.length) {
+            return this.requestResourceRender(a[0]);
+          }
+        }
+      } else {
+        return this.requestResourceRender(resource);
+      }
+    } else {
+      return this.handleResources(this.getCurrentResources());
+    }
+  },
+  handleResourceRemove: function(resource) {
+    if (this.canRenderSpecificResources) {
+      return this.requestResourceUnrender(resource);
+    } else {
+      return this.handleResources(this.getCurrentResources());
+    }
+  },
+  requestResourcesRender: function(resources) {
+    return this.resourceRenderQueue.add((function(_this) {
+      return function() {
+        return _this.executeResourcesRender(resources);
+      };
+    })(this));
+  },
+  requestResourcesUnrender: function(teardownOptions) {
+    if (this.isResourcesRendered) {
+      return this.resourceRenderQueue.add((function(_this) {
+        return function() {
+          return _this.executeResourcesUnrender(teardownOptions);
+        };
+      })(this));
+    } else {
+      return Promise.resolve();
+    }
+  },
+  requestResourceRender: function(resource) {
+    return this.resourceRenderQueue.add((function(_this) {
+      return function() {
+        return _this.executeResourceRender(resource);
+      };
+    })(this));
+  },
+  requestResourceUnrender: function(resource) {
+    return this.resourceRenderQueue.add((function(_this) {
+      return function() {
+        return _this.executeResourceUnrender(resource);
+      };
+    })(this));
+  },
+  executeResourcesRender: function(resources) {
+    this.captureScroll();
+    this.freezeHeight();
+    return this.executeResourcesUnrender().then((function(_this) {
+      return function() {
+        _this.renderResources(resources);
+        _this.thawHeight();
+        _this.releaseScroll();
+        return _this.reportResourcesRender();
+      };
+    })(this));
+  },
+  executeResourcesUnrender: function(teardownOptions) {
+    if (this.isResourcesRendered) {
+      return this.requestEventsUnrender().then((function(_this) {
+        return function() {
+          _this.captureScroll();
+          _this.freezeHeight();
+          _this.unrenderResources(teardownOptions);
+          _this.thawHeight();
+          _this.releaseScroll();
+          return _this.reportResourcesUnrender();
+        };
+      })(this));
+    } else {
+      return Promise.resolve();
+    }
+  },
+  executeResourceRender: function(resource) {
+    if (this.isResourcesRendered) {
+      this.captureScroll();
+      this.freezeHeight();
+      this.renderResource(resource);
+      this.thawHeight();
+      return this.releaseScroll();
+    } else {
+      return Promise.reject();
+    }
+  },
+  executeResourceUnrender: function(resource) {
+    if (this.isResourcesRendered) {
+      this.captureScroll();
+      this.freezeHeight();
+      this.unrenderResource(resource);
+      this.thawHeight();
+      return this.releaseScroll();
+    } else {
+      return Promise.reject();
+    }
+  },
+  reportResourcesRender: function() {
+    this.isResourcesRendered = true;
+    this.trigger('resourcesRender');
+    if (this.isEventsSet) {
+      this.requestEventsRender(this.getCurrentEvents());
+    }
+  },
+  reportResourcesUnrender: function() {
+    this.isResourcesRendered = false;
+    return this.isResourcesDirty = false;
+  },
+  whenResourcesRendered: function() {
+    if (this.isResourcesRendered && !this.isResourcesDirty) {
+      return Promise.resolve();
+    } else {
+      return new Promise((function(_this) {
+        return function(resolve) {
+          return _this.one('resourcesRender', resolve);
+        };
+      })(this));
+    }
+  },
+  renderResources: function(resources) {},
+  unrenderResources: function(teardownOptions) {},
+  renderResource: function(resource) {},
+  unrenderResource: function(resource) {},
+  isEventDraggable: function(event) {
+    return this.isEventResourceEditable(event) || View.prototype.isEventDraggable.call(this, event);
+  },
+  isEventResourceEditable: function(event) {
+    var ref, ref1, ref2;
+    return (ref = (ref1 = (ref2 = event.resourceEditable) != null ? ref2 : (event.source || {}).resourceEditable) != null ? ref1 : this.opt('eventResourceEditable')) != null ? ref : this.isEventGenerallyEditable(event);
   },
   getResourceText: function(resource) {
     return this.getResourceTextFunc()(resource);
@@ -1708,17 +2135,17 @@ ResourceViewMixin = {
   triggerDayClick: function(span, dayEl, ev) {
     var resourceManager;
     resourceManager = this.calendar.resourceManager;
-    return this.trigger('dayClick', dayEl, this.calendar.applyTimezone(span.start), ev, this, resourceManager.getResourceById(span.resourceId));
+    return this.publiclyTrigger('dayClick', dayEl, this.calendar.applyTimezone(span.start), ev, this, resourceManager.getResourceById(span.resourceId));
   },
   triggerSelect: function(span, ev) {
     var resourceManager;
     resourceManager = this.calendar.resourceManager;
-    return this.trigger('select', null, this.calendar.applyTimezone(span.start), this.calendar.applyTimezone(span.end), ev, this, resourceManager.getResourceById(span.resourceId));
+    return this.publiclyTrigger('select', null, this.calendar.applyTimezone(span.start), this.calendar.applyTimezone(span.end), ev, this, resourceManager.getResourceById(span.resourceId));
   },
   triggerExternalDrop: function(event, dropLocation, el, ev, ui) {
-    this.trigger('drop', el[0], dropLocation.start, ev, ui, dropLocation.resourceId);
+    this.publiclyTrigger('drop', el[0], dropLocation.start, ev, ui, dropLocation.resourceId);
     if (event) {
-      return this.trigger('eventReceive', null, event);
+      return this.publiclyTrigger('eventReceive', null, event);
     }
   },
 
@@ -1728,15 +2155,6 @@ ResourceViewMixin = {
   	But mutateEvent isn't aware of eventResourceField, so it might be setting the wrong property. Workaround.
   	TODO: normalize somewhere else. maybe make a hook in core.
    */
-  reportEventDrop: function() {
-    var dropLocation, event, otherArgs, ref;
-    event = arguments[0], dropLocation = arguments[1], otherArgs = 3 <= arguments.length ? slice.call(arguments, 2) : [];
-    dropLocation = this.normalizeDropLocation(dropLocation);
-    if (dropLocation.resourceId && event.resourceIds) {
-      dropLocation.resourceIds = null;
-    }
-    return (ref = View.prototype.reportEventDrop).call.apply(ref, [this, event, dropLocation].concat(slice.call(otherArgs)));
-  },
   reportExternalDrop: function() {
     var dropLocation, meta, otherArgs, ref;
     meta = arguments[0], dropLocation = arguments[1], otherArgs = 3 <= arguments.length ? slice.call(arguments, 2) : [];
@@ -1749,19 +2167,110 @@ ResourceViewMixin = {
     delete out.resourceId;
     this.calendar.setEventResourceId(out, dropLocation.resourceId);
     return out;
+  },
+  filterResourcesWithEvents: function(resources, events) {
+    var event, j, k, len, len1, ref, resourceId, resourceIdHits;
+    resourceIdHits = {};
+    for (j = 0, len = events.length; j < len; j++) {
+      event = events[j];
+      ref = this.calendar.getEventResourceIds(event);
+      for (k = 0, len1 = ref.length; k < len1; k++) {
+        resourceId = ref[k];
+        resourceIdHits[resourceId] = true;
+      }
+    }
+    return _filterResourcesWithEvents(resources, resourceIdHits);
   }
 };
 
+_filterResourcesWithEvents = function(sourceResources, resourceIdHits) {
+  var filteredChildren, filteredResource, filteredResources, j, len, sourceResource;
+  filteredResources = [];
+  for (j = 0, len = sourceResources.length; j < len; j++) {
+    sourceResource = sourceResources[j];
+    if (sourceResource.children.length) {
+      filteredChildren = _filterResourcesWithEvents(sourceResource.children, resourceIdHits);
+      if (filteredChildren.length || resourceIdHits[sourceResource.id]) {
+        filteredResource = createObject(sourceResource);
+        filteredResource.children = filteredChildren;
+        filteredResources.push(filteredResource);
+      }
+    } else {
+      if (resourceIdHits[sourceResource.id]) {
+        filteredResources.push(sourceResource);
+      }
+    }
+  }
+  return filteredResources;
+};
+
+
+/*
+For vertical resource view.
+For views that rely on grids that don't render their resources and dates together.
+ */
+
+VertResourceViewMixin = $.extend({}, ResourceViewMixin, {
+  executeResourcesRender: function(resources) {
+    this.setResourcesOnGrids(resources);
+    if (this.isDateRendered) {
+      return this.requestDateRender().then((function(_this) {
+        return function() {
+          return _this.reportResourcesRender();
+        };
+      })(this));
+    } else {
+      return Promise.resolve();
+    }
+  },
+  executeResourcesUnrender: function(teardownOptions) {
+    if (teardownOptions == null) {
+      teardownOptions = {};
+    }
+    this.unsetResourcesOnGrids();
+    if (this.isDateRendered && !teardownOptions.skipRerender) {
+      return this.requestDateRender().then((function(_this) {
+        return function() {
+          return _this.reportResourcesUnrender();
+        };
+      })(this));
+    } else {
+      this.reportResourcesUnrender();
+      return Promise.resolve();
+    }
+  },
+  executeDateRender: function(dateProfile) {
+    return View.prototype.executeDateRender.apply(this, arguments).then((function(_this) {
+      return function() {
+        if (_this.isResourcesSet) {
+          return _this.reportResourcesRender();
+        }
+      };
+    })(this));
+  },
+  executeDateUnrender: function() {
+    return View.prototype.executeDateUnrender.apply(this, arguments).then((function(_this) {
+      return function() {
+        if (_this.isResourcesSet) {
+          return _this.reportResourcesUnrender();
+        }
+      };
+    })(this));
+  },
+  setResourcesOnGrids: function(resources) {},
+  unsetResourcesOnGrids: function() {}
+});
+
 ResourceGridMixin = {
   allowCrossResource: true,
-  eventRangeToSpans: function(range, event) {
+  eventRangeToSpans: function(eventRange, event) {
     var j, len, resourceId, resourceIds, results;
     resourceIds = this.view.calendar.getEventResourceIds(event);
     if (resourceIds.length) {
       results = [];
       for (j = 0, len = resourceIds.length; j < len; j++) {
         resourceId = resourceIds[j];
-        results.push($.extend({}, range, {
+        results.push($.extend({}, eventRange, {
           resourceId: resourceId
         }));
       }
@@ -1779,14 +2288,18 @@ ResourceGridMixin = {
     return event;
   },
   computeEventDrop: function(startSpan, endSpan, event) {
-    var allowResourceChange, dropLocation;
-    allowResourceChange = true;
-    if (!allowResourceChange && startSpan.resourceId !== endSpan.resourceId) {
-      return null;
+    var dropLocation;
+    if (this.view.isEventStartEditable(event)) {
+      dropLocation = Grid.prototype.computeEventDrop.apply(this, arguments);
+    } else {
+      dropLocation = FC.pluckEventDateProps(event);
     }
-    dropLocation = Grid.prototype.computeEventDrop.apply(this, arguments);
     if (dropLocation) {
-      dropLocation.resourceId = endSpan.resourceId;
+      if (this.view.isEventResourceEditable(event)) {
+        dropLocation.resourceId = endSpan.resourceId;
+      } else {
+        dropLocation.resourceId = startSpan.resourceId;
+      }
     }
     return dropLocation;
   },
@@ -1984,7 +2497,7 @@ ResourceDayTableMixin = {
         } else {
           resource = _this.flattenedResources[_this.isRTL ? _this.flattenedResources.length - 1 - col : col];
         }
-        return _this.view.trigger('resourceRender', resource, resource, $(node), $());
+        return _this.view.publiclyTrigger('resourceRender', resource, resource, $(node), $());
       };
     })(this));
   },
@@ -2012,6 +2525,41 @@ ResourceDayTableMixin = {
     } else {
       return '<tr>' + this[introMethodName]() + cellHtmls.join('') + '</tr>';
     }
+  },
+
+  /*
+  	If there are no per-resource business hour definitions, returns null.
+  	Otherwise, returns a list of business hours segs for *every* resource.
+   */
+  computePerResourceBusinessHourSegs: function(wholeDay) {
+    var allSegs, anyCustomBusinessHours, businessHours, event, events, j, k, l, len, len1, len2, ref, ref1, resource, segs;
+    if (this.flattenedResources) {
+      anyCustomBusinessHours = false;
+      ref = this.flattenedResources;
+      for (j = 0, len = ref.length; j < len; j++) {
+        resource = ref[j];
+        if (resource.businessHours) {
+          anyCustomBusinessHours = true;
+        }
+      }
+      if (anyCustomBusinessHours) {
+        allSegs = [];
+        ref1 = this.flattenedResources;
+        for (k = 0, len1 = ref1.length; k < len1; k++) {
+          resource = ref1[k];
+          businessHours = resource.businessHours || this.view.calendar.options.businessHours;
+          events = this.buildBusinessHourEvents(wholeDay, businessHours);
+          for (l = 0, len2 = events.length; l < len2; l++) {
+            event = events[l];
+            event.resourceId = resource.id;
+          }
+          segs = this.eventsToSegs(events);
+          allSegs.push.apply(allSegs, segs);
+        }
+        return allSegs;
+      }
+    }
+    return null;
   }
 };
 
@@ -2075,6 +2623,16 @@ ResourceDayGrid = (function(superClass) {
     }
   };
 
+  ResourceDayGrid.prototype.renderBusinessHours = function() {
+    var segs;
+    segs = this.computePerResourceBusinessHourSegs(true);
+    if (segs) {
+      return this.renderFill('businessHours', segs, 'bgevent');
+    } else {
+      return ResourceDayGrid.__super__.renderBusinessHours.apply(this, arguments);
+    }
+  };
+
   return ResourceDayGrid;
 
 })(FC.DayGrid);
@@ -2127,6 +2685,16 @@ ResourceTimeGrid = (function(superClass) {
     }
   };
 
+  ResourceTimeGrid.prototype.renderBusinessHours = function() {
+    var segs;
+    segs = this.computePerResourceBusinessHourSegs(false);
+    if (segs) {
+      return this.renderBusinessSegs(segs);
+    } else {
+      return ResourceTimeGrid.__super__.renderBusinessHours.apply(this, arguments);
+    }
+  };
+
   return ResourceTimeGrid;
 
 })(FC.TimeGrid);
@@ -2142,18 +2710,24 @@ TimelineView = (function(superClass) {
 
   TimelineView.prototype.isScrolled = false;
 
+  TimelineView.prototype.usesMinMaxTime = true;
+
   TimelineView.prototype.initialize = function() {
-    this.timeGrid = this.instantiateGrid();
-    return this.intervalDuration = this.timeGrid.duration;
+    return this.timeGrid = this.instantiateGrid();
   };
 
   TimelineView.prototype.instantiateGrid = function() {
     return new TimelineGrid(this);
   };
 
-  TimelineView.prototype.setRange = function(range) {
-    TimelineView.__super__.setRange.apply(this, arguments);
-    return this.timeGrid.setRange(range);
+  TimelineView.prototype.setDateProfile = function(dateProfile) {
+    TimelineView.__super__.setDateProfile.apply(this, arguments);
+    this.timeGrid.initScaleProps();
+    return this.timeGrid.setRange(this.renderRange);
+  };
+
+  TimelineView.prototype.getFallbackDuration = function() {
+    return this.timeGrid.computeFallbackDuration();
   };
 
   TimelineView.prototype.renderSkeleton = function() {
@@ -2225,6 +2799,14 @@ TimelineView = (function(superClass) {
     return this.timeGrid.unrenderNowIndicator();
   };
 
+  TimelineView.prototype.hitsNeeded = function() {
+    return this.timeGrid.hitsNeeded();
+  };
+
+  TimelineView.prototype.hitsNotNeeded = function() {
+    return this.timeGrid.hitsNotNeeded();
+  };
+
   TimelineView.prototype.prepareHits = function() {
     return this.timeGrid.prepareHits();
   };
@@ -2263,16 +2845,33 @@ TimelineView = (function(superClass) {
     return this.el.outerHeight() - this.timeGrid.headScroller.el.outerHeight() - this.timeGrid.bodyScroller.el.outerHeight();
   };
 
-  TimelineView.prototype.computeInitialScroll = function(prevScrollState) {
-    return this.timeGrid.computeInitialScroll(prevScrollState);
+  TimelineView.prototype.computeInitialScroll = function() {
+    var left, scrollTime;
+    left = 0;
+    if (this.timeGrid.isTimeScale) {
+      scrollTime = this.opt('scrollTime');
+      if (scrollTime) {
+        scrollTime = moment.duration(scrollTime);
+        left = this.timeGrid.dateToCoord(this.activeRange.start.clone().time(scrollTime));
+      }
+    }
+    return {
+      left: left,
+      top: 0
+    };
   };
 
   TimelineView.prototype.queryScroll = function() {
-    return this.timeGrid.queryScroll();
+    return {
+      left: this.timeGrid.bodyScroller.getScrollLeft(),
+      top: this.timeGrid.bodyScroller.getScrollTop()
+    };
   };
 
-  TimelineView.prototype.setScroll = function(state) {
-    return this.timeGrid.setScroll(state);
+  TimelineView.prototype.setScroll = function(scroll) {
+    this.timeGrid.headScroller.setScrollLeft(scroll.left);
+    this.timeGrid.bodyScroller.setScrollLeft(scroll.left);
+    return this.timeGrid.bodyScroller.setScrollTop(scroll.top);
   };
 
   TimelineView.prototype.renderEvents = function(events) {
@@ -2348,10 +2947,6 @@ TimelineGrid = (function(superClass) {
 
   TimelineGrid.prototype.eventTitleFollower = null;
 
-  TimelineGrid.prototype.minTime = null;
-
-  TimelineGrid.prototype.maxTime = null;
-
   TimelineGrid.prototype.timeWindowMs = null;
 
   TimelineGrid.prototype.slotDuration = null;
@@ -2383,15 +2978,7 @@ TimelineGrid = (function(superClass) {
   TimelineGrid.prototype.innerEl = null;
 
   function TimelineGrid() {
-    var input;
     TimelineGrid.__super__.constructor.apply(this, arguments);
-    this.initScaleProps();
-    this.minTime = moment.duration(this.opt('minTime') || '00:00');
-    this.maxTime = moment.duration(this.opt('maxTime') || '24:00');
-    this.timeWindowMs = this.maxTime - this.minTime;
-    this.snapDuration = (input = this.opt('snapDuration')) ? moment.duration(input) : this.slotDuration;
-    this.minResizeDuration = this.snapDuration;
-    this.snapsPerSlot = divideDurationByDuration(this.slotDuration, this.snapDuration);
     this.slotWidth = this.opt('slotWidth');
   }
 
@@ -2404,7 +2991,7 @@ TimelineGrid = (function(superClass) {
     if (this.view.isHiddenDay(date)) {
       return false;
     } else if (this.isTimeScale) {
-      ms = date.time() - this.minTime;
+      ms = date.time() - this.view.minTime;
       ms = ((ms % 86400000) + 86400000) % 86400000;
       return ms < this.timeWindowMs;
     } else {
@@ -2471,8 +3058,13 @@ TimelineGrid = (function(superClass) {
 
   TimelineGrid.prototype.rangeUpdated = function() {
     var date, slotDates;
-    this.start = this.normalizeGridDate(this.start).add(this.minTime);
-    this.end = this.normalizeGridDate(this.end).subtract(1, 'day').add(this.maxTime);
+    this.start = this.normalizeGridDate(this.start);
+    this.end = this.normalizeGridDate(this.end);
+    this.timeWindowMs = this.view.maxTime - this.view.minTime;
+    if (this.isTimeScale) {
+      this.start.add(this.view.minTime);
+      this.end.subtract(1, 'day').add(this.view.maxTime);
+    }
     slotDates = [];
     date = this.start.clone();
     while (date < this.end) {
@@ -2536,7 +3128,7 @@ TimelineGrid = (function(superClass) {
     snapsPerSlot = this.snapsPerSlot;
     slatCoordCache = this.slatCoordCache;
     containerCoordCache = this.containerCoordCache;
-    if (containerCoordCache.getVerticalIndex(topOffset) != null) {
+    if (containerCoordCache.isPointInBounds(leftOffset, topOffset)) {
       slatIndex = slatCoordCache.getHorizontalIndex(leftOffset);
       if (slatIndex != null) {
         slatWidth = slatCoordCache.getWidth(slatIndex);
@@ -2613,10 +3205,10 @@ TimelineGrid = (function(superClass) {
     });
     this.joiner = new ScrollJoiner('horizontal', [this.headScroller, this.bodyScroller]);
     if (true) {
-      this.follower = new ScrollFollower(this.headScroller, this.view.calendar.isTouch);
+      this.follower = new ScrollFollower(this.headScroller, true);
     }
     if (true) {
-      this.eventTitleFollower = new ScrollFollower(this.bodyScroller, this.view.calendar.isTouch);
+      this.eventTitleFollower = new ScrollFollower(this.bodyScroller);
       this.eventTitleFollower.minTravel = 50;
       if (this.isRTL) {
         this.eventTitleFollower.containOnNaturalRight = true;
@@ -2650,10 +3242,10 @@ TimelineGrid = (function(superClass) {
     ref = this.slotDates;
     for (i = j = 0, len = ref.length; j < len; i = ++j) {
       date = ref[i];
-      this.view.trigger('dayRender', null, date, this.slatEls.eq(i));
+      this.view.publiclyTrigger('dayRender', null, date, this.slatEls.eq(i));
     }
     if (this.follower) {
-      return this.follower.setSprites(this.headEl.find('tr:not(:last-child) span'));
+      return this.follower.setSprites(this.headEl.find('tr:not(:last-child) .fc-cell-text'));
     }
   };
 
@@ -2668,7 +3260,7 @@ TimelineGrid = (function(superClass) {
   };
 
   TimelineGrid.prototype.renderHeadHtml = function() {
-    var cell, cellRows, date, dateData, format, formats, html, i, isChrono, isLast, isSuperRow, isWeekStart, j, k, l, labelInterval, leadingCell, len, len1, len2, len3, len4, len5, len6, m, n, newCell, p, prevWeekNumber, q, row, rowCells, slatHtml, slotCells, slotDates, text, weekNumber;
+    var cell, cellRows, date, format, formats, headerCellClassNames, html, i, isChrono, isLast, isSingleDay, isSuperRow, isWeekStart, j, k, l, labelInterval, leadingCell, len, len1, len2, len3, len4, len5, len6, m, n, newCell, p, prevWeekNumber, q, row, rowCells, rowUnits, slatHtml, slotCells, slotDates, text, weekNumber;
     labelInterval = this.labelInterval;
     formats = this.headerFormats;
     cellRows = (function() {
@@ -2684,6 +3276,15 @@ TimelineGrid = (function(superClass) {
     prevWeekNumber = null;
     slotDates = this.slotDates;
     slotCells = [];
+    rowUnits = (function() {
+      var j, len, results;
+      results = [];
+      for (j = 0, len = formats.length; j < len; j++) {
+        format = formats[j];
+        results.push(FC.queryMostGranularFormatUnit(format));
+      }
+      return results;
+    })();
     for (j = 0, len = slotDates.length; j < len; j++) {
       date = slotDates[j];
       weekNumber = date.week();
@@ -2696,25 +3297,15 @@ TimelineGrid = (function(superClass) {
         newCell = null;
         if (isSuperRow) {
           text = date.format(format);
-          dateData = date.format();
           if (!leadingCell || leadingCell.text !== text) {
-            newCell = {
-              text: text,
-              dateData: dateData,
-              colspan: 1
-            };
+            newCell = this.buildCellObject(date, text, rowUnits[row]);
           } else {
             leadingCell.colspan += 1;
           }
         } else {
           if (!leadingCell || isInt(divideRangeByDuration(this.start, date, labelInterval))) {
             text = date.format(format);
-            dateData = date.format();
-            newCell = {
-              text: text,
-              dateData: dateData,
-              colspan: 1
-            };
+            newCell = this.buildCellObject(date, text, rowUnits[row]);
           } else {
             leadingCell.colspan += 1;
           }
@@ -2730,6 +3321,7 @@ TimelineGrid = (function(superClass) {
       prevWeekNumber = weekNumber;
     }
     isChrono = labelInterval > this.slotDuration;
+    isSingleDay = this.slotDuration.as('days') === 1;
     html = '<table>';
     html += '<colgroup>';
     for (l = 0, len2 = slotDates.length; l < len2; l++) {
@@ -2744,7 +3336,14 @@ TimelineGrid = (function(superClass) {
       html += '<tr' + (isChrono && isLast ? ' class="fc-chrono"' : '') + '>';
       for (n = 0, len4 = rowCells.length; n < len4; n++) {
         cell = rowCells[n];
-        html += '<th class="' + this.view.widgetHeaderClass + ' ' + (cell.weekStart ? 'fc-em-cell' : '') + '"' + ' data-date="' + cell.dateData + '"' + (cell.colspan > 1 ? ' colspan="' + cell.colspan + '"' : '') + '>' + '<div class="fc-cell-content">' + '<span class="fc-cell-text">' + htmlEscape(cell.text) + '</span>' + '</div>' + '</th>';
+        headerCellClassNames = [this.view.widgetHeaderClass];
+        if (cell.weekStart) {
+          headerCellClassNames.push('fc-em-cell');
+        }
+        if (isSingleDay) {
+          headerCellClassNames = headerCellClassNames.concat(this.getDayClasses(cell.date, true));
+        }
+        html += '<th class="' + headerCellClassNames.join(' ') + '"' + ' data-date="' + cell.date.format() + '"' + (cell.colspan > 1 ? ' colspan="' + cell.colspan + '"' : '') + '>' + '<div class="fc-cell-content">' + cell.spanHtml + '</div>' + '</th>';
       }
       html += '</tr>';
     }
@@ -2765,6 +3364,24 @@ TimelineGrid = (function(superClass) {
     slatHtml += '</tr></tbody></table>';
     this._slatHtml = slatHtml;
     return html;
+  };
+
+  TimelineGrid.prototype.buildCellObject = function(date, text, rowUnit) {
+    var spanHtml;
+    date = date.clone();
+    spanHtml = this.view.buildGotoAnchorHtml({
+      date: date,
+      type: rowUnit,
+      forceOff: !rowUnit
+    }, {
+      'class': 'fc-cell-text'
+    }, htmlEscape(text));
+    return {
+      text: text,
+      spanHtml: spanHtml,
+      date: date,
+      colspan: 1
+    };
   };
 
   TimelineGrid.prototype.renderSlatHtml = function() {
@@ -2790,10 +3407,9 @@ TimelineGrid = (function(superClass) {
   TimelineGrid.prototype.businessHourSegs = null;
 
   TimelineGrid.prototype.renderBusinessHours = function() {
-    var events, segs;
+    var segs;
     if (!this.largeUnit) {
-      events = this.view.calendar.getBusinessHoursEvents(!this.isTimeScale);
-      segs = this.businessHourSegs = this.eventsToSegs(events);
+      segs = this.businessHourSegs = this.buildBusinessHourSegs(!this.isTimeScale);
       return this.renderFill('businessHours', segs, 'bgevent');
     }
   };
@@ -2806,7 +3422,7 @@ TimelineGrid = (function(superClass) {
 
   TimelineGrid.prototype.getNowIndicatorUnit = function() {
     if (this.isTimeScale) {
-      return computeIntervalUnit(this.slotDuration);
+      return computeGreatestUnit(this.slotDuration);
     }
   };
 
@@ -2839,27 +3455,38 @@ TimelineGrid = (function(superClass) {
   TimelineGrid.prototype.defaultSlotWidth = null;
 
   TimelineGrid.prototype.updateWidth = function() {
-    var availableWidth, containerMinWidth, containerWidth, nonLastSlotWidth, slotWidth;
-    slotWidth = Math.round(this.slotWidth || (this.slotWidth = this.computeSlotWidth()));
-    containerWidth = slotWidth * this.slotDates.length;
-    containerMinWidth = '';
-    nonLastSlotWidth = slotWidth;
-    availableWidth = this.bodyScroller.getClientWidth();
-    if (availableWidth > containerWidth) {
-      containerMinWidth = availableWidth;
+    var availableWidth, containerMinWidth, containerWidth, isDatesRendered, nonLastSlotWidth, slotWidth;
+    isDatesRendered = this.headColEls;
+    if (isDatesRendered) {
+      slotWidth = Math.round(this.slotWidth || (this.slotWidth = this.computeSlotWidth()));
+      containerWidth = slotWidth * this.slotDates.length;
+      containerMinWidth = '';
+      nonLastSlotWidth = slotWidth;
+      availableWidth = this.bodyScroller.getClientWidth();
+      if (availableWidth > containerWidth) {
+        containerMinWidth = availableWidth;
+        containerWidth = '';
+        nonLastSlotWidth = Math.floor(availableWidth / this.slotDates.length);
+      }
+    } else {
       containerWidth = '';
-      nonLastSlotWidth = Math.floor(availableWidth / this.slotDates.length);
+      containerMinWidth = '';
     }
     this.headScroller.canvas.setWidth(containerWidth);
     this.headScroller.canvas.setMinWidth(containerMinWidth);
     this.bodyScroller.canvas.setWidth(containerWidth);
     this.bodyScroller.canvas.setMinWidth(containerMinWidth);
-    this.headColEls.slice(0, -1).add(this.slatColEls.slice(0, -1)).width(nonLastSlotWidth);
+    if (isDatesRendered) {
+      this.headColEls.slice(0, -1).add(this.slatColEls.slice(0, -1)).width(nonLastSlotWidth);
+    }
     this.headScroller.updateSize();
     this.bodyScroller.updateSize();
     this.joiner.update();
-    this.buildCoords();
-    this.updateSegPositions();
+    if (isDatesRendered) {
+      this.buildCoords();
+      this.updateSegPositions();
+      this.view.updateNowIndicator();
+    }
     if (this.follower) {
       this.follower.update();
     }
@@ -2871,7 +3498,7 @@ TimelineGrid = (function(superClass) {
   TimelineGrid.prototype.computeSlotWidth = function() {
     var headerWidth, innerEls, maxInnerWidth, minWidth, slotWidth, slotsPerLabel;
     maxInnerWidth = 0;
-    innerEls = this.headEl.find('tr:last-child th span');
+    innerEls = this.headEl.find('tr:last-child th .fc-cell-text');
     innerEls.each(function(i, node) {
       var innerWidth;
       innerWidth = $(node).outerWidth();
@@ -2961,35 +3588,6 @@ TimelineGrid = (function(superClass) {
         right: -(seg.right = coords.right)
       });
     }
-  };
-
-  TimelineGrid.prototype.computeInitialScroll = function(prevState) {
-    var left, scrollTime;
-    left = 0;
-    if (this.isTimeScale) {
-      scrollTime = this.opt('scrollTime');
-      if (scrollTime) {
-        scrollTime = moment.duration(scrollTime);
-        left = this.dateToCoord(this.start.clone().time(scrollTime));
-      }
-    }
-    return {
-      left: left,
-      top: 0
-    };
-  };
-
-  TimelineGrid.prototype.queryScroll = function() {
-    return {
-      left: this.bodyScroller.getScrollLeft(),
-      top: this.bodyScroller.getScrollTop()
-    };
-  };
-
-  TimelineGrid.prototype.setScroll = function(state) {
-    this.headScroller.setScrollLeft(state.left);
-    this.headScroller.setScrollLeft(state.left);
-    return this.bodyScroller.setScrollTop(state.top);
   };
 
   TimelineGrid.prototype.renderFgSegs = function(segs) {
@@ -3211,7 +3809,12 @@ TimelineGrid = (function(superClass) {
   };
 
   TimelineGrid.prototype.renderEventResize = function(resizeLocation, seg) {
-    this.renderHighlight(this.eventToSpan(resizeLocation));
+    var eventSpan, eventSpans, j, len;
+    eventSpans = this.eventToSpans(resizeLocation);
+    for (j = 0, len = eventSpans.length; j < len; j++) {
+      eventSpan = eventSpans[j];
+      this.renderHighlight(eventSpan);
+    }
     return this.renderEventLocationHelper(resizeLocation, seg);
   };
 
@@ -3259,10 +3862,15 @@ TimelineGrid = (function(superClass) {
   };
 
   TimelineGrid.prototype.renderDrag = function(dropLocation, seg) {
+    var eventSpan, eventSpans, j, len;
     if (seg) {
       return this.renderEventLocationHelper(dropLocation, seg);
     } else {
-      this.renderHighlight(this.eventToSpan(dropLocation));
+      eventSpans = this.eventToSpans(dropLocation);
+      for (j = 0, len = eventSpans.length; j < len; j++) {
+        eventSpan = eventSpans[j];
+        this.renderHighlight(eventSpan);
+      }
       return null;
     }
   };
@@ -3353,7 +3961,6 @@ TimelineGrid.prototype.initScaleProps = function() {
   var input, slotUnit, type;
   this.labelInterval = this.queryDurationOption('slotLabelInterval');
   this.slotDuration = this.queryDurationOption('slotDuration');
-  this.ensureGridDuration();
   this.validateLabelAndSlot();
   this.ensureLabelInterval();
   this.ensureSlotDuration();
@@ -3361,17 +3968,19 @@ TimelineGrid.prototype.initScaleProps = function() {
   type = $.type(input);
   this.headerFormats = type === 'array' ? input : type === 'string' ? [input] : this.computeHeaderFormats();
   this.isTimeScale = durationHasTime(this.slotDuration);
-  this.largeUnit = !this.isTimeScale ? (slotUnit = computeIntervalUnit(this.slotDuration), /year|month|week/.test(slotUnit) ? slotUnit : void 0) : void 0;
-  return this.emphasizeWeeks = this.slotDuration.as('days') === 1 && this.duration.as('weeks') >= 2 && !this.opt('businessHours');
+  this.largeUnit = !this.isTimeScale ? (slotUnit = computeGreatestUnit(this.slotDuration), /year|month|week/.test(slotUnit) ? slotUnit : void 0) : void 0;
+  this.emphasizeWeeks = this.slotDuration.as('days') === 1 && this.view.currentRangeAs('weeks') >= 2 && !this.opt('businessHours');
 
   /*
-  	console.log('view duration =', @duration.humanize())
   	console.log('label interval =', @labelInterval.humanize())
   	console.log('slot duration =', @slotDuration.humanize())
   	console.log('header formats =', @headerFormats)
   	console.log('isTimeScale', @isTimeScale)
   	console.log('largeUnit', @largeUnit)
    */
+  this.snapDuration = (input = this.opt('snapDuration')) ? moment.duration(input) : this.slotDuration;
+  this.minResizeDuration = this.snapDuration;
+  return this.snapsPerSlot = divideDurationByDuration(this.slotDuration, this.snapDuration);
 };
 
 TimelineGrid.prototype.queryDurationOption = function(name) {
@@ -3386,16 +3995,17 @@ TimelineGrid.prototype.queryDurationOption = function(name) {
 };
 
 TimelineGrid.prototype.validateLabelAndSlot = function() {
-  var labelCnt, slotCnt, slotsPerLabel;
+  var currentRange, labelCnt, slotCnt, slotsPerLabel;
+  currentRange = this.view.currentRange;
   if (this.labelInterval) {
-    labelCnt = divideDurationByDuration(this.duration, this.labelInterval);
+    labelCnt = divideRangeByDuration(currentRange.start, currentRange.end, this.labelInterval);
     if (labelCnt > MAX_CELLS) {
       FC.warn('slotLabelInterval results in too many cells');
       this.labelInterval = null;
     }
   }
   if (this.slotDuration) {
-    slotCnt = divideDurationByDuration(this.duration, this.slotDuration);
+    slotCnt = divideRangeByDuration(currentRange.start, currentRange.end, this.slotDuration);
     if (slotCnt > MAX_CELLS) {
       FC.warn('slotDuration results in too many cells');
       this.slotDuration = null;
@@ -3410,38 +4020,30 @@ TimelineGrid.prototype.validateLabelAndSlot = function() {
   }
 };
 
-TimelineGrid.prototype.ensureGridDuration = function() {
-  var gridDuration, input, j, labelCnt, labelInterval;
-  gridDuration = this.duration;
-  if (!gridDuration) {
-    gridDuration = this.view.intervalDuration;
-    if (!gridDuration) {
-      if (!this.labelInterval && !this.slotDuration) {
-        gridDuration = moment.duration(DEFAULT_GRID_DURATION);
-      } else {
-        labelInterval = this.ensureLabelInterval();
-        for (j = STOCK_SUB_DURATIONS.length - 1; j >= 0; j += -1) {
-          input = STOCK_SUB_DURATIONS[j];
-          gridDuration = moment.duration(input);
-          labelCnt = divideDurationByDuration(gridDuration, labelInterval);
-          if (labelCnt >= MIN_AUTO_LABELS) {
-            break;
-          }
-        }
+TimelineGrid.prototype.computeFallbackDuration = function() {
+  var duration, input, j, labelCnt, labelInterval;
+  duration = null;
+  if (!this.labelInterval && !this.slotDuration) {
+    duration = moment.duration(DEFAULT_GRID_DURATION);
+  } else {
+    labelInterval = this.ensureLabelInterval();
+    for (j = STOCK_SUB_DURATIONS.length - 1; j >= 0; j += -1) {
+      input = STOCK_SUB_DURATIONS[j];
+      duration = moment.duration(input);
+      labelCnt = divideDurationByDuration(duration, labelInterval);
+      if (labelCnt >= MIN_AUTO_LABELS) {
+        break;
       }
     }
-    this.duration = gridDuration;
   }
-  return gridDuration;
+  return duration;
 };
 
 TimelineGrid.prototype.ensureLabelInterval = function() {
-  var input, j, k, labelCnt, labelInterval, len, len1, slotsPerLabel, tryLabelInterval;
+  var currentRange, input, j, k, labelCnt, labelInterval, len, len1, slotsPerLabel, tryLabelInterval;
+  currentRange = this.view.currentRange;
   labelInterval = this.labelInterval;
   if (!labelInterval) {
-    if (!this.duration && !this.slotDuration) {
-      this.ensureGridDuration();
-    }
     if (this.slotDuration) {
       for (j = 0, len = STOCK_SUB_DURATIONS.length; j < len; j++) {
         input = STOCK_SUB_DURATIONS[j];
@@ -3459,7 +4061,7 @@ TimelineGrid.prototype.ensureLabelInterval = function() {
       for (k = 0, len1 = STOCK_SUB_DURATIONS.length; k < len1; k++) {
         input = STOCK_SUB_DURATIONS[k];
         labelInterval = moment.duration(input);
-        labelCnt = divideDurationByDuration(this.duration, labelInterval);
+        labelCnt = divideRangeByDuration(currentRange.start, currentRange.end, labelInterval);
         if (labelCnt >= MIN_AUTO_LABELS) {
           break;
         }
@@ -3471,7 +4073,8 @@ TimelineGrid.prototype.ensureLabelInterval = function() {
 };
 
 TimelineGrid.prototype.ensureSlotDuration = function() {
-  var input, j, labelInterval, len, slotCnt, slotDuration, slotsPerLabel, trySlotDuration;
+  var currentRange, input, j, labelInterval, len, slotCnt, slotDuration, slotsPerLabel, trySlotDuration;
+  currentRange = this.view.currentRange;
   slotDuration = this.slotDuration;
   if (!slotDuration) {
     labelInterval = this.ensureLabelInterval();
@@ -3484,8 +4087,8 @@ TimelineGrid.prototype.ensureSlotDuration = function() {
         break;
       }
     }
-    if (slotDuration && this.duration) {
-      slotCnt = divideDurationByDuration(this.duration, slotDuration);
+    if (slotDuration) {
+      slotCnt = divideRangeByDuration(currentRange.start, currentRange.end, slotDuration);
       if (slotCnt > MAX_AUTO_CELLS) {
         slotDuration = null;
       }
@@ -3499,11 +4102,10 @@ TimelineGrid.prototype.ensureSlotDuration = function() {
 };
 
 TimelineGrid.prototype.computeHeaderFormats = function() {
-  var format0, format1, format2, gridDuration, labelInterval, unit, view, weekNumbersVisible;
+  var format0, format1, format2, labelInterval, unit, view, weekNumbersVisible;
   view = this.view;
-  gridDuration = this.duration;
   labelInterval = this.labelInterval;
-  unit = computeIntervalUnit(labelInterval);
+  unit = computeGreatestUnit(labelInterval);
   weekNumbersVisible = this.opt('weekNumbers');
   format0 = format1 = format2 = null;
   if (unit === 'week' && !weekNumbersVisible) {
@@ -3514,21 +4116,21 @@ TimelineGrid.prototype.computeHeaderFormats = function() {
       format0 = 'YYYY';
       break;
     case 'month':
-      if (gridDuration.asYears() > 1) {
+      if (view.currentRangeAs('years') > 1) {
         format0 = 'YYYY';
       }
       format1 = 'MMM';
       break;
     case 'week':
-      if (gridDuration.asYears() > 1) {
+      if (view.currentRangeAs('years') > 1) {
         format0 = 'YYYY';
       }
       format1 = this.opt('shortWeekFormat');
       break;
     case 'day':
-      if (gridDuration.asYears() > 1) {
+      if (view.currentRangeAs('years') > 1) {
         format0 = this.opt('monthYearFormat');
-      } else if (gridDuration.asMonths() > 1) {
+      } else if (view.currentRangeAs('months') > 1) {
         format0 = 'MMMM';
       }
       if (weekNumbersVisible) {
@@ -3540,7 +4142,7 @@ TimelineGrid.prototype.computeHeaderFormats = function() {
       if (weekNumbersVisible) {
         format0 = this.opt('weekFormat');
       }
-      if (gridDuration.asDays() > 1) {
+      if (view.currentRangeAs('days') > 1) {
         format1 = this.opt('dayOfMonthFormat');
       }
       format2 = this.opt('smallTimeFormat');
@@ -3611,6 +4213,8 @@ ResourceTimelineView = (function(superClass) {
   }
 
   ResourceTimelineView.mixin(ResourceViewMixin);
+
+  ResourceTimelineView.prototype.canRenderSpecificResources = true;
 
   ResourceTimelineView.prototype.resourceGrid = null;
 
@@ -3854,11 +4458,7 @@ ResourceTimelineView = (function(superClass) {
     return headHeight;
   };
 
-  ResourceTimelineView.prototype.scrollToResource = function(resource) {
-    return this.timeGrid.scrollToResource(resource);
-  };
-
-  ResourceTimelineView.prototype.setResources = function(resources) {
+  ResourceTimelineView.prototype.renderResources = function(resources) {
     var j, len, resource;
     this.batchRows();
     for (j = 0, len = resources.length; j < len; j++) {
@@ -3870,8 +4470,7 @@ ResourceTimelineView = (function(superClass) {
     return this.reinitializeCellFollowers();
   };
 
-  ResourceTimelineView.prototype.unsetResources = function() {
-    this.clearEvents();
+  ResourceTimelineView.prototype.unrenderResources = function() {
     this.batchRows();
     this.rowHierarchy.removeChildren();
     this.unbatchRows();
@@ -3886,12 +4485,12 @@ ResourceTimelineView = (function(superClass) {
   	Responsible for rendering the new resource
    */
 
-  ResourceTimelineView.prototype.addResource = function(resource) {
+  ResourceTimelineView.prototype.renderResource = function(resource) {
     this.insertResource(resource);
     return this.reinitializeCellFollowers();
   };
 
-  ResourceTimelineView.prototype.removeResource = function(resource) {
+  ResourceTimelineView.prototype.unrenderResource = function(resource) {
     var row;
     row = this.getResourceRow(resource.id);
     if (row) {
@@ -3909,7 +4508,7 @@ ResourceTimelineView = (function(superClass) {
     if (this.cellFollower) {
       this.cellFollower.clearSprites();
     }
-    this.cellFollower = new ScrollFollower(this.resourceGrid.bodyScroller, this.calendar.isTouch);
+    this.cellFollower = new ScrollFollower(this.resourceGrid.bodyScroller, true);
     this.cellFollower.isHFollowing = false;
     this.cellFollower.isVFollowing = true;
     nodes = [];
@@ -4058,6 +4657,7 @@ ResourceTimelineView = (function(superClass) {
     var isNesting, wasNesting;
     if (row instanceof ResourceRow) {
       this.resourceRowHash[row.resource.id] = row;
+      this.timeGrid.assignRowBusinessHourSegs(row);
     }
     wasNesting = this.isNesting;
     isNesting = Boolean(this.nestingCnt += row.depth ? 1 : 0);
@@ -4072,6 +4672,7 @@ ResourceTimelineView = (function(superClass) {
     var isNesting, wasNesting;
     if (row instanceof ResourceRow) {
       delete this.resourceRowHash[row.resource.id];
+      this.timeGrid.destroyRowBusinessHourSegs(row);
     }
     wasNesting = this.isNesting;
     isNesting = Boolean(this.nestingCnt -= row.depth ? 1 : 0);
@@ -4201,9 +4802,55 @@ ResourceTimelineView = (function(superClass) {
     return this.resourceRowHash[resourceId];
   };
 
-  ResourceTimelineView.prototype.setScroll = function(state) {
-    ResourceTimelineView.__super__.setScroll.apply(this, arguments);
-    return this.resourceGrid.bodyScroller.setScrollTop(state.top);
+  ResourceTimelineView.prototype.queryScroll = function() {
+    var el, elBottom, j, len, ref, rowObj, scroll, scrollerTop;
+    scroll = ResourceTimelineView.__super__.queryScroll.apply(this, arguments);
+    scrollerTop = this.timeGrid.bodyScroller.scrollEl.offset().top;
+    ref = this.getVisibleRows();
+    for (j = 0, len = ref.length; j < len; j++) {
+      rowObj = ref[j];
+      if (rowObj.resource) {
+        el = rowObj.getTr('event');
+        elBottom = el.offset().top + el.outerHeight();
+        if (elBottom > scrollerTop) {
+          scroll.resourceId = rowObj.resource.id;
+          scroll.bottom = elBottom - scrollerTop;
+          break;
+        }
+      }
+    }
+    return scroll;
+  };
+
+  ResourceTimelineView.prototype.setScroll = function(scroll) {
+    var el, elBottom, innerTop, row;
+    if (scroll.resourceId) {
+      row = this.getResourceRow(scroll.resourceId);
+      if (row) {
+        el = row.getTr('event');
+        if (el) {
+          innerTop = this.timeGrid.bodyScroller.canvas.el.offset().top;
+          elBottom = el.offset().top + el.outerHeight();
+          scroll.top = elBottom - scroll.bottom - innerTop;
+        }
+      }
+    }
+    ResourceTimelineView.__super__.setScroll.call(this, scroll);
+    return this.resourceGrid.bodyScroller.setScrollTop(scroll.top);
+  };
+
+  ResourceTimelineView.prototype.scrollToResource = function(resource) {
+    var el, innerTop, row, scrollTop;
+    row = this.getResourceRow(resource.id);
+    if (row) {
+      el = row.getTr('event');
+      if (el) {
+        innerTop = this.timeGrid.bodyScroller.canvas.el.offset().top;
+        scrollTop = el.offset().top - innerTop;
+        this.timeGrid.bodyScroller.setScrollTop(scrollTop);
+        return this.resourceGrid.bodyScroller.setScrollTop(scrollTop);
+      }
+    }
   };
 
   return ResourceTimelineView;
@@ -4352,6 +4999,113 @@ ResourceTimelineGrid = (function(superClass) {
     return this.unrenderFgContainers(eventRows);
   };
 
+  ResourceTimelineGrid.prototype.rowCntWithCustomBusinessHours = 0;
+
+  ResourceTimelineGrid.prototype.renderBusinessHours = function() {
+    if (this.rowCntWithCustomBusinessHours) {
+      return this.ensureIndividualBusinessHours();
+    } else {
+      return ResourceTimelineGrid.__super__.renderBusinessHours.apply(this, arguments);
+    }
+  };
+
+  ResourceTimelineGrid.prototype.unrenderBusinessHours = function() {
+    if (this.rowCntWithCustomBusinessHours) {
+      return this.clearIndividualBusinessHours();
+    } else {
+      return ResourceTimelineGrid.__super__.unrenderBusinessHours.apply(this, arguments);
+    }
+  };
+
+
+  /*
+  	Ensures that all rows have their individual business hours DISPLAYED.
+   */
+
+  ResourceTimelineGrid.prototype.ensureIndividualBusinessHours = function() {
+    var j, len, ref, results, row;
+    ref = this.view.getEventRows();
+    results = [];
+    for (j = 0, len = ref.length; j < len; j++) {
+      row = ref[j];
+      if (this.view.isDateSet && !row.businessHourSegs) {
+        this.populateRowBusinessHoursSegs(row);
+      }
+      if (row.isShown) {
+        results.push(row.ensureBusinessHourSegsRendered());
+      } else {
+        results.push(void 0);
+      }
+    }
+    return results;
+  };
+
+
+  /*
+  	Ensures that all rows have their individual business hours CLEARED.
+   */
+
+  ResourceTimelineGrid.prototype.clearIndividualBusinessHours = function() {
+    var j, len, ref, results, row;
+    ref = this.view.getEventRows();
+    results = [];
+    for (j = 0, len = ref.length; j < len; j++) {
+      row = ref[j];
+      results.push(row.clearBusinessHourSegs());
+    }
+    return results;
+  };
+
+
+  /*
+  	Called when a row has been added to the tree data structure, but before it's rendered.
+  	Computes and assigns business hour data *if necessary*. To be rendered soon after.
+   */
+
+  ResourceTimelineGrid.prototype.assignRowBusinessHourSegs = function(row) {
+    if (row.resource.businessHours) {
+      if (!this.rowCntWithCustomBusinessHours) {
+        TimelineGrid.prototype.unrenderBusinessHours.call(this);
+        this.ensureIndividualBusinessHours();
+      }
+      this.rowCntWithCustomBusinessHours += 1;
+    }
+    if (this.view.isDateSet && this.rowCntWithCustomBusinessHours) {
+      return this.populateRowBusinessHoursSegs(row);
+    }
+  };
+
+
+  /*
+  	Called when a row has been removed from the tree data structure.
+  	Unrenders the row's segs and, if necessary, forces businessHours back to generic rendering.
+   */
+
+  ResourceTimelineGrid.prototype.destroyRowBusinessHourSegs = function(row) {
+    row.clearBusinessHourSegs();
+    if (row.resource.businessHours) {
+      this.rowCntWithCustomBusinessHours -= 1;
+      if (!this.rowCntWithCustomBusinessHours) {
+        this.clearIndividualBusinessHours();
+        return TimelineGrid.prototype.renderBusinessHours.call(this);
+      }
+    }
+  };
+
+
+  /*
+  	Compute and assign to row.businessHourSegs unconditionally
+   */
+
+  ResourceTimelineGrid.prototype.populateRowBusinessHoursSegs = function(row) {
+    var businessHourSegs, businessHours, businessHoursEvents;
+    businessHours = row.resource.businessHours || this.view.opt('businessHours');
+    businessHoursEvents = this.view.calendar.computeBusinessHourEvents(!this.isTimeScale, businessHours);
+    businessHourSegs = this.eventsToSegs(businessHoursEvents);
+    businessHourSegs = this.renderFillSegEls('businessHours', businessHourSegs);
+    row.businessHourSegs = businessHourSegs;
+  };
+
   ResourceTimelineGrid.prototype.renderFill = function(type, segs, className) {
     var j, k, len, len1, nonResourceSegs, pair, pairs, resourceSegs, rowObj, rowSegs, seg, visiblePairs;
     segs = this.renderFillSegEls(type, segs);
@@ -4390,65 +5144,6 @@ ResourceTimelineGrid = (function(superClass) {
     segs = this.renderFgSegEls(segs);
     pairs = this.view.pairSegsWithRows(segs);
     return this.renderHelperSegsInContainers(pairs, sourceSeg);
-  };
-
-  ResourceTimelineGrid.prototype.computeInitialScroll = function(prevState) {
-    var state;
-    state = ResourceTimelineGrid.__super__.computeInitialScroll.apply(this, arguments);
-    if (prevState) {
-      state.resourceId = prevState.resourceId;
-      state.bottom = prevState.bottom;
-    }
-    return state;
-  };
-
-  ResourceTimelineGrid.prototype.queryScroll = function() {
-    var el, elBottom, j, len, ref, rowObj, scrollerTop, state;
-    state = ResourceTimelineGrid.__super__.queryScroll.apply(this, arguments);
-    scrollerTop = this.bodyScroller.scrollEl.offset().top;
-    ref = this.view.getVisibleRows();
-    for (j = 0, len = ref.length; j < len; j++) {
-      rowObj = ref[j];
-      if (rowObj.resource) {
-        el = rowObj.getTr('event');
-        elBottom = el.offset().top + el.outerHeight();
-        if (elBottom > scrollerTop) {
-          state.resourceId = rowObj.resource.id;
-          state.bottom = elBottom - scrollerTop;
-          break;
-        }
-      }
-    }
-    return state;
-  };
-
-  ResourceTimelineGrid.prototype.setScroll = function(state) {
-    var el, elBottom, innerTop, row;
-    if (state.resourceId) {
-      row = this.view.getResourceRow(state.resourceId);
-      if (row) {
-        el = row.getTr('event');
-        if (el) {
-          innerTop = this.bodyScroller.canvas.el.offset().top;
-          elBottom = el.offset().top + el.outerHeight();
-          state.top = elBottom - state.bottom - innerTop;
-        }
-      }
-    }
-    return ResourceTimelineGrid.__super__.setScroll.call(this, state);
-  };
-
-  ResourceTimelineGrid.prototype.scrollToResource = function(resource) {
-    var el, innerTop, row, scrollTop;
-    row = this.view.getResourceRow(resource.id);
-    if (row) {
-      el = row.getTr('event');
-      if (el) {
-        innerTop = this.bodyScroller.canvas.el.offset().top;
-        scrollTop = el.offset().top - innerTop;
-        return this.bodyScroller.scrollEl.scrollTop(scrollTop);
-      }
-    }
   };
 
   return ResourceTimelineGrid;
@@ -4514,7 +5209,7 @@ Spreadsheet = (function() {
     });
     this.bodyScroller.canvas = new ScrollerCanvas();
     this.bodyScroller.render();
-    this.bodyScroller.canvas.contentEl.html('<table>' + this.colGroupHtml + '<tbody/></table>');
+    this.bodyScroller.canvas.contentEl.html('<div class="fc-rows"><table>' + this.colGroupHtml + '<tbody/></table></div>');
     this.tbodyEl = this.bodyScroller.canvas.contentEl.find('tbody');
     this.el.append(this.bodyScroller.el);
     this.joiner = new ScrollJoiner('horizontal', [this.headScroller, this.bodyScroller]);
@@ -5528,6 +6223,10 @@ EventRow = (function(superClass) {
 
   EventRow.prototype.isSegsRendered = false;
 
+  EventRow.prototype.isBusinessHourSegsRendered = false;
+
+  EventRow.prototype.businessHourSegs = null;
+
   EventRow.prototype.bgSegs = null;
 
   EventRow.prototype.fgSegs = null;
@@ -5541,6 +6240,7 @@ EventRow = (function(superClass) {
 
   EventRow.prototype.ensureSegsRendered = function() {
     if (!this.isSegsRendered) {
+      this.ensureBusinessHourSegsRendered();
       if (this.bgSegs) {
         this.view.timeGrid.renderFillInContainer('bgEvent', this, this.bgSegs);
       }
@@ -5551,10 +6251,33 @@ EventRow = (function(superClass) {
     }
   };
 
+  EventRow.prototype.ensureBusinessHourSegsRendered = function() {
+    if (this.businessHourSegs && !this.isBusinessHourSegsRendered) {
+      this.view.timeGrid.renderFillInContainer('businessHours', this, this.businessHourSegs, 'bgevent');
+      return this.isBusinessHourSegsRendered = true;
+    }
+  };
+
   EventRow.prototype.unrenderEventContent = function() {
+    this.clearBusinessHourSegs();
     this.bgSegs = null;
     this.fgSegs = null;
     return this.isSegsRendered = false;
+  };
+
+  EventRow.prototype.clearBusinessHourSegs = function() {
+    var j, len, ref, seg;
+    if (this.businessHourSegs) {
+      ref = this.businessHourSegs;
+      for (j = 0, len = ref.length; j < len; j++) {
+        seg = ref[j];
+        if (seg.el) {
+          seg.el.remove();
+        }
+      }
+      this.businessHourSegs = null;
+    }
+    return this.isBusinessHourSegsRendered = false;
   };
 
   return EventRow;
@@ -5616,7 +6339,7 @@ ResourceRow = (function(superClass) {
     } else {
       this.disableExpanding();
     }
-    return this.view.trigger('resourceRender', this.resource, this.resource, this.getTr('spreadsheet').find('> td'), this.getTr('event').find('> td'));
+    return this.view.publiclyTrigger('resourceRender', this.resource, this.resource, this.getTr('spreadsheet').find('> td'), this.getTr('event').find('> td'));
   };
 
   ResourceRow.prototype.renderEventContent = function(tr) {
@@ -5682,7 +6405,7 @@ ResourceAgendaView = (function(superClass) {
     return ResourceAgendaView.__super__.constructor.apply(this, arguments);
   }
 
-  ResourceAgendaView.mixin(ResourceViewMixin);
+  ResourceAgendaView.mixin(VertResourceViewMixin);
 
   ResourceAgendaView.prototype.timeGridClass = ResourceTimeGrid;
 
@@ -5693,23 +6416,18 @@ ResourceAgendaView = (function(superClass) {
     return this.timeGrid.processHeadResourceEls(this.headContainerEl);
   };
 
-  ResourceAgendaView.prototype.setResources = function(resources) {
+  ResourceAgendaView.prototype.setResourcesOnGrids = function(resources) {
     this.timeGrid.setResources(resources);
     if (this.dayGrid) {
-      this.dayGrid.setResources(resources);
+      return this.dayGrid.setResources(resources);
     }
-    this.clearView();
-    return this.displayView();
   };
 
-  ResourceAgendaView.prototype.unsetResources = function() {
-    this.clearEvents();
+  ResourceAgendaView.prototype.unsetResourcesOnGrids = function() {
     this.timeGrid.unsetResources();
     if (this.dayGrid) {
-      this.dayGrid.unsetResources();
+      return this.dayGrid.unsetResources();
     }
-    this.clearView();
-    return this.displayView();
   };
 
   return ResourceAgendaView;
@@ -5718,7 +6436,7 @@ ResourceAgendaView = (function(superClass) {
 
 FC.views.agenda.queryResourceClass = function(viewSpec) {
   var ref;
-  if ((ref = viewSpec.options.groupByResource || viewSpec.options.groupByDateAndResource) != null ? ref : viewSpec.duration.as('days') === 1) {
+  if ((ref = viewSpec.options.groupByResource || viewSpec.options.groupByDateAndResource) != null ? ref : viewSpec.duration && viewSpec.duration.as('days') === 1) {
     return ResourceAgendaView;
   }
 };
@@ -5730,7 +6448,7 @@ ResourceBasicView = (function(superClass) {
     return ResourceBasicView.__super__.constructor.apply(this, arguments);
   }
 
-  ResourceBasicView.mixin(ResourceViewMixin);
+  ResourceBasicView.mixin(VertResourceViewMixin);
 
   ResourceBasicView.prototype.dayGridClass = ResourceDayGrid;
 
@@ -5739,17 +6457,12 @@ ResourceBasicView = (function(superClass) {
     return this.dayGrid.processHeadResourceEls(this.headContainerEl);
   };
 
-  ResourceBasicView.prototype.setResources = function(resources) {
-    this.dayGrid.setResources(resources);
-    this.clearView();
-    return this.displayView();
+  ResourceBasicView.prototype.setResourcesOnGrids = function(resources) {
+    return this.dayGrid.setResources(resources);
   };
 
-  ResourceBasicView.prototype.unsetResources = function() {
-    this.clearEvents();
-    this.dayGrid.unsetResources();
-    this.clearView();
-    return this.displayView();
+  ResourceBasicView.prototype.unsetResourcesOnGrids = function() {
+    return this.dayGrid.unsetResources();
   };
 
   return ResourceBasicView;
@@ -5763,7 +6476,7 @@ ResourceMonthView = (function(superClass) {
     return ResourceMonthView.__super__.constructor.apply(this, arguments);
   }
 
-  ResourceMonthView.mixin(ResourceViewMixin);
+  ResourceMonthView.mixin(VertResourceViewMixin);
 
   ResourceMonthView.prototype.dayGridClass = ResourceDayGrid;
 
@@ -5772,17 +6485,12 @@ ResourceMonthView = (function(superClass) {
     return this.dayGrid.processHeadResourceEls(this.headContainerEl);
   };
 
-  ResourceMonthView.prototype.setResources = function(resources) {
-    this.dayGrid.setResources(resources);
-    this.clearView();
-    return this.displayView();
+  ResourceMonthView.prototype.setResourcesOnGrids = function(resources) {
+    return this.dayGrid.setResources(resources);
   };
 
-  ResourceMonthView.prototype.unsetResources = function() {
-    this.clearEvents();
-    this.dayGrid.unsetResources();
-    this.clearView();
-    return this.displayView();
+  ResourceMonthView.prototype.unsetResourcesOnGrids = function() {
+    return this.dayGrid.unsetResources();
   };
 
   return ResourceMonthView;
@@ -5791,7 +6499,7 @@ ResourceMonthView = (function(superClass) {
 
 FC.views.basic.queryResourceClass = function(viewSpec) {
   var ref;
-  if ((ref = viewSpec.options.groupByResource || viewSpec.options.groupByDateAndResource) != null ? ref : viewSpec.duration.as('days') === 1) {
+  if ((ref = viewSpec.options.groupByResource || viewSpec.options.groupByDateAndResource) != null ? ref : viewSpec.duration && viewSpec.duration.as('days') === 1) {
     return ResourceBasicView;
   }
 };
@@ -5802,7 +6510,7 @@ FC.views.month.queryResourceClass = function(viewSpec) {
   }
 };
 
-RELEASE_DATE = '2016-04-23';
+RELEASE_DATE = '2017-04-01';
 
 UPGRADE_WINDOW = {
   years: 1,

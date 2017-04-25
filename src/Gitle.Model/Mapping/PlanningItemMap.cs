@@ -8,6 +8,7 @@
             Map(x => x.End).Column("[End]");
             References(x => x.User);
             Map(x => x.Resource);
+            Map(x => x.Text);
         }
     }
 }

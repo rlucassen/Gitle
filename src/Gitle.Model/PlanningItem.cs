@@ -8,5 +8,6 @@
         public virtual string Resource { get; set; }
         public virtual DateTime Start { get; set; }
         public virtual DateTime End { get; set; }
+        public virtual string Text { get; set; }
     }
 }

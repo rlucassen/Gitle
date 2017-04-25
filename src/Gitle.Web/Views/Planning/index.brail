@@ -67,12 +67,30 @@
   </form>
 </div>
 
+<div id="addGeneralEvent" class="reveal-modal" data-reveal>
+  <form action="#" data-abide>
+    <h2>Algemeen item toevoegen</h2>
+    <div class="row">
+      <div class="large-3 columns">Naam</div>
+      <div class="large-9 columns">
+        <input type="text" id="generalEventName" class="no-margin" placeholder="Naam" />
+      </div>
+    </div>
+    <div class="row">
+      <div class="large-12 columns">
+        <input class="button success" type="submit" value="Item toevoegen">
+      </div>
+    </div>
+  </form>
+</div>
+
 <script>
 
   var employees = [];
   $(function () {
 
     var calendar = $('#calendar');
+    generalEventDate = null;
 
     $('.project-chooser').autocomplete({
       serviceUrl: '/project/autocomplete',
@@ -112,6 +130,7 @@
       });
     });
 
+
     $('#external-events .employee').each(function () {
 
       var employeeName = $.trim($(this).text());
@@ -141,6 +160,7 @@
           eventId: event.id,
           resource: event.resourceId,
           userId: event.userId,
+          text: event.resourceId === 'general' ? event.title : null,
           start: event.start.format('YYYY-MM-DD HH:mm'),
           end: event.end.format('YYYY-MM-DD HH:mm')
         },
@@ -163,6 +183,24 @@
         }
       });
     };
+
+    $('#addGeneralEvent').find('form').submit(function(e) {
+      e.preventDefault();
+      var form = $(this);
+      var generalEventInput = form.find('#generalEventName');
+
+      var event = {
+        start: generalEventDate,
+        end: moment(generalEventDate).add(1, 'days'),
+        title: generalEventInput.val(),
+        resourceId: 'general',
+      };
+
+      calendar.fullCalendar('renderEvent', event);
+      $('#addGeneralEvent').foundation('reveal', 'close');
+
+      updateEvent(event);
+    });
 
     var getVisibleEvents = function () {
       return calendar.fullCalendar('clientEvents', function (event) {
@@ -200,7 +238,7 @@
         var event1 = events[i1];
         for (var i2 in events) {
           var event2 = events[i2];
-          if (event1.start < event2.end && event2.start < event1.end && event1._id != event2._id && event1.userId == event2.userId) {
+          if (event1.start < event2.end && event2.start < event1.end && event1._id != event2._id && event1.userId == event2.userId && event1.userId !== null) {
             var event2Resource = calendar.fullCalendar('getResourceById', event2.resourceId);
             event1.overlapWith = event2Resource.title;
             $('[data-event-id=' + event1._id + ']').addClass('overlap');
@@ -428,9 +466,9 @@
         calculateOverlap();
         postRenderChildren();
       },
-      resources: function (callback) {
-        var start = calendar.fullCalendar('getView').start.format('YYYY-MM-DD');
-        var end = calendar.fullCalendar('getView').end.format('YYYY-MM-DD');
+      resources: function (callback, start, end) {
+        var start = moment(start).format('YYYY-MM-DD');
+        var end = moment(end).format('YYYY-MM-DD');
         $.ajax({
           url: '/planning/projects',
           method: 'post',
@@ -444,6 +482,12 @@
           }
         });
 
+      },
+      dayClick: function (date, jsEvent, view, resourceObj) {
+        if (resourceObj.id === 'general') {
+          generalEventDate = date;
+          $('#addGeneralEvent').foundation('reveal', 'open');
+        }
       },
       events: '/planning/events',
       eventClick: function (event) {
