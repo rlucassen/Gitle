@@ -78,7 +78,7 @@
           d.orderDir = d.order[0].dir;
         }
       },
-      initComplete(settins, json) {
+      initComplete: function(settins, json) {
         $(document).foundation('reflow');
       },
       columns: [
