@@ -1,28 +1,14 @@
 ﻿namespace Gitle.Web.Controllers
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Linq.Expressions;
     using Castle.MonoRail.Framework;
     using Helpers;
     using Model;
     using Model.Helpers;
     using NHibernate;
-    using NHibernate.Criterion;
     using NHibernate.Linq;
-
-    // Colors
-        //008CBA
-        //F04124
-        //43AC6A
-        //FFBF00
-        //9FFFCB
-        //FFFFFF
-        //F966FF
-        //B96ECC
-        //E83F6F
 
     public class PlanningController : SecureController
     {
@@ -40,8 +26,7 @@
         [return: JSONReturnBinder]
         public List<Event> Events(DateTime start, DateTime end)
         {
-            return session.Query<PlanningItem>()
-                .Where(x => x.End > start && x.Start < end && x.IsActive).ToList()
+            return GetEvents(start, end)
                 .Select(x => new Event
                 {
                     id = x.Id,
@@ -50,91 +35,51 @@
                     end = x.End.ToString("yyyy-MM-dd HH:mm"),
                     title = x.User?.FullName ?? x.Text,
                     color = x.User != null ? $"#{x.User?.Color}" : "#ccc",
-                    userId = x.User?.Id.ToString(),
+                    userId = x.User?.Id.ToString()
                 }).ToList();
         }
 
         [return: JSONReturnBinder]
         public List<Resource> Projects(DateTime start, DateTime end)
         {
-            IList<(int year, int startWeek, int endWeek)> yearParts = new List<(int, int, int)>();
+            var events = GetEvents(start, end);
 
-            for (int yearIndex = start.Year; yearIndex <= end.Year; yearIndex++)
+            var resourceIds = events.Select(x => x.Resource).Distinct().ToList();
+
+            var issueIds = resourceIds.Where(x => x.StartsWith("i")).Select(x => long.Parse(x.Substring(1))).ToList();
+            var issues = session.Query<Issue>().Where(x => issueIds.Contains(x.Id)).ToList();
+
+            var projectIds = resourceIds.Where(x => x.StartsWith("p")).Select(x => long.Parse(x.Substring(1))).ToList();
+            // Add all projectIds that dont have events but have issues who have events
+            projectIds.AddRange(issues.Select(x => x.Project.Id).Except(projectIds));
+            var projects = session.Query<Project>().Where(x => projectIds.Contains(x.Id));
+
+            var resources = new List<Resource>();
+
+            foreach (var project in projects)
             {
-                var startWeek = yearIndex == start.Year ? start.WeekNr() : 1;
-                var endWeek = yearIndex == end.Year ? end.WeekNr() : 53;
-                yearParts.Add((yearIndex, startWeek, endWeek));
+                var issuesForProject = issues.Where(x => x.Project.Id == project.Id);
+                resources.Add(new Resource(project, issuesForProject));
             }
 
-            var disjunction = Restrictions.Disjunction();
-
-            foreach (var yearPart in yearParts)
-            {
-                disjunction.Add<PlanningResource>(x => x.Year == yearPart.year && x.Week >= yearPart.startWeek && x.Week <= yearPart.endWeek);
-            }
-
-            var resources = session.QueryOver<PlanningResource>().Where(disjunction).List()
-                .Select(x => new Resource(x)).ToList();
-
-            resources.Insert(0, new Resource() {title = "Algemeen", id = "general"});
-            //resources.Insert(1, new Resource(){title = "Vakanties", id="holiday"});
+            resources.Insert(0, new Resource {title = "Algemeen", id = "general"});
 
             return resources;
         }
 
-        [return: JSONReturnBinder]
-        public Resource SaveResource(int year, int week, long projectId, long[] issueIds)
+        private List<PlanningItem> GetEvents(DateTime start, DateTime end)
         {
-            var planningResource = session.Query<PlanningResource>().FirstOrDefault(x => x.Project.Id == projectId && x.Year == year && x.Week == week);
-
-            if (planningResource == null)
-            {
-                planningResource = new PlanningResource
-                {
-                    Year = year,
-                    Week = week,
-                    Project = session.Get<Project>(projectId),
-                    Issues = session.Query<Issue>().Where(x => issueIds.Contains(x.Id)).ToList()
-                };
-            }
-            else
-            {
-                foreach (var issueId in issueIds)
-                {
-                    if(!planningResource.Issues.Select(x => x.Id).Contains(issueId))
-                        planningResource.Issues.Add(session.Get<Issue>(issueId));
-                }
-            }
-
-
-            using (var tx = session.BeginTransaction())
-            {
-                session.SaveOrUpdate(planningResource);
-                tx.Commit();
-            }
-
-            return new Resource(planningResource);
+            return session.Query<PlanningItem>()
+                .Where(x => x.End > start && x.Start < end && x.IsActive).ToList();
         }
 
-        public void DeleteResource(long id, long issueId)
+        [return: JSONReturnBinder]
+        public Resource GetResource(long projectId, long[] issueIds)
         {
-            var planningResource = session.Get<PlanningResource>(id);
+            var issues = session.Query<Issue>().Where(x => issueIds.Contains(x.Id));
+            var project = session.Get<Project>(projectId);
 
-            using (var tx = session.BeginTransaction())
-            {
-                if (issueId > 0)
-                {
-                    planningResource.Issues.Remove(planningResource.Issues.FirstOrDefault(x => x.Id == issueId));
-                    session.SaveOrUpdate(planningResource);
-                }
-                else
-                {
-                    session.Delete(planningResource);
-                }
-
-                tx.Commit();
-            }
-            RenderText("ok");
+            return new Resource(project, issues);
         }
 
         public void UpdateEvent(long eventId, long userId, string resource, string text, DateTime start, DateTime end)
@@ -143,7 +88,7 @@
 
             if (planningItem == null)
             {
-                planningItem = new PlanningItem()
+                planningItem = new PlanningItem
                 {
                     User = session.Get<User>(userId),
                     Resource = resource,
@@ -220,21 +165,20 @@
         {
         }
 
-        public Resource(PlanningResource resource)
+        public Resource(Project project, IEnumerable<Issue> issues)
         {
-            originalId = resource.Id;
-            id = $"p{resource.Project.Id}";
-            title = resource.Project.Name;
-            children = resource.Issues.Select(i => new Resource
+            id = $"p{project.Id}";
+            title = project.Name;
+            children = issues.Select(i => new Resource()
             {
                 id = $"i{i.Id}",
                 title = $"#{i.Number} - {i.Name}",
-                originalId = i.Id
+                parentId = $"p{project.Id}"
             }).ToList();
         }
 
-        public long originalId;
         public string id;
+        public string parentId;
         public string title;
         public IList<Resource> children = new List<Resource>();
     }

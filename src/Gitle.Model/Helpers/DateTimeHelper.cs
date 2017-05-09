@@ -1,7 +1,9 @@
 ﻿namespace Gitle.Model.Helpers
 {
     using System;
+    using System.Collections.Generic;
     using System.Globalization;
+    using NHibernate.Linq.Functions;
 
     public static class DateTimeHelper
     {
@@ -131,6 +133,22 @@
         {
             if (DateTimeFormatInfo.CurrentInfo != null) return DateTimeFormatInfo.CurrentInfo.Calendar.GetWeekOfYear(dateTime, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
             return 0;
+        }
+
+        public static List<(int year, int week)> WeekNrs(DateTime start, DateTime end)
+        {
+            var startOfWeek = start.StartOfWeek();
+
+            var weeks = new List<(int year, int week)>();
+
+            var currentStartOfWeek = startOfWeek;
+            while (currentStartOfWeek <= end.StartOfWeek())
+            {
+                weeks.Add((currentStartOfWeek.Year, currentStartOfWeek.WeekNr()));
+                currentStartOfWeek = currentStartOfWeek.AddDays(7);
+            }
+
+            return weeks;
         }
     }
 }

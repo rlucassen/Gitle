@@ -61,7 +61,7 @@
     </div>
     <div class="row">
       <div class="large-12 columns">
-        <input class="button success" type="submit" value="Project toevoegen">
+        <input class="button success" type="submit" value="Toevoegen">
       </div>
     </div>
   </form>
@@ -87,9 +87,11 @@
 <script>
 
   var employees = [];
-  $(function () {
+  var calendar = $('#calendar');
 
-    var calendar = $('#calendar');
+  var tempResources = [];
+
+  $(function () {
     generalEventDate = null;
 
     $('.project-chooser').autocomplete({
@@ -115,13 +117,24 @@
       }
     });
 
+    var addTempResource = function (data) {
+      for (var i in data.children) {
+        tempResources.push(data.children[i]);
+      }
+      var tempResource = data;
+      tempResource.children = [];
+      tempResources.push(tempResource);
+    }
+
     $('#addResource').find('form').submit(function (e) {
       e.preventDefault();
       var form = $(this);
+
       $.ajax({
-        url: '/planning/saveresource',
-        data: $(this).serialize() + '&year=' + calendar.fullCalendar('getView').start.format('YYYY') + '&week=' + calendar.fullCalendar('getView').start.format('W'),
-        success: function () {
+        url: '/planning/getresource',
+        data: $(this).serialize(),
+        success: function (data) {
+          addTempResource(data);
           calendar.fullCalendar('refetchResources');
           form.trigger('reset');
           form.find('#resourceIssues').html('');
@@ -194,6 +207,8 @@
         end: moment(generalEventDate).add(1, 'days'),
         title: generalEventInput.val(),
         resourceId: 'general',
+        color: '#ccc',
+        borderColor: '#666'
       };
 
       calendar.fullCalendar('renderEvent', event);
@@ -365,7 +380,8 @@
           duration: { days: 28 },
           slotDuration: '12:00',
           snapDuration: '12:00',
-          slotWidth: 20
+          slotWidth: 20,
+          dateIncrement: { weeks: 1 }
         },
         timelineThreeMonths: {
           type: 'timeline',
@@ -373,18 +389,18 @@
           slotDuration: '12:00',
           snapDuration: '12:00',
           slotWidth: 20,
-          dateIncrement: {months: 1}
+          dateIncrement: { months: 1 }
         }
       },
       customButtons: {
         addProject: {
           text: 'Add project',
-          click: function () {
+          click: function() {
             $('#addResource').foundation('reveal', 'open');
           }
         }
       },
-      viewRender: function () {
+      viewRender: function() {
         calendar.fullCalendar('refetchResources');
       },
       resourceColumns: [
@@ -429,58 +445,53 @@
         },
         {
           render: function(resource, elem) {
-            elem.on('click', function (e) {
-              e.stopPropagation();
-              if (confirm('Are you sure you want to delete ' + resource.title + '?')) {
-                var resourceId = resource.originalId;
-                var issueId = 0;
-                if (resource.parent != undefined) {
-                  resourceId = resource.parent.originalId;
-                  issueId = resource.originalId;
-                }
-                $.ajax({
-                  url: '/planning/deleteresource',
-                  data: {
-                    id: resourceId,
-                    issueId: issueId
-                  },
-                  success: function (data) {
-                    calendar.fullCalendar('removeResource', resource);
-                    console.log('removeResource', data);
-                    calculateHours();
-                  }
-                });
-              }
-            }).find('.fc-cell-text').html('<i class="fa fa-trash"></i>');
+            if (resource.id.startsWith('p')) {
+              elem.on('click',
+                function(e) {
+                  e.stopPropagation();
+                  var modal = $('#addResource').foundation('reveal', 'open');
+                  modal.find('.project-chooser').val(resource.title);
+                  modal.find('#projectId').val(resource.id.replace('p', ''));
+                  modal.find('.issue-chooser').autocomplete('setOptions', { params: { projectId: resource.id.replace('p', '') } });
+                }).find('.fc-cell-text').html('<i class="fa fa-edit"></i>');
+            } else {
+              elem.find('.fc-cell-text').html('');
+            }
           },
           width: '30px'
         }
       ],
-      resourceRender: function (resource, elem) {
-      },
-      eventRender: function (event, element) {
+      eventRender: function(event, element) {
         element.attr('data-event-id', event._id);
       },
-      eventAfterAllRender: function () {
+      eventAfterAllRender: function() {
         calculateHours();
         calculateOverlap();
         postRenderChildren();
       },
+      resourceOrder: 'title',
+      refetchResourcesOnNavigate: true,
       resources: function (callback, start, end) {
-        var start = moment(start).format('YYYY-MM-DD');
-        var end = moment(end).format('YYYY-MM-DD');
-        $.ajax({
-          url: '/planning/projects',
-          method: 'post',
-          data: {
-            start: start,
-            end: end,
-            toeter: 'toeter'
-          },
-          success: function (data) {
-            callback(data);
-          }
-        });
+        if (start == null) start = calendar.fullCalendar('getView').start;
+        if (end == null) end = calendar.fullCalendar('getView').end;
+        if (start != null && end != null) {
+          start = moment(start).format('YYYY-MM-DD');
+          end = moment(end).format('YYYY-MM-DD');
+          $.ajax({
+            url: '/planning/projects',
+            method: 'post',
+            data: {
+              start: start,
+              end: end,
+            },
+            success: function (data) {
+              for (var i in tempResources) {
+                data.push(tempResources[i]);
+              }
+              callback(data);
+            }
+          });
+        }
 
       },
       dayClick: function (date, jsEvent, view, resourceObj) {
