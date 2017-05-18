@@ -178,9 +178,9 @@
           end: event.end.format('YYYY-MM-DD HH:mm')
         },
         success: function (data) {
-          event.id = data;
+          calendar.fullCalendar('removeEvents', event._id);
           console.log('eventUpdated', data);
-          calendar.fullCalendar('rerenderEvents');
+          calendar.fullCalendar('refetchEvents');
         }
       });
     };
@@ -399,9 +399,6 @@
             $('#addResource').foundation('reveal', 'open');
           }
         }
-      },
-      viewRender: function() {
-        calendar.fullCalendar('refetchResources');
       },
       resourceColumns: [
         {

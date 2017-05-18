@@ -70,7 +70,7 @@
         private List<PlanningItem> GetEvents(DateTime start, DateTime end)
         {
             return session.Query<PlanningItem>()
-                .Where(x => x.End > start && x.Start < end && x.IsActive).ToList();
+                .Where(x => x.End >= start && x.Start <= end && x.IsActive).ToList();
         }
 
         [return: JSONReturnBinder]
