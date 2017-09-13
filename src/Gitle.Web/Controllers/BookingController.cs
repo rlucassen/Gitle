@@ -16,13 +16,13 @@ namespace Gitle.Web.Controllers
         {
         }
 
-        [Admin]
+        [BookHours]
         public void Index()
         {
             Index(DateTime.Today);
         }
 
-        [Admin]
+        [BookHours]
         public void Index(DateTime date)
         {
             var bookings = session.Query<Booking>()
@@ -35,7 +35,7 @@ namespace Gitle.Web.Controllers
             PropertyBag.Add("admins", session.Query<User>().Where(x => x.IsActive && x.IsAdmin));
         }
 
-        [Admin]
+        [BookHours]
         public void Overview()
         {
             var bookingsByDate = session.Query<Booking>()
@@ -62,7 +62,7 @@ namespace Gitle.Web.Controllers
             PropertyBag.Add("dayList", dayList);
         }
 
-        [Admin]
+        [BookHours]
         public void Save(int adminId = 0)
         {
             var booking = BindObject<Booking>("booking");
@@ -95,7 +95,7 @@ namespace Gitle.Web.Controllers
             RedirectToAction("index", new {date = booking.Date.ToShortDateString()});
         }
 
-        [Admin]
+        [BookHours]
         public void Save(int id, int projectId, int issueId)
         {
             var booking = session.Query<Booking>().FirstOrDefault(x => x.IsActive && x.Id == id);
@@ -123,7 +123,7 @@ namespace Gitle.Web.Controllers
             }
             RedirectToReferrer();
         }
-        [Admin]
+        [BookHours]
         public void Delete(int id)
         {
             var booking = session.Query<Booking>().FirstOrDefault(x => x.IsActive && x.Id == id && !x.InvoiceLines.Any());
@@ -139,7 +139,7 @@ namespace Gitle.Web.Controllers
             }
             RedirectToReferrer();
         }
-        [Admin]
+        [BookHours]
         public void Edit(int id)
         {
             var booking = session.Query<Booking>().FirstOrDefault(x => x.IsActive && x.Id == id); //TODO: admin moet ook kunnen ophalen = andere user

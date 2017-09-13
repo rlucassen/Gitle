@@ -31,6 +31,12 @@
                 RenderView("/shared/forbidden");
                 return null;
             }
+            var bookHoursAttributes = (BookHoursAttribute[])method.GetCustomAttributes(typeof(BookHoursAttribute), false);
+            if (bookHoursAttributes.Length > 0 && !CurrentUser.CanBookHours)
+            {
+                RenderView("/shared/forbidden");
+                return null;
+            }
             var danielleAttributes = (DanielleAttribute[])method.GetCustomAttributes(typeof(DanielleAttribute), false);
             if (danielleAttributes.Length > 0 && !CurrentUser.IsDanielle)
             {

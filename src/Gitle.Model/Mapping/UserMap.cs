@@ -16,6 +16,7 @@
             Map(x => x.EmailAddress);
             Map(x => x.IsAdmin);
             Map(x => x.IsDanielle);
+            Map(x => x.CanBookHours);
             Map(x => x.Phone);
             Map(x => x.GitHubUsername);
             Map(x => x.GitHubAccessToken);
@@ -26,6 +27,7 @@
             HasMany(x => x.Projects).Cascade.AllDeleteOrphan();
             HasMany(x => x.FilterPresets);
             References(x => x.Customer);
+
         }
     }
 }

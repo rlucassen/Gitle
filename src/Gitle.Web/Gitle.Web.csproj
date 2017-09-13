@@ -28,6 +28,7 @@
     <IISExpressUseClassicPipelineMode />
     <UseGlobalApplicationHostFile />
     <TargetFrameworkProfile />
+    <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -354,6 +355,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\BookHoursAttribute.cs" />
     <Compile Include="Helpers\DanielleAttribute.cs" />
     <Compile Include="Helpers\AdminAttribute.cs" />
     <Compile Include="Helpers\DayHelper.cs" />

@@ -1,0 +1,1 @@
+update [user] set CanBookHours = 1 where IsAdmin = 1;

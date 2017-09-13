@@ -63,8 +63,12 @@
         <li><a href="/dashboard/index">Dashboard</a></li>
         <li class="divider"></li>
         <li><a href="/planning/index">Planning</a></li>
+        <% end %>
+        <% if CurrentUser.CanBookHours: %>
         <li class="divider"></li>
         <li><a href="/booking/index">Uren boeken</a></li>
+        <% end %>
+        <% if CurrentUser.IsAdmin: %>
         <li class="divider"></li>
         <li><a href="/report/index">Urenrapporten</a></li>
         <li class="divider"></li>
@@ -217,7 +221,7 @@
     //  return Foundation.libs.abide.validate($(this).find('input, textarea, select').not("[data-abide-ignore]").get(), e, false);
     //});
   </script>
-  <% if RELEASE: %>
+  <% if IsDefined("RELEASE") and RELEASE: %>
   <script src="/Content/javascript/auxilium.min.js"> </script>
   <script src="/Content/javascript/gitle.min.js"> </script>
   <script src="/Content/javascript/app.min.js"> </script>

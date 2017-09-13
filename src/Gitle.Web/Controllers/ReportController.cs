@@ -33,7 +33,7 @@ namespace Gitle.Web.Controllers
             PropertyBag.Add("reportPresets", reportPresets);
             PropertyBag.Add("globalReportPresets", globalReportPresets);
 
-            PropertyBag.Add("allUsers", session.Query<User>().Where(x => x.IsAdmin && x.IsActive).OrderBy(x => x.FullName).ToList());
+            PropertyBag.Add("allUsers", session.Query<User>().Where(x => x.CanBookHours && x.IsActive).OrderBy(x => x.FullName).ToList());
 
             var allCustomers = session.Query<Customer>().Where(x => x.IsActive);
             var allApplications = session.Query<Application>().Where(x => x.IsActive);
