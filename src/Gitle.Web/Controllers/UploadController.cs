@@ -14,8 +14,8 @@
 
     public class UploadController : SecureController
     {
-        private static readonly IList<string> ImageExtensions = new List<string> {".jpg", ".png", ".gif"};
-        private static readonly IList<string> DocumentExtensions = new List<string> {".doc", ".docx", ".xls", ".xlsx", ".pdf", ".json", ".txt", ".xml", ".xsd", ".msg", ".apk"};
+        private static readonly IList<string> ImageExtensions = ConfigurationManager.AppSettings["uploadController_ImageExtensions"].Split(new [] {",", ";"}, StringSplitOptions.RemoveEmptyEntries); //new List<string> {".jpg", ".png", ".gif"};
+        private static readonly IList<string> DocumentExtensions = ConfigurationManager.AppSettings["uploadController_DocumentExtensions"].Split(new[] { ",", ";" }, StringSplitOptions.RemoveEmptyEntries); //new List<string> {".doc", ".docx", ".xls", ".xlsx", ".pdf", ".json", ".txt", ".xml", ".xsd", ".msg", ".apk"};
 
         public UploadController(ISessionFactory sessionFactory) : base(sessionFactory)
         {

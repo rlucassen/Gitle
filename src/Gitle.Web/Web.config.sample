@@ -18,6 +18,8 @@
     <add key="freckleApi" value="" />
     <add key="fileUpload" value=""/>
     <add key="webPath" value="http://"/>
+    <add key="uploadController_ImageExtensions" value=".jpg, .png, .gif" />
+    <add key="uploadController_DocumentExtensions" value=".doc, .docx, .xls, .xlsx, .xlsm, .pdf, .json, .txt, .xml, .xsd, .msg, .apk" />
   </appSettings>
   <connectionStrings>
     <add name="Gitle" connectionString="Server=.\SqlExpress;Initial Catalog=Gitle;Integrated Security=SSPI;" />
@@ -57,6 +59,7 @@
       <add name="monorail" verb="*" path="*.rails" type="Castle.MonoRail.Framework.MonoRailHttpHandlerFactory, Castle.MonoRail.Framework" />
     </handlers>
     <modules runAllManagedModulesForAllRequests="true">
+      <add name="routing" type="Castle.MonoRail.Framework.Routing.RoutingModuleEx, Castle.MonoRail.Framework" />
       <add name="PerRequestLifestyle" type="Castle.MicroKernel.Lifestyle.PerWebRequestLifestyleModule, Castle.Windsor" />
     </modules>
     <validation validateIntegratedModeConfiguration="false" />
