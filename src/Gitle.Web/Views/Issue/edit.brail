@@ -71,7 +71,12 @@
         </div>
       </div>
       <div class="row">
-        <div class="large-12 columns"><input type="submit" class="button" value="Opslaan"/></div>
+        <div class="large-12 columns">
+          <input type="submit" class="button" value="Opslaan"/>
+          <% if CurrentUser.IsAdmin: %>
+          <input type="submit" name="andNew" class="button" value="Opslaan en nieuw"/>
+          <% end %>
+        </div>
       </div>
     </form>
   </div>

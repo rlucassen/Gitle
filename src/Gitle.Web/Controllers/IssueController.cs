@@ -136,7 +136,7 @@
         }
 
         [MustHaveProject]
-        public void Save(string projectSlug, int issueId, string[] labels)
+        public void Save(string projectSlug, int issueId, string[] labels, string andNew)
         {
             var project = session.Slug<Project>(projectSlug);
             if (project.Closed)
@@ -149,7 +149,14 @@
             var savedIssue = SaveIssue(project, issue, labels);
 
             var hash = $"#issue{savedIssue.Number}";
-            RedirectToUrl($"/project/{project.Slug}/issue/index{hash}");
+            if (string.IsNullOrEmpty(andNew))
+            {
+                RedirectToUrl($"/project/{project.Slug}/issue/index{hash}");
+            }
+            else
+            {
+                RedirectToUrl($"/project/{project.Slug}/issue/new");
+            }
         }
 
         [return: JSONReturnBinder]
