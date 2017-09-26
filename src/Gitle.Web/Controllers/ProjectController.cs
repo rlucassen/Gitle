@@ -332,6 +332,12 @@
                 projects = projects.Where(x => x.Type != ProjectType.Administration);
             }
 
+            if (!CurrentUser.IsAdmin && CurrentUser.CanBookHours)
+            {
+                var projectIds = CurrentUser.Projects.Select(up => up.Project.Id);
+                projects = projects.Where(p => projectIds.Contains(p.Id));
+            }
+
             if (query != null)
             {
                 projects = projects.Where(p => p.Name.Contains(query) || p.Number.ToString().Contains(query) || (p.Application != null && (p.Application.Name.Contains(query) || (p.Application.Customer != null && p.Application.Customer.Name.Contains(query)))));

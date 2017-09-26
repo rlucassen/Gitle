@@ -1,7 +1,10 @@
 ﻿[
   {
     "outputFile": "Content/stylesheets/app.css",
-    "inputFile": "Content/stylesheets/app.scss"
+    "inputFile": "Content/stylesheets/app.scss",
+    "options": {
+      "sourceMap":  true 
+    }
   },
   {
     "outputFile": "Content/stylesheets/planning.css",

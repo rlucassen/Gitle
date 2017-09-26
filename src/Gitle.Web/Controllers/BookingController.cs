@@ -79,6 +79,11 @@ namespace Gitle.Web.Controllers
             {
                 booking.User = CurrentUser;
             }
+            if (!CurrentUser.IsAdmin && !CurrentUser.Projects.Select(up => up.Id).Contains(booking.Project.Id))
+            {
+                RedirectToAction("index", new { date = booking.Date.ToShortDateString() });
+                return;
+            }
             if (booking.Issue.Id == 0 || booking.Project.Id == 0) //project moet nu ook verplicht zijn
             {
                 //issue is verplicht!
