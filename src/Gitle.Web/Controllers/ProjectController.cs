@@ -138,7 +138,7 @@
             PropertyBag.Add("donePercentage", donePercentage);
             PropertyBag.Add("totalIssueTime", totalIssueTime);
             PropertyBag.Add("application", application);
-            PropertyBag.Add("customers", project.Users.Where(up => !up.User.IsAdmin).ToList());
+            PropertyBag.Add("customers", project.Users.Where(up => !up.User.IsAdmin && !up.User.CanBookHours).ToList());
             PropertyBag.Add("developers", project.Users.Where(up => up.User.IsAdmin).ToList());
         }
 
