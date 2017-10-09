@@ -29,7 +29,7 @@ namespace Gitle.Model
         public Invoice(Project project, DateTime startDate, DateTime endDate, IList<Booking> bookings)
             : this(project, startDate, endDate)
         {
-            foreach (var booking in bookings)
+            foreach (var booking in bookings.OrderBy(b => b.Date))
             {
                 if(booking.Issue != null){
                     var invoiceLine = Lines.FirstOrDefault(il => il.Issue == booking.Issue);
@@ -79,7 +79,7 @@ namespace Gitle.Model
         public virtual User CreatedBy { get; set; }
         public virtual Project Project { get; set; }
         public virtual IList<InvoiceLine> Lines { get; set; }
-        public virtual IList<Booking> Bookings => Lines.SelectMany(l => l.Bookings).ToList();
+        public virtual IList<Booking> Bookings => Lines.SelectMany(l => l.Bookings).OrderBy(b => b.Date).ToList();
         public virtual IList<Correction> Corrections { get; set; }
 
         public virtual bool IsConcept => State == InvoiceState.Concept;
@@ -97,12 +97,12 @@ namespace Gitle.Model
 
         public virtual int IssueCount => Lines.Count(x => x.Issue != null);
 
-        public virtual IList<InvoiceLine> ProjectLines => Lines.Where(x => x.Issue == null).ToList();
-        public virtual IList<InvoiceLine> IssueLines => Lines.Where(x => x.Issue != null).ToList();
-        public virtual IList<Issue> Issues => Lines.Where(x => x.Issue != null).Select(x => x.Issue).ToList();
+        public virtual IList<InvoiceLine> ProjectLines => Lines.Where(x => x.Issue == null).OrderBy(l => l.Issue.Number).ToList();
+        public virtual IList<InvoiceLine> IssueLines => Lines.Where(x => x.Issue != null).OrderBy(l => l.Issue.Number).ToList();
+        public virtual IList<Issue> Issues => Lines.Where(x => x.Issue != null).OrderBy(l => l.Issue.Number).Select(x => x.Issue).ToList();
 
-        public virtual IList<InvoiceLine> UnbillableLines => Lines.Where(x => x.Null).ToList();
-        public virtual IList<InvoiceLine> BillableLines => Lines.Where(x => !x.Null).ToList();
+        public virtual IList<InvoiceLine> UnbillableLines => Lines.Where(x => x.Null).OrderBy(l => l.Issue.Number).ToList();
+        public virtual IList<InvoiceLine> BillableLines => Lines.Where(x => !x.Null).OrderBy(l => l.Issue.Number).ToList();
 
         public virtual void AddLine(InvoiceLine line)
         {
