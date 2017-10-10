@@ -2,11 +2,13 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
     using Enum;
     using Helpers;
     using Interfaces.Model;
 
+    [DebuggerDisplay("{Name}")]
     public class Project : ModelBase, IDocumentContainer, ISlugger
     {
         public Project()
@@ -51,8 +53,8 @@
         public virtual IList<Label> Labels { get; set; }
         public virtual IList<Issue> Issues { get; set; }
         public virtual IList<Invoice> Invoices { get; set; }
-        public virtual IList<Document> Documents { get; set; } 
-        public virtual IList<Booking> Bookings { get; set; } 
+        public virtual IList<Document> Documents { get; set; }
+        public virtual IList<Booking> Bookings { get; set; }
 
         public virtual int NotifiedUsers => Users.Count(u => u.Notifications);
 

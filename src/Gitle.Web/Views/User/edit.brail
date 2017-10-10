@@ -87,6 +87,8 @@
               <thead>
                 <tr>
                   <th>Project</th>
+                  <th>Nummer</th>
+                  <th>Type</th>
                   <th>Applicatie</th>
                   <th>Klant</th>
                   <th>Project zichtbaar</th>
@@ -107,7 +109,13 @@
                     <input type="hidden" name="userProject[${count}].Id" value="${userProject.Id}" />
                     <input type="hidden" name="userProject[${count}].Project.Id" value="${project.Id}" />
                     <input type="hidden" name="userProject[${count}].User.Id" value="${item.Id}" />
-                    ${project.Name}
+                    ${?project.Name}
+                  </td>
+                  <td>
+                    ${?project.Number}
+                  </td>
+                 <td>
+                    ${?project.Type}
                   </td>
                   <td>
                     ${?project.Application.Name}
@@ -155,5 +163,6 @@
       else
         $('#projecten tr.red').hide();
     }).change();
+
   });
 </script>
