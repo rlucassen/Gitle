@@ -57,6 +57,9 @@
                         IsBodyHtml = true
                     };
 
+                    if (!action.Issue.Changes.Any())
+                        message.Bcc.Add("servicedesk@auxilium.nl");
+
                     message.Body = GetBody("issue-action", new Hashtable { { "item", action }, { "user", user } });
 
                     SendMessage(message);
