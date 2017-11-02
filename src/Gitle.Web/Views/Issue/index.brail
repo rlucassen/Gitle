@@ -1,6 +1,6 @@
 ﻿<div class="row">
   <div class="large-12 columns">
-    <h1>${project.Name}: ${result.TotalResultCount} Taken</h1>
+    <h1><a href="/project/${project.Slug}/view">${project.Name}</a>: ${result.TotalResultCount} Taken</h1>
     <% if not project.Closed: %>
     <a class="button" href="/project/${project.Slug}/issue/new">Nieuwe taak</a>
     <% else: %>

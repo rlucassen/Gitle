@@ -331,6 +331,8 @@ table {
     background-color: #fffeb6; }
   table.row-clickable tbody td:hover {
     cursor: pointer; }
+  table tr.red > td {
+    color: red; }
 
 .container {
   max-width: 100%; }

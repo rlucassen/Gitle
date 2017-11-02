@@ -10,6 +10,7 @@
     using Castle.Core.Smtp;
     using Castle.MonoRail.Framework;
     using Castle.MonoRail.Views.Brail;
+    using Gitle.Model.Enum;
     using Model;
     using Model.Interfaces.Model;
     using Model.Interfaces.Service;
@@ -46,6 +47,16 @@
                 action = _session.Get<ChangeState>(((ChangeState)action).Id);
             var project = action.Issue.Project;
             IList<User> users = (from userProject in project.Users where userProject.Notifications && (!userProject.OnlyOwnIssues || action.Issue.CreatedBy == userProject.User) && userProject.User != action.User && userProject.IsActive select userProject.User).ToList();
+
+            if ((action as ChangeState)?.IssueState == IssueState.Open)
+            {
+                var servicedesk = new User()
+                {
+                    IsAdmin = true,
+                    EmailAddress = "servicedesk@auxilium.nl"
+                };
+                users.Add(servicedesk);
+            }
 
             foreach (var user in users)
             {

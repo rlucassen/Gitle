@@ -17,7 +17,7 @@
       <tbody>
         <% for project in initialProjects: %>
         <tr>
-          <td>${project.Name}</td>
+          <td><a href="/project/${project.Slug}/issues">${project.Name}</a></td>
           <td>${project.UnBillableHours}</td>
           <td>
             <div class="progress progress-border progress-status">
@@ -48,7 +48,7 @@
       <tbody>
         <% for project in serviceProjects: %>
         <tr>
-          <td>${project.Name}</td>
+          <td><a href="/project/${project.Slug}/issues">${project.Name}</a></td>
           <td>
             <div class="progress progress-tickets">
               <% if project.OpenIssues > 0: %><span class="meter open" style="width: ${project.OpenIssuesPercentage.ToString().Replace(",", ".")}%">${project.OpenIssues} open</span><% end %>

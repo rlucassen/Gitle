@@ -20,6 +20,10 @@
       <div class="large-10 columns"><a href="/application/${application.Slug}/view">${?application.Name}</a></div>
     </div>
     <% end %>
+    <div class="row">
+      <div class="large-2 columns">Taken</div>
+      <div class="large-10 columns"><a href="/project/${project.Slug}/issues">${?project.Name}</a></div>
+    </div>
     <% end %>
     <div class="row">
       <div class="large-2 columns">Voortgang taken</div>

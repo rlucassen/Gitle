@@ -80,12 +80,15 @@
       </div>
       <div class="panel">
         <h3>Projecten</h3>
-        <div class="row projects">
+        <input type="checkbox" id="closedProjects" /> Laat gesloten projecten zien
+       <div class="row projects">
           <div class="large-12 columns">
-            <table class="datatable tablesorter">
+            <table id="projecten" class="datatable tablesorter">
               <thead>
                 <tr>
                   <th>Project</th>
+                  <th>Nummer</th>
+                  <th>Type</th>
                   <th>Applicatie</th>
                   <th>Klant</th>
                   <th>Project zichtbaar</th>
@@ -97,12 +100,22 @@
                 <% count = 0 %>
                 <% for project in projects: %>
                 <% userProject = item.GetUserProject(project) %>
+                <% if project.Closed: %>
+                <tr class="red">
+                <% else: %>
                 <tr>
+                <% end %>
                   <td>
                     <input type="hidden" name="userProject[${count}].Id" value="${userProject.Id}" />
                     <input type="hidden" name="userProject[${count}].Project.Id" value="${project.Id}" />
                     <input type="hidden" name="userProject[${count}].User.Id" value="${item.Id}" />
-                    ${project.Name}
+                    ${?project.Name}
+                  </td>
+                  <td>
+                    ${?project.Number}
+                  </td>
+                 <td>
+                    ${?project.Type}
                   </td>
                   <td>
                     ${?project.Application.Name}
@@ -113,19 +126,19 @@
                   <td>
                     <div class="inline-checkbox">
                       <input type="checkbox" name="userProject[${count}].Subscribed" value="true" <% if selectedprojects.Contains(project): %>checked<% end %>/> Project is zichtbaar
-                      <input type="hidden" name="userProject[${count}].Subscribed" value="false"/>
+                      <input type="hidden" name="userProject[${count}].Subscribed" value="false" />
                     </div>
                   </td>
                   <td>
                     <div class="inline-checkbox">
                       <input type="checkbox" name="userProject[${count}].Notifications" value="true" <% if userProject.Notifications: %>checked<% end %>/> Notificaties ontvangen
-                       <input type="hidden" name="userProject[${count}].Notifications" value="false"/>
-                   </div>
+                      <input type="hidden" name="userProject[${count}].Notifications" value="false" />
+                    </div>
                   </td>
                   <td>
                     <div class="inline-checkbox">
                       <input type="checkbox" name="userProject[${count}].OnlyOwnIssues" value="true" <% if userProject.OnlyOwnIssues: %>checked<% end %>/> Alleen van zelf aangemaakte tickets
-                      <input type="hidden" name="userProject[${count}].OnlyOwnIssues" value="false"/>
+                      <input type="hidden" name="userProject[${count}].OnlyOwnIssues" value="false" />
                     </div>
                   </td>
                 </tr>
@@ -142,3 +155,14 @@
     </form>
   </div>
 </div>
+<script>
+  $(function () {
+    $('#closedProjects').change(function () {
+      if ($(this).is(':checked'))
+        $('#projecten tr.red').show();
+      else
+        $('#projecten tr.red').hide();
+    }).change();
+
+  });
+</script>
