@@ -21,6 +21,10 @@
         <% if item.EstimatePublic or CurrentUser.IsAdmin: %>
         <p class="hours no-margin"><strong>Geschatte tijd:</strong> ${item.EstimateString}  <% if not item.EstimatePublic: %><i class="fa fa-exclamation-triangle" title="schatting nog niet publiek"></i><% end %></p>
         <p class="price no-margin"><strong>Geschatte prijs:</strong> ${item.CostString(project.HourPrice)}  <% if not item.EstimatePublic: %><i class="fa fa-exclamation-triangle" title="schatting nog niet publiek"></i><% end %></p>
+        <% if CurrentUser.IsAdmin: %>
+        <% if item.Bookings.Count > 0: %><p class="hours no-margin"><strong>Geboekte tijd:</strong> ${item.BillableBookingHoursString()} (${item.UnbillableBookingHoursString()} unbillable)</p><% end %>
+        <% if item.Invoices.Count > 0: %><p class="hours no-margin"><strong>Gefactureerde tijd:</strong>  ${item.TotalBillableHoursInvoicedString} (${item.TotalUnbillableHoursInvoicedString} unbillable)</p><% end %>
+        <% end %>
         <p class="state no-margin"><strong>Status:</strong> ${item.StateString}</p>
         <% end %>
         <p class="labels no-margin">
@@ -114,7 +118,7 @@
           <small class="right capitalize">${Helpers.DateTimeHelper.Readable(DateTime.Now)}</small>
           <h3>Nieuwe reactie</h3>
           <form action="addcomment" method="POST">
-            <textarea name="body" class="uploadarea"></textarea>
+            <textarea name="body" class="uploadarea" data-suggestions-project="${item.Project.Id}"></textarea>
             <input type="submit" value="Plaats reactie" class="button no-margin"/>
           </form>
         </div>

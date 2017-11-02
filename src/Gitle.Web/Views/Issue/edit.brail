@@ -67,7 +67,7 @@
       <div class="row">
         <div class="large-3 columns">Omschrijving</div>
         <div class="large-9 columns">
-          ${Form.TextArea("item.Body", {"class": "uploadarea"})}
+          ${Form.TextArea("item.Body", {"class": "uploadarea", "data-suggestions-project": item.Project.Id})}
         </div>
       </div>
       <div class="row">

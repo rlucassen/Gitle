@@ -24,6 +24,8 @@
   $("table.row-clickable").tableRowClickable();
   $('.marked').markdownify();
   $('[data-confirm]').confirm();
+  $('textarea[data-suggestions-project]').textAreaSuggestion();
+  hightlightHash();
 
   /* 
    * Auxilium.upload

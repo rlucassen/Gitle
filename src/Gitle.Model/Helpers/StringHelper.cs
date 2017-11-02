@@ -38,11 +38,12 @@
             txt = Regex.Replace(txt, @"\(http(.*)\)", match => match.ToString().Replace(" ", "%20"));
             // single linebreaks become double linebreaks to conform gitle markdown
             var md = new Markdown();
+            txt = Regex.Replace(txt, @"( |^)(?<hash>#(?<number>[0-9]{1,6}))(?<hash2>#(?<number2>[0-9]{1,6}))( |\.|$)",
+                match => $" <a href=\"/project/{project.Slug}/issue/{match.Groups["number"]}/view#{match.Groups["number2"]}\">{match.Groups["hash"]}{match.Groups["hash2"]}</a> ");
+            txt = Regex.Replace(txt, @"( |^)(?<hash>#(?<number>[0-9]{1,6}))( |\.|$)",
+                match => $" <a href=\"/project/{project.Slug}/issue/{match.Groups["number"]}/view\">{match.Groups["hash"]}</a> ");
             txt = md.Transform(txt);
             txt = Regex.Replace(txt, @"(?<!(</p>))\n(?!\n)", match => "<br/>");
-            txt = Regex.Replace(txt, @" (?<hash>#(?<number>[0-9]{1,6})) ",
-                                match => string.Format(" <a href=\"/project/{0}/issue/{2}/view\">{1}</a> ",
-                                                       project.Slug, match.Groups["hash"], match.Groups["number"]));
             return txt;
         }
 

@@ -46,6 +46,7 @@
   <script src="/Content/javascript/vendor/scheduler/scheduler.js"></script>
   <script src="/Content/javascript/vendor/jquery.autocomplete.js"> </script>
   <script src="/Content/vendor/DataTables-1.10.13/js/jquery.dataTables.js"> </script>
+  <script src="/Content/vendor/component/caret-position.js"> </script>
 
 </head>
 <body class="<% if CurrentUser.IsAdmin: %>admin<% end %> scroll">

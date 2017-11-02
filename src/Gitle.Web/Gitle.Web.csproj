@@ -297,6 +297,7 @@
     <Content Include="Content\stylesheets\vendor\jquery-ui.min.css" />
     <Content Include="Content\stylesheets\vendor\jquery.autocomplete.css" />
     <Content Include="Content\stylesheets\vendor\normalize.css" />
+    <Content Include="Content\vendor\component\caret-position.js" />
     <Content Include="Content\vendor\DataTables-1.10.13\css\dataTables.bootstrap.css" />
     <Content Include="Content\vendor\DataTables-1.10.13\css\dataTables.bootstrap.min.css" />
     <Content Include="Content\vendor\DataTables-1.10.13\css\dataTables.foundation.css" />

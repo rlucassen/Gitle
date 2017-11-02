@@ -409,12 +409,25 @@ a.quickview-delay {
   }
 }
 
+@keyframes highlight {
+  from {
+    box-shadow: 0 0 15px 0 #000;
+  }
+  to {
+    box-shadow: none;
+  }
+}
+
 #timeline {
   font-size: 0.9em;
   margin-bottom: 1em;
 
   .issueaction {
     margin: 1em 0 0;
+    &.highlight {
+      animation-name: highlight;
+      animation-duration: 5s;
+    }
   }
 
   .panel {
@@ -1396,5 +1409,30 @@ select.hide-disabled {
 
   .supertiny {
     padding: 0.5em;
+  }
+}
+
+.suggestion-box {
+  position: absolute;
+  border: 1px solid #d8d8d8;
+  background-color: #fff;
+  list-style: none;
+
+  li {
+    padding: 0 10px;
+    &.query {
+      font-size: 0.8em;
+      font-style: italic;
+    }
+    &.issuelink {
+      font-weight: bold;
+    }
+    &.commentlink {
+      padding-left: 30px;
+      font-size: 0.8em;
+    }
+    &:hover {
+      background-color: #f2f2f2;
+    }
   }
 }

@@ -116,7 +116,7 @@
                 throw new ProjectClosedException(project);
             }
             PropertyBag.Add("project", project);
-            PropertyBag.Add("item", new Issue());
+            PropertyBag.Add("item", new Issue(){Project = project});
             PropertyBag.Add("labels", CurrentUser.IsAdmin ? project.Labels : project.Labels.Where(l => l.ApplicableByCustomer));
             RenderView("edit");
         }
@@ -469,6 +469,29 @@
             }
             suggestions.AddRange(issues.ToList().Where(i => i.HasBeenOpenSince(DateTime.Today.AddDays(-7))).Select(x => new Suggestion($"#{x.Number} - {x.Name}", x.Id.ToString())));
             return new { query = query, suggestions = suggestions };
+        }
+
+        [return: JSONReturnBinder]
+        public object Suggestions(long projectId, string query)
+        {
+            var suggestions = new List<Suggestion>();
+
+            query = query?.ToLower() ?? "";
+
+            var issues = session.Query<Issue>().Where(i => i.Project.Id == projectId).ToList().Where(i => i.HasBeenOpenSince(DateTime.Today.AddDays(-7))).ToList();
+
+            if (!string.IsNullOrEmpty(query))
+            {
+                issues = issues.Where(x => x.Number.ToString().StartsWith(query) || x.Name.ToLower().Contains(query) || x.Comments.Any(c => c.Id.ToString().StartsWith(query))).ToList();
+            }
+
+            foreach (var issue in issues)
+            {
+                suggestions.Add(new Suggestion($"#{issue.Number} - {issue.Name}", issue.Number.ToString(), "issuelink"));
+                var comments = issue.Comments;
+                suggestions.AddRange(comments.Select(c => new Suggestion($"#{issue.Number}#{c.Id} - {c.Name} ({c.CreatedAt})", $"{issue.Number}#{c.Id}", "commentlink")));
+            }
+            return suggestions;
         }
     }
 }

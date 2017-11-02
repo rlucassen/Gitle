@@ -1,4 +1,85 @@
 /*
+ * Give suggestions for links to issues or comments when typing a # in a textarea.
+ */
+$.fn.textAreaSuggestion = function () {
+  var textAreaSuggestionBox = $('<ul class="suggestion-box"></ul>').appendTo('body').hide();
+  return this.each(function () {
+    var textarea = $(this);
+    textarea.keydown(function (event) {
+      if (event.key == 'Shift' || event.key == 'Ctrl') {
+        return;
+      }
+      var textarea = $(this);
+      var previousdata = textarea.data('query') == undefined ? '' : textarea.data('query');
+      if (textarea.data('continue') == true && (/^[a-z0-9]{1}$/i.test(event.key) || event.key == '#')) {
+        event.preventDefault();
+        textarea.data('query', previousdata + event.key);
+        getSuggestions(textarea, textAreaSuggestionBox, textarea.data('query'));
+        textarea.data('continue', true);
+      } else if (event.key == '#') {
+        getSuggestions(textarea, textAreaSuggestionBox);
+        textarea.data('continue', true);
+      } else if (textarea.data('continue') && event.key == 'Backspace' && textarea.data('query').length > 0) {
+        event.preventDefault();
+        textarea.data('query', previousdata.substring(0, previousdata.length - 1));
+        getSuggestions(textarea, textAreaSuggestionBox, textarea.data('query'));
+        textarea.data('continue', true);
+      } else if (textarea.data('continue') && (event.key == 'Tab' || event.key == 'Enter')) {
+        event.preventDefault();
+        var link = textAreaSuggestionBox.find('li:not(.query)').first().data('link');
+        textarea.insert(link);
+        textAreaSuggestionBox.hide();
+        textarea.focus();
+        textarea.data('continue', false);
+        textarea.data('query', '');
+      } else {
+        textAreaSuggestionBox.hide();
+        textarea.data('continue', false);
+        textarea.data('query', '');
+      }
+    });
+  });
+};
+
+var getSuggestions = function (textarea, textAreaSuggestionBox, query) {
+  if (query == undefined) query = '';
+  var projectId = textarea.data('suggestions-project');
+  var caret = getCaretCoordinates(textarea[0], textarea[0].selectionEnd);
+  var top = caret.top + textarea.offset().top;
+  var left = caret.left + textarea.offset().left;
+  $.ajax({
+    url: '/issue/suggestions?projectId=' + projectId + '&query=' + query,
+    success: function(data) {
+      textAreaSuggestionBox.show().html('').css('top', top + 'px').css('left', left + 'px');
+      var queryLi = $('<li class="query">query: ' + query + '</li>').appendTo(textAreaSuggestionBox);
+      for (var i in data) {
+        var suggestion = data[i];
+        var item = $('<li class="' + suggestion.extraValue + '">' + suggestion.value + '</li>');
+        item.data('link', suggestion.data);
+        item.click(function() {
+          textarea.insert($(this).data('link') + ' ');
+          textAreaSuggestionBox.hide();
+          textarea.focus();
+        });
+        textAreaSuggestionBox.append(item);
+      }
+    }
+  });
+};
+
+/*
+ * Highlight elements that are hash linked to.
+ */
+var hightlightHash = function() {
+  if (window.location.hash) {
+    $(window.location.hash).addClass('highlight').on('animationend', function() {
+      $(this).removeClass('highlight');
+    });
+  }
+};
+window.onhashchange = hightlightHash;
+
+/*
  * Convert value from current elemente into slug and put it in target element [data-slugify]
  */
 $.fn.slugify = function () {
