@@ -316,8 +316,6 @@
         showOverload = true;
       }
 
-
-
       var events = getVisibleEvents();
 
       var view = calendar.fullCalendar('getView');
@@ -326,12 +324,12 @@
       for (i in events) {
         if (events.hasOwnProperty(i)) {
           var event = events[i];
-          if (event.start >= start && event.end <= end) {
-            var saturdays = weekdaysBetween(event.start, event.end, 6);
-            var sundays = weekdaysBetween(event.start, event.end, 7);
-            var days = (event.end - event.start) / 3600000 / 24;
-            employees[event.title] += (days - saturdays - sundays) * 8;
-          }
+          var eventStart = event.start < start ? start : event.start;
+          var eventEnd = event.end > end ? end : event.end;
+          var saturdays = weekdaysBetween(eventStart, eventEnd, 6);
+          var sundays = weekdaysBetween(eventStart, eventEnd, 7);
+          var days = (eventEnd - eventStart) / 3600000 / 24;
+          employees[event.title] += (days - saturdays - sundays) * 8;
         }
       }
 
