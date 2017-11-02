@@ -256,6 +256,8 @@ $(function () {
         url: '/project/' + projectSlug + '/issue/new?cancelLayout=true',
         success: function (data) {
           setTimeout(function() {
+            var gitleIssues = new GitleIssues();
+            gitleIssues.initTimeParser();
             $('#newIssue').find('form').submit(function(e) {
               e.preventDefault();
               $.ajax({
