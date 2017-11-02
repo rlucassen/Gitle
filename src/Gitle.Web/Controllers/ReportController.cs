@@ -57,7 +57,7 @@ namespace Gitle.Web.Controllers
 
             presetDates.Add(new DatePreset { startDate = today.StartOfWeek(), endDate = today.EndOfWeek(), title = "Deze week"});
 
-            for (int i = 1; i <= 9; i++)
+            for (int i = 1; i <= 8; i++)
             {
                 today = today.AddDays(-7);
                 presetDates.Add(new DatePreset{ startDate = today.StartOfWeek(), endDate = today.EndOfWeek(), title = $"Week {today.WeekNr()}"});

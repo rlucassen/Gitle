@@ -149,6 +149,10 @@
                         StartDate = DateTime.Today.AddMonths(-1).StartOfMonth();
                         EndDate = DateTime.Today.AddMonths(-1).EndOfMonth();
                         break;
+                    case "always":
+                        StartDate = new DateTime(2010, 1, 1);
+                        EndDate = DateTime.Today.AddMonths(-1).EndOfMonth();
+                        break;
                 }
             }
 

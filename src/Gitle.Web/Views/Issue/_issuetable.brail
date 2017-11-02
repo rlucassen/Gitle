@@ -73,10 +73,10 @@
                 <strong>Geboekt: </strong>
               </div>
               <div class="large-2 columns text-right">
-                ${issue.BillableBookingHoursString()}
+                <a href="/report/index?query=project:${project.Slug} issue:${issue.Number} period:always">${issue.BillableBookingHoursString()}</a>
               </div>
               <div class="large-2 columns text-right">
-                (${issue.UnbillableBookingHoursString()} unbillable)
+                (<a href="/report/index?query=project:${project.Slug} issue:${issue.Number} period:always">${issue.UnbillableBookingHoursString()} unbillable</a>)
               </div>
             </div>
             <% end %>

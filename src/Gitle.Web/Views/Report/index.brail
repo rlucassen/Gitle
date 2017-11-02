@@ -20,6 +20,9 @@
             <a href="#" class="button secondary prefix" data-insert-startdate="${date.startDate.ToString("yyyy-MM-dd")}" data-insert-startdate-to="#startDate" data-insert-enddate="${date.endDate.ToString("yyyy-MM-dd")}" data-insert-enddate-to="#endDate" data-filter="start:${date.startDate.ToString("yyyy-MM-dd")} end:${date.endDate.ToString("yyyy-MM-dd")}" data-filter-opposite="start,end,period">${date.title}</a>
           </div>
           <% end %>
+          <div class="large-1 medium-2 small-4 columns">
+            <a href="#" class="button secondary prefix" data-filter="period:always" data-filter-opposite="start,end">Altijd</a>
+          </div>
         </div>
         <div class="row collapse">
           <div class="large-9 small-12 columns">
