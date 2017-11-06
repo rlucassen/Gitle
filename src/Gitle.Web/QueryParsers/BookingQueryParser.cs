@@ -151,7 +151,7 @@
                         break;
                     case "always":
                         StartDate = new DateTime(2010, 1, 1);
-                        EndDate = DateTime.Today.AddMonths(-1).EndOfMonth();
+                        EndDate = DateTime.Today.AddYears(1);
                         break;
                 }
             }
