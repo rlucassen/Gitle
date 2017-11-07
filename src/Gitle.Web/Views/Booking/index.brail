@@ -150,5 +150,7 @@
   })
   .on('valid', function () {
     console.log('valid!');
-  });
+    });
+
+  $('#booking .booking-parser').focus();
 </script>
