@@ -13,40 +13,40 @@
 
   <link rel="shortcut icon" href="/Content/images/favicon.ico" />
 
-  <link rel="stylesheet" href="/content/stylesheets/vendor/normalize.css" />
-  <link rel="stylesheet" href="/content/stylesheets/vendor/foundation.min.css" />
-  <link rel="stylesheet" href="/Content/stylesheets/vendor/fontawesome/font-awesome.min.css">
-  <link rel="stylesheet" href="/Content/stylesheets/vendor/jquery.autocomplete.css">
-  <link rel="stylesheet" href="/Content/stylesheets/vendor/jquery-ui-1.10.3.custom.min.css">
-  <link rel="stylesheet" href="/Content/stylesheets/vendor/foundation.datepicker.css">
-  <link rel="stylesheet" href="/Content/stylesheets/app.css">
-  <link rel="stylesheet" href="/Content/stylesheets/chosen.css">
-  <link rel="stylesheet" href="/Content/javascript/vendor/jqueryui/jquery-ui.css">
-  <link rel="stylesheet" href="/Content/javascript/vendor/fullcalendar/fullcalendar.css">
-  <link rel="stylesheet" href="/Content/javascript/vendor/scheduler/scheduler.css">
-  <link rel="stylesheet" href="/Content/vendor/DataTables-1.10.13/css/jquery.dataTables.min.css">
+  <link rel="stylesheet" href="${Fingerprint.Tag('/content/stylesheets/vendor/normalize.css')}" />
+  <link rel="stylesheet" href="${Fingerprint.Tag('/content/stylesheets/vendor/foundation.min.css')}" />
+  <link rel="stylesheet" href="${Fingerprint.Tag('/Content/stylesheets/vendor/fontawesome/font-awesome.min.css')}">
+  <link rel="stylesheet" href="${Fingerprint.Tag('/Content/stylesheets/vendor/jquery.autocomplete.css')}">
+  <link rel="stylesheet" href="${Fingerprint.Tag('/Content/stylesheets/vendor/jquery-ui-1.10.3.custom.min.css')}">
+  <link rel="stylesheet" href="${Fingerprint.Tag('/Content/stylesheets/vendor/foundation.datepicker.css')}">
+  <link rel="stylesheet" href="${Fingerprint.Tag('/Content/stylesheets/app.css')}">
+  <link rel="stylesheet" href="${Fingerprint.Tag('/Content/stylesheets/chosen.css')}">
+  <link rel="stylesheet" href="${Fingerprint.Tag('/Content/javascript/vendor/jqueryui/jquery-ui.css')}">
+  <link rel="stylesheet" href="${Fingerprint.Tag('/Content/javascript/vendor/fullcalendar/fullcalendar.css')}">
+  <link rel="stylesheet" href="${Fingerprint.Tag('/Content/javascript/vendor/scheduler/scheduler.css')}">
+  <link rel="stylesheet" href="${Fingerprint.Tag('/Content/vendor/DataTables-1.10.13/css/jquery.dataTables.min.css')}">
 
-  <script src="/Content/javascript/vendor/jquery.js"> </script>
+  <script src="${Fingerprint.Tag('/Content/javascript/vendor/jquery.js')}"> </script>
   <script>jQuery.migrateMute = true;</script>
-  <script src="/Content/javascript/vendor/jquery.migrate.js"></script>
-  <script src="/Content/javascript/vendor/custom.modernizr.js"> </script>
-  <script src="/Content/javascript/vendor/marked.js"> </script>
-  <script src="/Content/javascript/vendor/jquery.metadata.js"> </script>
-  <script src="/Content/javascript/vendor/jquery.ajaxupload.js"> </script>
-  <script src="/Content/javascript/vendor/jquery.tablesorter.min.js"> </script>
-  <script src="/Content/javascript/vendor/jquery.colorpicker.js"> </script>
-  <script src="/Content/javascript/vendor/jquery.cookie.js"> </script>
-  <script src="/Content/javascript/vendor/chosen.jquery.min.js"> </script>
-  <script src="/Content/javascript/vendor/Sortable.min.js"> </script>
-  <script src="/Content/javascript/vendor/foundation.datepicker.js"> </script>
-  <script src="/Content/javascript/vendor/date.js"> </script>
-  <script src="/Content/javascript/vendor/jqueryui/jquery-ui.js"></script>
-  <script src="/Content/javascript/vendor/fullcalendar/lib/moment.min.js"></script>
-  <script src="/Content/javascript/vendor/fullcalendar/fullcalendar.js"></script>
-  <script src="/Content/javascript/vendor/scheduler/scheduler.js"></script>
-  <script src="/Content/javascript/vendor/jquery.autocomplete.js"> </script>
-  <script src="/Content/vendor/DataTables-1.10.13/js/jquery.dataTables.js"> </script>
-  <script src="/Content/vendor/component/caret-position.js"> </script>
+  <script src="${Fingerprint.Tag('/Content/javascript/vendor/jquery.migrate.js')}"></script>
+  <script src="${Fingerprint.Tag('/Content/javascript/vendor/custom.modernizr.js')}"> </script>
+  <script src="${Fingerprint.Tag('/Content/javascript/vendor/marked.js')}"> </script>
+  <script src="${Fingerprint.Tag('/Content/javascript/vendor/jquery.metadata.js')}"> </script>
+  <script src="${Fingerprint.Tag('/Content/javascript/vendor/jquery.ajaxupload.js')}"> </script>
+  <script src="${Fingerprint.Tag('/Content/javascript/vendor/jquery.tablesorter.min.js')}"> </script>
+  <script src="${Fingerprint.Tag('/Content/javascript/vendor/jquery.colorpicker.js')}"> </script>
+  <script src="${Fingerprint.Tag('/Content/javascript/vendor/jquery.cookie.js')}"> </script>
+  <script src="${Fingerprint.Tag('/Content/javascript/vendor/chosen.jquery.min.js')}"> </script>
+  <script src="${Fingerprint.Tag('/Content/javascript/vendor/Sortable.min.js')}"> </script>
+  <script src="${Fingerprint.Tag('/Content/javascript/vendor/foundation.datepicker.js')}"> </script>
+  <script src="${Fingerprint.Tag('/Content/javascript/vendor/date.js')}"> </script>
+  <script src="${Fingerprint.Tag('/Content/javascript/vendor/jqueryui/jquery-ui.js')}"></script>
+  <script src="${Fingerprint.Tag('/Content/javascript/vendor/fullcalendar/lib/moment.min.js')}"></script>
+  <script src="${Fingerprint.Tag('/Content/javascript/vendor/fullcalendar/fullcalendar.js')}"></script>
+  <script src="${Fingerprint.Tag('/Content/javascript/vendor/scheduler/scheduler.js')}"></script>
+  <script src="${Fingerprint.Tag('/Content/javascript/vendor/jquery.autocomplete.js')}"> </script>
+  <script src="${Fingerprint.Tag('/Content/vendor/DataTables-1.10.13/js/jquery.dataTables.js')}"> </script>
+  <script src="${Fingerprint.Tag('/Content/vendor/component/caret-position.js')}"> </script>
 
 </head>
 <body class="<% if CurrentUser.IsAdmin: %>admin<% end %> scroll">
@@ -223,19 +223,19 @@
     //});
   </script>
   <% if IsDefined("RELEASE") and RELEASE: %>
-  <script src="/Content/javascript/auxilium.min.js"> </script>
-  <script src="/Content/javascript/gitle.min.js"> </script>
-  <script src="/Content/javascript/app.min.js"> </script>
+  <script src="${Fingerprint.Tag('/Content/javascript/auxilium.min.js')}"> </script>
+  <script src="${Fingerprint.Tag('/Content/javascript/gitle.min.js')}"> </script>
+  <script src="${Fingerprint.Tag('/Content/javascript/app.min.js')}"> </script>
   <% else: %>
-  <script src="/Content/javascript/auxilium/auxilium.functions.js"> </script>
-  <script src="/Content/javascript/auxilium/auxilium.foundationhelper.js"> </script>
-  <script src="/Content/javascript/auxilium/auxilium.nestedtable.js"> </script>
-  <script src="/Content/javascript/auxilium/auxilium.upload.js"> </script>
-  <script src="/Content/javascript/gitle/gitle.functions.js"> </script>
-  <script src="/Content/javascript/gitle/gitle.invoice.js"> </script>
-  <script src="/Content/javascript/gitle/gitle.booking.js"> </script>
-  <script src="/Content/javascript/gitle/gitle.issues.js"> </script>
-  <script src="/Content/javascript/app.js"> </script>
+  <script src="${Fingerprint.Tag('/Content/javascript/auxilium/auxilium.functions.js')}"> </script>
+  <script src="${Fingerprint.Tag('/Content/javascript/auxilium/auxilium.foundationhelper.js')}"> </script>
+  <script src="${Fingerprint.Tag('/Content/javascript/auxilium/auxilium.nestedtable.js')}"> </script>
+  <script src="${Fingerprint.Tag('/Content/javascript/auxilium/auxilium.upload.js')}"> </script>
+  <script src="${Fingerprint.Tag('/Content/javascript/gitle/gitle.functions.js')}"> </script>
+  <script src="${Fingerprint.Tag('/Content/javascript/gitle/gitle.invoice.js')}"> </script>
+  <script src="${Fingerprint.Tag('/Content/javascript/gitle/gitle.booking.js')}"> </script>
+  <script src="${Fingerprint.Tag('/Content/javascript/gitle/gitle.issues.js')}"> </script>
+  <script src="${Fingerprint.Tag('/Content/javascript/app.js')}"> </script>
   <% end %>
 </body>
 </html>
