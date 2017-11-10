@@ -256,6 +256,10 @@
             var sessionFactory = Container.Resolve<ISessionFactory>();
             var session = WebSessionContext.Unbind(sessionFactory);
             if (session != null && session.IsOpen) session.Close();
+
+            Response.Headers.Add("Content-Security-Policy", "frame-ancestors 'self'");
+            Response.Headers.Add("X-Frame-Options", "SAMEORIGIN");
+            Response.Headers.Remove("X-AspNet-Version");
         }
 
         protected static void RegisterSessionFactory(IWindsorContainer windsorContainer)
