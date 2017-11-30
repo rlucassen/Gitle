@@ -198,14 +198,34 @@
           </div>
             <% isSelected = result.Dump %>
             <div class="large-0 small-6 columns">
-              <button href="#" data-dropdown="extra" aria-controls="extra" aria-expanded="false" class="button tiny dropdown no-margin
-                <% if result.Dump: %>warning<% end %>">Extra:</button>
+              <button href="#" data-dropdown="extra" aria-controls="extra" aria-expanded="false" class="button tiny dropdown no-margin <% if result.Dump: %>warning<% end %>">Extra:</button>
               <ul id="extra" data-dropdown-content="" class="f-dropdown wide" aria-hidden="true" tabindex="-1">
                 <li>
+                  <a href="#" data-filter="billable:yes" data-filter-opposite="billable:no">
+                    <% if result.Billable: %><i class="fa fa-check"></i><% end %>
+                    Billable
+                  </a>
+                  <% if result.Billable: %>
+                  <a href="#" class="remove-filter" data-filter="billable:yes">
+                    <i class="fa fa-close red"></i>
+                  </a>
+                  <% end %>
+                </li>
+                <li>
+                  <a href="#" data-filter="billable:no" data-filter-opposite="billable:yes">
+                    <% if result.Billable == false: %><i class="fa fa-check"></i><% end %>
+                    Unbillable
+                  </a>
+                  <% if result.Billable == false: %>
+                  <a href="#" class="remove-filter" data-filter="billable:no">
+                    <i class="fa fa-close red"></i>
+                  </a>
+                  <% end %>
+                </li>
+                <li>
                   <a href="#" data-filter="issue:null">
-                    <% if result.Dump: %><i class="fa fa-check"></i>
-                    <% end %>
-                  DUMP
+                    <% if result.Dump: %><i class="fa fa-check"></i><% end %>
+                    DUMP
                   </a>
                   <% if result.Dump: %>
                   <a href="#" class="remove-filter" data-filter="issue:null">

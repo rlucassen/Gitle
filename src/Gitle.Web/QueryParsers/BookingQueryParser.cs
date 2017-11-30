@@ -22,6 +22,7 @@
         public IList<string> Labels { get; set; } = new List<string>();
         public IList<Issue> Issues { get; set; } = new List<Issue>();
         public bool Dump { get; set; }
+        public bool? Billable { get; set; } = null;
 
         public List<BookingGroup> GroupedBookings { get; set; }
 
@@ -126,6 +127,12 @@
                     case "period":
                         period = value;
                         break;
+                    case "billable":
+                        if (value == "yes")
+                            Billable = true;
+                        if (value == "no")
+                            Billable = false;
+                        break;
                 }
             }
 
@@ -157,6 +164,11 @@
             }
 
             var bookings = session.Query<Booking>().Where(x => x.IsActive && x.Date >= StartDate && x.Date <= EndDate);
+
+            if (Billable != null)
+            {
+                bookings = bookings.Where(x => x.Unbillable == !Billable);
+            }
 
             if (userStrings.Count > 0)
             {
