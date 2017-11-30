@@ -196,9 +196,9 @@
               <% end %>
             </ul>
           </div>
-            <% isSelected = result.Dump %>
+            <% isSelected = result.Dump or result.Billable != null %>
             <div class="large-0 small-6 columns">
-              <button href="#" data-dropdown="extra" aria-controls="extra" aria-expanded="false" class="button tiny dropdown no-margin <% if result.Dump: %>warning<% end %>">Extra:</button>
+              <button href="#" data-dropdown="extra" aria-controls="extra" aria-expanded="false" class="button tiny dropdown no-margin <% if isSelected: %>warning<% end %>">Extra:</button>
               <ul id="extra" data-dropdown-content="" class="f-dropdown wide" aria-hidden="true" tabindex="-1">
                 <li>
                   <a href="#" data-filter="billable:yes" data-filter-opposite="billable:no">
