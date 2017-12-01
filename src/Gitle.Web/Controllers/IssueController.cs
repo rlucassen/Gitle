@@ -135,7 +135,7 @@
             PropertyBag.Add("labels", CurrentUser.IsAdmin ? project.Labels : project.Labels.Where(l => l.ApplicableByCustomer));
         }
 
-        [MustHaveProject]
+        [MustHaveProject, Csrf]
         public void Save(string projectSlug, int issueId, string[] labels, string andNew)
         {
             var project = session.Slug<Project>(projectSlug);
