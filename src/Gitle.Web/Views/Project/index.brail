@@ -98,7 +98,7 @@
             }
           } },
         { data: 'Application', title: 'Application', name: 'Application.Name', visible: isAdmin },
-        { data: 'Customer', title: 'Customer', name: 'Customer.Name', visible: isAdmin },
+        { data: 'Customer', title: 'Customer', name: 'Application.Customer.Name', visible: isAdmin },
         { data: 'Type', title: 'Type', name: 'Type', visible: isAdmin },
         {
           data: 'Slug',
@@ -116,7 +116,7 @@
             } else {
               html += '<li><a class="button tiny no-margin" href="/project/' + data+'/issues">Takenlijst</a></li>';
             }
-              
+
             if (isAdmin) {
               html += '<li><a class="button tiny success no-margin" href="/project/' + data +'/edit">Bewerk</a></li>';
               html += '<li><a class="button tiny alert no-margin" href="/project/' + data +'/delete" data-confirm="Weet je het zeker?">Verwijder</a></li>';

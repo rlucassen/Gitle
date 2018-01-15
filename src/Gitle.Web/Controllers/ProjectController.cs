@@ -171,7 +171,7 @@
             PropertyBag.Add("applicationId", session.Query<Application>().Where(x => x.Projects.Contains(project)));
             PropertyBag.Add("types", EnumHelper.ToList(typeof(ProjectType)));
             PropertyBag.Add("item", project);
-            PropertyBag.Add("customerId", project.Customer?.Id);
+            PropertyBag.Add("customerId", project.Application?.Customer?.Id);
             PropertyBag.Add("newNumbers", _projectNumberService.GetNextProjectNumbers());
         }
 

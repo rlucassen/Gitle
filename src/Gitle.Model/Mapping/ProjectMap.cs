@@ -26,7 +26,7 @@
             HasMany(x => x.Invoices).Cascade.None();
             HasMany(x => x.Bookings).Cascade.None();
             HasManyToMany(x => x.Documents).Table("ProjectDocument").Cascade.AllDeleteOrphan();
-            References(x => x.Customer);
+            //References(x => x.Customer);
             References(x => x.Application);
         }
     }
