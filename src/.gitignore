@@ -245,3 +245,5 @@ Logs/
 web.config
 Upload/
 Public/
+
+Gitle.Web/Content/stylesheets/**/*.css

@@ -73,7 +73,18 @@
                 <strong>Geboekt: </strong>
               </div>
               <div class="large-2 columns text-right">
-                <a href="/report/index?query=project:${project.Slug} issue:${issue.Number} period:always">${issue.BillableBookingHoursString()}</a>
+                <a href="/report/index?query=project:${project.Slug} issue:${issue.Number} period:always">
+                <div class="progress progress-border progress-status">
+                  <% if issue.BillableBookingHours() > issue.TotalHours and issue.TotalHours != 0: %>
+                  <span class="meter overbudget" style="width: 100% "></span>
+                  <% elif issue.TotalHours == 0: %>
+                  <span class="meter noestimate" style="width: 100%"></span>
+                  <% else: %>
+                  <span class="meter inbudget" style="width: ${issue.Progress().ToString().Replace(",", "." )}% "></span>
+                  <% end %>
+                  <span class="right-value">${issue.BillableBookingHoursString()}</span>
+                </div>
+                </a>
               </div>
               <div class="large-2 columns text-right">
                 (<a href="/report/index?query=project:${project.Slug} issue:${issue.Number} period:always">${issue.UnbillableBookingHoursString()} unbillable</a>)

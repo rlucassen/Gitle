@@ -255,7 +255,7 @@ table.tickets-table {
   .left-value, .right-value {
     position: absolute;
     font-size: 0.8em;
-    padding: 0 0.2em;
+    padding: 0 0.5em 0.2em;
     color: #333;
   }
 
@@ -1324,10 +1324,8 @@ input[type=checkbox].inline {
     .booking-buttons {
       display: block;
 
-      .booking-edit {
-        :hover {
-          background-color: #007095;
-        }
+      .booking-edit:hover {
+        background-color: #007095;
       }
 
       .alert {
@@ -1336,6 +1334,10 @@ input[type=checkbox].inline {
         }
       }
     }
+  }
+
+  i:hover{
+    background-color: transparent;
   }
 
   .booking-buttons {

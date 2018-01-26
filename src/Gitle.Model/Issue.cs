@@ -328,6 +328,11 @@
             return Math.Max(TotalHours, BillableBookingHours());
         }
 
+        public virtual double Progress()
+        {
+            return BillableBookingHours() / TotalHours * 100;
+        }
+
         public virtual string ShortName()
         {
             if (Name != null)
