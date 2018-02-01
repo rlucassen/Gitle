@@ -1,6 +1,6 @@
 ﻿<div class="row">
   <div class="large-12 columns">
-    <a href="/project/${project.Slug}/issues">terug naar overzicht</a>
+    <a href="/project/${project.Slug}/issues" id="back-button"><i class="fa fa-arrow-left"></i> terug naar overzicht</a>
     <% if item.Number > 0: %>
     <h1>#<strong>${item.Number}</strong> - Taak bewerken</h1>
     <% else: %>

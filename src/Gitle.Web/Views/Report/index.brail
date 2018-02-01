@@ -305,7 +305,7 @@
           <% if not booking.IsDefinitive: %>
           <div class="large-1 columns no-padding booking-buttons text-right">
             <a href="#" class="button radius supertiny no-margin booking-edit">edit <i class="fa fa-pencil-square-o"></i></a>
-            <a href="/booking/${booking.Id}/delete" class="button radius alert supertiny no-margin">delete <i class="fa fa-times"></i></a>
+            <a href="/booking/${booking.Id}/delete" class="button radius alert supertiny no-margin" data-confirm="Weet je het zeker?">delete <i class="fa fa-times"></i></a>
           </div>
           <% end %>
         </div>

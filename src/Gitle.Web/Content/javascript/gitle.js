@@ -273,6 +273,10 @@ $(function () {
                 }
               });
             });
+            $('#newIssue').find('#back-button').on('click', function(e) {
+              e.preventDefault();
+              $('#newIssue').foundation('reveal', 'close');
+            });
           }, 100);
         }
       }).on('opened.fndtn.reveal', function() {
