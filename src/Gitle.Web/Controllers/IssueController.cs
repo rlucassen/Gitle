@@ -406,14 +406,14 @@
                 items = items.Where(i => issues.Split(',').Contains(i.Number.ToString())).ToList();
             }
 
-            var json = JsonConvert.SerializeObject(items);
+            var json = JsonConvert.SerializeObject(items, new JsonSerializerSettings{ DefaultValueHandling = DefaultValueHandling.Ignore, DateParseHandling = DateParseHandling.None});
 
             CancelView();
 
             Response.ClearContent();
             Response.Clear();
 
-            var filename = $"issues_{project.Name}_{DateTime.Now:yyyyMMdd_hhmm}.json";
+            var filename = $"issues_{project.Slug}_{DateTime.Now:yyyyMMdd_hhmm}.json";
 
             Response.AppendHeader("content-disposition", $"attachment; filename={filename}");
             Response.ContentType = "application/json";
@@ -448,7 +448,7 @@
             Response.ClearContent();
             Response.Clear();
 
-            var filename = $"issues_{project.Name}_{DateTime.Now:yyyyMMdd_hhmm}.csv";
+            var filename = $"issues_{project.Slug}_{DateTime.Now:yyyyMMdd_hhmm}.csv";
 
             Response.AppendHeader("content-disposition", $"attachment; filename={filename}");
             Response.ContentType = "application/csv";

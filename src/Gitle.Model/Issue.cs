@@ -6,6 +6,7 @@
     using Enum;
     using Helpers;
     using Interfaces.Model;
+    using Newtonsoft.Json;
 
     public class Issue : Touchable
     {
@@ -31,9 +32,11 @@
         public virtual bool Prioritized { get; set; }
         public virtual int PrioOrder { get; set; }
 
+        [JsonIgnore]
         public virtual Project Project { get; set; }
         public virtual IList<Label> Labels { get; set; }
         public virtual IList<Comment> Comments { get; set; }
+        [JsonIgnore]
         public virtual IList<ChangeState> ChangeStates { get; set; }
         public virtual IList<Change> Changes { get; set; }
         public virtual IList<Pickup> Pickups { get; set; }
