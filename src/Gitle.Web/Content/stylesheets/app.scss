@@ -190,6 +190,11 @@ table.tickets-table {
       background: #e7e7e7;
     }
   }
+  &.hide-empties {
+    tr.empty-project {
+      display: none;
+    }
+  }
 }
 
 .dataTables_wrapper {
