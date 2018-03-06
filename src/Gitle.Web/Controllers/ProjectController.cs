@@ -382,7 +382,7 @@
             foreach (var project in projects)
             {
                 var customers = project.Users.Where(up => !up.User.IsAdmin && !up.User.CanBookHours).ToList();
-                if (customers.Count == 0)
+                if (customers.Count == 0 && !project.Closed)
                 exportProjects.Add(project);
             }
 
