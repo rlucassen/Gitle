@@ -63,6 +63,7 @@
             }
 
             resources.Insert(0, new Resource {title = "Algemeen", id = "general"});
+            resources.Insert(1, new Resource {title = "Vakantie", id = "vacation"});
 
             return resources;
         }
