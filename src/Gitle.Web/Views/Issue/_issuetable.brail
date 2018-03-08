@@ -73,7 +73,7 @@
                 <strong>Geboekt: </strong>
               </div>
               <div class="large-2 columns text-right">
-                <a href="/report/index?query=project:${project.Slug} issue:${issue.Number} period:always">
+                <a href="/report/index?query=project:${project.Slug} issue:${issue.Number} period:always" data-bookingschart="/project/${project.Slug}/issue/${issue.Number}/bookingschart">
                 <div class="progress progress-border progress-status">
                   <% if issue.BillableBookingHours() > issue.TotalHours and issue.TotalHours != 0: %>
                   <span class="meter overbudget" style="width: 100% "></span>

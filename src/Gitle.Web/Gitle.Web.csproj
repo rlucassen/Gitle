@@ -535,6 +535,7 @@
     <None Include="Views\Dashboard\index.brail" />
     <None Include="Views\Issue\index.brail" />
     <None Include="Views\Issue\exportimport.brail" />
+    <Content Include="Views\Issue\bookingschart.brail" />
     <None Include="Views\Issue\quickview.brail" />
     <None Include="Views\Issue\readjson.brail" />
     <None Include="Views\Issue\_dummyissue.brail" />
