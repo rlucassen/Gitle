@@ -246,7 +246,10 @@
     <h3>Resultaten van ${result.StartDate.ToString("dd-MM-yyyy")} tot en met ${result.EndDate.ToString("dd-MM-yyyy")}</h3>
   </div>
   <div class="large-4 columns text-right">
-    <p>${result.ResultCount} van ${result.TotalResultCount} resultaten</p>
+    <p class="no-margin">${result.ResultCount} van ${result.TotalResultCount} resultaten</p>
+    <% if result.ResultCount < result.TotalResultCount: %>
+    <a href="#" class="button tiny no-margin" data-filter="take:all">Geef alle resultaten</a>
+    <% end %>
   </div>
 </div>
 

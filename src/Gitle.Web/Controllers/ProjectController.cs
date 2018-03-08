@@ -1,7 +1,11 @@
 ﻿namespace Gitle.Web.Controllers
 {
+    using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
+    using System.Security.Cryptography.X509Certificates;
+    using System.Text;
     using Castle.MonoRail.Framework;
     using Model;
     using Helpers;
@@ -16,7 +20,8 @@
     {
         private readonly IProjectNumberService _projectNumberService;
 
-        public ProjectController(ISessionFactory sessionFactory, IProjectNumberService projectNumberService) : base(sessionFactory)
+        public ProjectController(ISessionFactory sessionFactory,
+            IProjectNumberService projectNumberService) : base(sessionFactory)
         {
             _projectNumberService = projectNumberService;
         }
@@ -40,13 +45,15 @@
 
             PropertyBag.Add("allCustomers", session.Query<Customer>().Where(x => x.IsActive).OrderBy(x => x.Name));
 
-            PropertyBag.Add("allApplications", session.Query<Application>().Where(x => x.IsActive).OrderBy(x => x.Name));
+            PropertyBag.Add("allApplications",
+                session.Query<Application>().Where(x => x.IsActive).OrderBy(x => x.Name));
 
             PropertyBag.Add("allTypes", EnumHelper.ToDictionary(typeof(ProjectType)).Where(x => x.Key > 0));
         }
 
         [return: JSONReturnBinder]
-        public object List(int start, int length, int draw, string orderColumn, string orderDir, string search, long customer, long application, ProjectType type, bool closed)
+        public object List(int start, int length, int draw, string orderColumn, string orderDir, string search,
+            long customer, long application, ProjectType type, bool closed)
         {
             var projects = session.Query<Project>().Where(x => x.IsActive);
             var recordsTotal = projects.Count();
@@ -78,7 +85,9 @@
 
             if (!string.IsNullOrEmpty(search))
             {
-                projects = projects.Where(x => x.Number.ToString() == search || x.Name.Contains(search) || x.Application.Name.Contains(search) || x.Application.Customer.Name.Contains(search));
+                projects = projects.Where(x => x.Number.ToString() == search || x.Name.Contains(search) ||
+                                               x.Application.Name.Contains(search) ||
+                                               x.Application.Customer.Name.Contains(search));
             }
 
             if (!CurrentUser.IsDanielle)
@@ -100,7 +109,7 @@
 
             var data = projects.Select(x => new ProjectListViewModel(x));
 
-            return new { draw, start, length, recordsTotal, recordsFiltered, data };
+            return new {draw, start, length, recordsTotal, recordsFiltered, data};
         }
 
         [MustHaveProject]
@@ -113,11 +122,11 @@
 
             if (CurrentUser.IsAdmin)
             {
-                var bookedTime = project.BillableMinutes/60.0;
-                var totalTime = project.BudgetMinutes/60.0;
+                var bookedTime = project.BillableMinutes / 60.0;
+                var totalTime = project.BudgetMinutes / 60.0;
 
                 var overbooked = false;
-                var bookedPercentage = bookedTime*100.0/totalTime;
+                var bookedPercentage = bookedTime * 100.0 / totalTime;
                 if (bookedPercentage > 100)
                 {
                     bookedPercentage = 100;
@@ -132,8 +141,8 @@
             var issues = session.Query<Issue>().Where(x => x.Project == project).ToList();
             var doneTime = issues.Where(i => !i.IsOpen).Sum(i => i.TotalHours);
             var totalIssueTime = issues.Sum(i => i.TotalHours);
-            var donePercentage = doneTime*100.0/totalIssueTime;
-            
+            var donePercentage = doneTime * 100.0 / totalIssueTime;
+
             PropertyBag.Add("doneTime", doneTime);
             PropertyBag.Add("donePercentage", donePercentage);
             PropertyBag.Add("totalIssueTime", totalIssueTime);
@@ -340,23 +349,57 @@
 
             if (query != null)
             {
-                projects = projects.Where(p => p.Name.Contains(query) || p.Number.ToString().Contains(query) || (p.Application != null && (p.Application.Name.Contains(query) || (p.Application.Customer != null && p.Application.Customer.Name.Contains(query)))));
+                projects = projects.Where(p => p.Name.Contains(query) || p.Number.ToString().Contains(query) ||
+                                               (p.Application != null &&
+                                                (p.Application.Name.Contains(query) ||
+                                                 (p.Application.Customer != null &&
+                                                  p.Application.Customer.Name.Contains(query)))));
             }
             projects = projects.OrderBy(x => x.Name);
-            suggestions.AddRange(projects.ToList().Select(x => new Suggestion(x.CompleteName, x.Id.ToString(), x.TicketRequiredForBooking ? "ticketRequired": string.Empty, x.Unbillable ? "unbillable":string.Empty, x.Slug)));
-            return new {query, suggestions };
+            suggestions.AddRange(projects.ToList().Select(x => new Suggestion(x.CompleteName, x.Id.ToString(),
+                x.TicketRequiredForBooking ? "ticketRequired" : string.Empty,
+                x.Unbillable ? "unbillable" : string.Empty, x.Slug)));
+            return new {query, suggestions};
         }
 
         [return: JSONReturnBinder]
         public object CheckProjectName(string name, long projectId)
         {
-            var validName = !session.Query<Project>().Any(x => x.IsActive && x.Slug == name.Slugify() && x.Id != projectId);
+            var validName = !session.Query<Project>()
+                .Any(x => x.IsActive && x.Slug == name.Slugify() && x.Id != projectId);
             var message = "Voer een naam in";
             if (!validName)
             {
                 message = "Deze naam is al in gebruik, kies een andere";
             }
-            return new { success = validName, message = message };
+            return new {success = validName, message = message};
+        }
+
+        public void ExportCsv()
+        {
+            var projects = session.Query<Project>();
+            var exportProjects = new List<Project>();
+            foreach (var project in projects)
+            {
+                var customers = project.Users.Where(up => !up.User.IsAdmin && !up.User.CanBookHours).ToList();
+                if (customers.Count == 0 && !project.Closed)
+                exportProjects.Add(project);
+            }
+
+            var csv = CsvHelper.ProjectCsv(exportProjects);
+            CancelView();
+
+            Response.ClearContent();
+            Response.Clear();
+
+            var filename = $"projects_{DateTime.Now:yyyyMMdd_hhmm}.csv";
+
+            Response.AppendHeader("content-disposition", $"attachment; filename={filename}");
+            Response.ContentType = "application/csv";
+
+            var byteArray = Encoding.Default.GetBytes(csv);
+            var stream = new MemoryStream(byteArray);
+            Response.BinaryWrite(stream);
         }
     }
 }
