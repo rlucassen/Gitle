@@ -6,6 +6,7 @@ GitleIssues.prototype = {
     this.initThreeStateChecker();
     this.initGroupActions();
     this.initQuickView();
+    this.initBookingsChart();
     this.initTimeParser();
   },
 
@@ -129,6 +130,37 @@ GitleIssues.prototype = {
       }
     }, function () {
       $('.quickview').hide();
+    });
+  },
+
+  initBookingsChart: function () {
+    var quickviewDelay = 0;
+    $('[data-bookingschart]').hover(function () {
+      var link = $(this);
+      if ($(this).data('tooltip') == undefined) {
+        var offset = $(this).position();
+        var tooltip = $('<div class="bookingschart">').css('top', offset.top + $(this).height()).css('left', offset.left);
+        $(this).data('tooltip', tooltip);
+        tooltip.load($(this).data('bookingschart'), function () {
+          tooltip.find('.marked').each(function () {
+            $(this).html(marked($(this).html()));
+          });
+          link.append(tooltip.hide());
+          link.data('timeout', setTimeout(function () {
+            if (link.is(':hover')) {
+              link.data('tooltip').show();
+            }
+          }, quickviewDelay));
+        });
+      } else {
+        link.data('timeout', setTimeout(function () {
+          if (link.is(':hover')) {
+            link.data('tooltip').show();
+          }
+        }, quickviewDelay));
+      }
+    }, function () {
+      $('.bookingschart').hide();
     });
   },
 

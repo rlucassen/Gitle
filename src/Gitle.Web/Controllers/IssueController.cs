@@ -108,6 +108,21 @@
         }
 
         [MustHaveProject]
+        public void BookingsChart(string projectSlug, int issueId)
+        {
+            var project = session.Slug<Project>(projectSlug);
+            var item = session.Query<Issue>().Single(i => i.Number == issueId && i.Project == project);
+            var totalTime = item.Bookings.Sum(x => x.Hours);
+            var bookings = item.Bookings.GroupBy(x => x.User).ToDictionary(x => x.Key, x => new { percentage = Math.Round(x.Sum(y => y.Hours) / totalTime * 100), percentageBillable = Math.Round(x.Where(y => !y.Unbillable).Sum(y => y.Hours) / x.Sum(y => y.Hours) * 100), total = x.Sum(y => y.Hours), totalBillable = x.Where(y => !y.Unbillable).Sum(y => y.Hours) });
+            PropertyBag.Add("project", project);
+            PropertyBag.Add("item", item);
+            PropertyBag.Add("bookings", bookings);
+            PropertyBag.Add("totalBooked", item.BillableBookingHoursString());
+            PropertyBag.Add("totalBookedUnbillable", item.UnbillableBookingHoursString());
+            CancelLayout();
+        }
+
+        [MustHaveProject]
         public void New(string projectSlug)
         {
             var project = session.Slug<Project>(projectSlug);
@@ -406,14 +421,14 @@
                 items = items.Where(i => issues.Split(',').Contains(i.Number.ToString())).ToList();
             }
 
-            var json = JsonConvert.SerializeObject(items);
+            var json = JsonConvert.SerializeObject(items, new JsonSerializerSettings{ DefaultValueHandling = DefaultValueHandling.Ignore, DateParseHandling = DateParseHandling.None});
 
             CancelView();
 
             Response.ClearContent();
             Response.Clear();
 
-            var filename = $"issues_{project.Name}_{DateTime.Now:yyyyMMdd_hhmm}.json";
+            var filename = $"issues_{project.Slug}_{DateTime.Now:yyyyMMdd_hhmm}.json";
 
             Response.AppendHeader("content-disposition", $"attachment; filename={filename}");
             Response.ContentType = "application/json";
@@ -448,7 +463,7 @@
             Response.ClearContent();
             Response.Clear();
 
-            var filename = $"issues_{project.Name}_{DateTime.Now:yyyyMMdd_hhmm}.csv";
+            var filename = $"issues_{project.Slug}_{DateTime.Now:yyyyMMdd_hhmm}.csv";
 
             Response.AppendHeader("content-disposition", $"attachment; filename={filename}");
             Response.ContentType = "application/csv";

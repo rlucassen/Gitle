@@ -1,0 +1,15 @@
+﻿<div class="text-left">Totaal geboekt: ${totalBooked} (${totalBookedUnbillable} unbillable)</div>
+<hr />
+<% for bookingGroup in bookings: %>
+  <div class="row">
+    <div class="large-3 columns">
+      <span>${bookingGroup.Key.FullName}</span>
+    </div>
+    <div class="large-9 columns">
+      <div class="progress progress-border progress-booking-time">
+        <span class="meter total" style="width: ${bookingGroup.Value.percentage}%"><span class="meter billable" style="width: ${bookingGroup.Value.percentageBillable}%"></span></span>
+        <span class="right-value">${StringHelper.ToHourDayNotation((bookingGroup.Value.total))}</span>
+      </div>
+    </div>
+  </div>
+  <% end %>

@@ -251,6 +251,31 @@ table.tickets-table {
     }
   }
 
+  &.progress-booking-time {
+    .total {
+      background-color: #75b1c3;
+    }
+
+    .billable {
+      background-color: #008CBA;
+    }
+
+    .left-value, .right-value {
+      position: absolute;
+      font-size: 1em;
+      padding: 0.5em 1em 0.5em;
+      color: #333;
+    }
+
+    .left-value {
+      left: 0;
+    }
+
+    .right-value {
+      right: 0;
+    }
+  }
+
   .meter {
     font-size: 0.8em;
     color: #fff;
@@ -411,6 +436,23 @@ a.quickview-delay {
         }
       }
     }
+  }
+}
+
+.bookingschart {
+  width: 40em;
+  max-width: 80vw;
+  color: #666;
+  background-color: #f3f3f3;
+  border: 1px solid #ddd;
+  line-height: 1em;
+  border-radius: 0;
+  position: absolute;
+  padding: 1em;
+  z-index: 999;
+
+  span {
+    font-size: 0.8em;
   }
 }
 
