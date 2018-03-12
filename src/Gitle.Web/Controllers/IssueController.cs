@@ -112,8 +112,8 @@
         {
             var project = session.Slug<Project>(projectSlug);
             var item = session.Query<Issue>().Single(i => i.Number == issueId && i.Project == project);
-            var totalTime = item.Bookings.Sum(x => x.Hours);
-            var bookings = item.Bookings.GroupBy(x => x.User).ToDictionary(x => x.Key, x => new { percentage = Math.Round(x.Sum(y => y.Hours) / totalTime * 100), percentageBillable = Math.Round(x.Where(y => !y.Unbillable).Sum(y => y.Hours) / x.Sum(y => y.Hours) * 100), total = x.Sum(y => y.Hours), totalBillable = x.Where(y => !y.Unbillable).Sum(y => y.Hours) });
+            var totalTime = item.Bookings.Where(x => x.IsActive).Sum(x => x.Hours);
+            var bookings = item.Bookings.Where(x => x.IsActive).GroupBy(x => x.User).ToDictionary(x => x.Key, x => new { percentage = Math.Round(x.Sum(y => y.Hours) / totalTime * 100), percentageBillable = Math.Round(x.Where(y => !y.Unbillable).Sum(y => y.Hours) / x.Sum(y => y.Hours) * 100), total = x.Sum(y => y.Hours), totalBillable = x.Where(y => !y.Unbillable).Sum(y => y.Hours) });
             PropertyBag.Add("project", project);
             PropertyBag.Add("item", item);
             PropertyBag.Add("bookings", bookings);
