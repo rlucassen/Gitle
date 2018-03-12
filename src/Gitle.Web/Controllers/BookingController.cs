@@ -8,6 +8,7 @@ using NHibernate.Linq;
 
 namespace Gitle.Web.Controllers
 {
+    using Castle.MonoRail.Framework;
     using Helpers;
 
     public class BookingController : SecureController
@@ -42,11 +43,11 @@ namespace Gitle.Web.Controllers
                 .Where(x => x.IsActive)
                 .OrderByDescending(x => x.Date)
                 .GroupBy(x => x.Date.Date);
-                //.ToDictionary(g => new { date = g.Key, total = g.ToList().Sum(x => x.Minutes) }, g => g.ToList());
+            //.ToDictionary(g => new { date = g.Key, total = g.ToList().Sum(x => x.Minutes) }, g => g.ToList());
             var dayList = new List<BookingDay>();
             foreach (var bookingDateGroup in bookingsByDate)
             {
-                var bookingDay = new BookingDay {Day = bookingDateGroup.Key, Users = new List<BookingUser>()};
+                var bookingDay = new BookingDay { Day = bookingDateGroup.Key, Users = new List<BookingUser>() };
                 var bookingsByUser = bookingDateGroup.GroupBy(x => x.User);
                 foreach (var bookingUserGroup in bookingsByUser)
                 {
@@ -63,17 +64,39 @@ namespace Gitle.Web.Controllers
         }
 
         [BookHours]
+        [return: JSONReturnBinder]
+        public object CheckBookingHours(long issueId, double minutes)
+        {
+            CancelView();
+            var currentIssue = session.Get<Issue>(issueId);
+            var allBookings = session.Query<Booking>().Where(x => x.Issue.Id == currentIssue.Id && x.IsActive);
+            var totalMinutes = 0.0;
+            var availableMinutes = currentIssue.Hours * 60;
+
+            foreach (var allBooking in allBookings)
+            {
+                totalMinutes = allBooking.Minutes + totalMinutes;
+            }
+
+            return new { value = !(availableMinutes > 0) || !(totalMinutes + minutes > availableMinutes) };
+        }
+
+        [BookHours]
         public void Save(int adminId = 0)
         {
             var booking = BindObject<Booking>("booking");
-
+            
             if (adminId > 0)
             {
                 if (CurrentUser.IsDanielle)
                 {
-                    booking.User = session.Query<User>().FirstOrDefault(x => x.IsActive && x.Id == adminId && x.IsAdmin);
+                    booking.User = session.Query<User>()
+                        .FirstOrDefault(x => x.IsActive && x.Id == adminId && x.IsAdmin);
                 }
-                else { return; }
+                else
+                {
+                    return;
+                }
             }
             else
             {
@@ -97,14 +120,14 @@ namespace Gitle.Web.Controllers
                 session.SaveOrUpdate(booking);
                 transaction.Commit();
             }
-            RedirectToAction("index", new {date = booking.Date.ToShortDateString()});
+            RedirectToAction("index", new { date = booking.Date.ToShortDateString() });
         }
 
         [BookHours]
         public void Save(int id, int projectId, int issueId)
         {
             var booking = session.Query<Booking>().FirstOrDefault(x => x.IsActive && x.Id == id);
-            
+
             if (booking != null)
             {
                 BindObjectInstance(booking, "booking");
@@ -119,7 +142,7 @@ namespace Gitle.Web.Controllers
             }
 
             booking.Project = session.Query<Project>().FirstOrDefault(x => x.IsActive && x.Id == projectId);
-            
+
 
             using (var transaction = session.BeginTransaction())
             {

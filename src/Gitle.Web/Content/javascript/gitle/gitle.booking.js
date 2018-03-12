@@ -91,6 +91,7 @@
       width: row.find('.project-chooser').width(),
       onSelect: function (suggestion) {
         row.find('.booking_Issue_Id').val(suggestion.data);
+        row.find('.booking_Issue_Id').trigger('change');
         row.find('.issue-chooser').val(suggestion.value);
         row.find('.booking_Comment').prop("required", false);
         $(document).foundation('abide', 'reflow');

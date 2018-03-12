@@ -152,5 +152,22 @@
     console.log('valid!');
     });
 
+  $('.booking_Issue_Id').on('change', function () {
+    var self = $(this);
+    var bookingMinutes = self.parents('.booking-row-new').find('.booking_Minutes');
+    
+    $.ajax({
+      method: 'GET',
+      data: {
+        issueId: self.val(),
+        minutes: bookingMinutes.val()
+      },
+      url: '/booking/checkbookinghours',
+      success: function (data) {
+        if (!data.value) alert('Let op, je gaat over de geschatte uren heen!');
+      }
+    });
+  });
+
   $('#booking .booking-parser').focus();
 </script>
