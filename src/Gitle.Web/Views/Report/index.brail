@@ -1,5 +1,5 @@
 ﻿<div class="row">
-  <div class="large-12 columns">
+  <div class="small-12 columns">
     <h1>Urenrapporten</h1>
   </div>
 </div>
@@ -177,6 +177,7 @@
           <% end %>
           <div class="large-0 small-6 columns right">
             <button class="button no-margin tiny" formaction="exportcsv">Exporteren</button>
+            <a href="/report/exportweeks" class="button tiny">Gitle vs James (exporteren)</a>
           </div>
           <div class="large-0 small-6 columns right">
             <button href="#" data-dropdown="groupbys" aria-controls="groupbys" aria-expanded="false" class="button tiny dropdown no-margin <% if result.GroupedBy: %>warning<% end %>">Groeperen:</button>

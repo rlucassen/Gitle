@@ -93,6 +93,8 @@
     <Compile Include="Interfaces\Model\ISlugger.cs" />
     <Compile Include="Interfaces\Service\IBookingQueryParserService.cs" />
     <Compile Include="Interfaces\Service\IProjectNumberService.cs" />
+    <Compile Include="James\Employee.cs" />
+    <Compile Include="James\ExportWeeksGitleVsJames.cs" />
     <Compile Include="Mapping\PlanningCommentMap.cs" />
     <Compile Include="Mapping\PlanningItemMap.cs" />
     <Compile Include="Mapping\PlanningResourceMap.cs" />
