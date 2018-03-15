@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using Enum;
+    using Gitle.Model.James;
     using NHibernate.Validator.Cfg.Loquacious.Impl;
 
     public static class CsvHelper
@@ -84,6 +85,32 @@
                     );
             }
 
+            return $"{header}{rows}";
+        }
+
+        public static string ExportWeeks(IList<ExportWeeksGitleVsJames> exportWeeksGitleVsJames)
+        {
+            var numbersOfWeeks = exportWeeksGitleVsJames.Select(x => x.Weeks).Count();
+            
+            var header = "Medewerker" + fieldseparator;
+
+            for (int i = 0; i < numbersOfWeeks; i++)
+                header += "W" + (i + 1) + "_G" + fieldseparator + "W" + (i + 1) + "_J" + fieldseparator;
+
+            header += lineEnd;
+
+            var rows = "";
+
+            foreach (var line in exportWeeksGitleVsJames)
+            {
+                var row = line.NameOfEmployee + fieldseparator;
+
+                for (int i = 0; i < numbersOfWeeks; i++)
+                    row += "" + line.Weeks[i].MinutesGitle + fieldseparator + line.Weeks[i].MinutesJames + fieldseparator;
+
+                rows += row + lineEnd;
+            }
+            
             return $"{header}{rows}";
         }
 

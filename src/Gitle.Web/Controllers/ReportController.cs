@@ -1,18 +1,17 @@
-﻿using Gitle.Model;
-using NHibernate;
-using System.Linq;
-using NHibernate.Linq;
-
-namespace Gitle.Web.Controllers
+﻿namespace Gitle.Web.Controllers
 {
     using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Text;
     using Helpers;
-    using Model.Enum;
     using Model.Helpers;
     using QueryParsers;
+    using Gitle.Model;
+    using NHibernate;
+    using System.Linq;
+    using Gitle.Model.James;
+    using NHibernate.Linq;
 
     public class ReportController : SecureController
     {
@@ -87,6 +86,65 @@ namespace Gitle.Web.Controllers
             var stream = new MemoryStream(byteArray);
             Response.BinaryWrite(stream);
         }
+
+        public void ExportWeeks()
+        {
+            var employees = session.Query<User>().Where(x => x.JamesEmployeeId > 0).ToList();
+            var exportweeks = new List<ExportWeeksGitleVsJames>();
+            var sqlConnectionHelper = new SqlConnectionHelper();
+
+            foreach (var employee in employees)
+            {
+                var bookings = session.Query<Booking>().Where(x => x.IsActive && x.Date.Year == DateTime.Today.Year && x.User.Id == employee.Id).ToList();
+                var exportWeek = new ExportWeeksGitleVsJames {NameOfEmployee = employee.FullName};
+
+                for (int i = 0; i < 53; i++)
+                {
+                    exportWeek.Weeks[i].MinutesGitle = bookings.Where(x => x.Date.WeekNr() == i+1).Sum(x => x.Minutes);
+
+                    using (var reader = sqlConnectionHelper.ExecuteSqlQuery("james", "SELECT SUM(datediff(mi, wd.StartTijd, wd.EindTijd)) - ISNULL((SELECT SUM(r.DuurMinuten) " +
+                                                                                                                                                    "FROM [Registratie] r " +
+                                                                                                                                                    "JOIN Werkdag wd on wd.Id = r.Werkdag " +
+                                                                                                                                                    "JOIN [Week] w on w.Id = wd.[Week] " +
+                                                                                                                                                    "WHERE r.RegistratieType IN (0,1,3,6,11) " +
+                                                                                                                                                    "AND w.Medewerker = " + employee.JamesEmployeeId +
+                                                                                                                                                    "AND w.WeekNr = " + i+1 +
+                                                                                                                                                    "AND w.Jaar = " + DateTime.Today.Year + "),0) " +
+                                                                                    "FROM Werkdag wd " +
+                                                                                    "JOIN [Week] w on w.Id = wd.[Week] " +
+                                                                                    "JOIN [Medewerker] m on m.Id = w.Medewerker " +
+                                                                                    "WHERE w.Medewerker = " + employee.JamesEmployeeId +
+                                                                                    "AND w.Jaar = " + DateTime.Today.Year +
+                                                                                    "AND w.WeekNr = " + i+1 +
+                                                                                    "GROUP BY w.WeekNr, w.Jaar, w.Medewerker"))
+                    {
+                        while (reader.Read())
+                        {
+                            exportWeek.Weeks[i].MinutesJames = (double)reader[0];
+                        }
+                    }
+
+                    sqlConnectionHelper.CloseSqlConnection();
+                }
+
+                exportweeks.Add(exportWeek);
+            }
+
+            var csv = CsvHelper.ExportWeeks(exportweeks);
+            CancelView();
+
+            Response.ClearContent();
+            Response.Clear();
+
+            var filename = $"gitle_vs_james_{DateTime.Today:yyyyMMdd_hhmm}.csv";
+
+            Response.AppendHeader("content-disposition", $"attachment; filename={filename}");
+            Response.ContentType = "application/csv";
+
+            var byteArray = Encoding.Default.GetBytes(csv);
+            var stream = new MemoryStream(byteArray);
+            Response.BinaryWrite(stream);
+        }
     }
 
     public class DatePreset
@@ -95,5 +153,4 @@ namespace Gitle.Web.Controllers
         public DateTime endDate;
         public DateTime startDate;
     }
-
 }

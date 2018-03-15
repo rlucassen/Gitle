@@ -1,10 +1,14 @@
 ﻿namespace Gitle.Web.Controllers
 {
+    using System;
     using System.Collections.Generic;
+    using System.Configuration;
+    using System.Data.SqlClient;
     using System.Linq;
     using System.Web.UI;
     using Castle.MonoRail.Framework;
     using FluentNHibernate.Utils;
+    using Gitle.Model.James;
     using Helpers;
     using Model;
     using Model.Helpers;
@@ -39,11 +43,31 @@
         public void Edit(long userId)
         {
             var user = session.Get<User>(userId);
+
+            var jamesEmployees = new List<Employee>();
+            var sqlConnectionHelper = new SqlConnectionHelper();
+
+            using (var reader = sqlConnectionHelper.ExecuteSqlQuery("james", "SELECT Id, Voornaam, Achternaam FROM Medewerker WHERE Actief = 1"))
+            {
+                while (reader.Read())
+                {
+                    jamesEmployees.Add(new Employee
+                    {
+                        Id = (int)reader[0],
+                        FirstName = reader[1].ToString(),
+                        LastName = reader[2].ToString()
+                    });
+                }
+            }
+
+            sqlConnectionHelper.CloseSqlConnection();
+
             PropertyBag.Add("item", user);
             PropertyBag.Add("selectedprojects", user.Projects.Select(x => x.Project).ToList());
             PropertyBag.Add("customers", session.Query<Customer>().Where(x => x.IsActive).ToList());
             PropertyBag.Add("projects", session.Query<Project>().Where(x => x.IsActive).OrderBy(x => x.Name).ToList());
             PropertyBag.Add("customerId", user.Customer?.Id ?? 0);
+            PropertyBag.Add("jamesEmployees", jamesEmployees.ToList());
         }
 
         [Admin]
