@@ -88,29 +88,36 @@
             return $"{header}{rows}";
         }
 
-        public static string ExportWeeks(IList<ExportWeeksGitleVsJames> exportWeeksGitleVsJames)
+        public static string ExportWeeks(IList<ExportWeeksGitleVsJames> exportWeeksGitleVsJames, IList<User> employees)
         {
-            var numbersOfWeeks = exportWeeksGitleVsJames.Select(x => x.Weeks).Count();
-            
-            var header = "Medewerker" + fieldseparator;
+            var numbersOfWeeks = exportWeeksGitleVsJames.First().Weeks.Length;
 
-            for (int i = 0; i < numbersOfWeeks; i++)
-                header += "W" + (i + 1) + "_G" + fieldseparator + "W" + (i + 1) + "_J" + fieldseparator;
+            var header = "" + fieldseparator;
+
+            foreach (var employee in employees)
+                header += employee.FullName + fieldseparator;
 
             header += lineEnd;
 
             var rows = "";
 
-            foreach (var line in exportWeeksGitleVsJames)
+            for (int i = 0; i < numbersOfWeeks; i++)
             {
-                var row = line.NameOfEmployee + fieldseparator;
+                var row = "Week " + (i + 1) + " Gitle" + fieldseparator;
 
-                for (int i = 0; i < numbersOfWeeks; i++)
-                    row += "" + line.Weeks[i].MinutesGitle + fieldseparator + line.Weeks[i].MinutesJames + fieldseparator;
+                foreach (var employee in employees)
+                    row += exportWeeksGitleVsJames.FirstOrDefault(x => x.JamesEmployeeId == employee.JamesEmployeeId)?.Weeks[i].MinutesGitle / 60.0 + fieldseparator;
+
+                rows += row + lineEnd;
+
+                row = "Week " + (i + 1) + " James" + fieldseparator;
+
+                foreach (var employee in employees)
+                    row += exportWeeksGitleVsJames.FirstOrDefault(x => x.JamesEmployeeId == employee.JamesEmployeeId)?.Weeks[i].MinutesJames / 60.0 + fieldseparator;
 
                 rows += row + lineEnd;
             }
-            
+
             return $"{header}{rows}";
         }
 

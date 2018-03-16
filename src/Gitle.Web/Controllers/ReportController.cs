@@ -87,40 +87,42 @@
             Response.BinaryWrite(stream);
         }
 
+        [Admin]
         public void ExportWeeks()
         {
-            var employees = session.Query<User>().Where(x => x.JamesEmployeeId > 0).ToList();
+            var employees = session.Query<User>().Where(x => x.IsActive && x.JamesEmployeeId > 0).ToList();
             var exportweeks = new List<ExportWeeksGitleVsJames>();
             var sqlConnectionHelper = new SqlConnectionHelper();
 
             foreach (var employee in employees)
             {
                 var bookings = session.Query<Booking>().Where(x => x.IsActive && x.Date.Year == DateTime.Today.Year && x.User.Id == employee.Id).ToList();
-                var exportWeek = new ExportWeeksGitleVsJames {NameOfEmployee = employee.FullName};
+                var exportWeek = new ExportWeeksGitleVsJames {JamesEmployeeId = employee.JamesEmployeeId, NameOfEmployee = employee.FullName };
 
                 for (int i = 0; i < 53; i++)
                 {
                     exportWeek.Weeks[i].MinutesGitle = bookings.Where(x => x.Date.WeekNr() == i+1).Sum(x => x.Minutes);
 
-                    using (var reader = sqlConnectionHelper.ExecuteSqlQuery("james", "SELECT SUM(datediff(mi, wd.StartTijd, wd.EindTijd)) - ISNULL((SELECT SUM(r.DuurMinuten) " +
+                    using (var reader = sqlConnectionHelper.ExecuteSqlQuery("james", "SELECT SUM(datediff(mi, wd.StartTijd, wd.EindTijd)) + ISNULL((SELECT SUM(r.DuurMinuten) " +
                                                                                                                                                     "FROM [Registratie] r " +
                                                                                                                                                     "JOIN Werkdag wd on wd.Id = r.Werkdag " +
                                                                                                                                                     "JOIN [Week] w on w.Id = wd.[Week] " +
-                                                                                                                                                    "WHERE r.RegistratieType IN (0,1,3,6,11) " +
-                                                                                                                                                    "AND w.Medewerker = " + employee.JamesEmployeeId +
-                                                                                                                                                    "AND w.WeekNr = " + i+1 +
+                                                                                                                                                    "WHERE r.RegistratieType IN (0,1,11) " +
+                                                                                                                                                    "AND w.Medewerker = " + employee.JamesEmployeeId + 
+                                                                                                                                                    "AND w.WeekNr = " + (i+1) +
                                                                                                                                                     "AND w.Jaar = " + DateTime.Today.Year + "),0) " +
                                                                                     "FROM Werkdag wd " +
                                                                                     "JOIN [Week] w on w.Id = wd.[Week] " +
                                                                                     "JOIN [Medewerker] m on m.Id = w.Medewerker " +
                                                                                     "WHERE w.Medewerker = " + employee.JamesEmployeeId +
                                                                                     "AND w.Jaar = " + DateTime.Today.Year +
-                                                                                    "AND w.WeekNr = " + i+1 +
+                                                                                    "AND w.WeekNr = " + (i+1) +
                                                                                     "GROUP BY w.WeekNr, w.Jaar, w.Medewerker"))
                     {
                         while (reader.Read())
                         {
-                            exportWeek.Weeks[i].MinutesJames = (double)reader[0];
+                            if (!reader.IsDBNull(0))
+                                exportWeek.Weeks[i].MinutesJames = reader.GetInt32(0);
                         }
                     }
 
@@ -130,7 +132,7 @@
                 exportweeks.Add(exportWeek);
             }
 
-            var csv = CsvHelper.ExportWeeks(exportweeks);
+            var csv = CsvHelper.ExportWeeks(exportweeks, employees);
             CancelView();
 
             Response.ClearContent();
