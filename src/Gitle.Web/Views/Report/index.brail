@@ -272,7 +272,7 @@
             <div class="booking-user">${booking.User.FullName}</div>
           </div>
           <div class="large-2 columns">
-            <div class="booking-project">${booking.Project.Name}</div>
+            <div class="booking-project"><a href="/project/${booking.Project.Slug}/issues">${booking.Project.Name}</a></div>
           </div>
           <div class="large-1 small-3 columns">
             <div class=" row booking-issue">
