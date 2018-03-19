@@ -77,6 +77,43 @@ ul.f-dropdown.wide {
   margin-left: 2px;
 }
 
+.has-dropdown {
+  width: 260px;
+  text-align: center;
+
+  li.has-form {
+    border-bottom: 1px solid grey;
+  }
+
+  .notif {
+    margin-left: 40px;
+    font-size: 20px;
+    margin-right: 10px;
+    position: absolute;
+    top: 0.8rem;
+  }
+
+  .notif:after {
+    position: absolute;
+    background: red;
+    height: 1rem;
+    bottom: 0.6rem;
+    left: 0.6rem;
+    width: 1rem;
+    text-align: center;
+    line-height: 0.9rem;
+    font-size: 0.8rem;
+    border-radius: 50%;
+    color: white;
+    border: 1px solid red;
+  }
+
+  a.close {
+    width: 0px;
+    height: 0px;
+  }
+}
+
 span {
   &.button.three-state-checker {
     font-size: 1.1em;
@@ -190,6 +227,7 @@ table.tickets-table {
       background: #e7e7e7;
     }
   }
+
   &.hide-empties {
     tr.empty-project {
       display: none;
@@ -460,6 +498,7 @@ a.quickview-delay {
   from {
     box-shadow: 0 0 15px 0 #000;
   }
+
   to {
     box-shadow: none;
   }
@@ -471,6 +510,7 @@ a.quickview-delay {
 
   .issueaction {
     margin: 1em 0 0;
+
     &.highlight {
       animation-name: highlight;
       animation-duration: 5s;
@@ -626,7 +666,7 @@ table {
     transition: none 0 0;
 
     ul {
-      display: inline;
+      display: block;
       height: auto !important;
       width: auto;
 
@@ -650,6 +690,10 @@ table {
 
       &:hover {
         background: #2b2b2b;
+      }
+
+      .menu {
+        display: none;
       }
     }
 
@@ -1188,6 +1232,7 @@ input[type=checkbox].inline {
         width: 100%;
       }
     }
+
     &.small-6 {
       width: 50% !important;
       margin-bottom: 0.5em;
@@ -1383,7 +1428,7 @@ input[type=checkbox].inline {
     }
   }
 
-  i:hover{
+  i:hover {
     background-color: transparent;
   }
 
@@ -1473,17 +1518,21 @@ select.hide-disabled {
 
   li {
     padding: 0 10px;
+
     &.query {
       font-size: 0.8em;
       font-style: italic;
     }
+
     &.issuelink {
       font-weight: bold;
     }
+
     &.commentlink {
       padding-left: 30px;
       font-size: 0.8em;
     }
+
     &:hover {
       background-color: #f2f2f2;
     }
