@@ -46,6 +46,8 @@
 
         public virtual bool TicketRequiredForBooking { get; set; }
 
+        public virtual bool SendEmailNotification { get; set; }
+
         //public virtual Customer Customer { get; set; }
         public virtual Application Application { get; set; }
 

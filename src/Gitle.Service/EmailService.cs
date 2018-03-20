@@ -43,34 +43,38 @@
 
         public void SendIssueActionNotification(IIssueAction action)
         {
-            if (action is ChangeState)
-                action = _session.Get<ChangeState>(((ChangeState)action).Id);
             var project = action.Issue.Project;
-            IList<User> users = (from userProject in project.Users where userProject.Notifications && (!userProject.OnlyOwnIssues || action.Issue.CreatedBy == userProject.User) && userProject.User != action.User && userProject.IsActive select userProject.User).ToList();
 
-            if ((action as ChangeState)?.IssueState == IssueState.Open)
+            if (project.SendEmailNotification)
             {
-                var servicedesk = new User()
-                {
-                    IsAdmin = true,
-                    EmailAddress = "servicedesk@auxilium.nl"
-                };
-                users.Add(servicedesk);
-            }
+                if (action is ChangeState)
+                    action = _session.Get<ChangeState>(((ChangeState)action).Id);
+                IList<User> users = (from userProject in project.Users where userProject.Notifications && (!userProject.OnlyOwnIssues || action.Issue.CreatedBy == userProject.User) && userProject.User != action.User && userProject.IsActive select userProject.User).ToList();
 
-            foreach (var user in users)
-            {
-                if (!string.IsNullOrEmpty(user.EmailAddress))
+                if ((action as ChangeState)?.IssueState == IssueState.Open)
                 {
-                    var message = new MailMessage(_sourceAddress, user.EmailAddress)
+                    var servicedesk = new User()
                     {
-                        Subject = $"Gitle: {action.EmailSubject} - {action.Issue.Project.Name}",
-                        IsBodyHtml = true
+                        IsAdmin = true,
+                        EmailAddress = "servicedesk@auxilium.nl"
                     };
+                    users.Add(servicedesk);
+                }
 
-                    message.Body = GetBody("issue-action", new Hashtable { { "item", action }, { "user", user } });
+                foreach (var user in users)
+                {
+                    if (!string.IsNullOrEmpty(user.EmailAddress))
+                    {
+                        var message = new MailMessage(_sourceAddress, user.EmailAddress)
+                        {
+                            Subject = $"Gitle: {action.EmailSubject} - {action.Issue.Project.Name}",
+                            IsBodyHtml = true
+                        };
 
-                    SendMessage(message);
+                        message.Body = GetBody("issue-action", new Hashtable { { "item", action }, { "user", user } });
+
+                        SendMessage(message);
+                    }
                 }
             }
         }

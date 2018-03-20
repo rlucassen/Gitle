@@ -83,7 +83,13 @@
               <th>Naam</th>
               <th>Telefoonnummer</th>
               <th>Emailadres</th>
-              <th title="Notificaties"><i class="fa fa-bell"></i></th>
+              <th title="Notificaties">
+                <i class="fa fa-bell left"></i>        
+                <div class="switch no-margin right">
+                  <input id="informcontacts" type="checkbox">
+                  <label for="informcontacts"></label>
+                </div>
+              </th>
             </tr>
           </thead>
           <tbody>

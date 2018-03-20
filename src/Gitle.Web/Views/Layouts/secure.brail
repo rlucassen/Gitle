@@ -109,7 +109,7 @@
         <li class="divider"></li>
         <li class="divider"></li>
         <li class="has-dropdown">
-          <a href="#">${?CurrentUser.FullName} <i class="fa fa-bell notif"></i></a>
+          <a href="#">${?CurrentUser.FullName} <i class="fa fa-comment notif"></i></a>
           <ul class="dropdown">
             <li class="has-form"><a href="/user/${?CurrentUser.Id}/edit"><i class="fa fa-cogs"></i> Bewerken</a></li>
             <li class="has-form"><a href="/signout"><i class="fa fa-sign-out"></i> Uitloggen</a></li>

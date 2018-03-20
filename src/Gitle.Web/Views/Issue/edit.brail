@@ -71,6 +71,15 @@
         </div>
       </div>
       <div class="row">
+        <div class="large-3 columns">Inlichten klantcontacten</div>
+        <div class="large-9 columns">
+          <fieldset class="switch" tabindex="0">
+            <input id="informcontacts" type="checkbox">
+            <label for="informcontacts"></label>
+          </fieldset>
+        </div>
+      </div>
+      <div class="row">
         <div class="large-12 columns">
           <input type="submit" class="button" value="Opslaan"/>
           <% if CurrentUser.IsAdmin: %>
