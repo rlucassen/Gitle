@@ -32,10 +32,30 @@
         public void New()
         {
             PropertyBag.Add("item", new User());
+
+            var jamesEmployees = new List<Employee>();
+            var sqlConnectionHelper = new SqlConnectionHelper();
+
+            using (var reader = sqlConnectionHelper.ExecuteSqlQuery("james", "SELECT Id, Voornaam, Achternaam FROM Medewerker WHERE Actief = 1"))
+            {
+                while (reader.Read())
+                {
+                    jamesEmployees.Add(new Employee
+                    {
+                        Id = (int)reader[0],
+                        FirstName = reader[1].ToString(),
+                        LastName = reader[2].ToString()
+                    });
+                }
+            }
+
+            sqlConnectionHelper.CloseSqlConnection();
+
             PropertyBag.Add("selectedprojects", new List<Project>());
             PropertyBag.Add("customers", session.Query<Customer>().Where(x => x.IsActive).ToList());
             PropertyBag.Add("notificationprojects", new List<Project>());
             PropertyBag.Add("projects", session.Query<Project>().Where(x => x.IsActive).OrderBy(x => x.Name).ToList());
+            PropertyBag.Add("jamesEmployees", jamesEmployees.ToList());
             RenderView("edit");
         }
 
