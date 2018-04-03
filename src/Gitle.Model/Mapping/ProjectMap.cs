@@ -17,7 +17,7 @@
             Map(x => x.Comments).CustomSqlType("nvarchar(max)");
             Map(x => x.Type);
             Map(x => x.TicketRequiredForBooking);
-            Map(x => x.SendEmailNotification);
+            Map(x => x.SendEmailNotification); 
             Map(x => x.BudgetMinutes);
             Map(x => x.Unbillable);
             Map(x => x.Closed);

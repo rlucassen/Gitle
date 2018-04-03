@@ -74,7 +74,11 @@
         <div class="large-3 columns">Inlichten klantcontacten</div>
         <div class="large-9 columns">
           <fieldset class="switch" tabindex="0">
-            <input id="informcontacts" type="checkbox">
+            <% if project.SendEmailNotification == true : %>
+            <input id="item_SendEmailNotification" name="item.SendEmailNotification" type="checkbox" onclick="this.form.submit();" checked>
+            <% else : %>
+            <input id="item_SendEmailNotification" name="item.SendEmailNotification" type="checkbox" onclick="this.form.submit();">
+            <% end %>
             <label for="informcontacts"></label>
           </fieldset>
         </div>

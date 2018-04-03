@@ -1,6 +1,19 @@
 ﻿<div class="row">
   <div class="large-12 columns">
     <h1><a href="/project/${project.Slug}/view">${project.Name}</a>: ${result.TotalResultCount} Taken</h1>
+    <% if CurrentUser.IsAdmin: %>
+    <form action="/project/${project.Slug}/switchnotifications" method="POST" data-abide>
+      <div class="switch no-margin right">
+        <i class="fa fa-bell fa-2x orange"></i>
+        <% if project.SendEmailNotification == true : %>
+        <input id="item_SendEmailNotification" name="item.SendEmailNotification" type="checkbox" onclick="this.form.submit();" checked>
+        <% else : %>
+        <input id="item_SendEmailNotification" name="item.SendEmailNotification" type="checkbox" onclick="this.form.submit();">
+        <% end %>
+        <label for="item_SendEmailNotification"></label>
+      </div>
+    </form>
+    <% end %>
     <% if not project.Closed: %>
     <a class="button" href="/project/${project.Slug}/issue/new">Nieuwe taak</a>
     <% else: %>
@@ -21,7 +34,7 @@
             <form id="query-form" method="GET">
               <div class="row collapse">
                 <div class="large-9 small-1 columns">
-                  <input type="text" id="query" name="query" data-remember="filter-${project.Slug}" value="${result.Query}"/>
+                  <input type="text" id="query" name="query" data-remember="filter-${project.Slug}" value="${result.Query}" />
                 </div>
                 <div class="large-1 small-1 columns">
                   <a href="#" data-filter="" data-filter-clear="" class="button postfix alert">
@@ -161,7 +174,7 @@
           <% end %>
           <div class="large-0 small-12 columns">
             <div class="row" id="group-actions">
-              <input type="hidden" name="issues"/>
+              <input type="hidden" name="issues" />
               <div class="large-0 small-12 columns text-right small-text-left">
                 <label>Geselecteerde taken:</label>
               </div>
@@ -190,9 +203,9 @@
         </div>
       </div>
     </div>
-      <% if dump != null and CurrentUser.IsDanielle: %>
-      <% OutputSubView("_dummyissue") %>
-      <% end %>
+    <% if dump != null and CurrentUser.IsDanielle: %>
+    <% OutputSubView("_dummyissue") %>
+    <% end %>
     <% OutputSubView("_issuetable", {"actions": true}) %>
   </div>
 </div>

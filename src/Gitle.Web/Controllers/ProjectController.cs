@@ -401,5 +401,27 @@
             var stream = new MemoryStream(byteArray);
             Response.BinaryWrite(stream);
         }
+
+        [Admin]
+        public void SwitchNotifications(string projectSlug, bool sendEmailNotification)
+        {
+            var project = session.SlugOrDefault<Project>(projectSlug);
+
+            if (project != null)
+            {
+                if (project.SendEmailNotification == false)
+                    project.SendEmailNotification = true;
+                else
+                    project.SendEmailNotification = false;
+            }
+
+            using (var tx = session.BeginTransaction())
+            {
+                session.SaveOrUpdate(project);
+                tx.Commit();
+            }
+
+            RedirectToReferrer();
+        }
     }
 }

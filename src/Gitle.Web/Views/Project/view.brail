@@ -86,8 +86,16 @@
               <th title="Notificaties">
                 <i class="fa fa-bell left"></i>        
                 <div class="switch no-margin right">
-                  <input id="informcontacts" type="checkbox">
-                  <label for="informcontacts"></label>
+                  <form action="/project/${project.Slug}/switchnotifications" method="POST" data-abide>
+                    <div class="switch no-margin right">
+                      <% if project.SendEmailNotification == true : %>
+                      <input id="item_SendEmailNotification" name="item.SendEmailNotification" type="checkbox" onclick="this.form.submit();" checked>
+                      <% else : %>
+                      <input id="item_SendEmailNotification" name="item.SendEmailNotification" type="checkbox" onclick="this.form.submit();">
+                      <% end %>
+                      <label for="item_SendEmailNotification"></label>
+                    </div>
+                  </form>
                 </div>
               </th>
             </tr>
