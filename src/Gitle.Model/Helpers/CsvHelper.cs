@@ -124,7 +124,7 @@
         public static string InvoiceCsv(IList<Project> projects)
         {
             const string rowTemplate =
-                "\"{2}\"{0}\"{3}\"{0}\"{4}\"{0}\"{5}\"{0}\"{6}\"{0}\"{7}\"{0}\"{8}\"{0}\"{9}\"{0}\"{10}\"{0}\"{11}\"{0}\"{12}\"{0}\"{13}\"{0}\"{14}\"{0}\"{15}\"{0}{1}";
+                "\"{2}\"{0}\"{3}\"{0}\"{4}\"{0}\"{5}\"{0}\"{6}\"{0}\"{7}\"{0}\"{8}\"{0}\"{9}\"{0}\"{10}\"{0}\"{11}\"{0}\"{12}\"{0}\"{13}\"{0}\"{14}\"{0}\"{15}\"{0}\"{16}\"{0}{1}";
 
             var header = string.Format(rowTemplate, fieldseparator, lineEnd,
                                           "Klant",
@@ -140,7 +140,8 @@
                                           "Billable gemaakte uren",
                                           "Unbillable gemaakte uren",
                                           "Totaal gefactureerde uren",
-                                          "Blijf nog te factureren");
+                                          "Blijf nog te factureren",
+                                          "Gesloten");
 
             var rows = "";
             foreach (var project in projects)
@@ -159,7 +160,8 @@
                                       project.BillableHours,
                                       project.UnBillableHours,
                                       project.TotalDefinitiveHours(),
-                                      project.ToInvoice()
+                                      project.ToInvoice(),
+                                      project.Closed ? "ja" : "nee"
                     );
             }
 
