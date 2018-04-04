@@ -13,7 +13,7 @@
 
     public class IssueQueryParser
     {
-        private const string queryRegex = @"[a-zA-Z0-9_]+:(([a-zA-Z0-9-_,.]+)|('[a-zA-Z0-9-_,. ]+'))";
+        private const string queryRegex = @"[a-zA-Z0-9_]+:(([a-zA-Z0-9-_,.]+)|('[a-zA-Z0-9-_,.\(\) ]+'))";
 
         public List<Issue> Items { get; set; }
 
