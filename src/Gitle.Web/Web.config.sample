@@ -19,10 +19,11 @@
     <add key="fileUpload" value=""/>
     <add key="webPath" value="http://"/>
     <add key="uploadController_ImageExtensions" value=".jpg, .png, .gif" />
-    <add key="uploadController_DocumentExtensions" value=".doc, .docx, .xls, .xlsx, .xlsm, .pdf, .json, .txt, .xml, .xsd, .msg, .apk" />
+    <add key="uploadController_DocumentExtensions" value=".doc,.docx,.xls,.xlsx,.xlsm,.pdf,.json,.txt,.xml,.xsd,.msg,.apk,.zip,.pptx,.ppt" />
   </appSettings>
   <connectionStrings>
-    <add name="Gitle" connectionString="Server=.\SqlExpress;Initial Catalog=Gitle;Integrated Security=SSPI;" />
+    <add name="Gitle" connectionString="Server=statler;Initial Catalog=Gitle;Integrated Security=SSPI;" />
+    <add name="James" connectionString="Server=STATLER;Initial Catalog=James_v2;Integrated Security=SSPI;" />
   </connectionStrings>
   <monorail>
     <viewEngine viewPathRoot="views" xhtmlRendering="true" customEngine="Castle.MonoRail.Views.Brail.BooViewEngine, Castle.MonoRail.Views.Brail" />
@@ -36,14 +37,14 @@
   <system.net>
     <mailSettings>
       <smtp deliveryMethod="SpecifiedPickupDirectory">
-        <specifiedPickupDirectory pickupDirectoryLocation="c:\temp\" />
+        <specifiedPickupDirectory pickupDirectoryLocation="c:\work\temp\" />
       </smtp>
     </mailSettings>
   </system.net>
   <system.web>
     <machineKey validationKey="A4BDB723FB89A2633B732FA2EE8AA7D231DDF44E819DBE42A2881106A1A66837" decryptionKey="4387CD05A0357E2F13BB0867CC7206A0ADC366C4733A12C142BD67D60CC2BB4C" validation="SHA1" decryption="AES" />
     <authentication mode="Forms">
-      <forms loginUrl="/signin" timeout="100" slidingExpiration="true" />
+      <forms loginUrl="/signin" timeout="43200" slidingExpiration="true" />
     </authentication>
     <httpModules>
       <add name="routing" type="Castle.MonoRail.Framework.Routing.RoutingModuleEx, Castle.MonoRail.Framework" />
@@ -52,7 +53,7 @@
     <httpHandlers>
       <add verb="*" path="*.rails" type="Castle.MonoRail.Framework.MonoRailHttpHandlerFactory, Castle.MonoRail.Framework" />
     </httpHandlers>
-    <compilation debug="true" />
+    <compilation debug="true" targetFramework="4.7.1" />
   </system.web>
   <system.webServer>
     <handlers>
@@ -80,7 +81,7 @@
       </dependentAssembly>
       <dependentAssembly>
         <assemblyIdentity name="Newtonsoft.Json" publicKeyToken="30ad4fe6b2a6aeed" culture="neutral" />
-        <bindingRedirect oldVersion="0.0.0.0-8.0.0.0" newVersion="8.0.0.0" />
+        <bindingRedirect oldVersion="0.0.0.0-10.0.0.0" newVersion="10.0.0.0" />
       </dependentAssembly>
       <dependentAssembly>
         <assemblyIdentity name="Castle.Windsor" publicKeyToken="407dd0808d44fbdc" culture="neutral" />
