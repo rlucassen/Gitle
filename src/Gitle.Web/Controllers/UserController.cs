@@ -186,7 +186,7 @@
 
             foreach (var subscription in subscriptions)
             {
-                var userProject = item.Projects.FirstOrDefault(x => x.Id == subscription.Id);
+                var userProject = item.Projects.FirstOrDefault(x => x.Id > 0 && x.Id == subscription.Id);
                 if (userProject != null)
                 {
                     userProject.Notifications = subscription.Notifications;
