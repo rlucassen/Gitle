@@ -9,6 +9,14 @@
 
     <% if CurrentUser.IsAdmin: %>
     <% if application != null: %>
+    <div class="row">
+      <div class="large-2 columns">Projectnummer</div>
+      <div class="large-10 columns">${project.Number}</div>
+    </div>
+    <div class="row">
+      <div class="large-2 columns">Projecttype</div>
+      <div class="large-10 columns">${project.Type}</div>
+    </div>
     <% if application.Customer != null: %>
     <div class="row">
       <div class="large-2 columns">Klant</div>
@@ -84,7 +92,7 @@
               <th>Telefoonnummer</th>
               <th>Emailadres</th>
               <th title="Notificaties">
-                <i class="fa fa-bell left"></i>        
+                <i class="fa fa-bell left"></i>
                 <div class="switch no-margin right">
                   <form action="/project/${project.Slug}/switchnotifications" method="POST" data-abide>
                     <div class="switch no-margin right">
