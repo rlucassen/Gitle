@@ -64,80 +64,98 @@
     </div>
   </div>
 </div>
-<div class="row">
-  <div class="large-12 columns">
-    <h1>Uren geschreven afgelopen 14 dagen</h1>
-    <% for keyvalue in bookings: %>
-    <% date = keyvalue.Key %>
-    <% datebookings = keyvalue.Value %>
-    <div class="panel booking">
+<form action="/booking/movebookings" method="POST">
+  <div class="row">
+    <div class="large-12 columns">
       <div class="row">
-        <div class="large-12 columns">
-          <h3>${date.date.ToString("dddd d MMMM yyyy")}</h3>
+        <div class="large-8 columns">
+          <h1>Uren geschreven afgelopen 14 dagen</h1>
+        </div>
+        <div class="large-2 columns">
+          <input type="date" name="moveDate" required />
+        </div>
+        <div class="large-2 columns">
+          <button class="tiny">Verplaats boekingen</button>
         </div>
       </div>
-      <% for booking in datebookings: %>
-      <div class="booking-row" data-id="${booking.Id}">
-        <div class="row booking-row-content">
-          <div class="large-1 columns">
-            <span class="booking-minutes">${booking.Time}</span>
+      <% for keyvalue in bookings: %>
+      <% date = keyvalue.Key %>
+      <% datebookings = keyvalue.Value %>
+      <div class="panel booking">
+        <div class="row">
+          <div class="large-12 columns">
+            <h3>${date.date.ToString("dddd d MMMM yyyy")}</h3>
           </div>
-          <div class="large-3 columns">
-            <div class="booking-project">${booking.Project.Name}</div>
-          </div>
-          <div class="large-1 columns">
-            <div class=" row booking-issue">
-              <div class="small-8 columns">
-                <% if booking.Issue: %>
-                <a href="/project/${booking.Issue.Project.Slug}/issue/${booking.Issue.Number}/view" data-quickview="/project/${booking.Issue.Project.Slug}/issue/${booking.Issue.Number}/quickview">#${booking.Issue.Number}</a>
-                <% end %>
-              </div>
-              <div class="small-4 columns">
-                <% if not booking.Unbillable: %>
-                <i class="fa fa-euro green" title="billable"></i>
-                <% else: %>
-                <i class="fa fa-euro red" title="unbillable"></i>
-                <% end %>
+        </div>
+        <% for booking in datebookings: %>
+        <div class="booking-row" data-id="${booking.Id}">
+          <div class="row booking-row-content">
+            <div class="large-1 columns">
+              <input type="checkbox" name="selectedBookings" class="no-margin" value="${booking.Id}">
+            </div>
+            <div class="large-1 columns">
+              <span class="booking-minutes">${booking.Time}</span>
+            </div>
+            <div class="large-2 columns">
+              <div class="booking-project">${booking.Project.Name}</div>
+            </div>
+            <div class="large-1 columns">
+              <div class=" row booking-issue">
+                <div class="small-8 columns">
+                  <% if booking.Issue: %>
+                  <a href="/project/${booking.Issue.Project.Slug}/issue/${booking.Issue.Number}/view" data-quickview="/project/${booking.Issue.Project.Slug}/issue/${booking.Issue.Number}/quickview">#${booking.Issue.Number}</a>
+                  <% end %>
+                </div>
+                <div class="small-4 columns">
+                  <% if not booking.Unbillable: %>
+                  <i class="fa fa-euro green" title="billable"></i>
+                  <% else: %>
+                  <i class="fa fa-euro red" title="unbillable"></i>
+                  <% end %>
+                </div>
               </div>
             </div>
+            <div class="large-5 columns end">
+              <% if booking.Comment == null or booking.Comment == "": %>
+              <% if booking.Issue: %>
+              <span class="booking-comment" title="#${booking.Issue.Number} - ${booking.Issue.Name}">#${booking.Issue.Number} - ${booking.Issue.ShortName()}</span>
+              <% else: %>
+              <span class="booking-comment" title="Niet gebonden aan een ticket">DUMP</span>
+              <% end %>
+              <% else: %>
+              <span class="booking-comment">${booking.Comment}</span>
+              <% end %>
+              <% for invoice in booking.Invoices: %>
+              <% if not invoice.IsDefinitive: %>
+              <span class="label round right" title="${invoice.Title}">${invoice.Number}</span>
+              <% end %>
+              <% end %>
+            </div>
+            <% if not booking.IsDefinitive: %>
+            <div class="large-2 columns no-padding booking-buttons text-right">
+              <a href="#" class="button radius supertiny no-margin booking-edit">bewerk <i class="fa fa-pencil-square-o"></i></a>
+              <a href="/booking/${booking.Id}/delete" class="button radius alert supertiny no-margin" data-confirm="Weet je het zeker?">verwijder <i class="fa fa-times"></i></a>
+            </div>
+            <% end %>
           </div>
-          <div class="large-5 columns end">
-            <% if booking.Comment == null or booking.Comment == "": %>
-            <% if booking.Issue: %>
-            <span class="booking-comment" title="#${booking.Issue.Number} - ${booking.Issue.Name}">#${booking.Issue.Number} - ${booking.Issue.ShortName()}</span>
-            <% else: %>
-            <span class="booking-comment" title="Niet gebonden aan een ticket">DUMP</span>
-            <% end %>
-            <% else: %>
-            <span class="booking-comment">${booking.Comment}</span>
-            <% end %>
-            <% for invoice in booking.Invoices: %>
-            <% if not invoice.IsDefinitive: %>
-            <span class="label round right" title="${invoice.Title}">${invoice.Number}</span>
-            <% end %>
-            <% end %>
+        </div>
+        <% end %>
+        <div class="row totalrow">
+          <div class="large-1 columns">
+            <input type="checkbox" class="no-margin select-all-bookings">
           </div>
-          <% if not booking.IsDefinitive: %>
-          <div class="large-2 columns no-padding booking-buttons text-right">
-            <a href="#" class="button radius supertiny no-margin booking-edit">bewerk <i class="fa fa-pencil-square-o"></i></a>
-            <a href="/booking/${booking.Id}/delete" class="button radius alert supertiny no-margin" data-confirm="Weet je het zeker?">verwijder <i class="fa fa-times"></i></a>
+          <div class="large-1 columns">
+            ${Helpers.DateTimeHelper.MinutesToTime(date.total)}
           </div>
-          <% end %>
+          <div class="large-10 columns">
+            <strong>Totaal</strong>
+          </div>
         </div>
       </div>
       <% end %>
-      <div class="row totalrow">
-        <div class="large-1 columns">
-          ${Helpers.DateTimeHelper.MinutesToTime(date.total)}
-        </div>
-        <div class="large-11 columns">
-          <strong>Totaal</strong>
-        </div>
-      </div>
     </div>
-    <% end %>
   </div>
-</div>
+</form>
 
 <div id="newIssue" class="reveal-modal" data-reveal>
   
@@ -170,4 +188,8 @@
   });
 
   $('#booking .booking-parser').focus();
+
+  $('.select-all-bookings').off('change').on('change', function () {
+    $(this).parents('.booking').find('input[type="checkbox"]').prop("checked", $(this).is(':checked'));
+  });
 </script>
