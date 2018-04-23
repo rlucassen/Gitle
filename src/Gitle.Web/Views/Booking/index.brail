@@ -73,10 +73,10 @@
           <h1>Uren geschreven afgelopen 14 dagen</h1>
         </div>
         <div class="large-2 columns">
-          <input type="date" name="moveDate" required />
+          <input type="date" id="move-bookings-date" name="moveDate" required />
         </div>
         <div class="large-2 columns">
-          <button class="tiny">Verplaats boekingen</button>
+          <button id="move-bookings-button" class="tiny">Verplaats boekingen</button>
         </div>
       </div>
       <% for keyvalue in bookings: %>
@@ -92,13 +92,13 @@
         <div class="booking-row" data-id="${booking.Id}">
           <div class="row booking-row-content">
             <div class="large-1 columns">
-              <input type="checkbox" name="selectedBookings" class="no-margin" value="${booking.Id}">
+              <input type="checkbox" name="selectedBookings" class="select-booking" value="${booking.Id}">
             </div>
             <div class="large-1 columns">
               <span class="booking-minutes">${booking.Time}</span>
             </div>
             <div class="large-2 columns">
-              <div class="booking-project">${booking.Project.Name}</div>
+              <div class="booking-project"><a href="/project/${booking.Project.Slug}/issues">${booking.Project.Name}</a></div>
             </div>
             <div class="large-1 columns">
               <div class=" row booking-issue">
@@ -197,6 +197,8 @@
   $('#booking .booking-parser').focus();
 
   $('.select-all-bookings').off('change').on('change', function () {
-    $(this).parents('.booking').find('input[type="checkbox"]').prop("checked", $(this).is(':checked'));
+    var checkboxes = $(this).parents('.booking').find('input[type="checkbox"]')
+    checkboxes.prop("checked", $(this).is(':checked'));
+    $(checkboxes[0]).trigger('change');
   });
 </script>

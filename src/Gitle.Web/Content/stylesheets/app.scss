@@ -73,6 +73,10 @@ ul.f-dropdown.wide {
   }
 }
 
+.columns {
+  min-height: 1px;
+}
+
 .button-group {
   margin-left: 2px;
 }
@@ -1361,6 +1365,11 @@ input[type=checkbox].inline {
   font-size: 0.6875rem;
 }
 
+#move-bookings-date, #move-bookings-button {
+  display: none;
+  margin: 16px 0 0 0;
+}
+
 .booking-row-new {
   .null {
     color: #ccc;
@@ -1375,6 +1384,10 @@ input[type=checkbox].inline {
 .booking-row {
   :hover {
     background-color: #E6E6E6;
+
+    .select-booking {
+      display: block;
+    }
 
     .booking-buttons {
       display: block;
@@ -1393,6 +1406,15 @@ input[type=checkbox].inline {
 
   i:hover{
     background-color: transparent;
+  }
+
+  .select-booking {
+    display: none;
+    margin: 4px 0 0 0;
+
+    &:checked {
+      display: block;
+    }
   }
 
   .booking-buttons {

@@ -159,6 +159,18 @@ $(function () {
     });
   });
 
+  $('.booking-row').on('click', function (e) {
+    if ($(e.target).is('input[type="checkbox"], a')) return;
+    e.stopPropagation();
+    var selectBooking = $(this).find('.select-booking');
+    selectBooking.prop('checked', !selectBooking.prop('checked'));
+    selectBooking.trigger('change');
+  });
+
+  $('.select-booking').on('change', function () {
+    $('#move-bookings-date, #move-bookings-button').toggle($('.select-booking:checked').length > 0);
+  });
+
   var addEditListeners = function (row) {
     row.find('.booking-edit-cancel').on('click', function (e) {
       e.preventDefault();
