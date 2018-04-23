@@ -54,6 +54,9 @@
 #endif
             PropertyBag.Add("RELEASE", release);
 
+            var notifications = new List<string> {"hoi", "doei", "klik mij weg"};
+            PropertyBag.Add("notifications", notifications);
+
             if (Convert.ToBoolean(request.Params["cancelLayout"]))
             {
                 CancelLayout();

@@ -50,7 +50,7 @@
 
   <style>
     .notif:after {
-      content: "2";
+      content: "${notifications.Count}";
     }
   </style>
 
@@ -114,10 +114,12 @@
             <li class="has-form"><a href="/user/${?CurrentUser.Id}/edit"><i class="fa fa-cogs"></i> Bewerken</a></li>
             <li class="has-form"><a href="/signout"><i class="fa fa-sign-out"></i> Uitloggen</a></li>
             <li class="has-form">
+              <% for notification in notifications: %>
               <div data-alert class="alert-box">
-                Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem.
+                ${notification}
                 <a href="#" class="close">&times;</a>
               </div>
+              <% end %>
             </li>
           </ul>
         </li>
