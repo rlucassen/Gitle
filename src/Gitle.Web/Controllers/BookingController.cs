@@ -121,6 +121,25 @@ namespace Gitle.Web.Controllers
         }
 
         [BookHours]
+        public void MoveBookings(int[] selectedBookings, DateTime moveDate)
+        {
+            using (var transaction = session.BeginTransaction())
+            {
+                foreach (var bookingId in selectedBookings)
+                {
+                    var booking = session.Get<Booking>(Convert.ToInt64(bookingId));
+                    booking.Date = moveDate;
+
+                    session.SaveOrUpdate(booking);
+                }
+
+                transaction.Commit();
+            }
+
+            RedirectToReferrer();
+        }
+
+        [BookHours]
         public void Save(int adminId = 0)
         {
             var booking = BindObject<Booking>("booking");
