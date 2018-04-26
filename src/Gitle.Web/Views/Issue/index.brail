@@ -2,15 +2,30 @@
   <div class="large-12 columns">
     <h1><a href="/project/${project.Slug}/view">${project.Name}</a>: ${result.TotalResultCount} Taken</h1>
     <% if CurrentUser.IsAdmin: %>
+    <form action="/project/${project.Slug}/switchsubscription" method="POST" data-abide>
+      <div class="switch tiny no-margin right">
+        <h5>
+          Notificaties voor jezelf
+          <% if project.SendEmailNotification == true : %>
+          <input id="item_Subscription" name="item.Subscription" type="checkbox" onclick="this.form.submit();" checked>
+          <% else : %>
+          <input id="item_Subscription" name="item.Subscription" type="checkbox" onclick="this.form.submit();">
+          <% end %>
+          <label for="item_Subscription"></label>
+        </h5>
+      </div><br /><br />
+    </form>
     <form action="/project/${project.Slug}/switchnotifications" method="POST" data-abide>
-      <div class="switch no-margin right">
-        <i class="fa fa-bell fa-2x orange"></i>
-        <% if project.SendEmailNotification == true : %>
-        <input id="item_SendEmailNotification" name="item.SendEmailNotification" type="checkbox" onclick="this.form.submit();" checked>
-        <% else : %>
-        <input id="item_SendEmailNotification" name="item.SendEmailNotification" type="checkbox" onclick="this.form.submit();">
-        <% end %>
-        <label for="item_SendEmailNotification"></label>
+      <div class="switch tiny no-margin right">
+        <h5>
+          Notificaties voor klanten
+          <% if project.SendEmailNotification == true : %>
+          <input id="item_SendEmailNotification" name="item.SendEmailNotification" type="checkbox" onclick="this.form.submit();" checked>
+          <% else : %>
+          <input id="item_SendEmailNotification" name="item.SendEmailNotification" type="checkbox" onclick="this.form.submit();">
+          <% end %>
+          <label for="item_SendEmailNotification"></label>
+        </h5>
       </div>
     </form>
     <% end %>
