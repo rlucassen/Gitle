@@ -96,7 +96,7 @@ namespace Gitle.Web.Controllers
             var percentageBooked = bookings.Where(y => !y.Unbillable).Sum(y => y.Hours) / (bookings.Where(y => !y.Unbillable).Sum(y => y.Hours) + extraHours) * 100;
             var total = bookings.Where(y => !y.Unbillable).Sum(y => y.Hours) + extraHours;
             var totalBooked = bookings.Where(y => !y.Unbillable).Sum(y => y.Hours);
-            var overbooked = percentageBooked > 100 && item.TotalHours > 0;
+            var overbooked = totalBooked > item.TotalHours && item.TotalHours > 0;
             var overbooking = percentage > 100 && item.TotalHours > 0;
             var totalHours = item.TotalHours;
 
