@@ -61,6 +61,7 @@
           </div>
         </div>
       </form>
+      <div id="booking-preview-container"></div>
     </div>
   </div>
 </div>
@@ -152,19 +153,25 @@
     console.log('valid!');
     });
 
+  $('.booking_Minutes').on('change', function () {
+    $('.booking_Issue_Id').trigger('change');
+  });
+
   $('.booking_Issue_Id').on('change', function () {
     var self = $(this);
+    if (self.val() === 'undefined' || self.val() === "" || self.val() === 0) return;
     var bookingMinutes = self.parents('.booking-row-new').find('.booking_Minutes');
     
     $.ajax({
       method: 'GET',
       data: {
+        projectId: $('input[name="booking.Project.Id"]').val(),
         issueId: self.val(),
         minutes: bookingMinutes.val()
       },
-      url: '/booking/checkbookinghours',
-      success: function (data) {
-        if (!data.value) alert('Let op, je gaat over de geschatte uren heen!');
+      url: '/booking/bookingschart',
+      success: function (html) {
+        $('#booking-preview-container').html(html);
       }
     });
   });

@@ -252,12 +252,20 @@ table.tickets-table {
   }
 
   &.progress-booking-time {
-    .total {
+    .total, .booking {
       background-color: #75b1c3;
     }
 
-    .billable {
+    .billable, .booked {
       background-color: #008CBA;
+    }
+
+    .overbooking {
+      background-color: #d09890;
+    }
+
+    .overbooked {
+      background-color: #a05f55;
     }
 
     .left-value, .right-value {

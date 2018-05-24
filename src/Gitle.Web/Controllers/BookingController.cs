@@ -8,8 +8,10 @@ using NHibernate.Linq;
 
 namespace Gitle.Web.Controllers
 {
+    using System.Globalization;
     using Castle.MonoRail.Framework;
     using Helpers;
+    using Model.Helpers;
 
     public class BookingController : SecureController
     {
@@ -79,6 +81,44 @@ namespace Gitle.Web.Controllers
             }
 
             return new { value = !(availableMinutes > 0) || !(totalMinutes + minutes > availableMinutes) };
+        }
+
+        [MustHaveProject]
+        public void BookingsChart(long projectId, long issueId, int minutes)
+        {
+            var project = session.Get<Project>(projectId);
+            var item = session.Get<Issue>(issueId);
+            var totalTimeAvailable = item.TotalHours > 0 ? item.Hours : item.Bookings.Where(x => x.IsActive && !x.Unbillable).Sum(x => x.Hours);
+            var extraHours = minutes / 60d;
+            var bookings = item.Bookings.Where(x => x.IsActive).ToList();
+            
+            var percentage = (bookings.Where(y => !y.Unbillable).Sum(y => y.Hours) + extraHours) / totalTimeAvailable * 100;
+            var percentageBooked = bookings.Where(y => !y.Unbillable).Sum(y => y.Hours) / (bookings.Where(y => !y.Unbillable).Sum(y => y.Hours) + extraHours) * 100;
+            var total = bookings.Where(y => !y.Unbillable).Sum(y => y.Hours) + extraHours;
+            var totalBooked = bookings.Where(y => !y.Unbillable).Sum(y => y.Hours);
+            var overbooked = percentageBooked > 100 && item.TotalHours > 0;
+            var overbooking = percentage > 100 && item.TotalHours > 0;
+            var totalHours = item.TotalHours;
+
+            if (item.TotalHours <= 0) percentage = 100;
+
+            var bookingsObj = new
+            {
+                percentage = percentage.ToString(CultureInfo.CreateSpecificCulture("en-US")),
+                percentageBooked = percentageBooked.ToString(CultureInfo.CreateSpecificCulture("en-US")),
+                total,
+                totalBooked,
+                overbooked,
+                overbooking,
+                totalHours
+            };
+
+            PropertyBag.Add("project", project);
+            PropertyBag.Add("item", item);
+            PropertyBag.Add("bookings", bookingsObj);
+            PropertyBag.Add("totalBooked", item.BillableBookingHoursString());
+            PropertyBag.Add("totalBookedUnbillable", item.UnbillableBookingHoursString());
+            CancelLayout();
         }
 
         [BookHours]

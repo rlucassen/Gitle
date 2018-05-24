@@ -1,0 +1,14 @@
+﻿<hr />
+<div class="callout">
+  <div class="text-left">Totaal geboekt: ${totalBooked} (${totalBookedUnbillable} unbillable)</div>
+  <div class="row">
+    <div class="large-3 columns">
+      <span>Nieuw totaal: ${StringHelper.ToHourDayNotation(bookings.total)} / ${StringHelper.ToHourDayNotation(bookings.totalHours)}</span>
+    </div>
+    <div class="large-6 columns end">
+      <div class="progress progress-border progress-booking-time">
+        <span class="meter <% if bookings.overbooking: %>overbooking<% else: %>booking<% end %>" style="width: ${bookings.percentage}%"><span class="meter <% if bookings.overbooked: %>overbooked<% else: %>booked<% end %>" style="width: ${bookings.percentageBooked}%"></span></span>
+      </div>
+    </div>
+  </div>
+</div>

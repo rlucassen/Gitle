@@ -527,6 +527,7 @@
     <None Include="Views\Application\view.brail" />
     <None Include="Views\Authentication\changepassword.brail" />
     <None Include="Views\Authentication\requestreset.brail" />
+    <Content Include="Views\Booking\bookingschart.brail" />
     <None Include="Views\Booking\index.brail" />
     <None Include="Views\Invoice\index.brail" />
     <None Include="Views\Invoice\create.brail" />

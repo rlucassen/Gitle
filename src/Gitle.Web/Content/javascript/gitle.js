@@ -41,6 +41,7 @@ $.fn.bookingParser = function () {
 
     $(this).val(visualOutput);
     bookingInput.val(hoursOutput);
+    bookingInput.trigger('change');
   });
 };
 
