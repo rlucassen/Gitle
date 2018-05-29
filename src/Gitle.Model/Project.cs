@@ -72,8 +72,8 @@
         public virtual int ClosedIssues => Issues.Count(x => !x.IsOpen && !x.IsArchived);
         public virtual int TotalIssues => Issues.Count(x => !x.IsArchived);
 
-        public virtual double OpenIssuesPercentage => TotalIssues == 0 ? 0 : OpenIssues / (TotalIssues * 1.0) * 100;
-        public virtual double ClosedIssuesPercentage => TotalIssues == 0 ? 0 : ClosedIssues / (TotalIssues * 1.0) * 100;
+        public virtual double OpenIssuesPercentage => 100 - ClosedIssuesPercentage;
+        public virtual double ClosedIssuesPercentage => TotalIssues == 0 ? 0 : Math.Floor(ClosedIssues / (TotalIssues * 1.0) * 100);
 
         public virtual double TotalEstimateAllTickets()
         {

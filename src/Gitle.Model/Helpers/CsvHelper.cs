@@ -51,6 +51,47 @@
             return $"{header}{rows}";
         }
 
+        public static string OpenIssuesCsv(IList<Issue> issues)
+        {
+            const string rowTemplate =
+                "\"{2}\"{0}\"{3}\"{0}\"{4}\"{0}\"{5}\"{0}\"{6}\"{0}\"{7}\"{0}\"{8}\"{0}\"{9}\"{0}\"{10}\"{0}\"{11}\"{0}\"{12}\"{0}{1}";
+
+            var header = string.Format(rowTemplate, fieldseparator, lineEnd,
+                                          "ProjectType",
+                                          "Project",
+                                          "Taaknummer",
+                                          "Naam",
+                                          "Geopend op",
+                                          "Geopend door",
+                                          "Totale schatting in uren",
+                                          "Totaal billable boekingen in uren",
+                                          "Totaal unbillable boekingen in uren",
+                                          "Totaal gefactureerd in uren",
+                                          "Labels");
+
+            var rows = "";
+            foreach (var issue in issues.OrderBy(i => i.Project.TypeString).ThenBy(i => i.Project.Name).ThenBy(i => i.Number))
+            {
+                rows += string.Format(rowTemplate, fieldseparator, lineEnd,
+                                      issue.Project.TypeString,
+                                      issue.Project.Name,
+                                      issue.Number,
+                                      issue.Name,
+                                      issue.CreatedAt?.ToString("yyyy-MM-dd"),
+                                      issue.CreatedBy?.FullName,
+                                      issue.TotalHours,
+                                      issue.BillableBookingHours(),
+                                      issue.UnbillableBookingHours(),
+                                      issue.TotalHoursInvoiced,
+                                      string.Join(", ", issue.Labels.Select(l => l.Name))
+                    );
+            }
+
+            return $"{header}{rows}";
+        }
+
+
+
         public static string BookingsCsv(IList<Booking> bookings)
         {
             const string rowTemplate =

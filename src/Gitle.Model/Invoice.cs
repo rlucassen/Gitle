@@ -97,7 +97,7 @@ namespace Gitle.Model
 
         public virtual int IssueCount => Lines.Count(x => x.Issue != null);
 
-        public virtual IList<InvoiceLine> ProjectLines => Lines.Where(x => x.Issue == null).OrderBy(l => l.Issue.Number).ToList();
+        public virtual IList<InvoiceLine> ProjectLines => Lines.Where(x => x.Issue == null).ToList();
         public virtual IList<InvoiceLine> IssueLines => Lines.Where(x => x.Issue != null).OrderBy(l => l.Issue.Number).ToList();
         public virtual IList<Issue> Issues => Lines.Where(x => x.Issue != null).OrderBy(l => l.Issue.Number).Select(x => x.Issue).ToList();
 
