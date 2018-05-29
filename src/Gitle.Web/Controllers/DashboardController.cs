@@ -1,6 +1,11 @@
 ﻿namespace Gitle.Web.Controllers
 {
+    using System;
+    using System.IO;
     using System.Linq;
+    using System.Text;
+    using System.Web;
+    using Gitle.Model.Helpers;
     using Model;
     using Model.Enum;
     using NHibernate;
@@ -19,6 +24,26 @@
 
             PropertyBag.Add("initialProjects", initialProjects);
             PropertyBag.Add("serviceProjects", serviceProjects);
-        } 
+        }
+
+        public void ExportOpenTicketsByProject()
+        {
+            var openIssues = session.Query<Issue>().Where(i => (i.Project.Type == ProjectType.Initial || i.Project.Type == ProjectType.Service) && !i.Project.Closed).ToList().Where(i => i.ChangeStates.OrderByDescending(x => x.CreatedAt).First().IssueState == IssueState.Open).ToList();
+
+            var csv = CsvHelper.OpenIssuesCsv(openIssues);
+            CancelView();
+
+            Response.ClearContent();
+            Response.Clear();
+
+            var filename = $"open_issues_{DateTime.Today:yyyyMMdd_hhmm}.csv";
+
+            Response.AppendHeader("content-disposition", $"attachment; filename={HttpUtility.UrlEncode(filename)}");
+            Response.ContentType = "application/csv";
+
+            var byteArray = Encoding.Default.GetBytes(csv);
+            var stream = new MemoryStream(byteArray);
+            Response.BinaryWrite(stream);
+        }
     }
 }

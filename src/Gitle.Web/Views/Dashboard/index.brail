@@ -39,6 +39,10 @@
   </div>
   <div class="content" id="service">
     <input type="checkbox" id="toggle-empties" checked /> Verberg projecten zonder open tickets
+    <div class="large-0 small-6 columns right">
+      <a href="/dashboard/exportopenticketsbyproject" class="button tiny">Export openstaande issues</a>
+    </div>
+
     <table class="tickets-table striped hide-empties">
       <thead>
         <tr>
