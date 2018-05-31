@@ -1404,6 +1404,13 @@ input[type=checkbox].inline {
     }
   }
 
+  .selected {
+    :hover{
+      background-color: #cbdce2;
+    }
+    background-color: #cbdce2;
+  }
+
   i:hover{
     background-color: transparent;
   }

@@ -197,8 +197,8 @@
   $('#booking .booking-parser').focus();
 
   $('.select-all-bookings').off('change').on('change', function () {
-    var checkboxes = $(this).parents('.booking').find('input[type="checkbox"]')
+    var checkboxes = $(this).parents('.booking').find('input[type="checkbox"]').not($(this));
     checkboxes.prop("checked", $(this).is(':checked'));
-    $(checkboxes[0]).trigger('change');
+    $(checkboxes).trigger('change');
   });
 </script>

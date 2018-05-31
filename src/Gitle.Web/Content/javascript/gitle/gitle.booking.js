@@ -31,7 +31,8 @@
     selectBooking.trigger('change');
   });
 
-  $('.select-booking').on('change', function () {
+  $('.select-booking').off('change').on('change', function () {
+    $(this).parents('.booking-row-content').toggleClass('selected', $(this).prop('checked'));
     $('#move-bookings-date, #move-bookings-button').toggle($('.select-booking:checked').length > 0);
   });
 
