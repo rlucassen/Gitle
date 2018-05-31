@@ -171,7 +171,7 @@
                 <ul id="addLabels" data-dropdown-content class="f-dropdown" aria-hidden="true" tabindex="-1">
                   <% for label in customerLabels: %>
                   <li>
-                    <a href="/project/${project.Slug}/addlabel?label=${label.Name}" data-group-action>
+                    <a href="/project/${project.Slug}/addlabel?label=${WebUtility.UrlEncode(label.Name)}" data-group-action>
                       <span class="label no-margin<% if label.VisibleForCustomer: %> radius<% end %>" title="${label.Name}" style="background-color: #${label.Color}; ">${label.Name}</span>
                     </a>
                   </li>
