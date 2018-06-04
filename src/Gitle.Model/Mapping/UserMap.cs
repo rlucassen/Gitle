@@ -25,7 +25,7 @@
             Map(x => x.Comments).CustomSqlType("nvarchar(max)");
             Map(x => x.Color);
             Map(x => x.JamesEmployeeId);
-            HasMany(x => x.Projects).Cascade.AllDeleteOrphan();
+            HasMany(x => x.Projects).Inverse().Cascade.AllDeleteOrphan();
             HasMany(x => x.FilterPresets);
             References(x => x.Customer);
 

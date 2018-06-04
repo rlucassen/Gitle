@@ -116,7 +116,7 @@
             {
                 item = BindObject<User>("item");
             }
-            
+
             if (!string.IsNullOrWhiteSpace(password) || item.Password == null)
             {
                 item.Password = new Password(password);
@@ -194,6 +194,7 @@
                 }
                 else
                 {
+                    subscription.User = item;
                     item.Projects.Add(subscription);
                 }
             }
