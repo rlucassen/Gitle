@@ -91,7 +91,7 @@ namespace Gitle.Web.Controllers
             var totalTimeAvailable = item.TotalHours > 0 ? item.Hours : item.Bookings.Where(x => x.IsActive && !x.Unbillable).Sum(x => x.Hours);
             var extraHours = minutes / 60d;
             var bookings = item.Bookings.Where(x => x.IsActive).ToList();
-            
+
             var percentage = (bookings.Where(y => !y.Unbillable).Sum(y => y.Hours) + extraHours) / totalTimeAvailable * 100;
             var percentageBooked = bookings.Where(y => !y.Unbillable).Sum(y => y.Hours) / (bookings.Where(y => !y.Unbillable).Sum(y => y.Hours) + extraHours) * 100;
             var total = bookings.Where(y => !y.Unbillable).Sum(y => y.Hours) + extraHours;
@@ -137,14 +137,14 @@ namespace Gitle.Web.Controllers
                 transaction.Commit();
             }
 
-            RedirectToReferrer();
+            RedirectToAction("index", new { date = moveDate.ToShortDateString() });
         }
 
         [BookHours]
         public void Save(int adminId = 0)
         {
             var booking = BindObject<Booking>("booking");
-            
+
             if (adminId > 0)
             {
                 if (CurrentUser.IsDanielle)
@@ -208,7 +208,7 @@ namespace Gitle.Web.Controllers
                 session.SaveOrUpdate(booking);
                 transaction.Commit();
             }
-            RedirectToReferrer();
+            RedirectToAction("index", new { date = booking.Date.ToShortDateString() });
         }
         [BookHours]
         public void Delete(int id)
