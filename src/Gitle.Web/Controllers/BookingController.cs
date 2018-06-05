@@ -137,7 +137,8 @@ namespace Gitle.Web.Controllers
                 transaction.Commit();
             }
 
-            RedirectToAction("index", new { date = moveDate.ToShortDateString() });
+            RedirectToReferrer();
+            //RedirectToAction("index", new { date = moveDate.ToShortDateString() });
         }
 
         [BookHours]
