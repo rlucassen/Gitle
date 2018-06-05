@@ -354,9 +354,14 @@ $(function () {
     e.preventDefault();
     var shift = $(this).data('dayshift');
     var date = Date.today().add(shift).days();
-    $('#booking_Date').val(date.toString('dd-MM-yyyy'));
-    $('[data-dayshift]').removeClass('active');
-    $(this).addClass('active');
+    $('#booking_Date').val(date.toString('dd-MM-yyyy')).change();
+    //$('#booking_Date').val(date.toString('dd-MM-yyyy'));
+    //$('[data-dayshift]').removeClass('active');
+    //$(this).addClass('active');
+  });
+
+  $('#booking_Date').change(function () {
+    window.location = '/Booking/index?date=' + $(this).val().toString('dd-MM-yyyy');
   });
 });
 

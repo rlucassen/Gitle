@@ -67,7 +67,7 @@
     <div class="large-12 columns">
       <div class="row">
         <div class="large-8 columns">
-          <h1>Uren geschreven afgelopen 14 dagen</h1>
+          <h1>Uren geschreven in week ${week}</h1>
         </div>
         <div class="large-2 columns">
           <input type="date" id="move-bookings-date" name="moveDate" required />

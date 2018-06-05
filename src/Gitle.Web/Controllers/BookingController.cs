@@ -28,12 +28,13 @@ namespace Gitle.Web.Controllers
         public void Index(DateTime date)
         {
             var bookings = session.Query<Booking>()
-                .Where(x => x.IsActive && x.User == CurrentUser && x.Date > DateTime.Today.AddDays(-14))
+                .Where(x => x.IsActive && x.User == CurrentUser && x.Date >= date.StartOfWeek() && x.Date <= date.EndOfWeek())
                 .OrderByDescending(x => x.Date)
                 .GroupBy(x => x.Date.Date)
                 .ToDictionary(g => new { date = g.Key, total = g.ToList().Sum(x => x.Minutes) }, g => g.ToList());
             PropertyBag.Add("bookings", bookings);
             PropertyBag.Add("today", date.ToString("dd-MM-yyyy"));
+            PropertyBag.Add("week", date.WeekNr());
             PropertyBag.Add("admins", session.Query<User>().Where(x => x.IsActive && x.IsAdmin));
         }
 
