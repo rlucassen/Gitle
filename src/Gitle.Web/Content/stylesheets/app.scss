@@ -1379,6 +1379,24 @@ input[type=checkbox].inline {
     border-bottom: 1px solid #ccc;
     border-top: 1px solid #ccc;
   }
+
+  .error input {
+    background-color: red;
+    color:white;
+
+    &::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+      color: white;
+      opacity: 1; /* Firefox */
+    }
+
+    &:-ms-input-placeholder { /* Internet Explorer 10-11 */
+      color: white;
+    }
+
+    &::-ms-input-placeholder { /* Microsoft Edge */
+      color: white;
+    }
+  }
 }
 
 .booking-row {
