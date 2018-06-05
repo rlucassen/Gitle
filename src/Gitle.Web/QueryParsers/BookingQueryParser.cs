@@ -50,7 +50,9 @@
                                 {"user", "Medewerker"},
                                 {"project", "Project"},
                                 {"application", "Applicatie"},
-                                {"customer", "Klant"}
+                                {"customer", "Klant"},
+                                {"day", "Dag"},
+                                {"week", "Week"}
                             };
 
 
@@ -272,6 +274,12 @@
                     break;
                 case "customer":
                     GroupedBookings = bookings.Where(x => x.Project.Application != null && x.Project.Application.Customer != null).OrderBy(x => x.Project.Application.Customer.Name).ToList().GroupBy(x => x.Project.Application.Customer).Select(x => new BookingGroup(x.Key.Name, x.ToList())).ToList();
+                    break;
+                case "day":
+                    GroupedBookings = bookings.OrderBy(x => x.Date).ToList().GroupBy(x => x.Date).Select(x => new BookingGroup(x.Key.ToShortDateString(), x.ToList())).ToList();
+                    break;
+                case "week":
+                    GroupedBookings = bookings.OrderBy(x => x.Date).ToList().GroupBy(x => x.Date.WeekNr()).Select(x => new BookingGroup($"week {x.Key}", x.ToList())).ToList();
                     break;
                 default:
                     GroupedBookings = new List<BookingGroup> { new BookingGroup("Alle uren", bookings.ToList()) };
