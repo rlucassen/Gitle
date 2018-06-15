@@ -1,20 +1,26 @@
 ﻿<div class="row">
   <div class="large-12 columns">
-    <form id="query-form" method="GET">
-      <div class="large-0 small-6 columns right">
-        <button class="button no-margin tiny" formaction="../project/exportcsv">Projecten zonder klantcontacten exporteren</button>
-      </div>
-    </form>
     <h1>Projecten  <% if IsDefined("customer"): %>van klant "${customer.Name}"<% end %> <% if IsDefined("application"): %>van applicatie "${application.Name}"<% end %></h1>
+
     <% if CurrentUser.IsAdmin: %>
-    <% if IsDefined("application"): %>
-    <a class="button" href="/application/${application.Slug}/newproject">Nieuw</a>
-    <% elif IsDefined("customer"): %>
-    <a class="button" href="/customer/${customer.Slug}/newproject">Nieuw</a>
-    <% else: %>
-    <a class="button" href="/project/new">Nieuw</a>
+    <div class="row">
+      <div class="large-1 columns">
+        <% if IsDefined("application"): %>
+        <a class="button" href="/application/${application.Slug}/newproject">Nieuw</a>
+        <% elif IsDefined("customer"): %>
+        <a class="button" href="/customer/${customer.Slug}/newproject">Nieuw</a>
+        <% else: %>
+        <a class="button" href="/project/new">Nieuw</a>
+        <% end %>
+      </div>
+      <div class="large-11 columns text-right">
+        <form id="query-form" method="GET">
+          <button class="button" formaction="../project/exportcsv">Projecten zonder klantcontacten exporteren</button>
+        </form>
+      </div>
+    </div>
     <% end %>
-    <% end %>
+
     <% if CurrentUser.IsAdmin or CurrentUser.IsDanielle: %>
     <div class="panel">
       <div class="row">
