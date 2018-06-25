@@ -209,7 +209,11 @@ namespace Gitle.Web.Controllers
                 session.SaveOrUpdate(booking);
                 transaction.Commit();
             }
-            RedirectToAction("index", new { date = booking.Date.ToShortDateString() });
+
+            if (Request.UrlReferrer.ToLower().Contains("/booking/"))
+                RedirectToAction("index", new { date = booking.Date.ToShortDateString() });
+            else
+                RedirectToReferrer();
         }
         [BookHours]
         public void Delete(int id)
