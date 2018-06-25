@@ -375,6 +375,7 @@
             return new {success = validName, message = message};
         }
 
+        [Admin]
         public void ExportCsv()
         {
             var projects = session.Query<Project>();

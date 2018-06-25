@@ -1,6 +1,7 @@
 ﻿<div class="row">
   <div class="large-12 columns">
     <h1>Uren schrijven</h1>
+    <div class="toggle-percentage" style="height:1px;"></div>
     <div class="panel">
       <form id="booking" action="save" method="POST" data-abide>
         <div class="row collapse">
@@ -66,8 +67,13 @@
   <div class="row">
     <div class="large-12 columns">
       <div class="row">
-        <div class="large-8 columns">
+        <div class="large-6 columns">
           <h1>Uren geschreven in week ${week}</h1>
+        </div>
+        <div class="large-2 columns">
+          <div class="billable-percentage" style="display:none;">
+            ${billablePercentage}%
+          </div>
         </div>
         <div class="large-2 columns">
           <input type="date" id="move-bookings-date" name="moveDate" required />
@@ -206,5 +212,24 @@
     var checkboxes = $(this).parents('.booking').find('input[type="checkbox"]').not($(this));
     checkboxes.prop("checked", $(this).is(':checked'));
     $(checkboxes).trigger('change');
+  });
+
+  $(function () {
+    var toggleBillablePercentage = function () {
+      if (localStorage.getItem('showBillablePercentage') === 'true')
+        $('.billable-percentage').show();
+      else
+        $('.billable-percentage').hide();
+    }
+
+    toggleBillablePercentage();
+
+    $('.toggle-percentage').off('click').on('click', function () {
+      if (localStorage.getItem('showBillablePercentage') === 'true')
+        localStorage.setItem('showBillablePercentage', 'false');
+      else
+        localStorage.setItem('showBillablePercentage', 'true');
+      toggleBillablePercentage();
+    });
   });
 </script>
