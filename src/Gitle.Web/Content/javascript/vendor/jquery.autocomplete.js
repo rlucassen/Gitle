@@ -669,7 +669,7 @@
                     html += formatGroup(suggestion, value, i);
                 }
 
-                html += '<div class="' + className + '" data-index="' + i + '">' + formatResult(suggestion, value) + '</div>';
+                html += '<div class="' + className + '" data-index="' + i + '" title="' + suggestion.value + '">' + formatResult(suggestion, value) + '</div>';
             });
 
             this.adjustContainerWidth();
