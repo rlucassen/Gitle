@@ -25,8 +25,8 @@ namespace Gitle.Model
 
         public virtual IList<InvoiceLine> OldInvoiceLines => Issue?.InvoiceLines.Where(x => x.Invoice.IsDefinitive).ToList() ?? new List<InvoiceLine>();
 
-        public virtual double EstimateHours => Issue.Hours - OldInvoiceLines.Sum(x => x.Hours);
-        public virtual double FullEstimateHours => Issue.Hours;
+        public virtual double EstimateHours => Issue.TotalHours - OldInvoiceLines.Sum(x => x.Hours);
+        public virtual double FullEstimateHours => Issue.TotalHours;
         public virtual double BookingHours => Bookings.Where(x => !x.Unbillable).Sum(x => x.Hours);
         public virtual double Minutes => Hours*60.0;
     }
