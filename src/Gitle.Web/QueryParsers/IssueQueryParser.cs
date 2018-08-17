@@ -26,6 +26,7 @@
         public string Query { get; set; }
 
         public IList<string> SelectedLabels = new List<string>();
+        public IList<string> AnySelectedLabels = new List<string>();
         public IList<string> NotSelectedLabels = new List<string>();
         public IList<IssueState> States = new List<IssueState>();
         public IDictionary<string, bool> SelectedSorts = new Dictionary<string, bool>();
@@ -74,6 +75,9 @@
                 {
                     case "label":
                         SelectedLabels.Add(value);
+                        break;
+                    case "anylabel":
+                        AnySelectedLabels.Add(value);
                         break;
                     case "notlabel":
                         NotSelectedLabels.Add(value);
@@ -135,6 +139,7 @@
                     x =>
                     x.Project == project &&
                     x.Labels.Count(l => SelectedLabels.Contains(l.Name)) == SelectedLabels.Count &&
+                    (AnySelectedLabels.Count == 0 || x.Labels.Any(l => AnySelectedLabels.Contains(l.Name))) &&
                     !x.Labels.Any(l => NotSelectedLabels.Contains(l.Name)));
 
             if (!string.IsNullOrWhiteSpace(searchQuery))

@@ -66,7 +66,9 @@
             </ul>
           </div>
           <div class="large-0 small-12 columns">
+
             <% if labels.Count > 0: %>
+
             <button href="#" data-dropdown="selectedLabels" aria-controls="selectedLabels" aria-expanded="false" class="button tiny dropdown no-margin">Bevat labels:</button>
             <ul id="selectedLabels" data-dropdown-content="" class="f-dropdown labels" aria-hidden="true" tabindex="-1">
               <% for label in labels: %>
@@ -81,6 +83,22 @@
               </li>
               <% end %>
             </ul>
+
+            <button href="#" data-dropdown="anySelectedLabels" aria-controls="anySelectedLabels" aria-expanded="false" class="button tiny dropdown no-margin">Bevat een label:</button>
+            <ul id="anySelectedLabels" data-dropdown-content="" class="f-dropdown labels" aria-hidden="true" tabindex="-1">
+              <% for label in labels: %>
+              <li>
+                <a href="#" data-filter="anylabel:'${label.Name}'">
+                  <% if result.AnySelectedLabels.Contains(label.Name): %>
+                  <i class="fa fa-check"></i>
+                  <% end %>
+                  <span class="label no-margin"
+                  <% if label.VisibleForCustomer: %> radius<% end %>" title="${label.Name}" style="background-color: #${label.Color} ;">${label.Name}</span>
+                </a>
+              </li>
+              <% end %>
+            </ul>
+
             <button href="#" data-dropdown="notSelectedLabels" aria-controls="notSelectedLabels" aria-expanded="false" class="button tiny dropdown no-margin">Bevat niet labels:</button>
             <ul id="notSelectedLabels" data-dropdown-content="" class="f-dropdown labels" aria-hidden="true" tabindex="-1">
               <% for label in labels: %>
@@ -95,9 +113,13 @@
               </li>
               <% end %>
             </ul>
+
             <% else: %>
+
             <a href="#" class="button tiny secondary disabled">Geen labels om te filteren</a>
+
             <% end %>
+
           </div>
           <div class="large-0 small-12 columns">
             <button href="#" data-dropdown="sorts" aria-controls="sorts" aria-expanded="false" class="button tiny dropdown no-margin">Sorteren:</button>

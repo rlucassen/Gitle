@@ -583,7 +583,11 @@ GitleIssues.prototype = {
     this.initTimeParser();
   },
 
-  initFilters: function() {
+  initFilters: function () {
+    function escapeRegExp(string) {
+      return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+
     $('a[data-filter], a[data-filter-clear]').click(function (e) {
       e.preventDefault();
       var filter = $(this).data('filter');
@@ -600,8 +604,9 @@ GitleIssues.prototype = {
           query = query.replace(rx, '');
         }
       }
-      if (query.indexOf(filter) != -1) {
-        query = query.replace(filter, "");
+      var match = query.match('\\b(' + escapeRegExp(filter) + ')');
+      if (match != null && query.indexOf(match[0]) != -1) {
+        query = query.replace(new RegExp('\\b(' + escapeRegExp(filter) + ')'), "");
       } else {
         query = query + " " + filter;
       }
