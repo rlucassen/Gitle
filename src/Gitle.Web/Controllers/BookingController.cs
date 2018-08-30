@@ -34,6 +34,7 @@ namespace Gitle.Web.Controllers
                 .ToDictionary(g => new { date = g.Key, total = g.ToList().Sum(x => x.Minutes) }, g => g.ToList());
             PropertyBag.Add("bookings", bookings);
             PropertyBag.Add("billablePercentage", bookings.Count > 0 ? Math.Round(bookings.Sum(x => x.Value.Where(y => !y.Unbillable).Sum(y => y.Minutes)) / bookings.Sum(x => x.Value.Sum(y => y.Minutes)), 4) * 100d : 0);
+            PropertyBag.Add("billableAmount", bookings.Count > 0 ? bookings.Sum(x => x.Value.Where(y => !y.Unbillable).Sum(y => (decimal) y.Hours * y.Project.HourPrice)) : 0);
             PropertyBag.Add("today", date.ToString("dd-MM-yyyy"));
             PropertyBag.Add("week", date.WeekNr());
             PropertyBag.Add("admins", session.Query<User>().Where(x => x.IsActive && x.IsAdmin));
