@@ -65,6 +65,16 @@
               </li>
             </ul>
           </div>
+          <div class="large-0 columns">
+            <ul class="button-group">
+              <li>
+                <a href="#" data-filter="bookingstate:Any" class="button tiny no-margin secondary<% if result.BookingStates.Contains(Gitle.Model.Enum.IssueBookingState.Any): %> active<% end %>">Geboekt</a>
+              </li>
+              <li>
+                <a href="#" data-filter="bookingstate:None" class="button tiny no-margin secondary<% if result.BookingStates.Contains(Gitle.Model.Enum.IssueBookingState.None): %> active<% end %>">Ongeboekt</a>
+              </li>
+            </ul>
+          </div>
           <div class="large-0 small-12 columns">
 
             <% if labels.Count > 0: %>

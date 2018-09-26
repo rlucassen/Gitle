@@ -164,7 +164,7 @@ namespace Gitle.Web.Controllers
             {
                 booking.User = CurrentUser;
             }
-            if (!CurrentUser.IsAdmin && !CurrentUser.Projects.Select(up => up.Id).Contains(booking.Project.Id))
+            if (!CurrentUser.IsAdmin && !CurrentUser.Projects.Select(up => up.Project.Id).Contains(booking.Project.Id))
             {
                 RedirectToAction("index", new { date = booking.Date.ToShortDateString() });
                 return;

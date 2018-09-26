@@ -29,6 +29,7 @@
         public IList<string> AnySelectedLabels = new List<string>();
         public IList<string> NotSelectedLabels = new List<string>();
         public IList<IssueState> States = new List<IssueState>();
+        public IList<IssueBookingState> BookingStates = new List<IssueBookingState>();
         public IDictionary<string, bool> SelectedSorts = new Dictionary<string, bool>();
         public IList<User> SelectedPickupbys = new List<User>();
         public bool PickupAny;
@@ -84,6 +85,9 @@
                         break;
                     case "state":
                         States.Add((IssueState)Enum.Parse(typeof(IssueState), value));
+                        break;
+                    case "bookingstate":
+                        BookingStates.Add((IssueBookingState)Enum.Parse(typeof(IssueBookingState), value));
                         break;
                     case "id":
                         ids = value.Split(',').Select(long.Parse).ToList();
@@ -229,6 +233,30 @@
             {
                 items = items.Where(x => States.Contains(x.State)).ToList();
             }
+
+
+            if (BookingStates.Any())
+            {
+                var bookingStateItems = new List<Issue>();
+
+                foreach (var bookingState in BookingStates)
+                {
+                    switch (bookingState)
+                    {
+                        case IssueBookingState.Any:
+                            bookingStateItems.AddRange(items.Where(x => x.Bookings.Any(y => y.IsActive)));
+                            break;
+                        case IssueBookingState.None:
+                            bookingStateItems.AddRange(items.Where(x => !x.Bookings.Any(y => y.IsActive)));
+                            break;
+                        default:
+                            continue;
+                    }
+                }
+
+                items = items.Where(x => bookingStateItems.Select(y => y.Id).Contains(x.Id)).ToList();
+            }
+
 
             TotalResultCount = items.Count();
 
