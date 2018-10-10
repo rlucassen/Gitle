@@ -13,6 +13,16 @@
       <li><a href="/project/${project.Slug}/issue/exportcsv">Exporteer alles (.csv)</a></li>
       <li id="exportselection"><a href="/project/${project.Slug}/issue/exportcsv" data-group-action>Exporteer selectie (.csv)</a></li>
     </ul>
+    <% if isSubscribed: %>
+    <a class="button icon success" href="/project/${project.Slug}/issue/unsubscribe" title="U ontvangt notificaties."><i class="fa fa-bell-o fa-fw"></i></a>
+    <% else: %>
+    <a class="button icon alert" href="/project/${project.Slug}/issue/subscribe" title="U ontvangt geen notificaties."><i class="fa fa-bell-slash-o fa-fw"></i></a>
+    <% end %>
+    <% if project.IsMuted: %>
+    <a class="button icon alert" href="/project/${project.Slug}/issue/unmuteproject" title="Notificaties naar geabonneerden worden tegengehouden."><i class="fa fa-ban fa-fw"></i></a>
+    <% else: %>
+    <a class="button icon success" href="/project/${project.Slug}/issue/muteproject" title="Alle geabonneerden worden genotificeerd."><i class="fa fa-envelope-o fa-fw"></i></a>
+    <% end %>
     <% end %>
     <div class="row">
       <div class="large-12 columns">
@@ -21,7 +31,7 @@
             <form id="query-form" method="GET">
               <div class="row collapse">
                 <div class="large-9 small-1 columns">
-                  <input type="text" id="query" name="query" data-remember="filter-${project.Slug}" value="${result.Query}"/>
+                  <input type="text" id="query" name="query" data-remember="filter-${project.Slug}" value="${result.Query}" />
                 </div>
                 <div class="large-1 small-1 columns">
                   <a href="#" data-filter="" data-filter-clear="" class="button postfix alert">
@@ -193,7 +203,7 @@
           <% end %>
           <div class="large-0 small-12 columns">
             <div class="row" id="group-actions">
-              <input type="hidden" name="issues"/>
+              <input type="hidden" name="issues" />
               <div class="large-0 small-12 columns text-right small-text-left">
                 <label>Geselecteerde taken:</label>
               </div>
@@ -222,9 +232,9 @@
         </div>
       </div>
     </div>
-      <% if dump != null and CurrentUser.IsDanielle: %>
-      <% OutputSubView("_dummyissue") %>
-      <% end %>
+    <% if dump != null and CurrentUser.IsDanielle: %>
+    <% OutputSubView("_dummyissue") %>
+    <% end %>
     <% OutputSubView("_issuetable", {"actions": true}) %>
   </div>
 </div>

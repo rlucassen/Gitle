@@ -43,6 +43,8 @@
 
         public void SendIssueActionNotification(IIssueAction action)
         {
+            if (action.Issue.Project.IsMuted) return;
+
             if (action is ChangeState)
                 action = _session.Get<ChangeState>(((ChangeState)action).Id);
             var project = action.Issue.Project;

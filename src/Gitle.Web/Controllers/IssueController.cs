@@ -55,6 +55,7 @@
             PropertyBag.Add("pickupany", parser.PickupAny);
             PropertyBag.Add("pickupnone", parser.PickupNone);
             PropertyBag.Add("dump", CreateDummyIssue(project));
+            PropertyBag.Add("isSubscribed", CurrentUser.Projects.Any(x => x.Project.Slug == projectSlug && x.Notifications));
         }
 
         public DummyIssue CreateDummyIssue(Project project)
@@ -507,6 +508,74 @@
                 suggestions.AddRange(comments.Select(c => new Suggestion($"#{issue.Number}#{c.Id} - {c.Name} ({c.CreatedAt})", $"{issue.Number}#{c.Id}", "commentlink")));
             }
             return suggestions;
+        }
+
+        [Admin]
+        public void Subscribe(string projectSlug)
+        {
+            RedirectToReferrer();
+
+            var project = session.SlugOrDefault<Project>(projectSlug);
+
+            var projectRelation = CurrentUser.Projects.FirstOrDefault(x => x.Project.Slug == projectSlug) ?? new UserProject { User = CurrentUser, Project = project };
+
+            projectRelation.Notifications = true;
+
+            using (var tx = session.BeginTransaction())
+            {
+                session.SaveOrUpdate(projectRelation);
+                tx.Commit();
+            }
+        }
+
+        [Admin]
+        public void Unsubscribe(string projectSlug)
+        {
+            RedirectToReferrer();
+
+            var projectRelation = CurrentUser.Projects.FirstOrDefault(x => x.Project.Slug == projectSlug);
+
+            if (projectRelation == null) return;
+
+            projectRelation.Notifications = false;
+
+            using (var tx = session.BeginTransaction())
+            {
+                session.SaveOrUpdate(projectRelation);
+                tx.Commit();
+            }
+        }
+
+        [Admin]
+        public void MuteProject(string projectSlug)
+        {
+            RedirectToReferrer();
+
+            var project = session.SlugOrDefault<Project>(projectSlug);
+
+            project.IsMuted = true;
+
+            using (var tx = session.BeginTransaction())
+            {
+                session.SaveOrUpdate(project);
+                tx.Commit();
+            }
+        }
+
+        [Admin]
+        public void UnmuteProject(string projectSlug)
+        {
+            RedirectToReferrer();
+
+            var project = session.SlugOrDefault<Project>(projectSlug);
+
+            project.IsMuted = false;
+
+            using (var tx = session.BeginTransaction())
+            {
+                session.SaveOrUpdate(project);
+                tx.Commit();
+            }
         }
     }
 }

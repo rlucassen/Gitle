@@ -20,6 +20,7 @@
             Map(x => x.BudgetMinutes);
             Map(x => x.Unbillable);
             Map(x => x.Closed);
+            Map(x => x.IsMuted);
             HasMany(x => x.Users).Cascade.All();
             HasMany(x => x.Labels).Cascade.AllDeleteOrphan();
             HasMany(x => x.Issues).Cascade.None();
