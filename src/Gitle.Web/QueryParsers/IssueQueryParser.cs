@@ -142,9 +142,9 @@
                 session.Query<Issue>().Where(
                     x =>
                     x.Project == project &&
-                    x.Labels.Count(l => SelectedLabels.Contains(l.Name)) == SelectedLabels.Count &&
-                    (AnySelectedLabels.Count == 0 || x.Labels.Any(l => AnySelectedLabels.Contains(l.Name))) &&
-                    !x.Labels.Any(l => NotSelectedLabels.Contains(l.Name)));
+                    x.Labels.Count(l => l.IsActive && SelectedLabels.Contains(l.Name)) == SelectedLabels.Count &&
+                    (AnySelectedLabels.Count == 0 || x.Labels.Any(l => l.IsActive && AnySelectedLabels.Contains(l.Name))) &&
+                    !x.Labels.Any(l => l.IsActive && NotSelectedLabels.Contains(l.Name)));
 
             if (!string.IsNullOrWhiteSpace(searchQuery))
             {

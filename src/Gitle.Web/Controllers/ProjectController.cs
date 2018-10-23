@@ -250,8 +250,8 @@
                 throw new ProjectClosedException(project);
             }
             var issueIds = issues.Split(',');
-            var realLabel = session.Query<Label>().FirstOrDefault(x => x.Name == label);
-            if (!realLabel.ApplicableByCustomer && !CurrentUser.IsAdmin)
+            var realLabel = session.Query<Label>().FirstOrDefault(x => x.IsActive && x.Project.Id == project.Id && x.Name == label);
+            if (realLabel == null || !realLabel.ApplicableByCustomer && !CurrentUser.IsAdmin)
             {
                 RedirectToReferrer();
                 return;
