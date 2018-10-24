@@ -1,6 +1,6 @@
 ﻿<h1>${item.Name}</h1>
 <% for label in item.Labels: %>
-<%  if item.CheckLabel(label.Name): %>
+<%  if item.CheckLabel(label.Name) and label.Project.Id == item.Project.Id: %>
 <span title="${label.Name}" class="label no-margin<% if label.VisibleForCustomer: %> radius<% end %>" style="background-color: #${label.Color};">${label.Name}</span>
 <%  end %>
 <% end %>
