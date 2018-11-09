@@ -61,13 +61,5 @@
 
   
   // Focus on .focus elements
-  var focusElements = $('form .focus[value=""]');
-  if (focusElements.length > 0)
-    focusElements.trigger('focus');
-  else {
-    if ($(document.activeElement).not('body').length <= 0)
-      setTimeout(function () { $('#search').trigger('focus'); }, 100);
-  }
-    
-
+  $('form .focus[value=""]').focus();
 });

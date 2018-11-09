@@ -74,10 +74,6 @@
           <div class="large-9 small-6 columns">${Form.CheckboxField("item.IsAdmin")}</div>
         </div>
         <div class="row">
-          <div class="large-3 small-6 columns">Is Dani&euml;lle</div>
-          <div class="large-9 small-6 columns">${Form.CheckboxField("item.IsDanielle")}</div>
-        </div>
-        <div class="row">
           <div class="large-3 small-6 columns">Kan uren boeken</div>
           <div class="large-9 small-6 columns">${Form.CheckboxField("item.CanBookHours")}</div>
         </div>
