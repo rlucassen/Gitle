@@ -88,15 +88,19 @@
         }
 
         [Admin]
-        public void ExportWeeks()
+        public void ExportWeeks(string query)
         {
+            var parser = new BookingQueryParser(session, $"{query} take:all", CurrentUser);
+
+            var year = parser.StartDate.Year;
+
             var employees = session.Query<User>().Where(x => x.IsActive && x.JamesEmployeeId > 0).ToList();
             var exportweeks = new List<ExportWeeksGitleVsJames>();
             var sqlConnectionHelper = new SqlConnectionHelper();
 
             foreach (var employee in employees)
             {
-                var bookings = session.Query<Booking>().Where(x => x.IsActive && x.Date.Year == DateTime.Today.Year && x.User.Id == employee.Id).ToList();
+                var bookings = session.Query<Booking>().Where(x => x.IsActive && x.Date.Year == year && x.User.Id == employee.Id).ToList();
                 var exportWeek = new ExportWeeksGitleVsJames {JamesEmployeeId = employee.JamesEmployeeId, NameOfEmployee = employee.FullName };
 
                 for (int i = 0; i < 53; i++)
@@ -110,12 +114,12 @@
                                                                                                                                                     "WHERE r.RegistratieType IN (0,1,11) " +
                                                                                                                                                     "AND w.Medewerker = " + employee.JamesEmployeeId + 
                                                                                                                                                     "AND w.WeekNr = " + (i+1) +
-                                                                                                                                                    "AND w.Jaar = " + DateTime.Today.Year + "),0) " +
+                                                                                                                                                    "AND w.Jaar = " + year + "),0) " +
                                                                                     "FROM Werkdag wd " +
                                                                                     "JOIN [Week] w on w.Id = wd.[Week] " +
                                                                                     "JOIN [Medewerker] m on m.Id = w.Medewerker " +
                                                                                     "WHERE w.Medewerker = " + employee.JamesEmployeeId +
-                                                                                    "AND w.Jaar = " + DateTime.Today.Year +
+                                                                                    "AND w.Jaar = " + year +
                                                                                     "AND w.WeekNr = " + (i+1) +
                                                                                     "GROUP BY w.WeekNr, w.Jaar, w.Medewerker"))
                     {

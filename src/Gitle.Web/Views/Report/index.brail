@@ -177,7 +177,7 @@
           <% end %>
           <div class="large-0 small-6 columns right">
             <button class="button no-margin tiny" formaction="exportcsv">Exporteren</button>
-            <a href="/report/exportweeks" class="button tiny">Gitle vs James (exporteren)</a>
+            <button class="button tiny" formaction="exportweeks">Gitle vs James</button>
           </div>
           <div class="large-0 small-6 columns right">
             <button href="#" data-dropdown="groupbys" aria-controls="groupbys" aria-expanded="false" class="button tiny dropdown no-margin <% if result.GroupedBy: %>warning<% end %>">Groeperen:</button>
