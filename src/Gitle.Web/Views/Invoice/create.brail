@@ -96,7 +96,10 @@
                 <% end %>
               </span>
             </div>
-            <div class="small-9 columns">
+            <div class="small-1 columns">
+              <a href="#" class="prefix secondary" data-quickview="/project/${project.Slug}/issue/${line.Issue.Number}/quickview"><i class="fa fa-info blue"></i></a>
+            </div>
+            <div class="small-8 columns">
               <input type="text" name="lines[${count}].Description" id="lines_${count}_Description" value="${line.Description}" />
             </div>
             <div class="small-1 columns">

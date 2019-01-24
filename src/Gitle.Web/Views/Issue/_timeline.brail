@@ -1,6 +1,6 @@
 ﻿<div id="timeline">
   <h2>Tijdlijn</h2>
-  <% for action in item.ActionsReverse: %>
+  <% for action in item.Actions: %>
   <div id="${action.Id}" class="issueaction ${action.GetType().Name.Replace("Proxy", "")}<% if action.TouchedBefore(CurrentUser, datetime): %> touched<% end %>">
   <% if action.GetType().Name.Replace("Proxy", "") == "ChangeState": %>
   <div class="row">
