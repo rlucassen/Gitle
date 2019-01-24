@@ -534,6 +534,7 @@
     <None Include="Views\Issue\readjson.brail" />
     <None Include="Views\Issue\_dummyissue.brail" />
     <None Include="Views\Issue\_issuetable.brail" />
+    <Content Include="Views\Issue\_action.brail" />
     <None Include="Views\Issue\_timeline.brail" />
     <None Include="Views\Mail\comment.brail" />
     <None Include="Views\Mail\issue-action.brail" />

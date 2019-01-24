@@ -5,4 +5,4 @@
 <%  end %>
 <% end %>
 <div class="marked">${item.Body}</div>
-<% OutputSubView("_timeline") %>
+<% OutputSubView("_timeline",  {@desc: true}) %>

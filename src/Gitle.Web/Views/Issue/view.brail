@@ -114,14 +114,14 @@
           <% end %>
           <div class="">${item.BodyHtml}</div>
         </div>
-        <% OutputSubView("_timeline") %>
+        <% OutputSubView("_timeline", {@desc: false}) %>
         <% if not item.IsArchived and not project.Closed: %>
         <div class="panel">
           <small class="right capitalize">${Helpers.DateTimeHelper.Readable(DateTime.Now)}</small>
           <h3>Nieuwe reactie</h3>
           <form action="addcomment" method="POST" autocomplete="off">
             <textarea name="body" class="uploadarea" data-suggestions-project="${item.Project.Id}"></textarea>
-            <input type="submit" value="Plaats reactie" class="button no-margin"/>
+            <input type="submit" value="Plaats reactie" class="button no-margin" />
           </form>
         </div>
         <% end %>

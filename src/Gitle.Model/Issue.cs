@@ -261,6 +261,11 @@
             return TotalHours > 0 ? ((decimal)TotalHours * hourPrice).ToString("C") : "n.n.b.";
         }
 
+        public virtual IList<IIssueAction> GetActions(bool descending)
+        {
+            return descending ? Actions.ToList() : Actions.Reverse().ToList();
+        }
+
         public virtual bool CheckLabel(string label)
         {
             return Labels.Select(l => l.Name).Contains(label);
