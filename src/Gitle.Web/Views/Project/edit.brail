@@ -5,7 +5,7 @@
     <% else: %>
     <h1>Nieuw project</h1>
     <% end %>
-    <form action="/project/<% if item.Slug: %>${?item.Slug}<% else: %>0<% end %>/save" method="POST" data-abide>
+    <form action="/project/<% if item.Slug: %>${?item.Slug}<% else: %>0<% end %>/save" method="POST" autocomplete="off" data-abide>
       ${Form.HiddenField("item.Id")}
       ${Form.HiddenField("item.FreckleName")}
       ${Form.HiddenField("item.Slug")}

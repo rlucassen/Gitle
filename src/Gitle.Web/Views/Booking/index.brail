@@ -3,7 +3,7 @@
     <h1>Uren schrijven</h1>
     <div class="toggle-percentage" style="height:1px;"></div>
     <div class="panel">
-      <form id="booking" action="save" method="POST" data-abide>
+      <form id="booking" action="save" method="POST" autocomplete="off" data-abide>
         <div class="row collapse">
           <% for i in range(0, -11): %>
           <div class="small-2 large-1 columns">
@@ -46,7 +46,7 @@
           <div class="large-5 columns">
             <div class="row collapse">
               <div class="large-10 columns">
-                <input type="text" class="no-margin booking_Comment" name="booking.Comment" placeholder="Opmerking" pattern="max500" />
+                <input type="text" class="no-margin booking_Comment" name="booking.Comment" placeholder="Opmerking" pattern="max500" autocomplete="on" />
                 <small class="error">Opmerking! (max 500 tekens)</small>
               </div>
               <div class="large-2 columns">
@@ -67,7 +67,7 @@
     </div>
   </div>
 </div>
-<form action="/booking/movebookings" method="POST">
+<form action="/booking/movebookings" method="POST" autocomplete="off">
   <div class="row">
     <div class="large-12 columns">
       <div class="row">

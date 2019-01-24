@@ -5,7 +5,7 @@
     <a class="button" href="/project/${project.Slug}/issue/exportcsv">Exporteren naar een CSV bestand</a><br />
     <a class="button" href="/project/${project.Slug}/issue/exportjson">Exporteren naar een JSON bestand</a><br />
     <h3>JSON Importeren</h3>
-    <form action="/project/${project.Slug}/issue/readjson" enctype="multipart/form-data" method="POST">
+    <form action="/project/${project.Slug}/issue/readjson" enctype="multipart/form-data" method="POST" autocomplete="off">
       <input type="file" name="import"/>
       <input type="submit" value="Upload" class="button small"/>
     </form>

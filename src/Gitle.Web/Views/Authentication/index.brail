@@ -11,7 +11,7 @@
         ${error}
     </div>
     <% end %>
-    <form method="POST" action="/signin/index">
+    <form method="POST" autocomplete="off" action="/signin/index">
       <input type="hidden" name="returnUrl" value="${returnUrl}"/>
       <div class="row">
         <div class="large-3 columns">

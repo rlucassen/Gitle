@@ -1,7 +1,7 @@
 ﻿<div class="row">
   <div class="large-12 columns">
     <h1>Gegevens bewerken</h1>
-    <form action="/user/saveprofile" method="POST">
+    <form action="/user/saveprofile" method="POST" autocomplete="off">
       ${Form.HiddenField("item.Id")}
       <div class="row">
         <div class="large-3 columns">Volledige naam</div>

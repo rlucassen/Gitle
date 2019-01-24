@@ -1,5 +1,5 @@
 ﻿<h1>Overzicht bijlagen</h1>
-<form action="/invoice/export" method="POST">
+<form action="/invoice/export" method="POST" autocomplete="off">
   <div class="row">
     <div class="large-12 columns">
       <input type="submit" class="button" value="Export" />
@@ -8,7 +8,7 @@
 </form>
 
 <h1>Nieuwe bijlage maken</h1>
-<form action="/invoice/create" method="POST">
+<form action="/invoice/create" method="POST" autocomplete="off">
   <div class="row booking-row-new">
     <div class="large-12 columns">
       <input type="hidden" name="projectId" class="booking_Project_Id" />

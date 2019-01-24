@@ -5,7 +5,7 @@
     <% else: %>
     <h1>Nieuwe gebruiker</h1>
     <% end %>
-    <form action="/user/${?item.Id}/save" method="POST" data-abide>
+    <form action="/user/${?item.Id}/save" method="POST" autocomplete="off" data-abide>
       ${Form.HiddenField("item.Id")}
       <div class="row">
         <div class="large-3 columns">Naam</div>

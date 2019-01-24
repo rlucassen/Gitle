@@ -5,7 +5,7 @@
     <% else: %>
     <h1>Nieuwe applicatie</h1>
     <% end %>
-    <form action="/application/<% if item.Slug: %>${item.Slug}<% else: %>0<% end %>/save" method="POST" data-abide>
+    <form action="/application/<% if item.Slug: %>${item.Slug}<% else: %>0<% end %>/save" method="POST" autocomplete="off" data-abide>
       ${Form.HiddenField("?item.Id")}
       ${Form.HiddenField("item.Slug")}
       <div class="row">
