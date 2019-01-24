@@ -17,7 +17,7 @@
         <%  if CurrentUser.IsDanielle: %>
         <div class="row collapse">
           <div class="large-2 end columns">
-            ${Form.Select("adminId", admins, {"value": "Id", "text": "FullName", "firstoption": "Kies een gebruiker"})}
+            ${Form.Select("adminId", urenboekers, {"value": "Id", "text": "FullName", "firstoption": "Kies een gebruiker"})}
           </div>
         </div>
         <% end %>

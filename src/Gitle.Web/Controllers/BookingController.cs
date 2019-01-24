@@ -37,7 +37,7 @@ namespace Gitle.Web.Controllers
             PropertyBag.Add("billableAmount", bookings.Count > 0 ? bookings.Sum(x => x.Value.Where(y => !y.Unbillable).Sum(y => (decimal) y.Hours * y.Project.HourPrice)) : 0);
             PropertyBag.Add("today", date.ToString("dd-MM-yyyy"));
             PropertyBag.Add("week", date.WeekNr());
-            PropertyBag.Add("admins", session.Query<User>().Where(x => x.IsActive && x.IsAdmin));
+            PropertyBag.Add("urenboekers", session.Query<User>().Where(x => x.IsActive && x.CanBookHours));
         }
 
         [BookHours]
