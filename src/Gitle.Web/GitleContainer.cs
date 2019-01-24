@@ -13,6 +13,8 @@
     using Castle.Windsor.Installer;
     using Clients.GitHub;
     using Clients.GitHub.Interfaces;
+    using Model.Interfaces.Service;
+    using Service;
 
     #endregion
 
@@ -43,6 +45,14 @@
             public void Install(IWindsorContainer container, IConfigurationStore store)
             {
                 container.AddFacility<LoggingFacility>(f => f.UseLog4Net());
+            }
+        }
+
+        public class SettingInstaller : IWindsorInstaller
+        {
+            public void Install(IWindsorContainer container, IConfigurationStore store)
+            {
+                container.Register(Component.For<ISettingService>().ImplementedBy(typeof(SettingService)).LifestyleSingleton());
             }
         }
 

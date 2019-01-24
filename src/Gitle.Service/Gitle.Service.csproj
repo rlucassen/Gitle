@@ -107,6 +107,7 @@
     <Compile Include="PdfExportService.cs" />
     <Compile Include="ProjectNumberService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SettingService.cs" />
     <Compile Include="TemplateParserService.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -16,6 +16,7 @@
     using Model;
     using Model.Enum;
     using Model.Helpers;
+    using Model.Interfaces.Service;
     using NHibernate;
     using NHibernate.Linq;
     using Newtonsoft.Json;
@@ -25,11 +26,13 @@
 
     public class IssueController : SecureController
     {
+        protected ISettingService SettingService { get; }
         private readonly ISessionFactory sessionFactory;
         private readonly IEntryClient entryClient;
 
-        public IssueController(ISessionFactory sessionFactory, IEntryClient entryClient) : base(sessionFactory)
+        public IssueController(ISessionFactory sessionFactory, IEntryClient entryClient, ISettingService settingService) : base(sessionFactory)
         {
+            SettingService = settingService;
             this.sessionFactory = sessionFactory;
             this.entryClient = entryClient;
         }
@@ -76,12 +79,15 @@
                 if (routeMatch.Name == "issues") PropertyBag.Add("referer", referer.PathAndQuery);
             }
 
+            var setting = SettingService.Load();
+            PropertyBag.Add("setting", setting);
+
             var project = session.Slug<Project>(projectSlug);
             PropertyBag.Add("project", project);
             var item = session.Query<Issue>().Single(i => i.Number == issueId && i.Project == project);
             PropertyBag.Add("item", item);
             PropertyBag.Add("comments", item.Comments);
-            PropertyBag.Add("days", DayHelper.GetPastDaysList());
+            PropertyBag.Add("days", DayHelper.GetPastDaysList(setting));
             PropertyBag.Add("datetime", DateTime.Now);
 
             item.Touch(CurrentUser);

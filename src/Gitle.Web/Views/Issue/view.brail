@@ -58,13 +58,13 @@
           <li><a href="#">Allen toegevoegd</a></li>
           <% end %>
         </ul>
-        <hr/>
+        <hr />
         <% end %>
         <% if not item.IsArchived and CurrentUser.IsAdmin and not project.Closed: %>
         <a href="pickup" class="button success large-12 no-margin">Taak oppakken</a>
-        <hr/>
+        <hr />
         <% end %>
-        <% if CurrentUser.IsAdmin and not project.Closed: %>
+        <% if CurrentUser.CanBookHours and not project.Closed and days.Count > 0: %>
         <form action="booktime" method="POST">
           <h2>Uren boeken</h2>
           <div class="row">
@@ -93,8 +93,10 @@
             </div>
           </div>
         </form>
-        <hr />
+        <% else: %>
+        Boekingperiode tot en met ${setting.ClosedForBookingsBefore.ToShortDateString()} is afgesloten.
         <% end %>
+        <hr />
         <% end %>
         <% if item.State.ToString() == "Open": %>
         <a href="close" class="button alert large-12">Sluit taak</a>

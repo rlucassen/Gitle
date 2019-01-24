@@ -11,12 +11,16 @@
     using NHibernate;
     using System.Linq;
     using Gitle.Model.James;
+    using Model.Interfaces.Service;
     using NHibernate.Linq;
 
     public class ReportController : SecureController
     {
-        public ReportController(ISessionFactory sessionFactory) : base(sessionFactory)
+        protected ISettingService SettingService { get; }
+
+        public ReportController(ISessionFactory sessionFactory, ISettingService settingService) : base(sessionFactory)
         {
+            SettingService = settingService;
         }
 
         [Admin]
@@ -63,6 +67,33 @@
             }
 
             PropertyBag.Add("presetDates", presetDates);
+
+            var setting = SettingService.Load();
+            PropertyBag.Add("setting", setting);
+        }
+
+        [Danielle]
+        public void Block(string query)
+        {
+            var parser = new BookingQueryParser(session, query, CurrentUser);
+
+            var setting = SettingService.Load();
+            setting.ClosedForBookingsBefore = parser.EndDate.Date;
+
+            session.SaveOrUpdate(setting);
+            session.Flush();
+
+            RedirectToReferrer();
+        }
+
+        [Danielle]
+        public void Unblock()
+        {
+            var setting = SettingService.Load();
+            setting.ClosedForBookingsBefore = null;
+            session.SaveOrUpdate(setting);
+            session.Flush();
+            RedirectToReferrer();
         }
 
         [Admin]

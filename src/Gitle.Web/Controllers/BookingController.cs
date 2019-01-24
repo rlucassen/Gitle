@@ -11,11 +11,16 @@ namespace Gitle.Web.Controllers
     using Castle.MonoRail.Framework;
     using Helpers;
     using Model.Helpers;
+    using Model.Interfaces.Service;
+    using Service;
 
     public class BookingController : SecureController
     {
-        public BookingController(ISessionFactory sessionFactory) : base(sessionFactory)
+        protected ISettingService SettingService { get; }
+
+        public BookingController(ISessionFactory sessionFactory, ISettingService settingService) : base(sessionFactory)
         {
+            SettingService = settingService;
         }
 
         [BookHours]
@@ -36,8 +41,12 @@ namespace Gitle.Web.Controllers
             PropertyBag.Add("billablePercentage", bookings.Count > 0 ? Math.Round(bookings.Sum(x => x.Value.Where(y => !y.Unbillable).Sum(y => y.Minutes)) / bookings.Sum(x => x.Value.Sum(y => y.Minutes)), 4) * 100d : 0);
             PropertyBag.Add("billableAmount", bookings.Count > 0 ? bookings.Sum(x => x.Value.Where(y => !y.Unbillable).Sum(y => (decimal) y.Hours * y.Project.HourPrice)) : 0);
             PropertyBag.Add("today", date.ToString("dd-MM-yyyy"));
+            PropertyBag.Add("todayDate", date);
             PropertyBag.Add("week", date.WeekNr());
             PropertyBag.Add("urenboekers", session.Query<User>().Where(x => x.IsActive && x.CanBookHours));
+
+            var setting = SettingService.Load();
+            PropertyBag.Add("setting", setting);
         }
 
         [BookHours]
@@ -131,7 +140,12 @@ namespace Gitle.Web.Controllers
                 foreach (var bookingId in selectedBookings)
                 {
                     var booking = session.Get<Booking>(Convert.ToInt64(bookingId));
+
+                    ThrowExceptionIfBookingModificationNotAllowed(booking);
+
                     booking.Date = moveDate;
+
+                    ThrowExceptionIfBookingModificationNotAllowed(booking);
 
                     session.SaveOrUpdate(booking);
                 }
@@ -148,12 +162,13 @@ namespace Gitle.Web.Controllers
         {
             var booking = BindObject<Booking>("booking");
 
+            ThrowExceptionIfBookingModificationNotAllowed(booking);
+
             if (adminId > 0)
             {
                 if (CurrentUser.IsDanielle)
                 {
-                    booking.User = session.Query<User>()
-                        .FirstOrDefault(x => x.IsActive && x.Id == adminId && x.IsAdmin);
+                    booking.User = session.Query<User>().FirstOrDefault(x => x.IsActive && x.Id == adminId && x.CanBookHours);
                 }
                 else
                 {
@@ -192,8 +207,14 @@ namespace Gitle.Web.Controllers
 
             if (booking != null)
             {
+                ThrowExceptionIfBookingModificationNotAllowed(booking);
+
                 BindObjectInstance(booking, "booking");
+
+                ThrowExceptionIfBookingModificationNotAllowed(booking);
             }
+
+
             if (issueId == 0)
             {
                 booking.Issue = null;
@@ -223,6 +244,8 @@ namespace Gitle.Web.Controllers
             var booking = session.Query<Booking>().FirstOrDefault(x => x.IsActive && x.Id == id && !x.InvoiceLines.Any());
             if (booking != null)
             {
+                ThrowExceptionIfBookingModificationNotAllowed(booking);
+
                 booking.Deactivate();
 
                 using (var transaction = session.BeginTransaction())
@@ -236,6 +259,7 @@ namespace Gitle.Web.Controllers
         [BookHours]
         public void Edit(int id)
         {
+
             var booking = session.Query<Booking>().FirstOrDefault(x => x.IsActive && x.Id == id); //TODO: admin moet ook kunnen ophalen = andere user
             if (booking == null)
             {
@@ -243,6 +267,8 @@ namespace Gitle.Web.Controllers
             }
             else
             {
+                ThrowExceptionIfBookingModificationNotAllowed(booking);
+
                 var suggestion = new Suggestion(booking.Project.Name, booking.Project.Id.ToString());
                 PropertyBag.Add("booking", booking);
                 PropertyBag.Add("suggestion", suggestion);
@@ -251,6 +277,13 @@ namespace Gitle.Web.Controllers
             }
         }
 
+        private void ThrowExceptionIfBookingModificationNotAllowed(Booking booking)
+        {
+            var setting = SettingService.Load();
+            var closedForBookingsBefore = setting.ClosedForBookingsBefore.GetValueOrDefault();
+
+            if (booking.Date <= closedForBookingsBefore) throw new Exception($"Boekingperiode tot en met {closedForBookingsBefore.ToShortDateString()} is afgesloten.");
+        }
     }
 
     public class BookingDay

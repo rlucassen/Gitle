@@ -92,12 +92,14 @@
     <Compile Include="Interfaces\Model\ISlugger.cs" />
     <Compile Include="Interfaces\Service\IBookingQueryParserService.cs" />
     <Compile Include="Interfaces\Service\IProjectNumberService.cs" />
+    <Compile Include="Interfaces\Service\ISettingService.cs" />
     <Compile Include="James\Employee.cs" />
     <Compile Include="James\ExportWeeksGitleVsJames.cs" />
     <Compile Include="Mapping\PlanningCommentMap.cs" />
     <Compile Include="Mapping\PlanningItemMap.cs" />
     <Compile Include="Mapping\PlanningResourceMap.cs" />
     <Compile Include="Mapping\ReportPresetMap.cs" />
+    <Compile Include="Mapping\SettingMap.cs" />
     <Compile Include="PlanningComment.cs" />
     <Compile Include="PlanningItem.cs" />
     <Compile Include="PlanningResource.cs" />
@@ -149,6 +151,7 @@
     <Compile Include="Pickup.cs" />
     <Compile Include="Project.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Setting.cs" />
     <Compile Include="Touch.cs" />
     <Compile Include="Touchable.cs" />
     <Compile Include="User.cs" />

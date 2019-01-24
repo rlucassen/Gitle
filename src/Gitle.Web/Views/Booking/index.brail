@@ -14,7 +14,8 @@
             <input type="text" name="booking.Date" id="booking_Date" class="date novalidate" placeholder="Eerder" value="${today}" />
           </div>
         </div>
-        <%  if CurrentUser.IsDanielle: %>
+        <% if setting.ClosedForBookingsBefore is null or todayDate > setting.ClosedForBookingsBefore: %>
+        <% if CurrentUser.IsDanielle: %>
         <div class="row collapse">
           <div class="large-2 end columns">
             ${Form.Select("adminId", urenboekers, {"value": "Id", "text": "FullName", "firstoption": "Kies een gebruiker"})}
@@ -58,6 +59,9 @@
             <input type="submit" class="button postfix no-margin success" value="Boeken" />
           </div>
         </div>
+        <% else: %>
+        Boekingperiode tot en met ${setting.ClosedForBookingsBefore.ToShortDateString()} is afgesloten.
+        <% end %>
       </form>
       <div id="booking-preview-container"></div>
     </div>
@@ -136,7 +140,7 @@
               <% end %>
               <% end %>
             </div>
-            <% if not booking.IsDefinitive: %>
+            <% if not booking.IsDefinitive and (setting.ClosedForBookingsBefore is null or booking.Date > setting.ClosedForBookingsBefore) : %>
             <div class="large-2 columns no-padding booking-buttons text-right">
               <a href="#" class="button radius supertiny no-margin booking-edit">bewerk <i class="fa fa-pencil-square-o"></i></a>
               <a href="/booking/${booking.Id}/delete" class="button radius alert supertiny no-margin" data-confirm="Weet je het zeker?">verwijder <i class="fa fa-times"></i></a>
