@@ -131,7 +131,7 @@
 
         public static int WeekNr(this DateTime dateTime)
         {
-            if (DateTimeFormatInfo.CurrentInfo != null) return DateTimeFormatInfo.CurrentInfo.Calendar.GetWeekOfYear(dateTime, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
+            if (DateTimeFormatInfo.CurrentInfo != null) return DateTimeFormatInfo.CurrentInfo.Calendar.GetWeekOfYear(dateTime.StartOfWeek().AddDays(3), CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
             return 0;
         }
 
