@@ -20,6 +20,7 @@
             Bookings = new List<Booking>();
             InvoiceLines = new List<InvoiceLine>();
             EstimatePublic = true;
+            Administrative = false;
         }
 
         public virtual int Number { get; set; }
@@ -28,6 +29,7 @@
         public virtual double Hours { get; set; }
         public virtual int Devvers { get; set; }
         public virtual bool EstimatePublic { get; set; }
+        public virtual bool Administrative { get; set; }
 
         public virtual bool Prioritized { get; set; }
         public virtual int PrioOrder { get; set; }
@@ -58,6 +60,19 @@
         public virtual bool IsOpen
         {
             get { return State == IssueState.Open; }
+        }
+
+        public virtual bool IsAdministrative
+        {
+            get
+            {
+                if (this.Administrative)
+                {
+                    return true;
+                }
+
+                return false;
+            }
         }
 
         public virtual bool HasBeenOpenSince(DateTime dateTime)

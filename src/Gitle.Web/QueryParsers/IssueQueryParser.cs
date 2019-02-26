@@ -44,7 +44,8 @@
                                 {"Number", "Nummer"},
                                 {"Name", "Naam"},
                                 {"TotalHours", "Inspanning"},
-                                {"Comments.Count", "Aantal reacties"}
+                                {"Comments.Count", "Aantal reacties"},
+                                {"IsAdministrative", "Administratief"}
                             };
 
 

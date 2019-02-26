@@ -26,7 +26,7 @@
               <span class="prefix" title="Aantal developers"><i class="fa fa-group"></i></span>
             </div>
             <div class="small-9 large-10 columns">
-              <input type="text" name="item.Devvers" value="${?item.Devvers}"/>
+              <input type="text" name="item.Devvers" value="${?item.Devvers}" />
             </div>
           </div>
         </div>
@@ -36,7 +36,7 @@
               <span class="prefix" title="Aantal uren"><i class="fa fa-clock-o"></i></span>
             </div>
             <div class="small-9 large-10 columns">
-              <input type="text" name="item.Hours" value="${?item.Hours}" class="time-parser"/>
+              <input type="text" name="item.Hours" value="${?item.Hours}" class="time-parser" />
             </div>
           </div>
         </div>
@@ -49,6 +49,21 @@
             </div>
             <div class="small-9 large-10 columns">
               <label for="item_EstimatePublic" class="postfix text-left">Schatting publiek</label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="small-6 medium-3 columns">Filterlabel</div>
+        <div class="large-3 columns end">
+          <div class="row collapse">
+            <div class="small-3 large-2 columns">
+              <span class="prefix">
+                ${Form.CheckboxField("item.Administrative")}
+              </span>
+            </div>
+            <div class="small-9 large-10 columns">
+              <label for="item_Administrative" class="postfix text-left">Administratief</label>
             </div>
           </div>
         </div>
@@ -72,9 +87,9 @@
       </div>
       <div class="row">
         <div class="large-12 columns">
-          <input type="submit" class="button" value="Opslaan"/>
+          <input type="submit" class="button" value="Opslaan" />
           <% if CurrentUser.IsAdmin: %>
-          <input type="submit" name="andNew" class="button" value="Opslaan en nieuw"/>
+          <input type="submit" name="andNew" class="button" value="Opslaan en nieuw" />
           <% end %>
         </div>
       </div>
