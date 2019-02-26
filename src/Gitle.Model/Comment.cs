@@ -15,6 +15,9 @@
 
         public virtual DateTime CreatedAt { get; set; }
 
+        public virtual bool IsInternal { get; set; }
+
+
         public virtual User User { get; set; }
         public virtual Issue Issue { get; set; }
 

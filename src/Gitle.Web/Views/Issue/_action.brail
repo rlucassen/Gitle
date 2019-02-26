@@ -33,12 +33,15 @@
       </div>
     </div>
     <% else: %>
-  <div class="panel ${action.GetType().Name}">
-    <small class="right">${Helpers.DateTimeHelper.Readable(action.CreatedAt)}</small>
-    <% if action.User != null: %>
-    <strong>${action.User.FullName} <% if action.User.IsAdmin: %> <span class="label no-margin radius">Developer</span> <% end %></strong>
-    <% end %>
-    <div class="">${action.HtmlText}</div>
-  </div>
+    <div class="panel ${action.GetType().Name} <% if action.IsInternal :%> is-internal <% end %>">
+      <small class="right">${Helpers.DateTimeHelper.Readable(action.CreatedAt)}</small>
+      <% if action.User != null: %>
+      <strong>${action.User.FullName} <% if action.User.IsAdmin: %> <span class="label no-margin radius">Developer</span> <% end %></strong>
+      <% end %>
+      <div class="">${action.HtmlText}</div>
+      <% if action.IsInternal :%>
+      <div class="text-align-right"><i class="fa fa-eye-slash" title="Alleen intern zichtbaar."></i></div>
+      <% end %>
+    </div>
   <% end %>
   </div>

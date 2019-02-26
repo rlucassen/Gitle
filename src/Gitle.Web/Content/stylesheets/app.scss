@@ -483,6 +483,7 @@ a.quickview-delay {
 
   .issueaction {
     margin: 1em 0 0;
+
     &.highlight {
       animation-name: highlight;
       animation-duration: 5s;
@@ -491,6 +492,16 @@ a.quickview-delay {
 
   .panel {
     padding: 1.25rem;
+
+    &.is-internal {
+      background-color: #edfaff;
+    }
+
+    .text-align-right {
+      text-align: right;
+      font-size: 20px;
+      color: #666;
+    }
   }
 
   .ChangeState i, .Change i, .Pickup i {
