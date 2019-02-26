@@ -250,7 +250,6 @@
 </div>
 <% end %>
 
-
 <div id="newFilterPreset" class="reveal-modal small" data-reveal>
   <div class="row">
     <div class="small-12 columns">
