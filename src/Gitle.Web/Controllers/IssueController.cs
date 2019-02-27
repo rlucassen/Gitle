@@ -245,7 +245,7 @@
         }
 
         [MustHaveProject]
-        public void AddComment(string projectSlug, int issueId, string body)
+        public void AddComment(string projectSlug, int issueId, string body, bool isInternal)
         {
             RedirectToReferrer();
             var project = session.Slug<Project>(projectSlug);
@@ -260,7 +260,8 @@
                                   Text = body,
                                   CreatedAt = DateTime.Now,
                                   Issue = issue,
-                                  User = CurrentUser
+                                  User = CurrentUser,
+                                  IsInternal = isInternal
                               };
             using (var transaction = session.BeginTransaction())
             {
