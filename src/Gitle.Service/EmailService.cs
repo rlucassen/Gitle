@@ -60,6 +60,21 @@
                 users.Add(servicedesk);
             }
 
+            if (action is Comment)
+            {
+                if ((action as Comment).IsInternal)
+                {
+                    var userlist = users.ToList();
+                    foreach (var user in userlist)
+                    {
+                        if (!user.CanBookHours && !user.IsAdmin)
+                        {
+                            users.Remove(user);
+                        }
+                    }
+                }
+            }
+
             foreach (var user in users)
             {
                 if (!string.IsNullOrEmpty(user.EmailAddress))

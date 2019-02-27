@@ -270,6 +270,23 @@
             }
         }
 
+        public void ChangeCommentVisibility(int actionId)
+        {
+            var id = (long)actionId;
+            var action = session.Get<Comment>(id);
+            if (action == null || action.IsInternal != true)
+                action.IsInternal = true;
+            else
+                action.IsInternal = false;
+
+            using (var transaction = session.BeginTransaction())
+            {
+                session.SaveOrUpdate(action);
+                transaction.Commit();
+            }
+            RedirectToReferrer();
+        }
+
         [MustHaveProject]
         public void AddLabel(string projectSlug, int issueId, int param)
         {
