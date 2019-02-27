@@ -250,7 +250,7 @@
                 bookings = bookings.Where(x => x.Comment.Contains(searchQuery));
             }
 
-            bookings = bookings.OrderByDescending(x => x.Date);
+            bookings = bookings.OrderByDescending(x => x.Date).ToList().AsQueryable();
 
             TotalResultCount = bookings.Count();
 
