@@ -120,7 +120,7 @@
           <small class="right capitalize">${Helpers.DateTimeHelper.Readable(DateTime.Now)}</small>
           <h3>Nieuwe reactie</h3>
           <form action="addcomment" method="POST" autocomplete="off">
-            <% if CurrentUser.CanBookHours or CurrentUser.IsAdmin : %><div class="right"><input type="checkbox" name="isInternal" /> Alleen zichtbaar voor intern</div><% end %>
+            <% if CurrentUser.CanBookHours or CurrentUser.IsAdmin : %><div class="right"><input type="checkbox" name="isInternal" checked /> Alleen zichtbaar voor intern</div><% end %>
             <textarea name="body" class="uploadarea" data-suggestions-project="${item.Project.Id}"></textarea>
             <input type="submit" value="Plaats reactie" class="button no-margin" />
           </form>
