@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Configuration;
     using System.IO;
+    using System.Linq;
     using Boo.Lang;
     using Castle.Windsor;
     using Model;
@@ -41,6 +42,22 @@
         {
             if (entity is Document)
                 deletedObjects.Add(entity);
+        }
+
+        public override bool OnFlushDirty(object entity, object id, object[] currentState, object[] previousState, string[] propertyNames, IType[] types)
+        {
+            if (entity is Comment)
+            {
+                var i = propertyNames.ToList().IndexOf("IsInternal");
+                var previousValue = previousState[i];
+                var currentValue = currentState[i];
+
+                if (currentValue.Equals(false))
+                {
+                savedObjects.Add(entity);
+                }
+            }
+            return base.OnFlushDirty(entity, id, currentState, previousState, propertyNames, types);
         }
 
         public override void PostFlush(ICollection entities)

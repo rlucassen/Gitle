@@ -33,15 +33,31 @@
       </div>
     </div>
     <% else: %>
+    <% if action.IsInternal and (not CurrentUser.CanBookHours and not CurrentUser.IsAdmin) :%>
+    <% else: %>
     <div class="panel ${action.GetType().Name} <% if action.IsInternal :%> is-internal <% end %>">
       <small class="right">${Helpers.DateTimeHelper.Readable(action.CreatedAt)}</small>
       <% if action.User != null: %>
       <strong>${action.User.FullName} <% if action.User.IsAdmin: %> <span class="label no-margin radius">Developer</span> <% end %></strong>
       <% end %>
       <div class="">${action.HtmlText}</div>
-      <% if action.IsInternal :%>
-      <div class="text-align-right"><i class="fa fa-eye-slash" title="Alleen intern zichtbaar."></i></div>
+      <% if CurrentUser.CanBookHours or CurrentUser.IsAdmin : %>
+      <div class="text-align-right">
+        <form action="changecommentvisibility" method="POST" autocomplete="off">
+          <input type="hidden" name="actionId" value="${action.Id}" />
+          <% if CurrentUser.IsAdmin or (CurrentUser.CanBookHours and action.User == CurrentUser) :%>
+          <a onclick="$(this).parent().submit();"><i class="fa <% if action.IsInternal :%> fa-eye-slash <% else :%>fa-eye<% end %>" title="Alleen intern zichtbaar."></i></a>
+          <% elif CurrentUser.CanBookHours :%>
+          <% if action.IsInternal :%>
+          <i class="fa fa-eye-slash" title="Alleen intern zichtbaar."></i>
+          <% else :%>
+          <i class="fa fa-eye" title="Zichtbaar voor iedereen."></i>
+          <% end %>
+          <% end %>
+        </form>
+      </div>
       <% end %>
     </div>
+  <% end %>
   <% end %>
   </div>
