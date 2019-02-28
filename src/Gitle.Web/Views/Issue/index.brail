@@ -73,6 +73,12 @@
               <li>
                 <a href="#" data-filter="state:Closed" class="button tiny no-margin secondary<% if result.States.Contains(Gitle.Model.Enum.IssueState.Closed): %> active<% end %>">Gesloten</a>
               </li>
+              <li>
+                <a href="#" data-filter="state:Done" class="button tiny no-margin secondary<% if result.States.Contains(Gitle.Model.Enum.IssueState.Done): %> active<% end %>">Uitgevoerd</a>
+              </li>
+              <li>
+                <a href="#" data-filter="state:Hold" class="button tiny no-margin secondary<% if result.States.Contains(Gitle.Model.Enum.IssueState.Hold): %> active<% end %>">On hold</a>
+              </li>
             </ul>
           </div>
           <div class="large-0 columns">

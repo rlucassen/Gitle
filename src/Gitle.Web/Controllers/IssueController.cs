@@ -13,6 +13,7 @@
     using Clients.Freckle.Models;
     using FluentNHibernate.Conventions.Inspections;
     using Helpers;
+    using Localization;
     using Model;
     using Model.Enum;
     using Model.Helpers;
@@ -84,10 +85,21 @@
 
             var project = session.Slug<Project>(projectSlug);
             PropertyBag.Add("project", project);
+
             var item = session.Query<Issue>().Single(i => i.Number == issueId && i.Project == project);
+            var statusString = string.Concat(Language.ResourceManager.GetString(item.State.ToString()).Select((currentChar, index) => index == 0 ? char.ToUpper(currentChar) : currentChar));
+            var statusInt = item.State;
+
+            var issueStates = EnumHelper.ToDictionary(typeof(IssueState));
+            var statusList = issueStates.Where(s =>
+                new[] {IssueState.Open, IssueState.Done, IssueState.Hold, IssueState.Closed}.Contains((IssueState)s.Key))
+                .ToList();
+
             PropertyBag.Add("item", item);
             PropertyBag.Add("comments", item.Comments);
             PropertyBag.Add("days", DayHelper.GetPastDaysList(setting));
+            PropertyBag.Add("statusList", statusList);
+            PropertyBag.Add("status", statusInt);
             PropertyBag.Add("datetime", DateTime.Now);
 
             item.Touch(CurrentUser);
@@ -293,7 +305,7 @@
         }
 
         [Admin]
-        public void BookTime(string projectSlug, int issueId, DateTime date, double minutes, bool close, string comment)
+        public void BookTime(string projectSlug, int issueId, DateTime date, double minutes, bool close, string comment, string status)
         {
             RedirectToReferrer();
             var project = session.Slug<Project>(projectSlug);
@@ -302,6 +314,23 @@
                 throw new ProjectClosedException(project);
             }
             var issue = session.Query<Issue>().Single(i => i.Number == issueId && i.Project == project);
+
+            switch (status)
+            {
+                case "2":
+                    issue.ChangeState(CurrentUser, IssueState.Done);
+                break;
+                case "3":
+                    issue.ChangeState(CurrentUser, IssueState.Hold);
+                break;
+                case "4":
+                    issue.ChangeState(CurrentUser, IssueState.Closed);
+                    break;
+                case "1":
+                    issue.ChangeState(CurrentUser, IssueState.Open);
+                    break;
+            }
+
             if (issue.IsArchived) return;
             var booking = new Booking {User = CurrentUser, Date = date, Minutes = minutes, Issue = issue, Project = project, Comment = comment};
 

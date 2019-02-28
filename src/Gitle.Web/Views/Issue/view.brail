@@ -85,7 +85,19 @@
             </div>
           </div>
           <div class="row">
-            <div class="large-12 columns">${Form.CheckboxField("close")} Sluit de taak</div>
+            <div class="small-12 columns">
+              <p class="labels no-margin">
+                Status Wijzigen
+                ${Form.Select("status", status, statusList, {"value": "Key", "text": "Value", "class": "no-margin"})}
+                <!--<a href="#" data-dropdown="addstatus" class="small button dropdown secondary radius"><strong>Standaard</strong></a>-->
+              </p>
+              <!--<div class="large-12 columns">{Form.CheckboxField("close")} Sluit de taak</div>-->
+              <!--<ul id="addstatus" data-dropdown-content class="f-dropdown">
+                <li><a href="/project/{project.Slug}/issue/{item.Number}">Standaard</a></li>
+                <li><a href="/project/{project.Slug}/issue/{item.Number}">Uitgevoerd</a></li>
+                <li><a href="/project/{project.Slug}/issue/{item.Number}">On hold</a></li>
+              </ul>-->
+            </div>
           </div>
           <div class="row">
             <div class="large-12 columns">

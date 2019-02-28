@@ -483,4 +483,19 @@
   <data name="Customer_HomeAccessibility_Label" xml:space="preserve">
     <value>De woning is toegankelijk voor</value>
   </data>
+  <data name="Archived" xml:space="preserve">
+    <value>Gearchiveerd</value>
+  </data>
+  <data name="Closed" xml:space="preserve">
+    <value>Gesloten</value>
+  </data>
+  <data name="Done" xml:space="preserve">
+    <value>Uitgevoerd</value>
+  </data>
+  <data name="Hold" xml:space="preserve">
+    <value>On hold</value>
+  </data>
+  <data name="Open" xml:space="preserve">
+    <value>Open</value>
+  </data>
 </root>
