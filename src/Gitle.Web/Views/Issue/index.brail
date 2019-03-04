@@ -215,7 +215,7 @@
               </div>
               <% if not project.Closed: %>
               <div class="large-0 small-12 columns">
-                <button href="#" data-dropdown="addLabels" aria-controls="addLabels" aria-expanded="false" class="button tiny dropdown success">Label toevoegen</button>
+                <button href="#" data-dropdown="addLabels" aria-controls="addLabels" aria-expanded="false" class="button tiny dropdown">Label toevoegen</button>
                 <ul id="addLabels" data-dropdown-content class="f-dropdown" aria-hidden="true" tabindex="-1">
                   <% for label in customerLabels: %>
                   <li>
@@ -228,9 +228,11 @@
               </div>
               <% end %>
               <div class="large-0 small-12 columns">
-                <a href="/project/${project.Slug}/changestate?state=2" data-group-action class="button tiny no-margin alert">Sluiten</a>
+                <a href="/project/${project.Slug}/changestate?state=4" data-group-action class="button tiny no-margin alert"><i class="fa fa-ban"></i> Sluiten</a>
+                <a href="/project/${project.Slug}/changestate?state=3" data-group-action class="button tiny no-margin on-hold"><i class="fa fa-hand-paper-o"></i> On hold</a>
                 <% if CurrentUser.IsAdmin: %>
-                <a href="/project/${project.Slug}/changestate?state=3" data-group-action class="button tiny no-margin alert">Archiveren</a>
+                <a href="/project/${project.Slug}/changestate?state=2" data-group-action class="button tiny no-margin success"><i class="fa fa-thumbs-o-up"></i> Uitgevoerd</a>
+                <a href="/project/${project.Slug}/changestate?state=5" data-group-action class="button tiny no-margin alert"><i class="fa fa-trash"></i> Archiveren</a>
                 <% end %>
               </div>
             </div>

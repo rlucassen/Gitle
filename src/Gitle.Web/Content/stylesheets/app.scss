@@ -84,7 +84,9 @@ ul.f-dropdown.wide {
 span {
   &.button.three-state-checker {
     font-size: 1.1em;
-    padding: 0.36rem 1.25rem;
+    height: 33px;
+    width: 52px;
+    padding: 0.5rem 1.25rem;
   }
 
   &.three-state-checker {
@@ -166,6 +168,13 @@ body.scroll .footer {
 
 .orange {
   color: orange;
+}
+
+.on-hold {
+  background-color: orange;
+  &:hover, &:focus {
+    background-color: darkorange;
+  }
 }
 
 .small-text {
@@ -780,6 +789,11 @@ table {
 .row.filters {
   margin: 0 -0.4375rem;
 
+  a, button {
+    margin-bottom: 10px !important;
+
+  }
+
   .button.active {
     background-color: #b9b9b9;
     color: #333;
@@ -1046,6 +1060,8 @@ table {
 }
 
 #group-actions {
+  margin-left: 5px;
+  margin-top: 10px;
   select {
     height: 2.0625rem;
     font-size: 0.775rem;
@@ -1434,13 +1450,14 @@ input[type=checkbox].inline {
   }
 
   .selected {
-    :hover{
+    :hover {
       background-color: #cbdce2;
     }
+
     background-color: #cbdce2;
   }
 
-  i:hover{
+  i:hover {
     background-color: transparent;
   }
 
