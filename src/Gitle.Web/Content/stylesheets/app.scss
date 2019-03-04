@@ -87,6 +87,7 @@ span {
     height: 33px;
     width: 52px;
     padding: 0.5rem 1.25rem;
+    margin-bottom: 10px;
   }
 
   &.three-state-checker {
@@ -788,6 +789,8 @@ table {
 
 .row.filters {
   margin: 0 -0.4375rem;
+  padding-top: 10px;
+  margin-bottom: 10px;
 
   a, button {
     margin-bottom: 10px !important;
