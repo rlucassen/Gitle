@@ -41,7 +41,21 @@
                 <% end %>
               </div>
               <div class="large-1 columns text-right comments">
-                <% if issue.Comments.Count > 0: %><i class="fa fa-comments-o"></i> ${issue.Comments.Count}<% end %>
+                <% if issue.Comments.Count > 0: %>
+                  <% if CurrentUser.IsAdmin or CurrentUser.CanBookHours :%>
+                    <i class="fa fa-comments-o"></i>
+                    ${issue.Comments.Count}
+                  <% else :%>
+                    <% count = 0 %>
+                    <% for comment in issue.Comments :%>
+                      <% if not comment.IsInternal :%>
+                      <% count++ %>
+                      <% end %>
+                    <% end %>
+                    <i class="fa fa-comments-o"></i>
+                    ${count}
+                  <% end %>
+                <% end %>
               </div>
             </div>
             <div class="row detailsrow">
