@@ -1570,4 +1570,8 @@ select.hide-disabled {
 
 .administrative {
   background-color: #ffe6fd;
+
+  &:hover {
+    background-color: #ffd0fd;
+  }
 }
