@@ -233,6 +233,20 @@ table.tickets-table {
       padding-left: 0.5em;
     }
 
+    .done {
+      color: #dedede;
+      background-color: #f00;
+      text-align: left;
+      padding-left: 0.5em;
+    }
+
+    .hold {
+      color: #dedede;
+      background-color: #f0f;
+      text-align: left;
+      padding-left: 0.5em;
+    }
+
     .closed {
       color: #dedede;
       background-color: #4c8ca0;
