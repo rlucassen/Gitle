@@ -105,10 +105,8 @@
             </div>
           </div>
         </form>
-        <% else: %>
-        Boekingperiode tot en met ${?setting.ClosedForBookingsBefore.ToShortDateString()} is afgesloten.
+         <hr />
         <% end %>
-        <hr />
         <% end %>
         <% if item.State.ToString() == "Open": %>
         <a href="close" class="button alert large-12">Sluit taak</a>

@@ -349,7 +349,7 @@
             }
 
             if (issue.IsArchived) return;
-            var booking = new Booking {User = CurrentUser, Date = date, Minutes = minutes, Issue = issue, Project = project, Comment = comment};
+            var booking = new Booking {User = CurrentUser, Date = date, Minutes = minutes, Issue = issue, Project = project, Comment = comment, Unbillable = project.Unbillable};
 
             using (var tx = session.BeginTransaction())
             {
