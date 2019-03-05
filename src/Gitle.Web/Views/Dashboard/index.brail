@@ -58,7 +58,7 @@
             <div class="progress progress-tickets">
               <% if project.OpenIssues > 0: %><span class="meter open" style="width: ${project.OpenIssuesPercentage.ToString().Replace(",", "." )}%">${project.OpenIssues} open</span><% end %>
               <% if project.DoneIssues > 0: %><span class="meter done" style="width: ${project.DoneIssuesPercentage.ToString().Replace(",", "." )}%">${project.DoneIssues} afgerond</span><% end %>
-              <% if project.HoldIssues > 0: %><span class="meter hold" style="width: ${project.HoldIssuesPercentage.ToString().Replace(",", "." )}%">${project.HoldIssues} on hold</span><% end %>
+              <% if project.HoldIssues > 0: %><span class="meter hold" style="width: ${project.HoldIssuesPercentage.ToString().Replace(",", "." )}%">${project.HoldIssues} hold</span><% end %>
               <% if project.ClosedIssues > 0: %><span class="meter closed" style="width: ${project.ClosedIssuesPercentage.ToString().Replace(",", "." )}%">${project.ClosedIssues} gesloten</span><% end %>
             </div>
           </td>
