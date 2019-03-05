@@ -45,7 +45,7 @@
       <div class="text-align-right">
         <form action="changecommentvisibility" method="POST" autocomplete="off">
           <input type="hidden" name="actionId" value="${action.Id}" />
-          <% if CurrentUser.IsAdmin or (CurrentUser.CanBookHours and action.User == CurrentUser) :%>
+          <% if (CurrentUser.IsAdmin or (CurrentUser.CanBookHours and action.User == CurrentUser)) and (action.User.IsAdmin or action.User.CanBookHours) :%>
           <a onclick="$(this).parent().submit();"><i class="fa <% if action.IsInternal :%> fa-eye-slash <% else :%>fa-eye<% end %>" title="Alleen intern zichtbaar."></i></a>
           <% elif CurrentUser.CanBookHours :%>
           <% if action.IsInternal :%>
