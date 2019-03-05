@@ -52,7 +52,7 @@
                 var previousValue = previousState[i];
                 var currentValue = currentState[i];
 
-                if (currentValue.Equals(false))
+                if (currentValue.Equals(false) && previousValue != null)
                 {
                 savedObjects.Add(entity);
                 }
