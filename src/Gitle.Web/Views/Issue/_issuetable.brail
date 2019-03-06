@@ -65,7 +65,7 @@
             <div class="row detailsrow">
               <div class="large-12 columns">
                 geopend op <strong>${Helpers.DateTimeHelper.Readable(issue.CreatedAt)}</strong><% if issue.CreatedBy: %> door <strong>${issue.CreatedBy.FullName}</strong><% end %>,
-                <% if issue.ClosedAt != null: %>gesloten op <strong>${Helpers.DateTimeHelper.Readable(issue.ClosedAt)}</strong><% if issue.ClosedBy != null: %> door <strong>${issue.ClosedBy.FullName}</strong><% end %><% end %>
+                <% if issue.ClosedAt != null and issue.State.ToString() == "Closed" : %>gesloten op <strong>${Helpers.DateTimeHelper.Readable(issue.ClosedAt)}</strong><% if issue.ClosedBy != null: %> door <strong>${issue.ClosedBy.FullName}</strong><% end %><% end %>
               </div>
             </div>
             <div class="row detailsrow">
