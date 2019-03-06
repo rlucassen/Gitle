@@ -329,6 +329,7 @@
   <ItemGroup>
     <Compile Include="Controllers\ApplicationController.cs" />
     <Compile Include="Controllers\DashboardController.cs" />
+    <Compile Include="Controllers\InstallationController.cs" />
     <Compile Include="Controllers\ReportPresetController.cs" />
     <Compile Include="Controllers\ReportController.cs" />
     <Compile Include="Controllers\BookingController.cs" />
@@ -338,6 +339,7 @@
     <Compile Include="Controllers\PlanningController.cs" />
     <Compile Include="Controllers\SearchController.cs" />
     <Compile Include="Controllers\InvoiceController.cs" />
+    <Compile Include="Controllers\ServerController.cs" />
     <Compile Include="Controllers\SlugController.cs" />
     <Compile Include="Controllers\UploadController.cs" />
     <Compile Include="Controllers\UserController.cs" />
@@ -521,6 +523,7 @@
     <None Include="Views\Authentication\requestreset.brail" />
     <Content Include="Views\Booking\bookingschart.brail" />
     <None Include="Views\Booking\index.brail" />
+    <Content Include="Views\Installation\index.brail" />
     <None Include="Views\Invoice\index.brail" />
     <None Include="Views\Invoice\create.brail" />
     <None Include="Views\Booking\_row.brail" />
@@ -548,6 +551,7 @@
     <None Include="Views\Customer\view.brail" />
     <None Include="Views\Planning\index.brail" />
     <None Include="Views\Project\view.brail" />
+    <Content Include="Views\Server\index.brail" />
     <None Include="Views\Template\invoice.brail" />
     <None Include="Views\Report\index.brail" />
     <None Include="Views\User\profile.brail" />

@@ -83,12 +83,14 @@
     <Compile Include="Comment.cs" />
     <Compile Include="Document.cs" />
     <Compile Include="DummyIssue.cs" />
+    <Compile Include="Enum\InstallationTypes.cs" />
     <Compile Include="Enum\InvoiceState.cs" />
     <Compile Include="Customer.cs" />
     <Compile Include="Enum\IssueBookingState.cs" />
     <Compile Include="Enum\ProjectType.cs" />
     <Compile Include="Enum\IssueState.cs" />
     <Compile Include="Helpers\ISessionExtension.cs" />
+    <Compile Include="Installation.cs" />
     <Compile Include="Interfaces\Model\ISlugger.cs" />
     <Compile Include="Interfaces\Service\IBookingQueryParserService.cs" />
     <Compile Include="Interfaces\Service\IProjectNumberService.cs" />
@@ -151,6 +153,7 @@
     <Compile Include="Pickup.cs" />
     <Compile Include="Project.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Server.cs" />
     <Compile Include="Setting.cs" />
     <Compile Include="Touch.cs" />
     <Compile Include="Touchable.cs" />

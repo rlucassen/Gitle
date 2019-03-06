@@ -83,6 +83,10 @@
         <% end %>
         <% if CurrentUser.IsAdmin: %>
         <li class="divider"></li>
+        <li><a href="/server">Servers</a></li>
+        <li class="divider"></li>
+        <li><a href="/installation">Installaties</a></li>
+        <li class="divider"></li>
         <li><a href="/users">Gebruikers</a></li>
         <% else: %>
         <li class="divider"></li>
