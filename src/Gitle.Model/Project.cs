@@ -70,11 +70,11 @@
 
         public virtual string CompleteName => $"{Name} ({Application?.Name}, {Application?.Customer?.Name})";
 
-        public virtual int OpenIssues => Issues.Count(x => x.IsOpen && x.State != IssueState.Done && x.State != IssueState.Hold && !x.IsArchived);
+        public virtual int OpenIssues => Issues.Count(x => x.IsOpen && x.State != IssueState.Done && x.State != IssueState.Hold && !x.IsArchived && !x.IsAdministrative);
         public virtual int DoneIssues => Issues.Count(x => x.State == IssueState.Done && !x.IsArchived);
         public virtual int HoldIssues => Issues.Count(x => x.State == IssueState.Hold && !x.IsArchived);
         public virtual int ClosedIssues => Issues.Count(x => !x.IsOpen && x.State != IssueState.Done && x.State != IssueState.Hold && !x.IsArchived);
-        public virtual int TotalIssues => Issues.Count(x => !x.IsArchived);
+        public virtual int TotalIssues => Issues.Count(x => !x.IsArchived && !x.IsAdministrative);
 
         public virtual double OpenIssuesPercentage => TotalIssues == 0 ? 0 : OpenIssues / (TotalIssues * 1.0) * 100;
         public virtual double DoneIssuesPercentage => TotalIssues == 0 ? 0 : DoneIssues / (TotalIssues * 1.0) * 100;
