@@ -3,6 +3,7 @@
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Configuration;
     using System.IO;
     using System.Linq;
     using System.Text;
@@ -21,6 +22,7 @@
     using NHibernate;
     using NHibernate.Linq;
     using Newtonsoft.Json;
+    using NHibernate.Linq.Expressions;
     using QueryParsers;
     using Issue = Model.Issue;
     using Project = Model.Project;
@@ -170,7 +172,7 @@
         }
 
         [MustHaveProject]
-        public void Save(string projectSlug, int issueId, string[] labels, string andNew)
+        public void Save(string projectSlug, int issueId, long[] labels, string andNew)
         {
             var project = session.Slug<Project>(projectSlug);
             if (project.Closed)
@@ -179,8 +181,9 @@
             }
 
             var issue = session.Query<Issue>().SingleOrDefault(i => i.Number == issueId && i.Project == project);
+            var query = session.Query<Label>().Where(x => labels.Contains(x.Id)).ToList();
 
-            var savedIssue = SaveIssue(project, issue, labels);
+            var savedIssue = SaveIssue(project, issue, query);
 
             var hash = $"#issue{savedIssue.Number}";
             if (string.IsNullOrEmpty(andNew))
@@ -194,7 +197,7 @@
         }
 
         [return: JSONReturnBinder]
-        public object AjaxSave(string projectSlug, int issueId, string[] labels)
+        public object AjaxSave(string projectSlug, int issueId, List<Label> labels)
         {
             var project = session.Slug<Project>(projectSlug);
             if (project.Closed)
@@ -209,7 +212,7 @@
             return new {savedIssue.Id, savedIssue.Number, savedIssue.Name};
         }
 
-        private Issue SaveIssue(Project project, Issue issue, string[] labels)
+        private Issue SaveIssue(Project project, Issue issue, List<Label> labels)
         {
             if (issue != null)
             {
@@ -224,7 +227,7 @@
                 issue.Open(CurrentUser);
             }
 
-            issue.Labels = labels.Select(label => session.Query<Label>().FirstOrDefault(l => l.Name == label)).ToList();
+            issue.Labels = labels.Select(label => session.Query<Label>().FirstOrDefault(l => l.Id == label.Id)).ToList();
 
             using (var transaction = session.BeginTransaction())
             {
@@ -380,7 +383,7 @@
             }
         }
 
-        [MustHaveProject]
+        [MustHaveProject] 
         public void OnHold(string projectSlug, int issueId)
         {
             RedirectToReferrer();
