@@ -35,6 +35,8 @@
             get
             {
                 var state = Language.ResourceManager.GetString(IssueState.ToString()).ToLower();
+                state = (state == "open") ? "geopend" : state;
+
                 var openings = Issue.ChangeStates.Where(x => x.IssueState == IssueState.Open).ToList();
                 if (openings.Count() > 1 && openings.OrderByDescending(x => x.CreatedAt).Last() != this &&
                     IssueState == IssueState.Open)
