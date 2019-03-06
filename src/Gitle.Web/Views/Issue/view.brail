@@ -60,18 +60,22 @@
         </ul>
         <hr />
         <% end %>
-        <% if not project.Closed and not item.IsArchived :%>
-          <% if CurrentUser.IsAdmin :%>
-          <a href="pickup" class="button large-12">Taak oppakken</a>
-          <% end %>
-          <% if item.State.ToString() != "Done" and CurrentUser.IsAdmin :%>
-          <a href="done" class="button success large-12">Taak uitgevoerd</a>
-          <% end %>
-          <% if item.State.ToString() != "Hold" :%>
-          <a href="onhold" class="button on-hold large-12">Taak on hold</a>
-          <% end %>
+        <% if not project.Closed and not item.IsArchived and not item.IsAdministrative :%>
+        <% if CurrentUser.IsAdmin :%>
+        <a href="pickup" class="button large-12 no-margin">Taak oppakken</a>
+        <hr />
+        <% end %>
+        <% if item.State.ToString() != "Open" and item.State.ToString() != "Closed": %>
+        <a href="reopen" class="button secondary large-12">Heropen taak</a>
+        <% end %>
+        <% if item.State.ToString() != "Done" and CurrentUser.IsAdmin :%>
+        <a href="done" class="button success large-12">Taak uitgevoerd</a>
+        <% end %>
+        <% if item.State.ToString() != "Hold" :%>
+        <a href="onhold" class="button on-hold large-12">Taak on hold</a>
         <% end %>
         <hr />
+        <% end %>
         <% if CurrentUser.CanBookHours and not project.Closed and days.Count > 0: %>
         <form action="booktime" method="POST" autocomplete="off">
           <h2>Uren boeken</h2>
@@ -92,6 +96,7 @@
               <input type="text" name="comment" class="no-margin" placeholder="Opmerking" autocomplete="on">
             </div>
           </div>
+          <% if not item.IsAdministrative :%>
           <div class="row">
             <div class="small-12 columns">
               <p class="labels no-margin">
@@ -107,6 +112,7 @@
         </ul>-->
             </div>
           </div>
+          <% end %>
           <div class="row">
             <div class="large-12 columns">
               <input type="submit" class="button right" value="Uren boeken" />
@@ -116,13 +122,14 @@
         <hr />
         <% end %>
         <% end %>
+        <% if item.State.ToString() == "Closed": %>
+        <a href="reopen" class="button success large-12">Heropen taak</a>
+        <% end %>
         <% if item.State.ToString() != "Closed" and item.State.ToString() != "Archived" : %>
         <a href="close" class="button alert large-12">Sluit taak</a>
-        <% elif item.State.ToString() != "Open" and item.State.ToString() != "Archived": %>
-        <a href="reopen" class="button success large-12">Heropen taak</a>
+        <% end %>
         <% if CurrentUser.IsAdmin and item.State.ToString() != "Archived": %>
         <a href="archive" class="button alert large-12">Archiveer taak</a>
-        <% end %>
         <% end %>
       </div>
       <div class="large-9 columns">
