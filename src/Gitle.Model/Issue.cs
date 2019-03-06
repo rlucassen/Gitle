@@ -310,8 +310,22 @@
 
         public virtual void Close(User user)
         {
-            if(State != IssueState.Archived)
+            if (State != IssueState.Archived)
                 ChangeState(user, IssueState.Closed);
+            PrioOrder = 0;
+        }
+
+        public virtual void OnHold(User user)
+        {
+            if (State != IssueState.Archived)
+                ChangeState(user, IssueState.Hold);
+            PrioOrder = 0;
+        }
+
+        public virtual void Done(User user)
+        {
+            if (State != IssueState.Archived)
+                ChangeState(user, IssueState.Done);
             PrioOrder = 0;
         }
 

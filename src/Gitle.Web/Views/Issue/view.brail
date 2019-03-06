@@ -60,10 +60,18 @@
         </ul>
         <hr />
         <% end %>
-        <% if not item.IsArchived and CurrentUser.IsAdmin and not project.Closed: %>
-        <a href="pickup" class="button success large-12 no-margin">Taak oppakken</a>
-        <hr />
+        <% if not project.Closed and not item.IsArchived :%>
+          <% if CurrentUser.IsAdmin :%>
+          <a href="pickup" class="button large-12">Taak oppakken</a>
+          <% end %>
+          <% if item.State.ToString() != "Done" and CurrentUser.IsAdmin :%>
+          <a href="done" class="button success large-12">Taak uitgevoerd</a>
+          <% end %>
+          <% if item.State.ToString() != "Hold" :%>
+          <a href="onhold" class="button on-hold large-12">Taak on hold</a>
+          <% end %>
         <% end %>
+        <hr />
         <% if CurrentUser.CanBookHours and not project.Closed and days.Count > 0: %>
         <form action="booktime" method="POST" autocomplete="off">
           <h2>Uren boeken</h2>
@@ -93,10 +101,10 @@
               </p>
               <!--<div class="large-12 columns">{Form.CheckboxField("close")} Sluit de taak</div>-->
               <!--<ul id="addstatus" data-dropdown-content class="f-dropdown">
-                <li><a href="/project/{project.Slug}/issue/{item.Number}">Standaard</a></li>
-                <li><a href="/project/{project.Slug}/issue/{item.Number}">Uitgevoerd</a></li>
-                <li><a href="/project/{project.Slug}/issue/{item.Number}">On hold</a></li>
-              </ul>-->
+          <li><a href="/project/{project.Slug}/issue/{item.Number}">Standaard</a></li>
+          <li><a href="/project/{project.Slug}/issue/{item.Number}">Uitgevoerd</a></li>
+          <li><a href="/project/{project.Slug}/issue/{item.Number}">On hold</a></li>
+        </ul>-->
             </div>
           </div>
           <div class="row">
@@ -105,14 +113,14 @@
             </div>
           </div>
         </form>
-         <hr />
+        <hr />
         <% end %>
         <% end %>
-        <% if item.State.ToString() == "Open": %>
+        <% if item.State.ToString() != "Closed" and item.State.ToString() != "Archived" : %>
         <a href="close" class="button alert large-12">Sluit taak</a>
-        <% elif item.State.ToString() == "Closed": %>
+        <% elif item.State.ToString() != "Open" and item.State.ToString() != "Archived": %>
         <a href="reopen" class="button success large-12">Heropen taak</a>
-        <% if CurrentUser.IsAdmin: %>
+        <% if CurrentUser.IsAdmin and item.State.ToString() != "Archived": %>
         <a href="archive" class="button alert large-12">Archiveer taak</a>
         <% end %>
         <% end %>

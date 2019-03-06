@@ -369,9 +369,43 @@
             RedirectToReferrer();
             var project = session.Slug<Project>(projectSlug);
             var issue = session.Query<Issue>().Single(i => i.Number == issueId && i.Project == project);
-            if (issue.State == IssueState.Open || issue.State == IssueState.Unknown)
+            if (issue.State != IssueState.Archived && issue.State != IssueState.Closed)
             {
                 issue.Close(CurrentUser);
+                using (var tx = session.BeginTransaction())
+                {
+                    session.SaveOrUpdate(issue);
+                    tx.Commit();
+                }
+            }
+        }
+
+        [MustHaveProject]
+        public void OnHold(string projectSlug, int issueId)
+        {
+            RedirectToReferrer();
+            var project = session.Slug<Project>(projectSlug);
+            var issue = session.Query<Issue>().Single(i => i.Number == issueId && i.Project == project);
+            if (issue.State != IssueState.Archived && issue.State != IssueState.Hold)
+            {
+                issue.OnHold(CurrentUser);
+                using (var tx = session.BeginTransaction())
+                {
+                    session.SaveOrUpdate(issue);
+                    tx.Commit();
+                }
+            }
+        }
+
+        [MustHaveProject]
+        public void Done(string projectSlug, int issueId)
+        {
+            RedirectToReferrer();
+            var project = session.Slug<Project>(projectSlug);
+            var issue = session.Query<Issue>().Single(i => i.Number == issueId && i.Project == project);
+            if (issue.State != IssueState.Archived && issue.State != IssueState.Done)
+            {
+                issue.Done(CurrentUser);
                 using (var tx = session.BeginTransaction())
                 {
                     session.SaveOrUpdate(issue);
@@ -390,7 +424,7 @@
                 throw new ProjectClosedException(project);
             }
             var issue = session.Query<Issue>().Single(i => i.Number == issueId && i.Project == project);
-            if (issue.State == IssueState.Closed || issue.State == IssueState.Unknown)
+            if (issue.State != IssueState.Archived || issue.State != IssueState.Open)
             {
                 issue.Open(CurrentUser);
                 using (var tx = session.BeginTransaction())
