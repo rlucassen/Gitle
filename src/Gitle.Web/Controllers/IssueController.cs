@@ -390,7 +390,7 @@
                 throw new ProjectClosedException(project);
             }
             var issue = session.Query<Issue>().Single(i => i.Number == issueId && i.Project == project);
-            if (issue.State == IssueState.Closed || issue.State == IssueState.Unknown)
+            if (issue.State == IssueState.Closed || issue.State == IssueState.Unknown || issue.State == IssueState.Hold)
             {
                 issue.Open(CurrentUser);
                 using (var tx = session.BeginTransaction())

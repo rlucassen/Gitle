@@ -93,10 +93,10 @@
               </p>
               <!--<div class="large-12 columns">{Form.CheckboxField("close")} Sluit de taak</div>-->
               <!--<ul id="addstatus" data-dropdown-content class="f-dropdown">
-                <li><a href="/project/{project.Slug}/issue/{item.Number}">Standaard</a></li>
-                <li><a href="/project/{project.Slug}/issue/{item.Number}">Uitgevoerd</a></li>
-                <li><a href="/project/{project.Slug}/issue/{item.Number}">On hold</a></li>
-              </ul>-->
+          <li><a href="/project/{project.Slug}/issue/{item.Number}">Standaard</a></li>
+          <li><a href="/project/{project.Slug}/issue/{item.Number}">Uitgevoerd</a></li>
+          <li><a href="/project/{project.Slug}/issue/{item.Number}">On hold</a></li>
+        </ul>-->
             </div>
           </div>
           <div class="row">
@@ -105,12 +105,12 @@
             </div>
           </div>
         </form>
-         <hr />
+        <hr />
         <% end %>
         <% end %>
         <% if item.State.ToString() == "Open": %>
         <a href="close" class="button alert large-12">Sluit taak</a>
-        <% elif item.State.ToString() == "Closed": %>
+        <% elif item.State.ToString() == "Closed" or item.State.ToString() == "Hold": %>
         <a href="reopen" class="button success large-12">Heropen taak</a>
         <% if CurrentUser.IsAdmin: %>
         <a href="archive" class="button alert large-12">Archiveer taak</a>
