@@ -278,7 +278,7 @@
 
         private static void ExportSchema(Configuration configuration)
         {
-            new SchemaUpdate(configuration).Execute(true, true);
+            new SchemaUpdate(configuration).Execute(false, true);
             //var scriptGenerator = new SchemaExport(configuration);
             //scriptGenerator.SetOutputFile(@"C:\AppOnline.sql");
             //scriptGenerator.Execute(true, false, false);

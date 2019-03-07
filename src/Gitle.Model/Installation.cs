@@ -10,7 +10,7 @@
         public virtual string Slug { get; set; }
         public virtual Customer Customer { get; set; }
         public virtual Application Application { get; set; }
-        public virtual InstallationTypes InstallationType { get; set; }
+        public virtual InstallationType InstallationType { get; set; }
         public virtual Server Server { get; set; }
         public virtual string Url { get; set; }
         public virtual string Description { get; set; }

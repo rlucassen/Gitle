@@ -2,8 +2,9 @@
 {
     using System.ComponentModel;
 
-    public enum InstallationTypes
+    public enum InstallationType
     {
+        [Description("Onbekend")]
         Unknown = 0,
         [Description("Live")]
         Live = 10,

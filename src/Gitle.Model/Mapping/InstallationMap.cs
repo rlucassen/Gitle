@@ -4,13 +4,13 @@
     {
         public InstallationMap()
         {
-            Map(x => x.Name);
             Map(x => x.Slug);
-            Map(x => x.Customer);
-            Map(x => x.Application);
             Map(x => x.InstallationType);
-            Map(x => x.Server);
             Map(x => x.Description).CustomSqlType("nvarchar(max)");
+
+            References(x => x.Server);
+            References(x => x.Customer);
+            References(x => x.Application);
         }
     }
 }

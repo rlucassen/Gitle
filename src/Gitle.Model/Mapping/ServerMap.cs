@@ -8,7 +8,7 @@
             Map(x => x.Slug);
             Map(x => x.HostingCompany);
             Map(x => x.IsExternal);
-            HasMany(x => x.Contacts); //Mogelijk dat de contacts niet in het systeem zitten?
+            HasMany(x => x.Contacts);
             HasMany(x => x.Installations);
             Map(x => x.Description).CustomSqlType("nvarchar(max)");
         }
