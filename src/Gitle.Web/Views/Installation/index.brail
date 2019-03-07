@@ -10,20 +10,20 @@
           <th>Klant</th>
           <th>Server</th>
           <th>URL</th>
-          <th style="width: 260px;"></th>
+          <th class="{sorter: false}"></th>
         </tr>
       </thead>
       <tbody>
         <% for item in items: %>
         <tr>
-          <td class="application">${item.Application.Name}</td>
+          <td class="application"><a href="/Application/${item.Application.Slug}/view">${item.Application.Name}</a></td>
           <td class="installation-type">${item.InstallationType}</td>
-          <td class="customer">${item.Customer.Name}</td>
+          <td class="customer"><a href="/Customer/${item.Customer.Slug}/view">${item.Customer.Name}</a></td>
           <td class="server">${item.Server.Name}</td>
-          <td class="url">${item.Url}</td>
+          <td class="url"><a target="_blank" href="https://myfinance.demo.auxilium.nl">${item.Url}</a></td>
           <td>
             <ul class="button-group">
-              <li><a class="button tiny no-margin" href="/installation/${item.Slug}/view">Details</a></li>
+              <li><a class="button tiny secondary no-margin" href="/installation/${item.Slug}/view">Details</a></li>
               <li><a class="button tiny success no-margin" href="/installation/${item.Slug}/edit">Bewerk</a></li>
               <li><a class="button tiny alert no-margin" href="/installation/${item.Slug}/delete" data-confirm="Weet je het zeker?">Verwijder</a></li>
             </ul>

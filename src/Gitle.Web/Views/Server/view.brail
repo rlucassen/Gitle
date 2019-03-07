@@ -18,7 +18,6 @@
 <div class="row">
   <div class="large-12 columns">
     <h2>Contactpersonen</h2>
-    <% for contact in item.Contacts: %>
     <table class="small-blocks" id="customers">
       <thead>
         <tr>
@@ -28,35 +27,49 @@
         </tr>
       </thead>
       <tbody>
+        <% for contact in item.Contacts: %>
         <tr>
           <td>${contact.FullName}</td>
           <td>${contact.Email}</td>
           <td>${contact.PhoneNumber}</td>
         </tr>
+        <% end %>
       </tbody>
     </table>
-    <% end %>
   </div>
 </div>
 
 <div class="row">
   <div class="large-12 columns">
     <h2>Installaties</h2>
-    <% for installation in item.Installations: %>
-    <table class="small-blocks" id="customers">
+    <table class="tablesorter small-blocks">
       <thead>
         <tr>
-          <th>Naam</th>
+          <th>Applicatie</th>
+          <th>Omgeving</th>
+          <th>Klant</th>
+          <th>Server</th>
+          <th>URL</th>
+          <th class="{sorter: false}"></th>
         </tr>
       </thead>
       <tbody>
+        <% for installation in item.Installations: %>
         <tr>
-          <td>${installation.Name}</td>
+          <td class="application"><a href="/Application/${installation.Application.Slug}/view">${installation.Application.Name}</a></td>
+          <td class="installation-type">${installation.InstallationType}</td>
+          <td class="customer"><a href="/Customer/${installation.Customer.Slug}/view">${installation.Customer.Name}</a></td>
+          <td class="server">${installation.Server.Name}</td>
+          <td class="url"><a target="_blank" href="https://myfinance.demo.auxilium.nl">${installation.Url}</a></td>
+          <td>
+            <ul class="button-group">
+              <li><a class="button tiny secondary no-margin" href="/installation/${installation.Slug}/view">Bekijk</a></li>
+            </ul>
+          </td>
         </tr>
+        <% end %>
       </tbody>
     </table>
-    <% end %>
-
   </div>
 </div>
 

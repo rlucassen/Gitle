@@ -9,7 +9,7 @@
           <th>Server</th>
           <th>Hostingpartij</th>
           <th>Intern</th>
-          <th id="project-actions" class="{sorter: false}"></th>
+          <th class="{sorter: false}"></th>
         </tr>
       </thead>
       <tbody>
