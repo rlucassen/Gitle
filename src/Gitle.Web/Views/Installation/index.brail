@@ -1,4 +1,5 @@
-﻿<div class="row">
+﻿<% if CurrentUser.IsAdmin: %>
+<div class="row">
   <div class="large-12 columns">
     <h1>Installatie</h1>
     <a class="button" href="/installation/new">Nieuw</a>
@@ -6,7 +7,7 @@
       <thead>
         <tr>
           <th>Applicatie</th>
-          <th>Omgeving</th>
+          <th>Type</th>
           <th>Klant</th>
           <th>Server</th>
           <th>URL</th>
@@ -20,7 +21,7 @@
           <td class="installation-type">${item.InstallationType}</td>
           <td class="customer"><a href="/Customer/${item.Customer.Slug}/view">${item.Customer.Name}</a></td>
           <td class="server">${item.Server.Name}</td>
-          <td class="url"><a target="_blank" href="https://myfinance.demo.auxilium.nl">${item.Url}</a></td>
+          <td class="url"><a target="_blank" href="${item.Url}">${item.Url}</a></td>
           <td>
             <ul class="button-group">
               <li><a class="button tiny secondary no-margin" href="/installation/${item.Slug}/view">Details</a></li>
@@ -34,3 +35,6 @@
     </table>
   </div>
 </div>
+<% else :%>
+Actie niet toegestaan.
+<% end %>

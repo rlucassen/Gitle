@@ -1,40 +1,50 @@
-﻿<div class="row">
-  <div class="large-12 columns">
-    <a href="/installation">Terug</a>
-  </div>
-</div>
-
+﻿<% if CurrentUser.IsAdmin: %>
 <div class="row">
   <div class="large-12 columns">
-    <p>Omgeving</p>
-    <select name="item.Type" required>
-      <option selected>Test</option>
-      <option>2</option>
-      <option>3</option>
-    </select>
-
-    <p>Server</p>
-    <select name="item.Server" required>
-      <option selected>Test</option>
-      <option>2</option>
-      <option>3</option>
-    </select>
-
-    <p>Klant</p>
-    <select name="item.Customer" required>
-      <option selected>Test</option>
-      <option>2</option>
-      <option>3</option>
-    </select>
-
-    <p>Applicatie</p>
-    <select name="item.Application" required>
-      <option selected>Test</option>
-      <option>2</option>
-      <option>3</option>
-    </select>
-
-    <p>Url</p>
-    <input type="text" name="item.Type" required />
+    <% if item.Id > 0: %>
+    <h1>Installatie bewerken</h1>
+    <% else: %>
+    <h1>Nieuwe installatie</h1>
+    <% end %>
+    <form action="/installation/<% if item.Slug: %>${item.Slug}<% else: %>0<% end %>/save" method="POST" autocomplete="off" data-abide>
+      ${Form.HiddenField("item.Id")}
+      ${Form.HiddenField("item.Slug")}
+      <div class="row">
+        <div class="large-3 columns">Applicatie</div>
+        <div class="large-9 columns">
+          ${Form.Select("item.Application", item.Application, applications, {"class": "chosen-select", "value": "Id", "text": "CompleteName", "firstoption": "Kies een applicatie", "pattern":"select"})}
+        </div>
+      </div>
+      <div class="row">
+        <div class="large-3 columns">Type</div>
+        <div class="large-9 columns">
+          ${Form.Select("item.InstallationType", item.InstallationType, installationTypes, {"value": "Key", "text": "Value"})}
+        </div>
+      </div>
+      <div class="row">
+        <div class="large-3 columns">Server naam</div>
+        <div class="large-9 columns">
+          ${Form.Select("item.Server", item.Server, servers, {"class": "chosen-select", "value": "Id", "text": "Name", "firstoption": "Kies een server", "pattern":"select"})}
+        </div>
+      </div>
+      <div class="row">
+        <div class="large-3 columns">URL</div>
+        <div class="large-9 columns">
+          <input type="text" id="item_Url" name="item.Url" value="">${?item.Url}</input>
+        </div>
+      </div>
+      <div class="row">
+        <div class="large-3 columns">Beschrijving</div>
+        <div class="large-9 columns">
+          <textarea type="text" id="item_Description" name="item.Description" value="">${?item.Description}</textarea>
+        </div>
+      </div>
+      <div class="row">
+        <div class="large-12 columns"><input type="submit" class="button" value="Opslaan" /></div>
+      </div>
+    </form>
   </div>
 </div>
+<% else :%>
+Actie niet toegestaan.
+<% end %>

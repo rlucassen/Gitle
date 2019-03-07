@@ -16,6 +16,11 @@
 </div>
 
 <div class="row">
+  <div class="large-2 columns">Beschrijving</div>
+  <div class="large-10 columns">${?item.Description}</div>
+</div>
+
+<div class="row">
   <div class="large-12 columns">
     <h2>Contactpersonen</h2>
     <table class="small-blocks" id="customers">
