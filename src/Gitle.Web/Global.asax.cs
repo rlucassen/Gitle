@@ -226,6 +226,12 @@
             RoutingModuleEx.Engine.Add(new PatternRoute("/server")
                                             .DefaultForController().Is<ServerController>()
                                             .DefaultForAction().Is("index"));
+            RoutingModuleEx.Engine.Add(new PatternRoute("/server/<action>")
+                                            .DefaultForController().Is<ServerController>()
+                                            .DefaultForAction().Is("index"));
+            RoutingModuleEx.Engine.Add(new PatternRoute("/server/<serverSlug>/<action>")
+                                            .DefaultForController().Is<ServerController>()
+                                            .DefaultForAction().Is("index"));
 
             RoutingModuleEx.Engine.Add(new PatternRoute("/planning/<slug>/<action>")
                                            .DefaultForController().Is<PlanningController>()

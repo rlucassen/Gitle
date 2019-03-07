@@ -554,6 +554,8 @@
     <None Include="Views\Planning\index.brail" />
     <None Include="Views\Project\view.brail" />
     <Content Include="Views\Server\index.brail" />
+    <Content Include="Views\Server\view.brail" />
+    <Content Include="Views\Server\edit.brail" />
     <None Include="Views\Template\invoice.brail" />
     <None Include="Views\Report\index.brail" />
     <None Include="Views\User\profile.brail" />

@@ -1,0 +1,51 @@
+﻿<% if CurrentUser.IsAdmin: %>
+<div class="row">
+  <div class="large-12 columns">
+    <% if item.Id > 0: %>
+    <h1>Server bewerken</h1>
+    <% else: %>
+    <h1>Nieuwe server</h1>
+    <% end %>
+    <form action="/server/<% if item.Slug: %>${item.Slug}<% else: %>0<% end %>/save" method="POST" autocomplete="off" data-abide>
+      ${Form.HiddenField("item.Id")}
+      ${Form.HiddenField("item.Slug")}
+      <div class="row">
+        <div class="large-3 columns">Naam</div>
+        <div class="large-9 columns">
+          <input class="focus" type="text" id="item_Name" name="item.Name" value="${?item.Name}" class="focus" data-abide-validator="checkServerName" data-serverid="${item.Id}" data-slugify="#item_Slug" required />
+          <small class="error">Geef een naam op</small>
+        </div>
+      </div>
+      <div class="row">
+        <div class="large-3 columns">Hostingpartij</div>
+        <div class="large-9 columns">
+          <input type="text" id="item_HostingCompany" name="item.HostingCompany" value="${?item.HostingCompany}" />
+        </div>
+      </div>
+      <div class="row">
+        <div class="large-3 columns">Contactpersonen</div>
+        <div class="large-9 columns">
+          TODO<br /><br />
+        </div>
+      </div>
+      <div class="row">
+        <div class="large-3 columns">Extern</div>
+        <div class="large-9 columns">
+          <input type="checkbox" id="item_HostingCompany" name="item.HostingCompany" value="${?item.HostingCompany}" />
+        </div>
+      </div>
+      <div class="row">
+        <div class="large-3 columns">Beschrijving</div>
+        <div class="large-9 columns">
+          <textarea type="text" id="item_Description" name="item.Description" value="">${?item.Description}</textarea>
+        </div>
+      </div>
+      <div class="row">
+        <div class="large-12 columns"><input type="submit" class="button" value="Opslaan" /></div>
+      </div>
+    </form>
+  </div>
+</div>
+<% else :%>
+Actie niet toegestaan.
+<% end %>
