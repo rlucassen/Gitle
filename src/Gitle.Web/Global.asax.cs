@@ -213,6 +213,14 @@
                                            .DefaultForController().Is<InvoiceController>()
                                            .DefaultForAction().Is("index"));
 
+            RoutingModuleEx.Engine.Add(new PatternRoute("/installation")
+                                            .DefaultForController().Is<InstallationController>()
+                                            .DefaultForAction().Is("index"));
+
+            RoutingModuleEx.Engine.Add(new PatternRoute("/server")
+                                            .DefaultForController().Is<ServerController>()
+                                            .DefaultForAction().Is("index"));
+
             RoutingModuleEx.Engine.Add(new PatternRoute("/planning/<slug>/<action>")
                                            .DefaultForController().Is<PlanningController>()
                                            .DefaultForAction().Is("index"));
