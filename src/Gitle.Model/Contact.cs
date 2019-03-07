@@ -7,6 +7,6 @@
     {
         public virtual string FullName { get; set; }
         public virtual string Email { get; set; }
-        public virtual double PhoneNumber { get; set; }
+        public virtual string PhoneNumber { get; set; }
     }
 }

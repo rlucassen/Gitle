@@ -1,0 +1,40 @@
+﻿<div class="row">
+  <div class="large-12 columns">
+    <a href="/installation">Terug</a>
+  </div>
+</div>
+
+<div class="row">
+  <div class="large-12 columns">
+    <p>Omgeving</p>
+    <select name="item.Type" required>
+      <option selected>Test</option>
+      <option>2</option>
+      <option>3</option>
+    </select>
+
+    <p>Server</p>
+    <select name="item.Server" required>
+      <option selected>Test</option>
+      <option>2</option>
+      <option>3</option>
+    </select>
+
+    <p>Klant</p>
+    <select name="item.Customer" required>
+      <option selected>Test</option>
+      <option>2</option>
+      <option>3</option>
+    </select>
+
+    <p>Applicatie</p>
+    <select name="item.Application" required>
+      <option selected>Test</option>
+      <option>2</option>
+      <option>3</option>
+    </select>
+
+    <p>Url</p>
+    <input type="text" name="item.Type" required />
+  </div>
+</div>

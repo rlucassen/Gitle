@@ -3,6 +3,7 @@
     using System.Linq;
     using Gitle.Model;
     using Gitle.Web.Helpers;
+    using Model.Helpers;
     using NHibernate;
     using NHibernate.Linq;
 
@@ -15,7 +16,27 @@
         [Admin]
         public void Index()
         {
-            //PropertyBag.Add("items", session.Query<Installation>().Where(x => x.IsActive).ToList());
+            PropertyBag.Add("items", session.Query<Installation>().Where(x => x.IsActive).ToList());
+        }
+
+        [Admin]
+        public void View(string installationSlug)
+        {
+            Installation installation = session.SlugOrDefault<Installation>(installationSlug);
+
+            PropertyBag.Add("installation", installation);
+        }
+
+        [Admin]
+        public void Edit()
+        {
+
+        }
+        
+        [Admin]
+        public void Delete()
+        {
+
         }
     }
 }

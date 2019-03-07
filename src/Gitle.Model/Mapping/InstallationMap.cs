@@ -6,6 +6,7 @@
         {
             Map(x => x.Slug);
             Map(x => x.InstallationType);
+            Map(x => x.Url);
             Map(x => x.Description).CustomSqlType("nvarchar(max)");
 
             References(x => x.Server);

@@ -1,1 +1,36 @@
-﻿
+﻿<div class="row">
+  <div class="large-12 columns">
+    <h1>Installatie</h1>
+    <a class="button" href="/installation/new">Nieuw</a>
+    <table class="tablesorter small-blocks">
+      <thead>
+        <tr>
+          <th>Applicatie</th>
+          <th>Omgeving</th>
+          <th>Klant</th>
+          <th>Server</th>
+          <th>URL</th>
+          <th style="width: 260px;"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for item in items: %>
+        <tr>
+          <td class="application">${item.Application.Name}</td>
+          <td class="installation-type">${item.InstallationType}</td>
+          <td class="customer">${item.Customer.Name}</td>
+          <td class="server">${item.Server.Name}</td>
+          <td class="url">${item.Url}</td>
+          <td>
+            <ul class="button-group">
+              <li><a class="button tiny no-margin" href="/installation/${item.Slug}/view">Details</a></li>
+              <li><a class="button tiny success no-margin" href="/installation/${item.Slug}/edit">Bewerk</a></li>
+              <li><a class="button tiny alert no-margin" href="/installation/${item.Slug}/delete" data-confirm="Weet je het zeker?">Verwijder</a></li>
+            </ul>
+          </td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -216,6 +216,12 @@
             RoutingModuleEx.Engine.Add(new PatternRoute("/installation")
                                             .DefaultForController().Is<InstallationController>()
                                             .DefaultForAction().Is("index"));
+            RoutingModuleEx.Engine.Add(new PatternRoute("/installation/<action>")
+                                            .DefaultForController().Is<InstallationController>()
+                                            .DefaultForAction().Is("index"));
+            RoutingModuleEx.Engine.Add(new PatternRoute("/installation/<installationSlug>/<action>")
+                                            .DefaultForController().Is<InstallationController>()
+                                            .DefaultForAction().Is("index"));
 
             RoutingModuleEx.Engine.Add(new PatternRoute("/server")
                                             .DefaultForController().Is<ServerController>()
