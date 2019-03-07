@@ -1,0 +1,65 @@
+﻿<% if CurrentUser.IsAdmin: %>
+<div class="row">
+  <div class="large-12 columns">
+    <h1>${item.Name}</h1>
+  </div>
+</div>
+
+<div class="row">
+  <div class="large-2 columns">Hostingpartij</div>
+  <div class="large-10 columns">${?item.HostingCompany}</div>
+</div>
+
+<div class="row">
+  <div class="large-2 columns">Intern</div>
+  <div class="large-10 columns"><% if item.IsExternal: %><i class="fa fa-times red"></i><% else: %><i class="fa fa-check green"></i><% end %></div>
+</div>
+
+<div class="row">
+  <div class="large-12 columns">
+    <h2>Contactpersonen</h2>
+    <% for contact in item.Contacts: %>
+    <table class="small-blocks" id="customers">
+      <thead>
+        <tr>
+          <th>Naam</th>
+          <th>Emailadres</th>
+          <th>Telefoonnummer</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>${contact.FullName}</td>
+          <td>${contact.Email}</td>
+          <td>${contact.PhoneNumber}</td>
+        </tr>
+      </tbody>
+    </table>
+    <% end %>
+  </div>
+</div>
+
+<div class="row">
+  <div class="large-12 columns">
+    <h2>Installaties</h2>
+    <% for installation in item.Installations: %>
+    <table class="small-blocks" id="customers">
+      <thead>
+        <tr>
+          <th>Naam</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>${installation.Name}</td>
+        </tr>
+      </tbody>
+    </table>
+    <% end %>
+
+  </div>
+</div>
+
+<% else :%>
+Actie niet toegestaan.
+<% end %>

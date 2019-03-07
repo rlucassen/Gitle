@@ -1,1 +1,36 @@
-﻿
+﻿<% if CurrentUser.IsAdmin: %>
+<div class="row">
+  <div class="large-12 columns">
+    <h1>Servers</h1>
+    <a class="button" href="/server/edit">Nieuw</a>
+    <table id="customer-table" class="tablesorter small-blocks">
+      <thead>
+        <tr>
+          <th>Server</th>
+          <th>Hostingpartij</th>
+          <th>Intern</th>
+          <th id="project-actions" class="{sorter: false}"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for item in items: %>
+        <tr>
+          <td class="name">${item.Name}</td>
+          <td class="hostingCompany">${item.HostingCompany}</td>
+          <td class="isExternal"><span class="hide">${item.IsExternal}</span><% if item.IsExternal: %><i class="fa fa-times red"></i><% else: %><i class="fa fa-check green"></i><% end %></td>
+          <td class="actions">
+            <ul class="button-group">
+              <li><a class="button tiny secondary no-margin" href="/server/${item.Slug}/view">Details</a></li>
+              <li><a class="button tiny success no-margin" href="/server/${item.Slug}/edit">Bewerk</a></li>
+              <li><a class="button tiny alert no-margin" href="/server/${item.Slug}/delete" data-confirm="Weet je het zeker?">Verwijder</a></li>
+            </ul>
+          </td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+<% else :%>
+Actie niet toegestaan.
+<% end %>
