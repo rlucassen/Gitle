@@ -30,7 +30,7 @@
       <div class="row">
         <div class="large-3 columns">URL</div>
         <div class="large-9 columns">
-          <input type="text" id="item_Url" name="item.Url" value="">${?item.Url}</input>
+          <input type="text" id="item_Url" name="item.Url" value="${?item.Url}">
         </div>
       </div>
       <div class="row">

@@ -29,8 +29,9 @@
         }
 
         [Admin]
-        public void Edit()
+        public void Edit(string installationSlug)
         {
+            Installation installation = session.SlugOrDefault<Installation>(installationSlug);
             var installationTypes = EnumHelper.ToDictionary(typeof(InstallationType));
             var types = installationTypes.Where(t =>
                     new[] { InstallationType.Live, InstallationType.Acceptance, InstallationType.Demo }.Contains((InstallationType)t.Key))
@@ -39,7 +40,7 @@
             PropertyBag.Add("applications", session.Query<Application>().Where(x => x.IsActive).OrderBy(x => x.Name));
             PropertyBag.Add("servers", session.Query<Server>().Where(x => x.IsActive).OrderBy(x => x.Name));
             PropertyBag.Add("installationTypes", types);
-            PropertyBag.Add("item", new Installation());
+            PropertyBag.Add("item", (installation != null) ? installation : new Installation());
             RenderView("edit");
         }
 

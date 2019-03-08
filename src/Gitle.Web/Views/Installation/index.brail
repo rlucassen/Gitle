@@ -2,7 +2,7 @@
 <div class="row">
   <div class="large-12 columns">
     <h1>Installatie</h1>
-    <a class="button" href="/installation/new">Nieuw</a>
+    <a class="button" href="/installation/0/edit">Nieuw</a>
     <table class="tablesorter small-blocks">
       <thead>
         <tr>
