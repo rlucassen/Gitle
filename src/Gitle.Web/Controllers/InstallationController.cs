@@ -24,13 +24,15 @@
         {
             Installation installation = session.SlugOrDefault<Installation>(installationSlug);
 
-            PropertyBag.Add("installation", installation);
+            PropertyBag.Add("item", installation);
         }
 
         [Admin]
-        public void Edit()
+        public void Edit(string installationSlug)
         {
+            Installation installation = session.SlugOrDefault<Installation>(installationSlug);
 
+            PropertyBag.Add("item", installation);
         }
         
         [Admin]

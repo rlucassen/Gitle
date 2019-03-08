@@ -1,40 +1,52 @@
 ﻿<div class="row">
   <div class="large-12 columns">
-    <a href="/installation">Terug</a>
-  </div>
-</div>
+    <% if item.Id > 0: %>
+    <h1>Installatie bewerken</h1>
+    <% else: %>
+    <h1>Nieuwe installatie</h1>
+    <% end %>
+    <form action="/installation/${?item.Slug}/save" method="POST" autocomplete="off" data-abide>
+      ${Form.HiddenField("item.Slug")}
+      <div class="row">
+        <div class="large-3 columns">Omgeving</div>
+        <div class="large-9 columns">
+          ${Form.Select("typeId", item.InstallationType, {"class": "chosen-select", "value": "item.Id", "text": "Item.Name", "firstoption": "Kies een omgeving", "pattern":"select"})}
+          <small class="error">Kies een omgeving</small>
+        </div>
+      </div>
+      <div class="row">
+        <div class="large-3 columns">Server</div>
+        <div class="large-9 columns">
+          <!--{Form.Select("serverId", item.InstallationType, {"class": "chosen-select", "value": "Id", "text": "Name", "firstoption": "Kies een klant", "pattern":"select"})}-->
+          <small class="error">Kies een server</small>
+        </div>
+      </div>
+      <div class="row">
+        <div class="large-3 columns">Klant</div>
+        <div class="large-9 columns">
+          <!--{Form.Select("customerId", item.InstallationType, {"class": "chosen-select", "value": "Id", "text": "Name", "firstoption": "Kies een klant", "pattern":"select"})}-->
+          <small class="error">Kies een klant</small>
+        </div>
+      </div>
+      <div class="row">
+        <div class="large-3 columns">Applicatie</div>
+        <div class="large-9 columns">
+          <!--{Form.Select("applicationId", item.InstallationType, {"class": "chosen-select", "value": "Id", "text": "Name", "firstoption": "Kies een klant", "pattern":"select"})}-->
+          <small class="error">Kies een applicatie</small>
+        </div>
+      </div>
+      <div class="row">
+        <div class="large-3 columns">URL</div>
+        <div class="large-9 columns">${Form.TextField("text")}</div>
+      </div>
+      <div class="row">
+        <div class="large-3 columns">Beschrijving</div>
+        <div class="large-9 columns">${Form.TextArea("text")}</div>
+      </div>
 
-<div class="row">
-  <div class="large-12 columns">
-    <p>Omgeving</p>
-    <select name="item.Type" required>
-      <option selected>Test</option>
-      <option>2</option>
-      <option>3</option>
-    </select>
-
-    <p>Server</p>
-    <select name="item.Server" required>
-      <option selected>Test</option>
-      <option>2</option>
-      <option>3</option>
-    </select>
-
-    <p>Klant</p>
-    <select name="item.Customer" required>
-      <option selected>Test</option>
-      <option>2</option>
-      <option>3</option>
-    </select>
-
-    <p>Applicatie</p>
-    <select name="item.Application" required>
-      <option selected>Test</option>
-      <option>2</option>
-      <option>3</option>
-    </select>
-
-    <p>Url</p>
-    <input type="text" name="item.Type" required />
+      <div class="row">
+        <div class="large-12 columns"><input type="submit" class="button" value="Opslaan" /></div>
+      </div>
+    </form>
   </div>
 </div>
