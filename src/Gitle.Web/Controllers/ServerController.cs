@@ -27,9 +27,10 @@
         }
 
         [Admin]
-        public void Edit()
+        public void Edit(string serverSlug)
         {
-            PropertyBag.Add("item", new Server());
+            var server = session.SlugOrDefault<Server>(serverSlug);
+            PropertyBag.Add("item", (server != null) ? server : new Server());
             RenderView("edit");
         }
 

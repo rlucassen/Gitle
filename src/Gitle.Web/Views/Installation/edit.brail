@@ -12,19 +12,37 @@
       <div class="row">
         <div class="large-3 columns">Applicatie</div>
         <div class="large-9 columns">
-          ${Form.Select("item.Application", item.Application, applications, {"class": "chosen-select", "value": "Id", "text": "CompleteName", "firstoption": "Kies een applicatie", "pattern":"select"})}
+          <!--{Form.Select("applicationId", applications, {"class": "chosen-select", "value": "Id", "text": "CompleteName", "firstoption": "Kies een applicatie", "pattern":"select"})}-->
+          <select class="chosen-select" name="item.Application" id="item_Application">
+            <option>Kies een applicatie</option>
+            <% for application in applications : %>
+            <option value="${application.Id}" <% if IsDefined("item") and item.Application == application : %>selected<% end %>>${application.CompleteName}</option>
+            <% end %>
+          </select>
         </div>
       </div>
       <div class="row">
         <div class="large-3 columns">Type</div>
         <div class="large-9 columns">
-          ${Form.Select("item.InstallationType", item.InstallationType, installationTypes, {"value": "Key", "text": "Value"})}
+          ${Form.Select("item.InstallationType", installationTypes, {"value": "Key", "text": "Value"})}
+        </div>
+      </div>
+      <div class="row">
+        <div class="large-3 columns">Naam installatie</div>
+        <div class="large-9 columns">
+          <input type="text" name="item.Name" id="item_Name" value="${?item.Name}" data-slugify="#item_Slug" required />
         </div>
       </div>
       <div class="row">
         <div class="large-3 columns">Server naam</div>
         <div class="large-9 columns">
-          ${Form.Select("item.Server", item.Server, servers, {"class": "chosen-select", "value": "Id", "text": "Name", "firstoption": "Kies een server", "pattern":"select"})}
+          <!--{Form.Select("serverId", servers, {"class": "chosen-select", "value": "Id", "text": "Name", "firstoption": "Kies een server", "pattern":"select"})}-->
+          <select class="chosen-select" name="item.Server" id="item_Server">
+            <option>Kies een server</option>
+            <% for server in servers : %>
+            <option value="${server.Id}" <% if IsDefined("item") and item.Server == server : %>selected<% end %>>${server.Name}</option>
+            <% end %>
+          </select>
         </div>
       </div>
       <div class="row">
@@ -48,3 +66,8 @@
 <% else :%>
 Actie niet toegestaan.
 <% end %>
+
+<script>
+  // Gekozen name = application + type
+
+</script>

@@ -19,7 +19,7 @@
         <tr>
           <td class="application"><a href="/Application/${item.Application.Slug}/view">${item.Application.Name}</a></td>
           <td class="installation-type">${item.InstallationType}</td>
-          <td class="customer"><a href="/Customer/${item.Customer.Slug}/view">${item.Customer.Name}</a></td>
+          <td class="customer"><a href="/Customer/${item.Application.Customer.Slug}/view">${item.Application.Customer.Name}</a></td>
           <td class="server">${item.Server.Name}</td>
           <td class="url"><a target="_blank" href="${item.Url}">${item.Url}</a></td>
           <td>

@@ -6,9 +6,8 @@
 
     public class Installation : ModelBase, ISlugger
     {
-        public virtual string Name => $"{Application?.Name} - {InstallationType}";
+        public virtual string Name { get; set; }
         public virtual string Slug { get; set; }
-        public virtual Customer Customer { get; set; }
         public virtual Application Application { get; set; }
         public virtual InstallationType InstallationType { get; set; }
         public virtual Server Server { get; set; }

@@ -1,5 +1,6 @@
 ﻿namespace Gitle.Web.Controllers
 {
+    using System;
     using System.Linq;
     using Gitle.Model;
     using Gitle.Model.Enum;
@@ -17,7 +18,9 @@
         [Admin]
         public void Index()
         {
-            PropertyBag.Add("items", session.Query<Installation>().Where(x => x.IsActive).ToList());
+            var items = session.Query<Installation>().Where(x => x.IsActive).ToList();
+
+            PropertyBag.Add("items", items);
         }
 
         [Admin]
@@ -55,6 +58,10 @@
         public void Save(string installationSlug)
         {
             var item = session.SlugOrDefault<Installation>(installationSlug);
+
+            var application = session.Get<Application>(long.Parse(Params["applicationId"]));
+            var server = session.Get<Server>(long.Parse(Params["serverId"]));
+
             if (item != null)
             {
                 BindObjectInstance(item, "item");
@@ -63,6 +70,9 @@
             {
                 item = BindObject<Installation>("item");
             }
+
+            item.Application = application;
+            item.Server = server;
 
             using (var tx = session.BeginTransaction())
             {
