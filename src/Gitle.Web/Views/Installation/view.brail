@@ -1,36 +1,39 @@
-﻿<div class="row">
-  <div class="large-12 columns">
-    <a href="/installation">Terug</a>
-  </div>
-</div>
-
+﻿<% if CurrentUser.IsAdmin: %>
 <div class="row">
   <div class="large-12 columns">
-    <h1>${item.Customer.Name}:</h1>
+    <h1>${item.Name}</h1>
 
     <div class="row">
       <div class="large-2 columns">Applicatie</div>
-      <div class="large-10 columns">${item.Application.Name}</div>
+      <div class="large-10 columns"><a href="/Application/${item.Application.Slug}/view">${item.Application.Name}</a></div>
     </div>
 
     <div class="row">
-      <div class="large-2 columns">Omgeving</div>
-      <div class="large-10 columns">${item.InstallationType} omgeving</div>
+      <div class="large-2 columns">Type</div>
+      <div class="large-10 columns">${item.InstallationType}</div>
     </div>
 
     <div class="row">
-      <div class="large-2 columns">Server</div>
+      <div class="large-2 columns">Klant</div>
+      <div class="large-10 columns"><a href="/Customer/${item.Customer.Slug}/view">${item.Customer.Name}</a></div>
+    </div>
+
+    <div class="row">
+      <div class="large-2 columns">Server naam</div>
       <div class="large-10 columns">${item.Server.Name}</div>
     </div>
-    
+
     <div class="row">
       <div class="large-2 columns">URL</div>
-      <div class="large-10 columns">${item.Url}</div>
+      <div class="large-10 columns"><a target="_blank" href="${item.Url}">${item.Url}</a></div>
     </div>
 
     <div class="row">
-      <div class="large-2 columns">Description</div>
+      <div class="large-2 columns">Beschrijving</div>
       <div class="large-10 columns">${item.Description}</div>
     </div>
   </div>
 </div>
+<% else :%>
+Actie niet toegestaan.
+<% end %>
