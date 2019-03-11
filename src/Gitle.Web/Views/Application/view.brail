@@ -70,6 +70,10 @@
               </td>
             </tr>
             <% end %>
+            <% if not IsDefined("installations.Count") :%>
+          <td>Nog geen installaties toegevoegd aan deze applicatie.</td>
+          <td></td><td></td><td></td><td></td>
+          <% end %>
           </tbody>
         </table>
       </div>
