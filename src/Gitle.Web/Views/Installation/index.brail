@@ -6,6 +6,7 @@
     <table class="tablesorter small-blocks">
       <thead>
         <tr>
+          <th>Naam</th>
           <th>Applicatie</th>
           <th>Type</th>
           <th>Klant</th>
@@ -17,6 +18,7 @@
       <tbody>
         <% for item in items: %>
         <tr>
+          <td class="application">${item.Name}</td>
           <td class="application"><a href="/Application/${item.Application.Slug}/view">${item.Application.Name}</a></td>
           <td class="installation-type">${item.InstallationType}</td>
           <td class="customer"><a href="/Customer/${item.Application.Customer.Slug}/view">${item.Application.Customer.Name}</a></td>

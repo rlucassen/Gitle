@@ -10,6 +10,13 @@
       ${Form.HiddenField("item.Id")}
       ${Form.HiddenField("item.Slug")}
       <div class="row">
+        <div class="large-3 columns">Naam installatie</div>
+        <div class="large-9 columns">
+          <input class="focus" type="text" id="item_Name" name="item.Name" value="${?item.Name}" class="focus" data-abide-validator="checkInstallationName" data-serverid="${item.Id}" data-slugify="#item_Slug" required />
+          <small class="error">Geef een naam op</small>
+        </div>
+      </div>
+      <div class="row">
         <div class="large-3 columns">Applicatie</div>
         <div class="large-9 columns">
           <!--{Form.Select("applicationId", applications, {"class": "chosen-select", "value": "Id", "text": "CompleteName", "firstoption": "Kies een applicatie", "pattern":"select"})}-->
@@ -26,12 +33,6 @@
         <div class="large-3 columns">Type</div>
         <div class="large-9 columns">
           ${Form.Select("item.InstallationType", installationTypes, {"value": "Key", "text": "Value"})}
-        </div>
-      </div>
-      <div class="row">
-        <div class="large-3 columns">Naam installatie</div>
-        <div class="large-9 columns">
-          <input type="text" name="item.Name" id="item_Name" value="${?item.Name}" data-slugify="#item_Slug" required />
         </div>
       </div>
       <div class="row">
