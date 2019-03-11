@@ -56,7 +56,9 @@
         public void View(string applicationSlug)
         {
             var application = session.SlugOrDefault<Application>(applicationSlug);
+            var installations = session.Query<Installation>().Where(x => x.Application == application && x.IsActive);
             PropertyBag.Add("item", application);
+            PropertyBag.Add("installations", installations);
         }
         [Admin]
         public void Save(string applicationSlug, long customerId)

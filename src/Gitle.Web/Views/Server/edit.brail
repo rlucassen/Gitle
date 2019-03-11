@@ -68,6 +68,7 @@
           </table>
         </div>
       </div>
+      <% if item.Id > 0: %>
       <div class="row">
         <div class="large-3 columns">Installaties</div>
         <div class="large-9 columns">
@@ -92,28 +93,23 @@
               <% count = 0 %>
               <% for installation in item.Installations: %>
               <tr>
-                <td>
-                  ${installation.Name}
-                </td>
-                <td>
-                  ${installation.Application.Name}
-                </td>
-                <td>
-                  ${installation.InstallationType}
-                </td>
-                <td>
-                  ${installation.Url}
-                </td>
-                <td>
-                  <a href="/installation/${installation.Slug}/edit" target="_blank" class="button tiny no-margin">Wijzig</a>
-                </td>
+                <td>${installation.Name}</td>
+                <td>${installation.Application.Name}</td>
+                <td>${installation.InstallationType}</td>
+                <td>${installation.Url}</td>
+                <td><a href="/installation/${installation.Slug}/edit" target="_blank" class="button tiny no-margin">Wijzig</a></td>
               </tr>
               <% count++ %>
+              <% end %>
+              <% if item.Installations.Count == 0 :%>
+                <td>Nog geen installaties toegevoegd aan deze server.</td>
+                <td></td><td></td><td></td><td></td>
               <% end %>
             </tbody>
           </table>
         </div>
       </div>
+      <% end %>
       <div class="row">
         <div class="large-3 columns">Extern</div>
         <div class="large-9 columns">

@@ -18,7 +18,7 @@
 
     <span>Comments</span>
     <textarea data-live-comments="/application/${item.Slug}/comments">${?item.Comments}</textarea>
-    
+
     <div class="row">
       <div class="large-12 columns">
         <h2>Projecten</h2>
@@ -38,7 +38,38 @@
               <td>${?project.TypeString}</td>
             </tr>
             <% end %>
-            
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="large-12 columns">
+        <h2>Installaties</h2>
+        <table class="tablesorter small-blocks">
+          <thead>
+            <tr>
+              <th>Naam</th>
+              <th>Omgeving</th>
+              <th>Server</th>
+              <th>URL</th>
+              <th class="{sorter: false}"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% for installation in installations: %>
+            <tr>
+              <td class="name">${installation.Name}</td>
+              <td class="installation-type">${installation.InstallationType}</td>
+              <td class="server">${installation.Server.Name}</td>
+              <td class="url"><a target="_blank" href="https://myfinance.demo.auxilium.nl">${installation.Url}</a></td>
+              <td>
+                <ul class="button-group">
+                  <li><a class="button tiny secondary no-margin" href="/installation/${installation.Slug}/view">Bekijk</a></li>
+                </ul>
+              </td>
+            </tr>
+            <% end %>
           </tbody>
         </table>
       </div>

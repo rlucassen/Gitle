@@ -39,6 +39,10 @@
           <td>${contact.PhoneNumber}</td>
         </tr>
         <% end %>
+        <% if item.Contacts.Count == 0 :%>
+          <td>Nog geen contactpersonen toegevoegd aan deze server.</td>
+          <td></td><td></td>
+        <% end %>
       </tbody>
     </table>
   </div>
@@ -75,6 +79,10 @@
           </td>
         </tr>
         <% end %>
+        <% if item.Installations.Count == 0 :%>
+      <td>Nog geen installaties toegevoegd aan deze server.</td>
+      <td></td><td></td><td></td><td></td><td></td><td></td>
+      <% end %>
       </tbody>
     </table>
   </div>
