@@ -1,6 +1,7 @@
 ﻿<% if CurrentUser.IsAdmin: %>
 <div class="row">
   <div class="large-12 columns">
+
     <h1>${item.Name}</h1>
 
     <div class="row">

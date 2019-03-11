@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using Castle.MonoRail.Framework;
+    using Gitle.Model.Enum;
     using Helpers;
     using Model;
     using NHibernate;
@@ -31,7 +32,13 @@
             suggestions.AddRange(projects.Select(x => new Suggestion("Taken: " + x.Name, $"/project/{x.Slug}/issues")));
 
             var applications = session.Query<Application>().Where(x => x.Name.Contains(query) && x.IsActive);
-            suggestions.AddRange(applications.Select(x => new Suggestion($"Application: {x.Name}", $"/application/{x.Slug}/view")));
+            foreach (var application in applications)
+            {
+                var live = session.Query<Installation>().FirstOrDefault(x => x.Application == application && x.InstallationType == InstallationType.Live);
+                suggestions.Add(live != null
+                    ? new Suggestion($"Application: {application.Name} - {live.Server.Name}", $"/application/{application.Slug}/view")
+                    : new Suggestion($"Application: {application.Name}", $"/application/{application.Slug}/view"));
+            }
 
             return new {query = query, suggestions = suggestions };
         }
