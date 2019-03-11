@@ -13,6 +13,7 @@
         <div class="large-3 columns">Applicatie</div>
         <div class="large-9 columns">
           <!--{Form.Select("applicationId", applications, {"class": "chosen-select", "value": "Id", "text": "CompleteName", "firstoption": "Kies een applicatie", "pattern":"select"})}-->
+          <input type="hidden" name="item.ApplicationId" id="item_ApplicationId" value="${?item.Application.Id}" />
           <select class="chosen-select" name="item.Application" id="item_Application">
             <option>Kies een applicatie</option>
             <% for application in applications : %>
@@ -37,6 +38,7 @@
         <div class="large-3 columns">Server naam</div>
         <div class="large-9 columns">
           <!--{Form.Select("serverId", servers, {"class": "chosen-select", "value": "Id", "text": "Name", "firstoption": "Kies een server", "pattern":"select"})}-->
+          <input type="hidden" name="item.ServerId" id="item_ServerId" value="${?item.Server.Id}" />
           <select class="chosen-select" name="item.Server" id="item_Server">
             <option>Kies een server</option>
             <% for server in servers : %>
@@ -68,6 +70,10 @@ Actie niet toegestaan.
 <% end %>
 
 <script>
-  // Gekozen name = application + type
-
+  $(document).ready(() => {
+    $('form').on('submit', (e) => {
+      $('#item_ApplicationId').val($('#item_Application').val());
+      $('#item_ServerId').val($('#item_Server').val());
+    });
+  });
 </script>

@@ -58,9 +58,10 @@
         public void Save(string installationSlug)
         {
             var item = session.SlugOrDefault<Installation>(installationSlug);
-
-            var application = session.Get<Application>(long.Parse(Params["applicationId"]));
-            var server = session.Get<Server>(long.Parse(Params["serverId"]));
+            var appId = (Params["item.ApplicationId"] != null) ? long.Parse(Params["item.ApplicationId"]) : 0;
+            var application = (appId != 0) ? session.Get<Application>(appId) : new Application();
+            
+            var server = session.Get<Server>(long.Parse(Params["item.ServerId"]));
 
             if (item != null)
             {

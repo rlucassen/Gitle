@@ -63,7 +63,7 @@
         <tr>
           <td class="application"><a href="/Application/${installation.Application.Slug}/view">${installation.Application.Name}</a></td>
           <td class="installation-type">${installation.InstallationType}</td>
-          <td class="customer"><a href="/Customer/${installation.Customer.Slug}/view">${installation.Customer.Name}</a></td>
+          <td class="customer"><a href="/Customer/${installation.Application.Customer.Slug}/view">${installation.Application.Customer.Name}</a></td>
           <td class="server">${installation.Server.Name}</td>
           <td class="url"><a target="_blank" href="https://myfinance.demo.auxilium.nl">${installation.Url}</a></td>
           <td>
