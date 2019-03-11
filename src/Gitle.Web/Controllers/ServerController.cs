@@ -1,5 +1,6 @@
 ﻿namespace Gitle.Web.Controllers
 {
+    using System.Collections.Generic;
     using System.Linq;
     using Gitle.Model;
     using Gitle.Model.Helpers;
@@ -54,8 +55,18 @@
                 item = BindObject<Server>("item");
             }
 
+            var contacts = BindObject<Contact[]>("contact");
+
             using (var tx = session.BeginTransaction())
             {
+                item.Contacts = new List<Contact>();
+
+                foreach (var contact in contacts.Where(x => !string.IsNullOrWhiteSpace(x.FullName)))
+                {
+                    session.SaveOrUpdate(contact);
+                    item.Contacts.Add(contact);
+                }
+
                 session.SaveOrUpdate(item);
                 tx.Commit();
             }

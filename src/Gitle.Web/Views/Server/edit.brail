@@ -25,13 +25,100 @@
       <div class="row">
         <div class="large-3 columns">Contactpersonen</div>
         <div class="large-9 columns">
-          TODO<br /><br />
+          <table class="nested">
+            <thead>
+              <tr>
+                <th>Volledige Naam</th>
+                <th>Email</th>
+                <th>Telefoon nummer</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if item.Contacts.Count == 0 :%>
+              <tr class="hide">
+                <td>
+                  <input type="hidden" name="contact[-1].Id" value="" data-nested-remove="" />
+                  <input type="text" name="contact[-1].FullName" value="" />
+                </td>
+                <td>
+                  <input type="text" name="contact[-1].Email" value="" />
+                </td>
+                <td>
+                  <input type="text" name="contact[-1].PhoneNumber" value="" />
+                </td>
+              </tr>
+              <% end %>
+              <% count = 0 %>
+              <% for contact in item.Contacts: %>
+              <tr>
+                <td>
+                  <input type="hidden" name="contact[${count}].Id" value="${contact.Id}" data-nested-remove />
+                  <input type="text" name="contact[${count}].FullName" value="${contact.FullName}" />
+                </td>
+                <td>
+                  <input type="text" name="contact[${count}].Email" value="${contact.Email}" />
+                </td>
+                <td>
+                  <input type="text" name="contact[${count}].PhoneNumber" value="${contact.PhoneNumber}" />
+                </td>
+              </tr>
+              <% count++ %>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="row">
+        <div class="large-3 columns">Installaties</div>
+        <div class="large-9 columns">
+          <table class="tablesorter">
+            <thead>
+              <tr>
+                <th>Naam</th>
+                <th>Applicatie</th>
+                <th>Omgeving</th>
+                <th>URL</th>
+                <th class="{sorter: false}">Wijzig</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if item.Installations.Count == 0 :%>
+              <tr class="hide">
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <% end %>
+              <% count = 0 %>
+              <% for installation in item.Installations: %>
+              <tr>
+                <td>
+                  ${installation.Name}
+                </td>
+                <td>
+                  ${installation.Application.Name}
+                </td>
+                <td>
+                  ${installation.InstallationType}
+                </td>
+                <td>
+                  ${installation.Url}
+                </td>
+                <td>
+                  <a href="/installation/${installation.Slug}/edit" target="_blank" class="button tiny no-margin">Wijzig</a>
+                </td>
+              </tr>
+              <% count++ %>
+              <% end %>
+            </tbody>
+          </table>
         </div>
       </div>
       <div class="row">
         <div class="large-3 columns">Extern</div>
         <div class="large-9 columns">
-          <input type="checkbox" id="item_HostingCompany" name="item.HostingCompany" value="${?item.HostingCompany}" />
+          <input type="checkbox" id="item_IsExternal" name="item.IsExternal" <% if item.IsExternal: %>checked<% end %> />
+          <input type="hidden" name="item.IsExternal" value="false" />
         </div>
       </div>
       <div class="row">
