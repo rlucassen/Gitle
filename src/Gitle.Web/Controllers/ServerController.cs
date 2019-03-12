@@ -2,6 +2,8 @@
 {
     using System.Collections.Generic;
     using System.Linq;
+    using Castle.MonoRail.Framework;
+    using Castle.MonoRail.Framework.Descriptors;
     using Gitle.Model;
     using Gitle.Model.Helpers;
     using Gitle.Web.Helpers;
@@ -31,7 +33,10 @@
         public void Edit(string serverSlug)
         {
             var server = session.SlugOrDefault<Server>(serverSlug);
+            List<Contact> contacts = session.Query<Contact>().Where(x => x.IsActive && !server.Contacts.Contains(x)).ToList();
+
             PropertyBag.Add("item", (server != null) ? server : new Server());
+            PropertyBag.Add("contacts", contacts);
             RenderView("edit");
         }
 
@@ -85,6 +90,20 @@
                 tx.Commit();
             }
             RedirectToReferrer();
+        }
+
+        [return: JSONReturnBinder]
+        public object AddContact(string serverSlug, long addContactId)
+        {
+            var server = session.Slug<Server>(serverSlug);
+            var contact = session.Get<Contact>(addContactId);
+
+            return new
+            {
+                success = true,
+                message = contact.FullName+" is toegevoegd",
+                contact
+            };
         }
     }
 }

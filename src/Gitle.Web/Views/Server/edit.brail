@@ -6,7 +6,7 @@
     <% else: %>
     <h1>Nieuwe server</h1>
     <% end %>
-    <form action="/server/<% if item.Slug: %>${item.Slug}<% else: %>0<% end %>/save" method="POST" autocomplete="off" data-abide>
+    <form action="/server/<% if item.Slug: %>${item.Slug}<% else: %>0<% end %>/save" id="server-form" method="POST" autocomplete="off" data-abide>
       ${Form.HiddenField("item.Id")}
       ${Form.HiddenField("item.Slug")}
       <div class="row">
@@ -25,7 +25,21 @@
       <div class="row">
         <div class="large-3 columns">Contactpersonen</div>
         <div class="large-9 columns">
-          <table class="nested">
+          <div class="row">
+            <div class="medium-4 columns">
+              <select name="addContactId" id="addContactId">
+                <% for contact in contacts: %>
+                <option value="${contact.Id}">${contact.FullName}</option>
+                <% end %>
+              </select>
+            </div>
+            <div class="medium-8 columns">
+              <a id="addContact" class="button small">Voeg contact toe</a>
+            </div>
+            <!--<p class="contact-message"></p>-->
+          </div>
+
+          <table class="nested addable-contacts">
             <thead>
               <tr>
                 <th>Volledige Naam</th>
@@ -132,3 +146,59 @@
 <% else :%>
 Actie niet toegestaan.
 <% end %>
+
+<script>
+  //var msgTimer;
+
+  $(document).ready(() => {
+    //$('.contact-message').hide();
+
+    $('form#server-form').on('submit', () => {
+      $('input:disabled').prop('disabled', false);
+    });
+
+    $('.addable-contacts tbody tr td a').on('click', () => {
+      console.log('removing '+$(this).val());
+    });
+
+    $('#addContact').on('click', () => {
+      if ($('#addContactId').val()) {
+        $.ajax({
+          url: 'addContact?addContactId=' + $('#addContactId').val()
+        }).done(function (data) {
+          //$('.contact-message').text(data.message);
+          //$('.contact-message').show();
+
+          //clearTimeout(msgTimer);
+          //msgTimer = window.setTimeout(() => { $('.contact-message').hide() }, 1500);
+
+          if (data.success) {
+            let contact = data.contact;
+            let lastTr = $('.addable-contacts tbody tr:last-child input:first-child');
+            let count = parseInt(lastTr.length == 0 ? 0 : lastTr.prop('name').match(/\d+/)[0]) + 1;
+
+            $('.addable-contacts tbody').append(
+            '<tr>' +
+              '<td>' +
+                '<input type="hidden" name="contact[' + count + '].Id" value="' + contact.Id + '">' +
+                '<input type="text" name="contact[' + count + '].FullName" value="' + contact.FullName + '">' +
+              '</td>' +
+              '<td><input type="text" name="contact[' + count + '].Email" value="' + contact.Email +'"></td>' +
+              '<td><input type="text" name="contact[' + count + '].PhoneNumber" value="' + contact.PhoneNumber +'"></td>' +
+              '<td><a href="#" class="button tiny no-margin alert temp">Verwijder</a></td>' +
+            '</tr>');           
+
+            $('.addable-contacts tbody a.temp').on('click', function() {
+              $(this).parents('tr').remove();
+              $('#addContactId').append('<option value="' + contact.Id + '">' + contact.FullName + '</option>');
+            });
+
+            $('.addable-contacts tbody a.temp').removeClass('temp');
+
+            $('#addContactId').find('option[value="' + contact.Id + '"]').remove();
+          }
+        });
+      }
+    });
+  });
+</script>

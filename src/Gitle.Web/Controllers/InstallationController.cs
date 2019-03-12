@@ -2,6 +2,7 @@
 {
     using System;
     using System.Linq;
+    using Castle.MonoRail.Framework;
     using Gitle.Model;
     using Gitle.Model.Enum;
     using Gitle.Web.Helpers;
@@ -59,10 +60,10 @@
         {
             var item = session.SlugOrDefault<Installation>(installationSlug);
             var appId = (Params["item.ApplicationId"] != null) ? long.Parse(Params["item.ApplicationId"]) : 0;
-            var application = (appId != 0) ? session.Get<Application>(appId) : new Application();
-            
-            var server = session.Get<Server>(long.Parse(Params["item.ServerId"]));
 
+            var application = (appId != 0) ? session.Get<Application>(appId) : new Application();
+            var server = session.Get<Server>(long.Parse(Params["item.ServerId"]));
+            
             if (item != null)
             {
                 BindObjectInstance(item, "item");
@@ -94,7 +95,24 @@
                 session.SaveOrUpdate(installation);
                 tx.Commit();
             }
+
             RedirectToReferrer();
         }
+
+        //[return: JSONReturnBinder]
+        //public object CheckInstallationName(string name)
+        //{
+        //    var validName = session.Query<User>().Where(x => x.IsActive && x.Name == name).ToList();
+        //    var valid = true;
+        //    var message = "";
+
+        //    if (validName.Count > 1)
+        //    {
+        //        valid = false;
+        //        message = "Deze installatie naam is al in gebruik, kies een andere";
+        //    }
+
+        //    return new { success = valid, message = message };
+        //}
     }
 }
