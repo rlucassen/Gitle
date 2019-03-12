@@ -25,7 +25,8 @@
       <div class="row">
         <div class="large-3 columns">Type</div>
         <div class="large-9 columns">
-          ${Form.Select("item.InstallationType", installationTypes, {"value": "Key", "text": "Value"})}
+          ${Form.Select("item.InstallationType", installationTypes, {"value": "Key", "text": "Value", "pattern":"select", "required":"required", "data-abide-validator":"checkInstallationType"})}
+          <small class="error">Kies een installatie type</small>
         </div>
       </div>
       <div class="row">

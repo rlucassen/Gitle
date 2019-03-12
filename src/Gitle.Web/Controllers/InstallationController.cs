@@ -1,6 +1,7 @@
 ﻿namespace Gitle.Web.Controllers
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using Castle.MonoRail.Framework;
     using Gitle.Model;
@@ -102,6 +103,27 @@
                 message = "Deze naam is al in gebruik, kies een andere";
             }
             return new { success = validName, message = message };
+        }
+
+        [return: JSONReturnBinder]
+        public object CheckInstallationType(long installationType, long installationId)
+        {
+            var installation = session.Get<Installation>(installationId);
+            var server = installation.Server;
+            var installations = server.Installations.Where(x => x.InstallationType == installation.InstallationType && x.Application == installation.Application && x != installation);
+
+            if (installations.Any())
+            {
+                return new
+                {
+                    message = "error"
+                };
+            }
+
+            return new
+            {
+                
+            };
         }
     }
 }
