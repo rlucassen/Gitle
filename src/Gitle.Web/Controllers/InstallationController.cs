@@ -42,7 +42,9 @@
                 .ToList();
 
             PropertyBag.Add("applications", session.Query<Application>().Where(x => x.IsActive).OrderBy(x => x.Name));
+            PropertyBag.Add("applicationId", installation?.Application?.Id);
             PropertyBag.Add("servers", session.Query<Server>().Where(x => x.IsActive).OrderBy(x => x.Name));
+            PropertyBag.Add("serverId", installation?.Server?.Id);
             PropertyBag.Add("installationTypes", types);
             PropertyBag.Add("item", (installation != null) ? installation : new Installation());
             RenderView("edit");
