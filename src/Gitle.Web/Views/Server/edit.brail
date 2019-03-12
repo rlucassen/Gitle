@@ -35,6 +35,7 @@
             </div>
             <div class="medium-8 columns">
               <a id="addContact" class="button small">Voeg contact toe</a>
+              <a id="removeContact" class="button small alert">Verwijder contact</a>
             </div>
             <!--<p class="contact-message"></p>-->
           </div>
@@ -153,6 +154,13 @@ Actie niet toegestaan.
   $(document).ready(() => {
     //$('.contact-message').hide();
 
+    $('#removeContact').on('click', () => {
+      if (confirm('Hiermee verwijdert u zowel de contact, als relaties van deze contact definitief. Weet u het zeker?')) {
+        window.location.href = 'removeContact?contactId=' + $('#addContactId').val();
+        // $('#addContactId').find('option[value="' + $('#addContactId').val() + '"]').remove();
+      }
+    });
+
     $('form#server-form').on('submit', () => {
       $('input:disabled').prop('disabled', false);
     });
@@ -186,7 +194,7 @@ Actie niet toegestaan.
               '<td><input type="text" name="contact[' + count + '].Email" value="' + contact.Email +'"></td>' +
               '<td><input type="text" name="contact[' + count + '].PhoneNumber" value="' + contact.PhoneNumber +'"></td>' +
               '<td><a href="#" class="button tiny no-margin alert temp">Verwijder</a></td>' +
-            '</tr>');           
+            '</tr>');
 
             $('.addable-contacts tbody a.temp').on('click', function() {
               $(this).parents('tr').remove();

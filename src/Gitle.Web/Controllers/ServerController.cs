@@ -105,5 +105,19 @@
                 contact
             };
         }
+        
+        public void RemoveContact(long contactId)
+        {
+            var contact = session.Get<Contact>(contactId);
+            contact.Deactivate();
+
+            using (var tx = session.BeginTransaction())
+            {
+                session.SaveOrUpdate(contact);
+                tx.Commit();
+            }
+
+            RedirectToReferrer();
+        }
     }
 }
