@@ -33,7 +33,9 @@
         public void Edit(string serverSlug)
         {
             var server = session.SlugOrDefault<Server>(serverSlug);
-            List<Contact> contacts = session.Query<Contact>().Where(x => x.IsActive && !server.Contacts.Contains(x)).ToList();
+            List<Contact> contacts = new List<Contact>();
+            if (server != null)
+                contacts = session.Query<Contact>().Where(x => x.IsActive && !server.Contacts.Contains(x)).ToList();
 
             PropertyBag.Add("item", (server != null) ? server : new Server());
             PropertyBag.Add("contacts", contacts);
@@ -101,11 +103,11 @@
             return new
             {
                 success = true,
-                message = contact.FullName+" is toegevoegd",
+                message = contact.FullName + " is toegevoegd",
                 contact
             };
         }
-        
+
         public void RemoveContact(long contactId)
         {
             var contact = session.Get<Contact>(contactId);
@@ -118,6 +120,18 @@
             }
 
             RedirectToReferrer();
+        }
+
+        [return: JSONReturnBinder]
+        public object CheckServerName(string name, long serverId)
+        {
+            var validName = !session.Query<Server>().Any(x => x.IsActive && x.Slug == name.Slugify() && x.Id != serverId);
+            var message = "Voer een naam in";
+            if (!validName)
+            {
+                message = "Deze naam is al in gebruik, kies een andere";
+            }
+            return new { success = validName, message = message };
         }
     }
 }

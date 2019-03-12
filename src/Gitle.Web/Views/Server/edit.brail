@@ -7,12 +7,12 @@
     <h1>Nieuwe server</h1>
     <% end %>
     <form action="/server/<% if item.Slug: %>${item.Slug}<% else: %>0<% end %>/save" id="server-form" method="POST" autocomplete="off" data-abide>
-      ${Form.HiddenField("item.Id")}
+      ${Form.HiddenField("item.Id", {"data-serverId": "value"})}
       ${Form.HiddenField("item.Slug")}
       <div class="row">
         <div class="large-3 columns">Naam</div>
         <div class="large-9 columns">
-          <input class="focus" type="text" id="item_Name" name="item.Name" value="${?item.Name}" data-abide-validator="checkServerName" data-serverid="${item.Id}" data-slugify="#item_Slug" required />
+          <input type="text" id="item_Name" name="item.Name" value="${?item.Name}" data-abide-validator="checkServerName" data-slugify="#item_Slug" required />
           <small class="error">Geef een naam op</small>
         </div>
       </div>
@@ -117,9 +117,12 @@
               <% count++ %>
               <% end %>
               <% if item.Installations.Count == 0 :%>
-                <td>Nog geen installaties toegevoegd aan deze server.</td>
-                <td></td><td></td><td></td><td></td>
-              <% end %>
+            <td>Nog geen installaties toegevoegd aan deze server.</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <% end %>
             </tbody>
           </table>
         </div>
