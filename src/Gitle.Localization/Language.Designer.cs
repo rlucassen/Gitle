@@ -196,6 +196,15 @@ namespace Gitle.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Gearchiveerd.
+        /// </summary>
+        public static string Archived {
+            get {
+                return ResourceManager.GetString("Archived", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to om.
         /// </summary>
         public static string At {
@@ -246,6 +255,15 @@ namespace Gitle.Localization {
         public static string Clear_Search {
             get {
                 return ResourceManager.GetString("Clear_Search", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Gesloten.
+        /// </summary>
+        public static string Closed {
+            get {
+                return ResourceManager.GetString("Closed", resourceCulture);
             }
         }
         
@@ -583,6 +601,15 @@ namespace Gitle.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Uitgevoerd.
+        /// </summary>
+        public static string Done {
+            get {
+                return ResourceManager.GetString("Done", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Exporteer.
         /// </summary>
         public static string Export {
@@ -678,6 +705,15 @@ namespace Gitle.Localization {
         public static string Groups {
             get {
                 return ResourceManager.GetString("Groups", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to On hold.
+        /// </summary>
+        public static string Hold {
+            get {
+                return ResourceManager.GetString("Hold", resourceCulture);
             }
         }
         
@@ -867,6 +903,15 @@ namespace Gitle.Localization {
         public static string Note {
             get {
                 return ResourceManager.GetString("Note", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open.
+        /// </summary>
+        public static string Open {
+            get {
+                return ResourceManager.GetString("Open", resourceCulture);
             }
         }
         

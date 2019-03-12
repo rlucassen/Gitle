@@ -167,6 +167,10 @@
       <Project>{E9C28D89-80BD-4384-BAB4-88911DD8236D}</Project>
       <Name>Gitle.Clients.GitHub</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Gitle.Localization\Gitle.Localization.csproj">
+      <Project>{369fbfe1-7acc-4a9e-a632-a1ffd1ef7607}</Project>
+      <Name>Gitle.Localization</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\MarkdownDeep License.txt" />

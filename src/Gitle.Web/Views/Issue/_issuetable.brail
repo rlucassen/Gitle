@@ -2,7 +2,7 @@
   <% for issue in result.Items: %>
   <div class="row <% if issue.IsOpen: %><% if issue.PickedUpBy == null:%>orderable<% else: %>pickedup<% end %><% end %>">
     <div class="large-12 columns">
-      <div class="issue<% if issue.IsAdministrative : %> administrative<% end %><% if issue.Touched(CurrentUser): %> touched<% end %> radius<% if issue.PickedUpBy == null: %> free<% end %> ${issue.State.ToString()}" data-issueid="${issue.Number}">
+      <div class="issue<% if issue.Touched(CurrentUser): %> touched<% end %> radius<% if issue.PickedUpBy == null: %> free<% end %> ${issue.State.ToString()}" data-issueid="${issue.Number}">
         <div class="row">
           <div class="large-1 columns issuestate">
             <div class="row">
@@ -13,19 +13,23 @@
               <div class="small-6 columns large-text-center medium-text-right">
                 <% if not issue.IsAdministrative : %>
                 <% if issue.IsOpen: %>
-                <i class="fa fa-info-circle green" aria-hidden="true" title="open"></i>
+                <i class="fa fa-info-circle blue" aria-hidden="true" title="open"></i>
                 <!--<i class="fa fa-exclamation-circle green" title="open"></i>-->
                 <% elif issue.IsArchived: %>
-                <i class="fa fa-trash red" title="${Helpers.DateTimeHelper.Readable(issue.ArchivedAt)}" title="gearchiveerd"></i>
+                <i class="fa fa-trash red" title="gearchiveerd: ${Helpers.DateTimeHelper.Readable(issue.ArchivedAt)}"></i>
+                <% elif issue.IsDone: %>
+                <i class="fa fa-thumbs-o-up green" title="uitgevoerd"></i>
+                <% elif issue.IsOnHold: %>
+                <i class="fa fa-hand-paper-o orange" title="on hold"></i>
                 <% else: %>
-                <i class="fa fa-ban red" title="${Helpers.DateTimeHelper.Readable(issue.ClosedAt)}" title="gesloten"></i>
+                <i class="fa fa-ban red" title="gesloten: ${Helpers.DateTimeHelper.Readable(issue.ClosedAt)}"></i>
                 <% end %>
-                <!--< if not issue.Prioritized and issue.IsOpen and issue.Pickups.Count == 0: >
-  <i class="fa fa-paw red noprio" title="Niet geprioriteerd"></i>
-  < end >-->
+                <!--< if not issue.Prioritized and issue.IsOpen and issue.Pickups.Count == 0: ><i class="fa fa-paw red noprio" title="Niet geprioriteerd"></i>< end >-->
                 <% if issue.PickedUpBy != null and issue.IsOpen: %>
                 <i class="fa fa-user orange pickedup" title="In behandeling"></i>
                 <% end %>
+                <% else :%>
+                <i class="fa fa-bookmark yellow" title="administratief"></i>
                 <% end %>
               </div>
             </div>
@@ -37,17 +41,31 @@
                 <% for label in labels: %>
                 <%  if issue.CheckLabel(label.Name): %>
                 <span title="${label.Name}" class="label no-margin<% if label.VisibleForCustomer: %> radius<% end %>" style="background-color: #${label.Color};">${label.Name}</span>
-                <%  end %>
+                <% end %>
                 <% end %>
               </div>
               <div class="large-1 columns text-right comments">
-                <% if issue.Comments.Count > 0: %><i class="fa fa-comments-o"></i> ${issue.Comments.Count}<% end %>
+                <% if issue.Comments.Count > 0: %>
+                  <% if CurrentUser.IsAdmin or CurrentUser.CanBookHours :%>
+                    <i class="fa fa-comments-o"></i>
+                    ${issue.Comments.Count}
+                  <% else :%>
+                    <% count = 0 %>
+                    <% for comment in issue.Comments :%>
+                      <% if not comment.IsInternal :%>
+                      <% count++ %>
+                      <% end %>
+                    <% end %>
+                    <i class="fa fa-comments-o"></i>
+                    ${count}
+                  <% end %>
+                <% end %>
               </div>
             </div>
             <div class="row detailsrow">
               <div class="large-12 columns">
                 geopend op <strong>${Helpers.DateTimeHelper.Readable(issue.CreatedAt)}</strong><% if issue.CreatedBy: %> door <strong>${issue.CreatedBy.FullName}</strong><% end %>,
-                <% if issue.ClosedAt != null: %>gesloten op <strong>${Helpers.DateTimeHelper.Readable(issue.ClosedAt)}</strong><% if issue.ClosedBy != null: %> door <strong>${issue.ClosedBy.FullName}</strong><% end %><% end %>
+                <% if issue.ClosedAt != null and issue.State.ToString() == "Closed" : %>gesloten op <strong>${Helpers.DateTimeHelper.Readable(issue.ClosedAt)}</strong><% if issue.ClosedBy != null: %> door <strong>${issue.ClosedBy.FullName}</strong><% end %><% end %>
               </div>
             </div>
             <div class="row detailsrow">

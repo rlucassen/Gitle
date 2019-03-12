@@ -3,6 +3,7 @@
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Configuration;
     using System.IO;
     using System.Linq;
     using System.Text;
@@ -13,6 +14,7 @@
     using Clients.Freckle.Models;
     using FluentNHibernate.Conventions.Inspections;
     using Helpers;
+    using Localization;
     using Model;
     using Model.Enum;
     using Model.Helpers;
@@ -20,6 +22,7 @@
     using NHibernate;
     using NHibernate.Linq;
     using Newtonsoft.Json;
+    using NHibernate.Linq.Expressions;
     using QueryParsers;
     using Issue = Model.Issue;
     using Project = Model.Project;
@@ -84,10 +87,21 @@
 
             var project = session.Slug<Project>(projectSlug);
             PropertyBag.Add("project", project);
+
             var item = session.Query<Issue>().Single(i => i.Number == issueId && i.Project == project);
+            var statusString = string.Concat(Language.ResourceManager.GetString(item.State.ToString()).Select((currentChar, index) => index == 0 ? char.ToUpper(currentChar) : currentChar));
+            var statusInt = item.State;
+
+            var issueStates = EnumHelper.ToDictionary(typeof(IssueState));
+            var statusList = issueStates.Where(s =>
+                new[] {IssueState.Open, IssueState.Done, IssueState.Hold, IssueState.Closed}.Contains((IssueState)s.Key))
+                .ToList();
+
             PropertyBag.Add("item", item);
             PropertyBag.Add("comments", item.Comments);
             PropertyBag.Add("days", DayHelper.GetPastDaysList(setting));
+            PropertyBag.Add("statusList", statusList);
+            PropertyBag.Add("status", statusInt);
             PropertyBag.Add("datetime", DateTime.Now);
 
             item.Touch(CurrentUser);
@@ -158,7 +172,7 @@
         }
 
         [MustHaveProject]
-        public void Save(string projectSlug, int issueId, string[] labels, string andNew)
+        public void Save(string projectSlug, int issueId, long[] labels, string andNew)
         {
             var project = session.Slug<Project>(projectSlug);
             if (project.Closed)
@@ -167,8 +181,9 @@
             }
 
             var issue = session.Query<Issue>().SingleOrDefault(i => i.Number == issueId && i.Project == project);
+            var query = session.Query<Label>().Where(x => labels.Contains(x.Id)).ToList();
 
-            var savedIssue = SaveIssue(project, issue, labels);
+            var savedIssue = SaveIssue(project, issue, query);
 
             var hash = $"#issue{savedIssue.Number}";
             if (string.IsNullOrEmpty(andNew))
@@ -182,7 +197,7 @@
         }
 
         [return: JSONReturnBinder]
-        public object AjaxSave(string projectSlug, int issueId, string[] labels)
+        public object AjaxSave(string projectSlug, int issueId, List<Label> labels)
         {
             var project = session.Slug<Project>(projectSlug);
             if (project.Closed)
@@ -197,7 +212,7 @@
             return new {savedIssue.Id, savedIssue.Number, savedIssue.Name};
         }
 
-        private Issue SaveIssue(Project project, Issue issue, string[] labels)
+        private Issue SaveIssue(Project project, Issue issue, List<Label> labels)
         {
             if (issue != null)
             {
@@ -212,7 +227,7 @@
                 issue.Open(CurrentUser);
             }
 
-            issue.Labels = labels.Select(label => session.Query<Label>().FirstOrDefault(l => l.Name == label)).ToList();
+            issue.Labels = labels.Select(label => session.Query<Label>().FirstOrDefault(l => l.Id == label.Id)).ToList();
 
             using (var transaction = session.BeginTransaction())
             {
@@ -310,7 +325,7 @@
         }
 
         [Admin]
-        public void BookTime(string projectSlug, int issueId, DateTime date, double minutes, bool close, string comment)
+        public void BookTime(string projectSlug, int issueId, DateTime date, double minutes, bool close, string comment, string status)
         {
             RedirectToReferrer();
             var project = session.Slug<Project>(projectSlug);
@@ -319,8 +334,25 @@
                 throw new ProjectClosedException(project);
             }
             var issue = session.Query<Issue>().Single(i => i.Number == issueId && i.Project == project);
+
+            switch (status)
+            {
+                case "2":
+                    issue.ChangeState(CurrentUser, IssueState.Done);
+                break;
+                case "3":
+                    issue.ChangeState(CurrentUser, IssueState.Hold);
+                break;
+                case "4":
+                    issue.ChangeState(CurrentUser, IssueState.Closed);
+                    break;
+                case "1":
+                    issue.ChangeState(CurrentUser, IssueState.Open);
+                    break;
+            }
+
             if (issue.IsArchived) return;
-            var booking = new Booking {User = CurrentUser, Date = date, Minutes = minutes, Issue = issue, Project = project, Comment = comment};
+            var booking = new Booking {User = CurrentUser, Date = date, Minutes = minutes, Issue = issue, Project = project, Comment = comment, Unbillable = project.Unbillable};
 
             using (var tx = session.BeginTransaction())
             {
@@ -340,9 +372,43 @@
             RedirectToReferrer();
             var project = session.Slug<Project>(projectSlug);
             var issue = session.Query<Issue>().Single(i => i.Number == issueId && i.Project == project);
-            if (issue.State == IssueState.Open || issue.State == IssueState.Unknown)
+            if (issue.State != IssueState.Archived && issue.State != IssueState.Closed)
             {
                 issue.Close(CurrentUser);
+                using (var tx = session.BeginTransaction())
+                {
+                    session.SaveOrUpdate(issue);
+                    tx.Commit();
+                }
+            }
+        }
+
+        [MustHaveProject] 
+        public void OnHold(string projectSlug, int issueId)
+        {
+            RedirectToReferrer();
+            var project = session.Slug<Project>(projectSlug);
+            var issue = session.Query<Issue>().Single(i => i.Number == issueId && i.Project == project);
+            if (issue.State != IssueState.Archived && issue.State != IssueState.Hold)
+            {
+                issue.OnHold(CurrentUser);
+                using (var tx = session.BeginTransaction())
+                {
+                    session.SaveOrUpdate(issue);
+                    tx.Commit();
+                }
+            }
+        }
+
+        [MustHaveProject]
+        public void Done(string projectSlug, int issueId)
+        {
+            RedirectToReferrer();
+            var project = session.Slug<Project>(projectSlug);
+            var issue = session.Query<Issue>().Single(i => i.Number == issueId && i.Project == project);
+            if (issue.State != IssueState.Archived && issue.State != IssueState.Done)
+            {
+                issue.Done(CurrentUser);
                 using (var tx = session.BeginTransaction())
                 {
                     session.SaveOrUpdate(issue);
@@ -361,7 +427,7 @@
                 throw new ProjectClosedException(project);
             }
             var issue = session.Query<Issue>().Single(i => i.Number == issueId && i.Project == project);
-            if (issue.State == IssueState.Closed || issue.State == IssueState.Unknown)
+            if (issue.State != IssueState.Archived || issue.State != IssueState.Open)
             {
                 issue.Open(CurrentUser);
                 using (var tx = session.BeginTransaction())

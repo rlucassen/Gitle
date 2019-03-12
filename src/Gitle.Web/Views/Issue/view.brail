@@ -60,8 +60,20 @@
         </ul>
         <hr />
         <% end %>
-        <% if not item.IsArchived and CurrentUser.IsAdmin and not project.Closed: %>
-        <a href="pickup" class="button success large-12 no-margin">Taak oppakken</a>
+        <% if not project.Closed and not item.IsArchived and not item.IsAdministrative :%>
+        <% if CurrentUser.IsAdmin :%>
+        <a href="pickup" class="button large-12 no-margin">Taak oppakken</a>
+        <hr />
+        <% end %>
+        <% if item.State.ToString() != "Open" and item.State.ToString() != "Closed": %>
+        <a href="reopen" class="button secondary large-12">Heropen taak</a>
+        <% end %>
+        <% if item.State.ToString() != "Done" and CurrentUser.IsAdmin :%>
+        <a href="done" class="button success large-12">Taak uitgevoerd</a>
+        <% end %>
+        <% if item.State.ToString() != "Hold" :%>
+        <a href="onhold" class="button on-hold large-12">Taak on hold</a>
+        <% end %>
         <hr />
         <% end %>
         <% if CurrentUser.CanBookHours and not project.Closed and days.Count > 0: %>
@@ -84,27 +96,40 @@
               <input type="text" name="comment" class="no-margin" placeholder="Opmerking" autocomplete="on">
             </div>
           </div>
+          <% if not item.IsAdministrative :%>
           <div class="row">
-            <div class="large-12 columns">${Form.CheckboxField("close")} Sluit de taak</div>
+            <div class="small-12 columns">
+              <p class="labels no-margin">
+                Status Wijzigen
+                ${Form.Select("status", status, statusList, {"value": "Key", "text": "Value", "class": "no-margin"})}
+                <!--<a href="#" data-dropdown="addstatus" class="small button dropdown secondary radius"><strong>Standaard</strong></a>-->
+              </p>
+              <!--<div class="large-12 columns">{Form.CheckboxField("close")} Sluit de taak</div>-->
+              <!--<ul id="addstatus" data-dropdown-content class="f-dropdown">
+          <li><a href="/project/{project.Slug}/issue/{item.Number}">Standaard</a></li>
+          <li><a href="/project/{project.Slug}/issue/{item.Number}">Uitgevoerd</a></li>
+          <li><a href="/project/{project.Slug}/issue/{item.Number}">On hold</a></li>
+        </ul>-->
+            </div>
           </div>
+          <% end %>
           <div class="row">
             <div class="large-12 columns">
               <input type="submit" class="button right" value="Uren boeken" />
             </div>
           </div>
         </form>
-        <% else: %>
-        Boekingperiode tot en met ${?setting.ClosedForBookingsBefore.ToShortDateString()} is afgesloten.
-        <% end %>
         <hr />
         <% end %>
-        <% if item.State.ToString() == "Open": %>
-        <a href="close" class="button alert large-12">Sluit taak</a>
-        <% elif item.State.ToString() == "Closed": %>
-        <a href="reopen" class="button success large-12">Heropen taak</a>
-        <% if CurrentUser.IsAdmin: %>
-        <a href="archive" class="button alert large-12">Archiveer taak</a>
         <% end %>
+        <% if item.State.ToString() == "Closed": %>
+        <a href="reopen" class="button success large-12">Heropen taak</a>
+        <% end %>
+        <% if item.State.ToString() != "Closed" and item.State.ToString() != "Archived" : %>
+        <a href="close" class="button alert large-12">Sluit taak</a>
+        <% end %>
+        <% if CurrentUser.IsAdmin and item.State.ToString() != "Archived": %>
+        <a href="archive" class="button alert large-12">Archiveer taak</a>
         <% end %>
       </div>
       <div class="large-9 columns">

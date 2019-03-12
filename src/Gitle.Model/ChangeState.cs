@@ -5,6 +5,7 @@
     using Enum;
     using Helpers;
     using Interfaces.Model;
+    using Localization;
 
     public class ChangeState : Touchable, IIssueAction
     {
@@ -17,7 +18,7 @@
         {
             get
             {
-                var state = IssueState.GetDescription();
+                var state = Language.ResourceManager.GetString(IssueState.ToString()).ToLower();
                 var openings = Issue.ChangeStates.Where(x => x.IssueState == IssueState.Open).ToList();
                 if (openings.Count() > 1 && openings.OrderByDescending(x => x.CreatedAt).Last() != this &&
                     IssueState == IssueState.Open)
@@ -33,7 +34,9 @@
         {
             get
             {
-                var state = IssueState.GetDescription();
+                var state = Language.ResourceManager.GetString(IssueState.ToString()).ToLower();
+                state = (state == "open") ? "geopend" : state;
+
                 var openings = Issue.ChangeStates.Where(x => x.IssueState == IssueState.Open).ToList();
                 if (openings.Count() > 1 && openings.OrderByDescending(x => x.CreatedAt).Last() != this &&
                     IssueState == IssueState.Open)
@@ -48,7 +51,7 @@
         public virtual string EmailSubject
         {
             get {
-                var state = IssueState.GetDescription();
+                var state = Language.ResourceManager.GetString(IssueState.ToString()).ToLower();
                 var openings = Issue.ChangeStates.Where(x => x.IssueState == IssueState.Open).ToList();
                 if (openings.Count() > 1 && openings.OrderByDescending(x => x.CreatedAt).Last() != this &&
                     IssueState == IssueState.Open)

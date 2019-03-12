@@ -54,7 +54,7 @@
         </div>
       </div>
       <div class="row">
-        <div class="small-6 medium-3 columns">Filterlabel</div>
+        <div class="small-6 medium-3 columns">Filter Label</div>
         <div class="large-3 columns end">
           <div class="row collapse">
             <div class="small-3 large-2 columns">
@@ -74,7 +74,7 @@
         <div class="large-9 columns">
           <% for label in labels: %>
           <div>
-            <input type="checkbox" class="inline" name="labels[${label.Id}]" value="${label.Name}" <% if item.CheckLabel(label.Name): %>checked="checked"<% end %>/> <span class="label no-margin radius" style="background-color: #${label.Color};">${label.Name}</span>
+            <input type="checkbox" class="inline" name="labels[${label.Id}]" value="${label.Id}" <% if item.CheckLabel(label.Name): %>checked="checked"<% end %>/> <span class="label no-margin radius" style="background-color: #${label.Color};">${label.Name}</span>
           </div>
           <% end %>
         </div>

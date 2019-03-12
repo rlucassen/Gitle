@@ -84,7 +84,10 @@ ul.f-dropdown.wide {
 span {
   &.button.three-state-checker {
     font-size: 1.1em;
-    padding: 0.36rem 1.25rem;
+    height: 33px;
+    width: 52px;
+    padding: 0.5rem 1.25rem;
+    margin-bottom: 10px;
   }
 
   &.three-state-checker {
@@ -168,6 +171,13 @@ body.scroll .footer {
   color: orange;
 }
 
+.on-hold {
+  background-color: orange;
+  &:hover, &:focus {
+    background-color: darkorange;
+  }
+}
+
 .small-text {
   font-size: 0.9rem;
 
@@ -228,14 +238,28 @@ table.tickets-table {
 
     .open {
       color: #dedede;
-      background-color: #a05f55;
+      background-color: #008CBA;
+      text-align: left;
+      padding-left: 0.5em;
+    }
+
+    .done {
+      color: #000;
+      background-color: #6ad43b;
+      text-align: left;
+      padding-left: 0.5em;
+    }
+
+    .hold {
+      color: #000;
+      background-color: orange;
       text-align: left;
       padding-left: 0.5em;
     }
 
     .closed {
-      color: #dedede;
-      background-color: #4c8ca0;
+      color: #000;
+      background-color: #d0d0d0;
       text-align: right;
       padding-right: 0.5em;
     }
@@ -779,6 +803,13 @@ table {
 
 .row.filters {
   margin: 0 -0.4375rem;
+  padding-top: 10px;
+  margin-bottom: 10px;
+
+  a, button {
+    margin-bottom: 10px !important;
+
+  }
 
   .button.active {
     background-color: #b9b9b9;
@@ -1046,6 +1077,8 @@ table {
 }
 
 #group-actions {
+  margin-left: 5px;
+  margin-top: 10px;
   select {
     height: 2.0625rem;
     font-size: 0.775rem;
@@ -1434,13 +1467,14 @@ input[type=checkbox].inline {
   }
 
   .selected {
-    :hover{
+    :hover {
       background-color: #cbdce2;
     }
+
     background-color: #cbdce2;
   }
 
-  i:hover{
+  i:hover {
     background-color: transparent;
   }
 
@@ -1570,4 +1604,8 @@ select.hide-disabled {
 
 .administrative {
   background-color: #ffe6fd;
+
+  &:hover {
+    background-color: #ffd0fd;
+  }
 }

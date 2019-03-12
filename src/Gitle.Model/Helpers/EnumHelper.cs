@@ -5,6 +5,7 @@
     using System.Reflection;
     using System;
     using System.Collections.Generic;
+    using Localization;
 
     public static class EnumHelper
     {
@@ -28,7 +29,7 @@
 
             foreach (int val in enumValArray)
             {
-                enumValList.Add((T)Enum.Parse(enumType, val.ToString()));
+                enumValList.Add((T)Enum.Parse(enumType, val.GetDescription()));
             }
 
             return enumValList;
@@ -87,6 +88,8 @@
                     {
                         return attr.Description;
                     }
+
+                    return Language.ResourceManager.GetString(name);
                 }
             }
             return null;
