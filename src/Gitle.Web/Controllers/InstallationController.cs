@@ -61,22 +61,19 @@
             var item = session.SlugOrDefault<Installation>(installationSlug);
             var application = session.Get<Application>(applicationId);
             var server = session.Get<Server>(serverId);
+
             if (item != null)
-            {
                 BindObjectInstance(item, "item");
-            }
             else
-            {
                 item = BindObject<Installation>("item");
-            }
 
             item.Application = application;
             item.Server = server;
 
             using (var tx = session.BeginTransaction())
             {
-               session.SaveOrUpdate(item);
-               tx.Commit();
+                session.SaveOrUpdate(item);
+                tx.Commit();
             }
 
             RedirectToUrl("/installation");
@@ -104,7 +101,6 @@
             {
                 message = "Deze naam is al in gebruik, kies een andere";
             }
-            var server = Params["item.Server.Id"];
             return new { success = validName, message = message };
         }
     }

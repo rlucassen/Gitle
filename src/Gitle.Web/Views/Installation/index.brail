@@ -18,17 +18,17 @@
       <tbody>
         <% for item in items: %>
         <tr>
-          <td class="application">${item.Name}</td>
-          <td class="application"><a href="/Application/${item.Application.Slug}/view">${item.Application.Name}</a></td>
-          <td class="installation-type">${item.InstallationType}</td>
-          <td class="customer"><a href="/Customer/${item.Application.Customer.Slug}/view">${item.Application.Customer.Name}</a></td>
-          <td class="server">${item.Server.Name}</td>
-          <td class="url"><a target="_blank" href="${item.Url}">${item.Url}</a></td>
+          <td class="application">${?item.Name}</td>
+          <td class="application"><a href="/Application/${?item.Application.Slug}/view">${?item.Application.Name}</a></td>
+          <td class="installation-type">${?item.InstallationType}</td>
+          <td class="customer"><a href="/Customer/${?item.Application.Customer.Slug}/view">${?item.Application.Customer.Name}</a></td>
+          <td class="server">${?item.Server.Name}</td>
+          <td class="url"><a target="_blank" href="${?item.Url}">${?item.Url}</a></td>
           <td>
             <ul class="button-group">
-              <li><a class="button tiny secondary no-margin" href="/installation/${item.Slug}/view">Details</a></li>
-              <li><a class="button tiny success no-margin" href="/installation/${item.Slug}/edit">Bewerk</a></li>
-              <li><a class="button tiny alert no-margin" href="/installation/${item.Slug}/delete" data-confirm="Weet je het zeker?">Verwijder</a></li>
+              <li><a class="button tiny secondary no-margin" href="/installation/${?item.Slug}/view">Details</a></li>
+              <li><a class="button tiny success no-margin" href="/installation/${?item.Slug}/edit">Bewerk</a></li>
+              <li><a class="button tiny alert no-margin" href="/installation/${?item.Slug}/delete" data-confirm="Weet je het zeker?">Verwijder</a></li>
             </ul>
           </td>
         </tr>
