@@ -12,7 +12,7 @@
       <div class="row">
         <div class="large-3 columns">Naam installatie</div>
         <div class="large-9 columns">
-          <input type="text" id="item_Name" name="item.Name" value="${?item.Name}" data-abide-validator="checkInstallationName" data-serverid="${item.Id}" data-slugify="#item_Slug" required />
+          <input type="text" id="item_Name" name="item.Name" value="${?item.Name}" data-abide-validator="checkInstallationName" data-slugify="#item_Slug" required />
           <small class="error">Geef een naam op</small>
         </div>
       </div>
