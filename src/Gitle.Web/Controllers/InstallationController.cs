@@ -2,6 +2,7 @@
 {
     using System;
     using System.Linq;
+    using Castle.MonoRail.Framework;
     using Gitle.Model;
     using Gitle.Model.Enum;
     using Gitle.Web.Helpers;
@@ -55,14 +56,11 @@
         }
 
         [Admin]
-        public void Save(string installationSlug)
+        public void Save(string installationSlug, long applicationId, long serverId)
         {
             var item = session.SlugOrDefault<Installation>(installationSlug);
-            var appId = (Params["item.ApplicationId"] != null) ? long.Parse(Params["item.ApplicationId"]) : 0;
-            var application = (appId != 0) ? session.Get<Application>(appId) : new Application();
-            
-            var server = session.Get<Server>(long.Parse(Params["item.ServerId"]));
-
+            var application = session.Get<Application>(applicationId);
+            var server = session.Get<Server>(serverId);
             if (item != null)
             {
                 BindObjectInstance(item, "item");
@@ -77,8 +75,8 @@
 
             using (var tx = session.BeginTransaction())
             {
-                session.SaveOrUpdate(item);
-                tx.Commit();
+               session.SaveOrUpdate(item);
+               tx.Commit();
             }
 
             RedirectToUrl("/installation");
@@ -95,6 +93,19 @@
                 tx.Commit();
             }
             RedirectToReferrer();
+        }
+
+        [return: JSONReturnBinder]
+        public object CheckInstallationName(string name, long installationId)
+        {
+            var validName = !session.Query<Installation>().Any(x => x.IsActive && x.Slug == name.Slugify() && x.Id != installationId);
+            var message = "Voer een naam in";
+            if (!validName)
+            {
+                message = "Deze naam is al in gebruik, kies een andere";
+            }
+            var server = Params["item.Server.Id"];
+            return new { success = validName, message = message };
         }
     }
 }
