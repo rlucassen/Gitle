@@ -57,6 +57,10 @@
             </tr>
           </thead>
           <tbody>
+           <% if not IsDefined("installations"): %>
+          <td>Nog geen installaties toegevoegd aan deze applicatie.</td>
+          <td></td><td></td><td></td><td></td>
+          <% else: %>
             <% for installation in installations: %>
             <tr>
               <td class="name">${installation.Name}</td>
@@ -70,10 +74,7 @@
               </td>
             </tr>
             <% end %>
-            <% if not IsDefined("installations.Count") :%>
-          <td>Nog geen installaties toegevoegd aan deze applicatie.</td>
-          <td></td><td></td><td></td><td></td>
-          <% end %>
+            <% end %>
           </tbody>
         </table>
       </div>

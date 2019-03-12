@@ -5,6 +5,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using Castle.MonoRail.Framework;
+    using FluentNHibernate.Conventions;
     using Helpers;
     using Model;
     using Model.Helpers;
@@ -57,8 +58,11 @@
         {
             var application = session.SlugOrDefault<Application>(applicationSlug);
             var installations = session.Query<Installation>().Where(x => x.Application == application && x.IsActive);
+            if (!installations.IsEmpty())
+            {
+                PropertyBag.Add("installations", installations);
+            }
             PropertyBag.Add("item", application);
-            PropertyBag.Add("installations", installations);
         }
         [Admin]
         public void Save(string applicationSlug, long customerId)
