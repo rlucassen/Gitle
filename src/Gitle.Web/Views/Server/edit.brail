@@ -108,11 +108,11 @@
               <% count = 0 %>
               <% for installation in item.Installations: %>
               <tr>
-                <td>${installation.Name}</td>
-                <td>${installation.Application.Name}</td>
-                <td>${installation.InstallationType}</td>
-                <td>${installation.Url}</td>
-                <td><a href="/installation/${installation.Slug}/edit" target="_blank" class="button tiny no-margin">Wijzig</a></td>
+                <td>${?installation.Name}</td>
+                <td>${?installation.Application.Name}</td>
+                <td>${?installation.InstallationType}</td>
+                <td>${?installation.Url}</td>
+                <td><a href="/installation/${?installation.Slug}/edit" target="_blank" class="button tiny no-margin">Wijzig</a></td>
               </tr>
               <% count++ %>
               <% end %>
