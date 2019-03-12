@@ -58,7 +58,6 @@
           <th>Applicatie</th>
           <th>Omgeving</th>
           <th>Klant</th>
-          <th>Server</th>
           <th>URL</th>
           <th class="{sorter: false}"></th>
         </tr>
@@ -66,15 +65,14 @@
       <tbody>
         <% for installation in item.Installations: %>
         <tr>
-          <td class="name">${installation.Name}</td>
-          <td class="application"><a href="/Application/${installation.Application.Slug}/view">${installation.Application.Name}</a></td>
-          <td class="installation-type">${installation.InstallationType}</td>
-          <td class="customer"><a href="/Customer/${installation.Application.Customer.Slug}/view">${installation.Application.Customer.Name}</a></td>
-          <td class="server">${installation.Server.Name}</td>
-          <td class="url"><a target="_blank" href="https://myfinance.demo.auxilium.nl">${installation.Url}</a></td>
+          <td class="name">${?installation.Name}</td>
+          <td class="application"><a href="/Application/${?installation.Application.Slug}/view">${?installation.Application.Name}</a></td>
+          <td class="installation-type">${?installation.InstallationType}</td>
+          <td class="customer"><a href="/Customer/${?installation.Application.Customer.Slug}/view">${?installation.Application.Customer.Name}</a></td>
+          <td class="url"><a target="_blank" href="https://myfinance.demo.auxilium.nl">${?installation.Url}</a></td>
           <td>
             <ul class="button-group">
-              <li><a class="button tiny secondary no-margin" href="/installation/${installation.Slug}/view">Bekijk</a></li>
+              <li><a class="button tiny secondary no-margin" href="/installation/${?installation.Slug}/view">Bekijk</a></li>
             </ul>
           </td>
         </tr>
