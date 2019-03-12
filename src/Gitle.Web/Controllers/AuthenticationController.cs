@@ -47,7 +47,7 @@
 
             if (user is User.NullUser || string.IsNullOrEmpty(password) || !user.Password.Match(password))
             {
-                Error("De gebruikersnaam of het wachtwoord is onjuist.", true);
+                Error("Inloggen mislukt", true);
                 return;
             }
 
@@ -84,11 +84,7 @@
                 }
                     });
             }
-            else
-            {
-                PropertyBag.Add("error", "Dit emailadres is niet bekend.");
-                RenderView("forgotpassword");
-            }
+            Information("Er is een mail verstuurd indien het adres bij ons bekend is.", true);
         }
 
         public void ChangePassword(string hash)
