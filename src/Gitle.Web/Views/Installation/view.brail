@@ -2,36 +2,36 @@
 <div class="row">
   <div class="large-12 columns">
 
-    <h1>${item.Name}</h1>
+    <h1>${?item.Name}</h1>
 
     <div class="row">
       <div class="large-2 columns">Applicatie</div>
-      <div class="large-10 columns"><a href="/Application/${item.Application.Slug}/view">${item.Application.Name}</a></div>
+      <div class="large-10 columns"><a href="/Application/${?item.Application.Slug}/view">${?item.Application.Name}</a></div>
     </div>
 
     <div class="row">
       <div class="large-2 columns">Type</div>
-      <div class="large-10 columns">${item.InstallationType}</div>
+      <div class="large-10 columns">${?item.InstallationType}</div>
     </div>
 
     <div class="row">
       <div class="large-2 columns">Klant</div>
-      <div class="large-10 columns"><a href="/Customer/${item.Application.Customer.Slug}/view">${item.Application.Customer.Name}</a></div>
+      <div class="large-10 columns"><a href="/Customer/${?item.Application.Customer.Slug}/view">${?item.Application.Customer.Name}</a></div>
     </div>
 
     <div class="row">
       <div class="large-2 columns">Server naam</div>
-      <div class="large-10 columns">${item.Server.Name}</div>
+      <div class="large-10 columns">${?item.Server.Name}</div>
     </div>
 
     <div class="row">
       <div class="large-2 columns">URL</div>
-      <div class="large-10 columns"><a target="_blank" href="${item.Url}">${item.Url}</a></div>
+      <div class="large-10 columns"><a target="_blank" href="${?item.Url}">${?item.Url}</a></div>
     </div>
 
     <div class="row">
       <div class="large-2 columns">Beschrijving</div>
-      <div class="large-10 columns">${item.Description}</div>
+      <div class="large-10 columns">${?item.Description}</div>
     </div>
   </div>
 </div>

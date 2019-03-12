@@ -63,13 +63,13 @@
           <% else: %>
             <% for installation in installations: %>
             <tr>
-              <td class="name">${installation.Name}</td>
-              <td class="installation-type">${installation.InstallationType}</td>
-              <td class="server">${installation.Server.Name}</td>
-              <td class="url"><a target="_blank" href="https://myfinance.demo.auxilium.nl">${installation.Url}</a></td>
+              <td class="name">${?installation.Name}</td>
+              <td class="installation-type">${?installation.InstallationType}</td>
+              <td class="server">${?installation.Server.Name}</td>
+              <td class="url"><a target="_blank" href="https://myfinance.demo.auxilium.nl">${?installation.Url}</a></td>
               <td>
                 <ul class="button-group">
-                  <li><a class="button tiny secondary no-margin" href="/installation/${installation.Slug}/view">Bekijk</a></li>
+                  <li><a class="button tiny secondary no-margin" href="/installation/${?installation.Slug}/view">Bekijk</a></li>
                 </ul>
               </td>
             </tr>
