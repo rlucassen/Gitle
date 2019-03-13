@@ -251,23 +251,6 @@
               $(parent).find("small.error").html(message);
             }
             return success;
-          },
-          checkInstallationType: function (el, required, parent) {
-            if (required && el.value == "") {
-              return false;
-            }
-            var success = true;
-            var message = "";
-            jQuery.ajax({
-              url: '/installation/checkInstallationType?installationType=' + el.value + '&installationId=' + $('[data-installationId]').val(), async: false, dataType: 'json', success: function (data) {
-                success = data.success;
-                message = data.message;
-              }
-            });
-            if (!success) {
-              $(parent).find("small.error").html(message);
-            }
-            return success;
           }
         },
         patterns: {
