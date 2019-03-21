@@ -23,7 +23,7 @@
                 <p style="margin-bottom: 0; margin: 0; padding: 0;"><strong>Gesloten op:</strong> <span title="${Helpers.DateTimeHelper.Readable(item.Issue.ClosedAt)}">${Helpers.DateTimeHelper.Relative(item.Issue.ClosedAt)}</span></p>
                 <% end %>
                 <p style="margin-bottom: 0; margin: 0; padding: 0;"><strong>Geschatte tijd:</strong> ${item.Issue.EstimateString}</p>
-                <p style="margin-bottom: 0; margin: 0; padding: 0;"><strong>Status:</strong> <% if item.Issue.IsOpen: %>open<% else: %>gesloten<% end %></p>
+                <p style="margin-bottom: 0; margin: 0; padding: 0;"><strong>Status:</strong> ${item.Issue.StateString}</p>
                 <p style="margin-bottom: 0; margin: 0; padding: 0;">
                   <strong>Labels:</strong>
                 </p>
