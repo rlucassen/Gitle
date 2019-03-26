@@ -69,7 +69,7 @@
               <td class="url"><a target="_blank" href="https://myfinance.demo.auxilium.nl">${?installation.Url}</a></td>
               <td>
                 <ul class="button-group">
-                  <li><a class="button tiny secondary no-margin" href="/installation/${?installation.Slug}/view">Bekijk</a></li>
+                  <li><a class="button tiny secondary no-margin" href="/installation/${?installation.Slug}/edit">Bewerk</a></li>
                 </ul>
               </td>
             </tr>
