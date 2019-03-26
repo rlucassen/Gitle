@@ -1609,3 +1609,18 @@ select.hide-disabled {
     background-color: #ffd0fd;
   }
 }
+
+.not-valid {
+  border-color: red!important;
+  margin-bottom: 0px!important;
+}
+
+.validate {
+  line-height: 2.6em;
+  font-size: 11px;
+  color: red;
+
+  &.hidden { 
+    display: none;
+  }
+}
