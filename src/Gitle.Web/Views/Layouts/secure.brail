@@ -75,17 +75,19 @@
         <li class="divider"></li>
         <li><a href="/customers">Klanten</a></li>
         <li class="divider"></li>
-        <li><a href="/applications">Applicaties</a></li>
+        <li class="has-dropdown">
+          <a href="/applications">Applicaties</a>
+          <ul class="dropdown">
+            <li><a href="/server">Servers</a></li>
+            <li><a href="/installation">Installaties</a></li>
+          </ul>
+        </li>
         <% end %>
         <% if CurrentUser.IsAdmin or CurrentUser.Projects.Count > 1: %>
         <li class="divider"></li>
         <li><a href="/projects">Projecten</a></li>
         <% end %>
         <% if CurrentUser.IsAdmin: %>
-        <li class="divider"></li>
-        <li><a href="/server">Servers</a></li>
-        <li class="divider"></li>
-        <li><a href="/installation">Installaties</a></li>
         <li class="divider"></li>
         <li><a href="/users">Gebruikers</a></li>
         <% else: %>
