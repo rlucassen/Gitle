@@ -26,14 +26,6 @@
         }
 
         [Admin]
-        public void View(string installationSlug)
-        {
-            Installation installation = session.SlugOrDefault<Installation>(installationSlug);
-
-            PropertyBag.Add("item", installation);
-        }
-
-        [Admin]
         public void Edit(string installationSlug)
         {
             Installation installation = session.SlugOrDefault<Installation>(installationSlug);
