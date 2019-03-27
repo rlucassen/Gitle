@@ -12,35 +12,35 @@
       <div class="row">
         <div class="large-3 columns">Naam installatie</div>
         <div class="large-9 columns">
-          <input type="text" id="item_Name" name="item.Name" value="${?item.Name}" data-abide-validator="checkInstallationName" data-slugify="#item_Slug" />
-          <span class="validate hidden item-name">Vul een geldige naam in</span>
+          <input type="text" id="item_Name" name="item.Name" value="${?item.Name}" data-abide-validator="checkInstallationName" data-slugify="#item_Slug" required/>
+          <span class="error">Vul een geldige naam in</span>
         </div>
       </div>
       <div class="row">
         <div class="large-3 columns">Applicatie</div>
         <div class="large-9 columns">
-          ${Form.Select("applicationId", applications, {"class": "chosen-select", "value": "Id", "text": "CompleteName", "firstoption": "Kies een applicatie", "pattern":"select", "required":"required", "data-abide-validator":"checkServerName"})}
+          ${Form.Select("applicationId", applications, {"class": "chosen-select", "value": "Id", "text": "CompleteName", "firstoption": "Kies een applicatie", "pattern":"select", "required":"required"})}
           <span class="validate hidden item-applicationId">Kies een applicatie</span>
         </div>
       </div>
       <div class="row">
         <div class="large-3 columns">Type</div>
         <div class="large-9 columns">
-          ${Form.Select("item.InstallationType", installationTypes, {"value": "Key", "text": "Value", "pattern":"select", "required":"required", "data-abide-validator":"checkInstallationType"})}
+          ${Form.Select("item.InstallationType", installationTypes, {"value": "Key", "text": "Value", "pattern":"select", "required":"required"})}
         </div>
       </div>
       <div class="row">
         <div class="large-3 columns">Server naam</div>
         <div class="large-9 columns">
-          ${Form.Select("serverId", servers, {"class": "chosen-select", "value": "Id", "text": "Name", "firstoption": "Kies een server", "pattern":"select", "required":"required", "data-abide-validator":"checkServerName"})}
+          ${Form.Select("serverId", servers, {"class": "chosen-select", "value": "Id", "text": "Name", "firstoption": "Kies een server", "pattern":"select", "required":"required"})}
           <span class="validate hidden item-serverId">Kies een server</span>
         </div>
       </div>
       <div class="row">
         <div class="large-3 columns">URL</div>
         <div class="large-9 columns">
-          <input type="text" id="item_Url" name="item.Url" value="${?item.Url}">
-          <span class="validate hidden item-url">Vul een geldige Url in</span>
+          <input type="text" id="item_Url" name="item.Url" value="${?item.Url}" required/>
+          <small class="error">Vul een geldige Url in</small>
         </div>
       </div>
       <div class="row">
@@ -64,22 +64,6 @@ Actie niet toegestaan.
 
     var valid = true;
     
-    if ($('#item_Name').val() == '') {
-      $('#item_Name').addClass('not-valid');
-      $('.item-name').removeClass('hidden');
-      valid = false;
-    } else {
-      $('#item_Name').removeClass('not-valid');
-      $('.item-name').addClass('hidden');
-    }
-    if ($('#item_Url').val() == '') {
-      $('#item_Url').addClass('not-valid');
-      $('.item-url').removeClass('hidden');
-      valid = false;
-    } else {
-      $('#item_Url').removeClass('not-valid');
-      $('.item-url').addClass('hidden');
-    }
     if ($('#serverId').val() == 0) {
       $('#serverId_chosen, #serverId_chosen .chosen-single').addClass('not-valid');
       $('.item-serverId').removeClass('hidden');

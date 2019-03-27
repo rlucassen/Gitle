@@ -1611,14 +1611,19 @@ select.hide-disabled {
 }
 
 .not-valid {
-  border-color: red!important;
   margin-bottom: 0px!important;
 }
 
 .validate {
-  line-height: 2.6em;
-  font-size: 11px;
-  color: red;
+  display: block;
+  font-size: 0.75rem;
+  font-style: italic;
+  font-weight: normal;
+  margin-bottom: 1rem;
+  margin-top: -1px;
+  padding: 0.375rem 0.5625rem 0.5625rem;
+  background: #f04124;
+  color: #fff;
 
   &.hidden { 
     display: none;
