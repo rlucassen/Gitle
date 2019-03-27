@@ -253,6 +253,25 @@
               $(parent).find("small.error").html(message);
             }
             return success;
+          },
+          checkUrl: function (el, required, parent) {
+            if (required && el.value == "") {
+
+              return false;
+            }
+            var success = true;
+            var message = "";
+            console.log(el.value);
+            jQuery.ajax({
+              url: '/installation/checkUrl?link=' + el.value, async: false, dataType: 'json', success: function (data) {
+                success = data.success;
+                message = data.message;
+              }
+            });
+            if (!success) {
+              $(parent).find("small.error").html(message);
+            }
+            return success;
           }
         },
         patterns: {

@@ -525,7 +525,6 @@
     <None Include="Views\Booking\index.brail" />
     <Content Include="Views\Installation\index.brail" />
     <Content Include="Views\Installation\edit.brail" />
-    <Content Include="Views\Installation\view.brail" />
     <None Include="Views\Invoice\index.brail" />
     <None Include="Views\Invoice\create.brail" />
     <None Include="Views\Booking\_row.brail" />

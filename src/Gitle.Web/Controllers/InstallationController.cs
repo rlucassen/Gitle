@@ -100,24 +100,18 @@
         }
 
         [return: JSONReturnBinder]
-        public object CheckInstallationType(long installationType, long installationId)
+        public object CheckUrl(string link)
         {
-            var installation = session.Get<Installation>(installationId);
-            var server = installation.Server;
-            var installations = server.Installations.Where(x => x.InstallationType == installation.InstallationType && x.Application == installation.Application && x != installation);
-
-            if (installations.Any())
+            var urls = !session.Query<Installation>().Any(x => x.IsActive && x.Url == link);
+            var message = "Vul een geldige Url in";
+            if (!urls)
             {
                 return new
                 {
-                    message = "error"
+                    message = "Deze url is al in gebruik, kies een andere"
                 };
             }
-
-            return new
-            {
-                
-            };
+            return new {success = urls, message = message};
         }
     }
 }
