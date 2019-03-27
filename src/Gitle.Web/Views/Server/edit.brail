@@ -12,15 +12,15 @@
       <div class="row">
         <div class="large-3 columns">Naam</div>
         <div class="large-9 columns">
-          <input type="text" id="item_Name" name="item.Name" value="${?item.Name}" data-abide-validator="checkServerName" data-slugify="#item_Slug" />
-          <span class="validate hidden item-name">Geef een naam op</span>
+          <input type="text" id="item_Name" name="item.Name" value="${?item.Name}" data-abide-validator="checkServerName" data-slugify="#item_Slug" required/>
+          <small class="error">Geef een naam op</small>
         </div>
       </div>
       <div class="row">
         <div class="large-3 columns">Hostingpartij</div>
         <div class="large-9 columns">
-          <input type="text" id="item_HostingCompany" name="item.HostingCompany" value="${?item.HostingCompany}" />
-          <span class="validate hidden item-hostingCompany">Geef een hostingpartij op</span>
+          <input type="text" id="item_HostingCompany" name="item.HostingCompany" value="${?item.HostingCompany}" required/>
+          <small class="error">Geef een hostingpartij op</small>
         </div>
       </div>
       <div class="row">
@@ -233,22 +233,6 @@ Actie niet toegestaan.
    var valid = true;
    let existingRows = $('.addable-contacts tbody tr:not(.hide)');
 
-    if ($('#item_Name').val() == '') {
-      $('#item_Name').addClass('not-valid');
-      $('.item-name').removeClass('hidden');
-      valid = false;
-    } else {
-      $('#item_Name').removeClass('not-valid');
-      $('.item-name').addClass('hidden');
-    }
-    if ($('#item_HostingCompany').val() == '') {
-      $('#item_HostingCompany').addClass('not-valid');
-      $('.item-hostingCompany').removeClass('hidden');
-      valid = false;
-    } else {
-      $('#item_HostingCompany').removeClass('not-valid');
-      $('.item-hostingCompany').addClass('hidden');
-   }
    if (existingRows.length <= 0 || hasEmptyInputs(existingRows)) {
      $('.item-contact').removeClass('hidden');
      valid = false;
