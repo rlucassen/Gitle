@@ -216,7 +216,9 @@
         {
             if (issue != null)
             {
+                var name = Request.Params["item.Name"];
                 BindObjectInstance(issue, "item");
+                issue.Name = name.Replace("\"", "'");
                 issue.Change(CurrentUser);
             }
             else

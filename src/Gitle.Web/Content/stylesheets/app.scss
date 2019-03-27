@@ -407,7 +407,6 @@ a.quickview-delay {
   border-radius: 0;
   position: absolute;
   padding: 1em;
-  z-index: 999;
 
   &:after {
     width: 10px;
@@ -1608,4 +1607,8 @@ select.hide-disabled {
   &:hover {
     background-color: #ffd0fd;
   }
+}
+
+a.prefix {
+  position: static;
 }

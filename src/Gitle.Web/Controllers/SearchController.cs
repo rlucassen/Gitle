@@ -26,7 +26,7 @@
             var customers = session.Query<Customer>().Where(x => x.Name.Contains(query) && x.IsActive);
             suggestions.AddRange(customers.Select(x => new Suggestion($"Klant: {x.Name}", $"/customer/{x.Slug}/view")));
 
-            var projects = session.Query<Project>().Where(x => (x.Name.Contains(query) || x.Number.ToString().Contains(query)) && x.IsActive);
+            var projects = session.Query<Project>().Where(x => (x.Name.Contains(query) || x.Number.ToString().Contains(query)) && !x.Closed && x.IsActive);
             suggestions.AddRange(projects.Select(x => new Suggestion($"Project: {x.Name}", $"/project/{x.Slug}/view")));
             suggestions.AddRange(projects.Select(x => new Suggestion("Taken: " + x.Name, $"/project/{x.Slug}/issues")));
 

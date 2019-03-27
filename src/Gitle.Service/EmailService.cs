@@ -62,12 +62,23 @@
 
             if (action is Comment)
             {
+                var userlist = users.ToList();
+
                 if ((action as Comment).IsInternal)
                 {
-                    var userlist = users.ToList();
                     foreach (var user in userlist)
                     {
                         if (!user.CanBookHours && !user.IsAdmin)
+                        {
+                            users.Remove(user);
+                        }
+                    }
+                }
+                else
+                {
+                    foreach (var user in userlist)
+                    {
+                        if (user.CanBookHours || user.IsAdmin)
                         {
                             users.Remove(user);
                         }

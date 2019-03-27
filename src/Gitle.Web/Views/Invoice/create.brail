@@ -88,7 +88,11 @@
             <div class="small-1 columns">
               <span class="prefix secondary">
                 <% if line.Issue.IsOpen: %>
-                <i class="fa fa-exclamation-circle green" title="open"></i>
+                <i class="fa fa-exclamation-circle blue" title="open"></i>
+                <% elif line.Issue.IsOnHold: %>
+                <i class="fa fa-hand-paper-o orange" title="on hold"></i>
+                <% elif line.Issue.IsDone: %>
+                <i class="fa fa-thumbs-o-up green" title="uitgevoerd"></i>
                 <% elif line.Issue.IsArchived: %>
                 <i class="fa fa-trash red" title="${Helpers.DateTimeHelper.Readable(line.Issue.ArchivedAt)}" title="gearchiveerd"></i>
                 <% else: %>

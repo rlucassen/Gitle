@@ -686,7 +686,7 @@ GitleIssues.prototype = {
       var link = $(this);
       if ($(this).data('tooltip') == undefined) {
         var offset = $(this).position();
-        var tooltip = $('<div class="quickview">').css('top', offset.top + $(this).height()).css('left', offset.left);
+        var tooltip = $('<div class="quickview">').css('top', offset.top + $(this).height()).css('left', offset.left).css('z-index', 10);
         $(this).data('tooltip', tooltip);
         tooltip.load($(this).data('quickview'), function () {
           tooltip.find('.marked').each(function () {
