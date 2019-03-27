@@ -6,20 +6,21 @@
     <% else: %>
     <h1>Nieuwe server</h1>
     <% end %>
-    <form action="/server/<% if item.Slug: %>${item.Slug}<% else: %>0<% end %>/save" id="server-form" method="POST" autocomplete="off" data-abide>
+    <form action="/server/<% if item.Slug: %>${item.Slug}<% else: %>0<% end %>/save" id="server-form" method="POST" autocomplete="off" data-abide onsubmit="return isValidForm()">
       ${Form.HiddenField("item.Id", {"data-serverId": "value"})}
       ${Form.HiddenField("item.Slug")}
       <div class="row">
         <div class="large-3 columns">Naam</div>
         <div class="large-9 columns">
-          <input type="text" id="item_Name" name="item.Name" value="${?item.Name}" data-abide-validator="checkServerName" data-slugify="#item_Slug" required />
-          <small class="error">Geef een naam op</small>
+          <input type="text" id="item_Name" name="item.Name" value="${?item.Name}" data-abide-validator="checkServerName" data-slugify="#item_Slug" />
+          <span class="validate hidden item-name">Geef een naam op</span>
         </div>
       </div>
       <div class="row">
         <div class="large-3 columns">Hostingpartij</div>
         <div class="large-9 columns">
           <input type="text" id="item_HostingCompany" name="item.HostingCompany" value="${?item.HostingCompany}" />
+          <span class="validate hidden item-hostingCompany">Geef een hostingpartij op</span>
         </div>
       </div>
       <div class="row">
@@ -39,7 +40,7 @@
             </div>
             <!--<p class="contact-message"></p>-->
           </div>
-
+          <span class="validate hidden item-contact">Selecteer minimaal een contactpersoon en/of zorg er voor dat de informatie volledig is ingevuld</span>
           <table class="nested addable-contacts">
             <thead>
               <tr>
@@ -169,7 +170,7 @@ Actie niet toegestaan.
     });
 
     $('.addable-contacts tbody tr td a').on('click', () => {
-      console.log('removing '+$(this).val());
+      console.log('removing ' + $(this).val());
     });
 
     $('#addContact').on('click', () => {
@@ -189,17 +190,17 @@ Actie niet toegestaan.
             let count = parseInt(lastTr.length == 0 ? 0 : lastTr.prop('name').match(/\d+/)[0]) + 1;
 
             $('.addable-contacts tbody').append(
-            '<tr>' +
+              '<tr>' +
               '<td>' +
-                '<input type="hidden" name="contact[' + count + '].Id" value="' + contact.Id + '">' +
-                '<input type="text" name="contact[' + count + '].FullName" value="' + contact.FullName + '">' +
+              '<input type="hidden" name="contact[' + count + '].Id" value="' + contact.Id + '">' +
+              '<input type="text" name="contact[' + count + '].FullName" value="' + contact.FullName + '">' +
               '</td>' +
-              '<td><input type="text" name="contact[' + count + '].Email" value="' + contact.Email +'"></td>' +
-              '<td><input type="text" name="contact[' + count + '].PhoneNumber" value="' + contact.PhoneNumber +'"></td>' +
+              '<td><input type="text" name="contact[' + count + '].Email" value="' + contact.Email + '"></td>' +
+              '<td><input type="text" name="contact[' + count + '].PhoneNumber" value="' + contact.PhoneNumber + '"></td>' +
               '<td><a href="#" class="button tiny no-margin alert temp">Verwijder</a></td>' +
-            '</tr>');
+              '</tr>');
 
-            $('.addable-contacts tbody a.temp').on('click', function() {
+            $('.addable-contacts tbody a.temp').on('click', function () {
               $(this).parents('tr').remove();
               $('#addContactId').append('<option value="' + contact.Id + '">' + contact.FullName + '</option>');
             });
@@ -212,4 +213,49 @@ Actie niet toegestaan.
       }
     });
   });
+
+  function hasEmptyInputs(el) {
+    let inputs = el.find('input');
+
+    console.log(inputs);
+
+    for (let i = 0; i < inputs.length; i++) {
+      if (inputs.eq(i).val() == '') {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+ function isValidForm() {
+
+   var valid = true;
+   let existingRows = $('.addable-contacts tbody tr:not(.hide)');
+
+    if ($('#item_Name').val() == '') {
+      $('#item_Name').addClass('not-valid');
+      $('.item-name').removeClass('hidden');
+      valid = false;
+    } else {
+      $('#item_Name').removeClass('not-valid');
+      $('.item-name').addClass('hidden');
+    }
+    if ($('#item_HostingCompany').val() == '') {
+      $('#item_HostingCompany').addClass('not-valid');
+      $('.item-hostingCompany').removeClass('hidden');
+      valid = false;
+    } else {
+      $('#item_HostingCompany').removeClass('not-valid');
+      $('.item-hostingCompany').addClass('hidden');
+   }
+   if (existingRows.length <= 0 || hasEmptyInputs(existingRows)) {
+     $('.item-contact').removeClass('hidden');
+     valid = false;
+   } else {
+     $('.item-contact').addClass('hidden');
+   }
+
+  return valid;
+}
 </script>
