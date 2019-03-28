@@ -234,6 +234,7 @@ table.tickets-table {
 
     .meter {
       text-align: center;
+      overflow: hidden;
     }
 
     .open {
@@ -1611,4 +1612,13 @@ select.hide-disabled {
 
 a.prefix {
   position: static;
+}
+
+#tooltip {
+  z-index: 1;
+  position: absolute;
+  padding: 5px 15px;
+  background-color: #fff;
+  border-radius: 5px;
+  transform: translate(-50%, 0);
 }
