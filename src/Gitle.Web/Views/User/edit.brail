@@ -32,6 +32,18 @@
         <div class="large-9 columns"><input type="tel" name="item.Phone" value="${?item.Phone}" /></div>
       </div>
       <div class="row">
+        <div class="large-3 columns">Mobiel nummer</div>
+        <div class="large-9 columns"><input type="tel" name="item.Mobile" value="${?item.Mobile}" /></div>
+      </div>
+      <div class="row">
+        <div class="large-3 columns">Functie</div>
+        <div class="large-9 columns"><input type="text" name="item.Position" value="${?item.Position}" /></div>
+      </div>
+      <div class="row">
+        <div class="large-3 columns">Bedrijf</div>
+        <div class="large-9 columns"><input type="text" name="item.Company" value="${?item.Company}" /></div>
+      </div>
+      <div class="row">
         <div class="large-3 columns">Emailadres</div>
         <div class="large-9 columns">
           <input type="text" name="item.Emailaddress" value="${?item.EmailAddress}" required />
