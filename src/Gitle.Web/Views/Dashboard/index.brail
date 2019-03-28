@@ -72,6 +72,23 @@
 
 <script>
 
+  $(document).ready(() => {
+    $('body').append('<div id="tooltip"></div>');
+    $('#tooltip').hide();
+
+    $('#service .progress-tickets span').on('hover', function (ev) {
+      let offset = $(this).parent().offset();
+
+      $('#tooltip').show();
+      $('#tooltip').css({ 'top': (offset.top - 35) + 'px', 'left': (ev.pageX + 75) + 'px' });
+      $('#tooltip').text($(this).text());
+    });
+
+    $('#service .progress-tickets span').mouseleave(() => {
+      $('#tooltip').hide();
+    });
+  });
+
   $(function () {
     $('#toggle-empties').change(function () {
       $('table.tickets-table').toggleClass('hide-empties', $(this).is(':checked'));
