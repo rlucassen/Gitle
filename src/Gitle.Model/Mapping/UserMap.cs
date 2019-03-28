@@ -18,6 +18,9 @@
             Map(x => x.IsDanielle);
             Map(x => x.CanBookHours);
             Map(x => x.Phone);
+            Map(x => x.Mobile);
+            Map(x => x.Position);
+            Map(x => x.Company);
             Map(x => x.GitHubUsername);
             Map(x => x.GitHubAccessToken);
             Map(x => x.FreckleEmail);
