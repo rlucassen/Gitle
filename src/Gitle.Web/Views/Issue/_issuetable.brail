@@ -56,8 +56,10 @@
                       <% count++ %>
                       <% end %>
                     <% end %>
+                    <% if count >= 1 :%>
                     <i class="fa fa-comments-o"></i>
                     ${count}
+                    <% end %>
                   <% end %>
                 <% end %>
               </div>
