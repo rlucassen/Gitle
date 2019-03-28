@@ -8,6 +8,12 @@
     <form action="/user/${?item.Id}/save" method="POST" autocomplete="off" data-abide>
       ${Form.HiddenField("item.Id")}
       <div class="row">
+        <div class="large-3 columns">Aanhef</div>
+        <div class="large-9 columns">
+          ${Form.Select("item.Salutation", salutations, {"value": "Key", "text": "Value", "pattern":"select"})}
+        </div>
+      </div>
+      <div class="row">
         <div class="large-3 columns">Naam</div>
         <div class="large-9 columns">
           <input type="text" name="item.FullName" value="${?item.FullName}" required />

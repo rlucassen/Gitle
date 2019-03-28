@@ -22,6 +22,7 @@
 
 
         public virtual IPassword Password { get; set; }
+        public virtual Salutation Salutation { get; set; }
         public virtual string Name { get; set; }
         public virtual string FullName { get; set; }
         public virtual string EmailAddress { get; set; }

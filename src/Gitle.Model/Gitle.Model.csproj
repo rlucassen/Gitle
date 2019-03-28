@@ -88,6 +88,7 @@
     <Compile Include="Enum\IssueBookingState.cs" />
     <Compile Include="Enum\ProjectType.cs" />
     <Compile Include="Enum\IssueState.cs" />
+    <Compile Include="Enum\Salutation.cs" />
     <Compile Include="Helpers\ISessionExtension.cs" />
     <Compile Include="Interfaces\Model\ISlugger.cs" />
     <Compile Include="Interfaces\Service\IBookingQueryParserService.cs" />
