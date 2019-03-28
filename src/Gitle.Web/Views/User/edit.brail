@@ -8,6 +8,12 @@
     <form action="/user/${?item.Id}/save" method="POST" autocomplete="off" data-abide>
       ${Form.HiddenField("item.Id")}
       <div class="row">
+        <div class="large-3 columns">Aanhef</div>
+        <div class="large-9 columns">
+          ${Form.Select("item.Salutation", salutations, {"value": "Key", "text": "Value", "pattern":"select"})}
+        </div>
+      </div>
+      <div class="row">
         <div class="large-3 columns">Naam</div>
         <div class="large-9 columns">
           <input type="text" name="item.FullName" value="${?item.FullName}" required />
@@ -81,7 +87,7 @@
       <div class="panel">
         <h3>Projecten</h3>
         <input type="checkbox" id="closedProjects" /> Laat gesloten projecten zien
-       <div class="row projects">
+        <div class="row projects">
           <div class="large-12 columns">
             <table id="projecten" class="datatable tablesorter">
               <thead>
@@ -102,9 +108,9 @@
                 <% userProject = item.GetUserProject(project) %>
                 <% if project.Closed: %>
                 <tr class="red">
-                <% else: %>
+                  <% else: %>
                 <tr>
-                <% end %>
+                  <% end %>
                   <td>
                     <input type="hidden" name="userProject[${count}].Id" value="${userProject.Id}" />
                     <input type="hidden" name="userProject[${count}].Project.Id" value="${project.Id}" />
@@ -114,7 +120,7 @@
                   <td>
                     ${?project.Number}
                   </td>
-                 <td>
+                  <td>
                     ${?project.Type}
                   </td>
                   <td>

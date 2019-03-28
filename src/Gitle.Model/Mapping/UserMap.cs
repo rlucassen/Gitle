@@ -11,6 +11,7 @@
         public UserMap()
         {
             Component(x => (Password) x.Password).ColumnPrefix("Password_");
+            Map(x => x.Salutation);
             Map(x => x.Name);
             Map(x => x.FullName);
             Map(x => x.EmailAddress);

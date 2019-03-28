@@ -8,6 +8,7 @@
     using System.Web.UI;
     using Castle.MonoRail.Framework;
     using FluentNHibernate.Utils;
+    using Gitle.Model.Enum;
     using Gitle.Model.James;
     using Helpers;
     using Model;
@@ -33,6 +34,8 @@
         {
             PropertyBag.Add("item", new User());
 
+            var salutations = EnumHelper.ToDictionary(typeof(Salutation));
+
             var jamesEmployees = new List<Employee>();
             var sqlConnectionHelper = new SqlConnectionHelper();
 
@@ -51,6 +54,7 @@
 
             sqlConnectionHelper.CloseSqlConnection();
 
+            PropertyBag.Add("salutations", salutations);
             PropertyBag.Add("selectedprojects", new List<Project>());
             PropertyBag.Add("customers", session.Query<Customer>().Where(x => x.IsActive).ToList());
             PropertyBag.Add("notificationprojects", new List<Project>());
@@ -63,6 +67,8 @@
         public void Edit(long userId)
         {
             var user = session.Get<User>(userId);
+
+            var salutations = EnumHelper.ToDictionary(typeof(Salutation));
 
             var jamesEmployees = new List<Employee>();
             var sqlConnectionHelper = new SqlConnectionHelper();
@@ -83,6 +89,7 @@
             sqlConnectionHelper.CloseSqlConnection();
 
             PropertyBag.Add("item", user);
+            PropertyBag.Add("salutations", salutations);
             PropertyBag.Add("selectedprojects", user.Projects.Select(x => x.Project).ToList());
             PropertyBag.Add("customers", session.Query<Customer>().Where(x => x.IsActive).ToList());
             PropertyBag.Add("projects", session.Query<Project>().Where(x => x.IsActive).OrderBy(x => x.Name).ToList());
