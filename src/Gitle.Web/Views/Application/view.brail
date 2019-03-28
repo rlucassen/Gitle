@@ -22,11 +22,12 @@
     <div class="row">
       <div class="large-12 columns">
         <h2>Projecten</h2>
-        <table class="small-blocks" id="customers">
+        <table class="small-blocks tablesorter" id="customers">
           <thead>
             <tr>
-              <th>Naam</th>
-              <th>Type</th>
+              <th class="{sorter: false}">Naam</th>
+              <th class="{sorter: false}">Type</th>
+              <th>Status</th>
             </tr>
           </thead>
           <tbody>
@@ -36,6 +37,13 @@
                 <a href="/project/${project.Slug}/view">${?project.Name}</a>
               </td>
               <td>${?project.TypeString}</td>
+              <td>
+                <% if project.Closed :%>
+                <span class="red">Gesloten</span>
+                <% else :%>
+                <span class="green">Open</span>
+                <% end %>
+              </td>
             </tr>
             <% end %>
             
