@@ -225,9 +225,10 @@
                     items = items.OrderByProperty(sort.Key, sort.Value).ToList();
                 }
             }
+
             if (querySorts.Count == 0 && linqSorts.Count == 0)
             {
-                items = items.OrderBy(x => x.State).ThenBy(x => x.Pickups.Count == 0).ThenBy(x => x.PrioOrder == 0).ThenBy(x => x.PrioOrder).ThenByDescending(x => x.ChangeStates.Max(cs => cs.CreatedAt)).ToList();
+                items = items.OrderBy(x => x.State).ThenBy(x => x.IsAdministrative).ThenBy(x => x.Pickups.Count == 0).ThenBy(x => x.PrioOrder == 0).ThenBy(x => x.PrioOrder).ThenByDescending(x => x.ChangeStates.Max(cs => cs.CreatedAt)).ToList();
             }
 
             if (States.Any())
