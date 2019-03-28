@@ -56,6 +56,8 @@
             var item = session.SlugOrDefault<Installation>(installationSlug);
             var application = session.Get<Application>(applicationId);
             var server = session.Get<Server>(serverId);
+            var ignoreString = new List<string>() { "http://", "https://" };
+            var ignore = false;
 
             if (item != null)
                 BindObjectInstance(item, "item");
@@ -64,6 +66,22 @@
 
             item.Application = application;
             item.Server = server;
+
+            var url = item.Url;
+
+            foreach (var key in ignoreString)
+            {
+                if (url.Substring(0, key.Length) == key)
+                {
+                    ignore = true;
+                }
+            }
+
+            if (!ignore)
+            {
+                url = "https://" + url;
+                item.Url = url;
+            }
 
             using (var tx = session.BeginTransaction())
             {
