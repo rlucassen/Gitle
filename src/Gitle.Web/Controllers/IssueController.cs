@@ -197,7 +197,7 @@
         }
 
         [return: JSONReturnBinder]
-        public object AjaxSave(string projectSlug, int issueId, List<Label> labels)
+        public object AjaxSave(string projectSlug, int issueId, List<long> labelIds)
         {
             var project = session.Slug<Project>(projectSlug);
             if (project.Closed)
@@ -205,7 +205,17 @@
                 throw new ProjectClosedException(project);
             }
 
-            var issue = session.Query<Issue>().SingleOrDefault(i => i.Number == issueId && i.Project == project);
+            Issue issue = session.Query<Issue>().SingleOrDefault(i => i.Number == issueId && i.Project == project);
+            List<Label> labels;
+
+            if (labelIds != null)
+            {
+                labels = session.Query<Label>().Where(x => x.IsActive && labelIds.Contains(x.Id)).ToList();
+            }
+            else
+            {
+                labels = null;
+            }
 
             var savedIssue = SaveIssue(project, issue, labels);
 
@@ -223,13 +233,18 @@
             }
             else
             {
+                var estimatePublic = Request.Params["item.EstimatePublic"];
                 issue = BindObject<Issue>("item");
                 issue.Number = project.NewIssueNumber;
                 issue.Project = project;
                 issue.Open(CurrentUser);
             }
 
-            issue.Labels = labels.Select(label => session.Query<Label>().FirstOrDefault(l => l.Id == label.Id)).ToList();
+            if (labels != null)
+            {
+                issue.Labels = labels.Select(label => session.Query<Label>().FirstOrDefault(l => l.Id == label.Id))
+                    .ToList();
+            }
 
             using (var transaction = session.BeginTransaction())
             {
