@@ -181,7 +181,7 @@
             }
 
             var issue = session.Query<Issue>().SingleOrDefault(i => i.Number == issueId && i.Project == project);
-            var query = session.Query<Label>().Where(x => labels.Contains(x.Id)).ToList();
+            var query = session.Query<Label>().Where(x => x.IsActive && labels.Contains(x.Id)).ToList();
 
             var savedIssue = SaveIssue(project, issue, query);
 
@@ -197,7 +197,7 @@
         }
 
         [return: JSONReturnBinder]
-        public object AjaxSave(string projectSlug, int issueId, List<Label> labels)
+        public object AjaxSave(string projectSlug, int issueId, long[] labels)
         {
             var project = session.Slug<Project>(projectSlug);
             if (project.Closed)
@@ -206,13 +206,14 @@
             }
 
             var issue = session.Query<Issue>().SingleOrDefault(i => i.Number == issueId && i.Project == project);
+            var labelObjects = session.Query<Label>().Where(x => x.IsActive && labels.Contains(x.Id)).ToList();
 
-            var savedIssue = SaveIssue(project, issue, labels);
+            var savedIssue = SaveIssue(project, issue, labelObjects);
 
             return new {savedIssue.Id, savedIssue.Number, savedIssue.Name};
         }
 
-        private Issue SaveIssue(Project project, Issue issue, List<Label> labels)
+        private Issue SaveIssue(Project project, Issue issue, IEnumerable<Label> labels)
         {
             if (issue != null)
             {
