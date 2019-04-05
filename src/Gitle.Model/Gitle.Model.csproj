@@ -91,6 +91,7 @@
     <Compile Include="Helpers\ISessionExtension.cs" />
     <Compile Include="Interfaces\Model\ISlugger.cs" />
     <Compile Include="Interfaces\Service\IBookingQueryParserService.cs" />
+    <Compile Include="Interfaces\Service\IJamesRegistrationService.cs" />
     <Compile Include="Interfaces\Service\IProjectNumberService.cs" />
     <Compile Include="Interfaces\Service\ISettingService.cs" />
     <Compile Include="James\Employee.cs" />

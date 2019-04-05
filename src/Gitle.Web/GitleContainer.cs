@@ -56,6 +56,14 @@
             }
         }
 
+        public class JamesRegistrationInstaller : IWindsorInstaller
+        {
+            public void Install(IWindsorContainer container, IConfigurationStore store)
+            {
+                container.Register(Component.For<IJamesRegistrationService>().ImplementedBy(typeof(JamesRegistrationService)).LifestylePerWebRequest());
+            }
+        }
+
         public class ClientsInstaller : IWindsorInstaller
         {
             public void Install(IWindsorContainer container, IConfigurationStore store)

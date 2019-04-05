@@ -16,11 +16,13 @@
 
     public class ReportController : SecureController
     {
+        protected IJamesRegistrationService JamesRegistrationService { get; }
         protected ISettingService SettingService { get; }
 
-        public ReportController(ISessionFactory sessionFactory, ISettingService settingService) : base(sessionFactory)
+        public ReportController(IJamesRegistrationService jamesRegistrationService, ISessionFactory sessionFactory, ISettingService settingService) : base(sessionFactory)
         {
             SettingService = settingService;
+            JamesRegistrationService = jamesRegistrationService;
         }
 
         [Admin]
@@ -126,8 +128,7 @@
             var year = parser.StartDate.Year;
 
             var employees = session.Query<User>().Where(x => x.IsActive && x.JamesEmployeeId > 0).ToList();
-            var exportweeks = new List<ExportWeeksGitleVsJames>();
-            var sqlConnectionHelper = new SqlConnectionHelper();
+            var exportWeeks = new List<ExportWeeksGitleVsJames>();
 
             foreach (var employee in employees)
             {
@@ -137,37 +138,14 @@
                 for (int i = 0; i < 53; i++)
                 {
                     exportWeek.Weeks[i].MinutesGitle = bookings.Where(x => x.Date.WeekNr() == i+1).Sum(x => x.Minutes);
-
-                    using (var reader = sqlConnectionHelper.ExecuteSqlQuery("james", "SELECT SUM(datediff(mi, wd.StartTijd, wd.EindTijd)) + ISNULL((SELECT SUM(r.DuurMinuten) " +
-                                                                                                                                                    "FROM [Registratie] r " +
-                                                                                                                                                    "JOIN Werkdag wd on wd.Id = r.Werkdag " +
-                                                                                                                                                    "JOIN [Week] w on w.Id = wd.[Week] " +
-                                                                                                                                                    "WHERE r.RegistratieType IN (0,1,11) " +
-                                                                                                                                                    "AND w.Medewerker = " + employee.JamesEmployeeId + 
-                                                                                                                                                    "AND w.WeekNr = " + (i+1) +
-                                                                                                                                                    "AND w.Jaar = " + year + "),0) " +
-                                                                                    "FROM Werkdag wd " +
-                                                                                    "JOIN [Week] w on w.Id = wd.[Week] " +
-                                                                                    "JOIN [Medewerker] m on m.Id = w.Medewerker " +
-                                                                                    "WHERE w.Medewerker = " + employee.JamesEmployeeId +
-                                                                                    "AND w.Jaar = " + year +
-                                                                                    "AND w.WeekNr = " + (i+1) +
-                                                                                    "GROUP BY w.WeekNr, w.Jaar, w.Medewerker"))
-                    {
-                        while (reader.Read())
-                        {
-                            if (!reader.IsDBNull(0))
-                                exportWeek.Weeks[i].MinutesJames = reader.GetInt32(0);
-                        }
-                    }
-
-                    sqlConnectionHelper.CloseSqlConnection();
+                    
+                    exportWeek.Weeks[i].MinutesJames = JamesRegistrationService.GetTotalMinutesForEmployee(employee.JamesEmployeeId, year, i + 1);
                 }
 
-                exportweeks.Add(exportWeek);
+                exportWeeks.Add(exportWeek);
             }
 
-            var csv = CsvHelper.ExportWeeks(exportweeks, employees);
+            var csv = CsvHelper.ExportWeeks(exportWeeks, employees);
             CancelView();
 
             Response.ClearContent();
