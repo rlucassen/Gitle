@@ -113,12 +113,24 @@
         </div>
         <div class="large-1 columns">
           <div class="row collapse estimate-hours">
+            <% if line.OldHours > 0 and line.ExtraHours > 0: %>
+            <div class="large-4 columns">
+              <a href="#" class="button tiny invoiceline-estimate expand <% if line.EstimateHours == line.Hours: %>active<% end %>" title="Schatting exclusief gefactureerde uren">${line.EstimateHours.ToString("#0.##")}</a>
+            </div>
+            <div class="large-4 columns">
+              <a href="#" class="button tiny invoiceline-hours expand <% if line.BookingHours == line.Hours: %>active<% end %>" title="Billable geboekte uren">${line.BookingHours.ToString("#0.##")}</a>
+            </div>
+            <div class="large-4 columns">
+              <a href="#" class="button tiny invoiceline-extrahours warning expand <% if line.BookingHours == line.Hours: %>active<% end %>" title="Billable meerwerk">${line.ExtraHours.ToString("#0.##")}</a>
+            </div>
+            <% else: %>
             <div class="large-6 columns">
               <a href="#" class="button tiny invoiceline-estimate expand <% if line.EstimateHours == line.Hours: %>active<% end %>" title="Schatting exclusief gefactureerde uren">${line.EstimateHours.ToString("#0.##")}</a>
             </div>
             <div class="large-6 columns">
               <a href="#" class="button tiny invoiceline-hours expand <% if line.BookingHours == line.Hours: %>active<% end %>" title="Billable geboekte uren">${line.BookingHours.ToString("#0.##")}</a>
             </div>
+            <% end %>
           </div>
         </div>
         <div class="large-1 columns">
@@ -138,7 +150,7 @@
       </div>
       <div class="bookings">
         <% for booking in line.Bookings: %>
-        <div class="row booking" data-booking="${booking.Id}" data-issue="${line.Issue.Number}">
+        <div class="row booking" data-booking="${booking.Id}" data-issue="${line.Issue.Number}" data-billable="<% output not booking.Unbillable %>">
           <input type="hidden" name="lines[${count}].Bookings[${booking.Id}].Id" id="lines_${count}_Bookings_${booking.Id}_Id" value="${booking.Id}" />
           <div class="large-1 columns text-right">
             <a href="#" class="delete-booking"><i class="fa fa-close red"></i></a>
@@ -168,9 +180,12 @@
         </div>
         <% for invoiceLine in line.OldInvoiceLines: %>
         <div class="row booking old-booking" data-issue="${line.Issue.Number}">
-          <div class="large-8 large-offset-1 columns">
+          <div class="large-2 large-offset-1 columns">
             <span class="booking-date">${invoiceLine.Invoice.CreatedAt.ToString("dd-MM-yyyy")}</span>:
             <span class="label round" title="${invoiceLine.Invoice.Title}">${invoiceLine.Invoice.Number}</span>
+          </div>
+          <div class="large-6 columns">
+            <span class="booking-hours-span">(${invoiceLine.BookingHours} billable<% if invoiceLine.BookingHoursUnbillable > 0: %>; ${invoiceLine.BookingHoursUnbillable} unbillable<% end %>)</span>
           </div>
           <div class="large-1 columns end text-right">
             <span class="booking-hours-span">${invoiceLine.Hours}</span>

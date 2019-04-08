@@ -453,6 +453,7 @@ $(function () {
   calculateTotals();
 
   $('.invoiceline-hours-input').on('change keyup', function () {
+    $(this).data('changed', true);
     var invoiceLine = $(this).parents('.invoiceline');
     computePriceForInvoiceLine(invoiceLine);
     invoiceLine.find('.invoiceline-estimate, .invoiceline-hours').removeClass('active');
@@ -558,15 +559,23 @@ $(function () {
 
   $('[data-booking]').each(function () {
     var bookingRow = $(this);
-    var bookingHours = bookingRow.find('.booking-hours').val();
+    var bookingHours = parseFloat(bookingRow.find('.booking-hours').val().replace(',', '.'));
     var issueId = bookingRow.data('issue');
     var invoiceLine = $('.invoiceline-issue[data-issue=' + issueId + ']');
     var invoiceLineHoursInput = invoiceLine.find('.invoiceline-hours-input');
     bookingRow.find('.delete-booking').click(function (e) {
       e.preventDefault();
       bookingRow.remove();
-      var newInvoiceLineHours = parseFloat(invoiceLineHoursInput.val().replace(',', '.')) - parseFloat(bookingHours);
-      invoiceLineHoursInput.val(newInvoiceLineHours.toString().replace(".", ","));
+      var newInvoiceLineHours = parseFloat(invoiceLineHoursInput.val().replace(',', '.')) - bookingHours;
+      if (!invoiceLineHoursInput.data('changed')) invoiceLineHoursInput.val(newInvoiceLineHours.toString().replace('.', ','));
+      if (bookingRow.data('billable') === 'True') {
+        var invoiceLineHours = invoiceLine.find('.invoiceline-hours');
+        invoiceLineHours.html((parseFloat(invoiceLineHours.text().replace(',', '.')) - bookingHours).toString().replace('.', ','));
+        var invoiceLineExtraHours = invoiceLine.find('.invoiceline-extrahours');
+        var extraHours = parseFloat(invoiceLineExtraHours.text().replace(',', '.')) - bookingHours;
+        if (extraHours < 0) extraHours = 0;
+        invoiceLineExtraHours.html(extraHours.toString().replace('.', ','));
+      }
       computePriceForInvoiceLine(invoiceLine);
     });
   });

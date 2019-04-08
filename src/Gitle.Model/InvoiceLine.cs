@@ -28,7 +28,12 @@ namespace Gitle.Model
         public virtual double EstimateHours => Issue.TotalHours - OldInvoiceLines.Sum(x => x.Hours);
         public virtual double FullEstimateHours => Issue.TotalHours;
         public virtual double BookingHours => Bookings.Where(x => !x.Unbillable).Sum(x => x.Hours);
+        public virtual double BookingHoursUnbillable => Bookings.Where(x => x.Unbillable).Sum(x => x.Hours);
+        public virtual double BookingHoursTotal => BookingHours + BookingHoursUnbillable;
         public virtual double Minutes => Hours*60.0;
+        public virtual double OldHours => OldInvoiceLines.Sum(x => x.Hours);
+        public virtual double OldBookingHours => OldInvoiceLines.Sum(x => x.BookingHours);
+        public virtual double ExtraHours => BookingHours - (OldHours - OldBookingHours >= 0 ? OldHours - OldBookingHours : 0);
     }
 
     public class Correction : ModelBase
