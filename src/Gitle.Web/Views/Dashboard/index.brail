@@ -22,11 +22,11 @@
           <td>
             <div class="progress progress-border progress-status">
               <% if project.BillableHours > project.BudgetHours and project.BudgetHours != 0: %>
-              <span class="meter overbudget" style="width: ${project.Progress().ToString().Replace(",", "." )}% "></span>
+              <span class="meter overbudget" style="width: ${project.Progress().ToString().Replace(",", "." )}%; max-width: 100%"></span>
               <% elif project.BudgetHours == 0: %>
               <span class="meter noestimate" style="width: 100%"></span>
               <% else: %>
-              <span class="meter inbudget" style="width: ${project.Progress().ToString().Replace(",", "." )}% "></span>
+              <span class="meter inbudget" style="width: ${project.Progress().ToString().Replace(",", "." )}%; max-width: 100%"></span>
               <% end %>
               <span class="left-value">${project.BudgetHours} beschikbare uren</span>
               <span class="right-value">${project.BillableHours} uur gemaakt</span>
