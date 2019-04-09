@@ -15,7 +15,7 @@
       <% end %>
     </div>
     <div class="small-11 columns">
-      ${action.HtmlText}
+      !{action.HtmlText}
     </div>
   </div>
     <% elif action.GetType().Name == "Change": %>
@@ -24,7 +24,7 @@
         <i class="fa fa-edit"></i>
       </div>
       <div class="small-11 columns">
-        ${action.HtmlText}
+        !{action.HtmlText}
       </div>
     </div>
     <% elif action.GetType().Name == "Pickup": %>
@@ -33,7 +33,7 @@
         <i class="fa fa-sign-out"></i>
       </div>
       <div class="small-11 columns">
-        ${action.HtmlText}
+        !{action.HtmlText}
       </div>
     </div>
     <% else: %>
@@ -44,7 +44,7 @@
       <% if action.User != null: %>
       <strong>${action.User.FullName} <% if action.User.IsAdmin: %> <span class="label no-margin radius">Developer</span> <% end %></strong>
       <% end %>
-      <div class="">${action.HtmlText}</div>
+      <div class="">!{action.HtmlText}</div>
       <% if CurrentUser.CanBookHours or CurrentUser.IsAdmin : %>
       <div class="text-align-right">
         <form action="changecommentvisibility" method="POST" autocomplete="off">
