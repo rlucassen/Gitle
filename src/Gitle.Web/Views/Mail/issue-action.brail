@@ -46,7 +46,7 @@
                 <table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin-bottom: 30px; border: 1px solid #d9d9d9;">
                   <tr>
                     <td bgcolor="#f2f2f2" width="70%" style="padding: 12px; font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Helvetica, Arial, sans-serif;">
-                      <div>${item.Issue.BodyHtml}</div>
+                      <div>!{item.Issue.BodyHtml}</div>
                     </td>
                     <td bgcolor="#f2f2f2" width="30%" style="padding: 12px; font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Helvetica, Arial, sans-serif; font-size: 12px; text-align: right; vertical-align: top;">
                       ${Helpers.DateTimeHelper.Readable(item.Issue.CreatedAt)}
@@ -70,7 +70,7 @@
                   </tr>
                   <tr>
                     <td colspan="2" bgcolor="#f2f2f2" width="100%" style="padding-left: 12px; padding-bottom: 12px; font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Helvetica, Arial, sans-serif;">
-                      <div>${comment.HtmlText}</div>
+                      <div>!{comment.HtmlText}</div>
                     </td>
                   </tr>
                 </table><br />
