@@ -471,12 +471,12 @@ $(function () {
     calculateTotals();
   });
 
-  $('.invoiceline-estimate, .invoiceline-hours').click(function (e) {
+  $('.invoiceline-estimate, .invoiceline-hours, .invoiceline-extrahours').click(function (e) {
     e.preventDefault();
     var estimate = $(this).text();
     var invoiceLine = $(this).parents('.invoiceline');
     invoiceLine.find('.invoiceline-hours-input').val(estimate).change();
-    invoiceLine.find('.invoiceline-estimate, .invoiceline-hours').removeClass('active');
+    invoiceLine.find('.invoiceline-estimate, .invoiceline-hours, .invoiceline-extrahours').removeClass('active');
     $(this).addClass('active');
   });
 

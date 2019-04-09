@@ -365,6 +365,16 @@
             return UnbillableBookingHours().ToHourDayNotation();
         }
 
+        public virtual double BillableBookingHoursInvoiced()
+        {
+            return InvoiceLines.Where(x => x.Invoice.IsDefinitive).Sum(x => x.BookingHours);
+        }
+
+        public virtual double UnbillableBookingHoursInvoiced()
+        {
+            return InvoiceLines.Where(x => x.Invoice.IsDefinitive).Sum(x => x.BookingHoursUnbillable);
+        }
+
         public virtual double BookingHours(DateTime startDate, DateTime endDate)
         {
             return Bookings.Where(x => x.Date >= startDate && x.Date <= endDate).Sum(x => x.Hours);
