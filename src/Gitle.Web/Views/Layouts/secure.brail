@@ -80,6 +80,7 @@
           <ul class="dropdown">
             <li><a href="/server">Servers</a></li>
             <li><a href="/installation">Installaties</a></li>
+            <li><a href="/hosting">Hosting Partijen</a></li>
           </ul>
         </li>
         <% end %>

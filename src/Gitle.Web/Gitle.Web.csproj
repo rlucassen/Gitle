@@ -339,6 +339,7 @@
     <Compile Include="Controllers\PlanningController.cs" />
     <Compile Include="Controllers\SearchController.cs" />
     <Compile Include="Controllers\InvoiceController.cs" />
+    <Compile Include="Controllers\HostingController.cs" />
     <Compile Include="Controllers\ServerController.cs" />
     <Compile Include="Controllers\SlugController.cs" />
     <Compile Include="Controllers\UploadController.cs" />
@@ -555,6 +556,9 @@
     <Content Include="Views\Server\index.brail" />
     <Content Include="Views\Server\view.brail" />
     <Content Include="Views\Server\edit.brail" />
+    <Content Include="Views\Hosting\edit.brail" />
+    <Content Include="Views\Hosting\index.brail" />
+    <Content Include="Views\Hosting\view.brail" />
     <None Include="Views\Template\invoice.brail" />
     <None Include="Views\Report\index.brail" />
     <None Include="Views\User\profile.brail" />

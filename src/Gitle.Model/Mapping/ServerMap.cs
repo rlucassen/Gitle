@@ -5,10 +5,9 @@
         public ServerMap()
         {
             Map(x => x.Name);
-            Map(x => x.Slug);
-            Map(x => x.HostingCompany);
+            Map(x => x.Slug); 
             Map(x => x.IsExternal);
-            HasMany(x => x.Contacts);
+            References(x => x.Hosting);
             HasMany(x => x.Installations);
             Map(x => x.Description).CustomSqlType("nvarchar(max)");
         }

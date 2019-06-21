@@ -16,7 +16,7 @@
         <% for item in items: %>
         <tr>
           <td class="name">${item.Name}</td>
-          <td class="hostingCompany">${item.HostingCompany}</td>
+          <td class="hostingCompany"><a href="/hosting/${?item.Hosting.Slug}/view">${?item.Hosting.Name}</a></td>
           <td class="isExternal"><span class="hide">${item.IsExternal}</span><% if item.IsExternal: %><i class="fa fa-times red"></i><% else: %><i class="fa fa-check green"></i><% end %></td>
           <td class="actions">
             <ul class="button-group">

@@ -1,89 +1,34 @@
 ﻿<% if CurrentUser.IsAdmin: %>
 <div class="row">
-  <div class="large-12 columns">
-    <% if item.Id > 0: %>
-    <h1>Server bewerken</h1>
-    <% else: %>
-    <h1>Nieuwe server</h1>
-    <% end %>
-    <form action="/server/<% if item.Slug: %>${item.Slug}<% else: %>0<% end %>/save" id="server-form" method="POST" autocomplete="off" data-abide onsubmit="return isValidForm()">
-      ${Form.HiddenField("item.Id", {"data-serverId": "value"})}
-      ${Form.HiddenField("item.Slug")}
-      <div class="row">
-        <div class="large-3 columns">Naam</div>
-        <div class="large-9 columns">
-          <input type="text" id="item_Name" name="item.Name" value="${?item.Name}" data-abide-validator="checkServerName" data-slugify="#item_Slug" required/>
-          <small class="error">Geef een naam op</small>
-        </div>
-      </div>
-      <div class="row">
-        <div class="large-3 columns">Hostingpartij</div>
-        <div class="large-9 columns">
-          <input type="text" id="item_HostingCompany" name="item.HostingCompany" value="${?item.HostingCompany}" required/>
-          <small class="error">Geef een hostingpartij op</small>
-        </div>
-      </div>
-      <div class="row">
-        <div class="large-3 columns">Contactpersonen</div>
-        <div class="large-9 columns">
+    <div class="row">
+      <div class="large-12 columns">
+        <% if item.Id > 0: %>
+        <h1>Server bewerken</h1>
+        <% else: %>
+        <h1>Nieuwe server</h1>
+        <% end %>
+        <form action="/server/<% if item.Slug: %>${item.Slug}<% else: %>0<% end %>/save" id="server-form" method="POST" autocomplete="off" data-abide>
+          ${Form.HiddenField("item.Id", {"data-serverId": "value"})}
+          ${Form.HiddenField("item.Slug")}
           <div class="row">
-            <div class="medium-4 columns">
-              <select name="addContactId" id="addContactId">
-                <% for contact in contacts: %>
-                <option value="${contact.Id}">${contact.FullName}</option>
-                <% end %>
-              </select>
+            <div class="large-3 columns">Naam</div>
+            <div class="large-9 columns">
+              <input type="text" id="item_Name" name="item.Name" value="${?item.Name}" data-abide-validator="checkServerName" data-slugify="#item_Slug" required/>
+              <small class="error">Geef een naam op</small>
             </div>
-            <div class="medium-8 columns">
-              <a id="addContact" class="button small">Voeg contact toe</a>
-              <a id="removeContact" class="button small alert">Verwijder contact</a>
-            </div>
-            <!--<p class="contact-message"></p>-->
           </div>
-          <span class="validate hidden item-contact">Selecteer minimaal een contactpersoon en/of zorg er voor dat de informatie volledig is ingevuld</span>
-          <table class="nested addable-contacts">
-            <thead>
-              <tr>
-                <th>Volledige Naam</th>
-                <th>Email</th>
-                <th>Telefoon nummer</th>
-              </tr>
-            </thead>
-            <tbody>
-              <% if item.Contacts.Count == 0 :%>
-              <tr class="hide">
-                <td>
-                  <input type="hidden" name="contact[-1].Id" value="" data-nested-remove="" />
-                  <input type="text" name="contact[-1].FullName" value="" />
-                </td>
-                <td>
-                  <input type="text" name="contact[-1].Email" value="" />
-                </td>
-                <td>
-                  <input type="text" name="contact[-1].PhoneNumber" value="" />
-                </td>
-              </tr>
-              <% end %>
-              <% count = 0 %>
-              <% for contact in item.Contacts: %>
-              <tr>
-                <td>
-                  <input type="hidden" name="contact[${count}].Id" value="${contact.Id}" data-nested-remove />
-                  <input type="text" name="contact[${count}].FullName" value="${contact.FullName}" />
-                </td>
-                <td>
-                  <input type="text" name="contact[${count}].Email" value="${contact.Email}" />
-                </td>
-                <td>
-                  <input type="text" name="contact[${count}].PhoneNumber" value="${contact.PhoneNumber}" />
-                </td>
-              </tr>
-              <% count++ %>
-              <% end %>
-            </tbody>
-          </table>
+          <div class="row">
+            <div class="large-3 columns">Hostingpartij</div>
+            <div class="large-9 columns">
+					    <select name="hostingId"> 
+						    <% for hosting in hostings: %>
+						    <option value="${hosting.Id}">${hosting.Name}</option>
+						    <% end %>
+					    </select>
+            </div>
+          </div>
         </div>
-      </div>
+      </div>    
       <% if item.Id > 0: %>
       <div class="row">
         <div class="large-3 columns">Installaties</div>
@@ -226,20 +171,5 @@ Actie niet toegestaan.
     }
 
     return false;
-  }
-
- function isValidForm() {
-
-   var valid = true;
-   let existingRows = $('.addable-contacts tbody tr:not(.hide)');
-
-   if (existingRows.length <= 0 || hasEmptyInputs(existingRows)) {
-     $('.item-contact').removeClass('hidden');
-     valid = false;
-   } else {
-     $('.item-contact').addClass('hidden');
-   }
-
-  return valid;
-}
+  } 
 </script>
