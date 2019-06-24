@@ -38,7 +38,9 @@
     </table>
   </div>
   <div class="content" id="service">
-    <input type="checkbox" id="toggle-empties" checked /> Verberg projecten zonder open tickets
+    <input type="checkbox" id="toggle-overview" /> Toon overzicht facturabele tickets
+    <br/>
+    <input type="checkbox" id="toggle-empties" checked /> Verberg projecten zonder tickets
     <div class="large-0 small-6 columns right">
       <a href="/dashboard/exportopenticketsbyproject" class="button tiny">Export openstaande issues</a>
     </div>
@@ -52,7 +54,29 @@
       </thead>
       <tbody>
         <% for project in serviceProjects: %>
-        <tr class="<% if project.OpenIssues.Count == 0: %>empty-project<% end %>">
+        <tr class="<% if project.OpenIssues.Count + project.DoneIssues.Count + project.HoldIssues.Count == 0 : %>empty-project<% end %>">
+          <td><a href="/project/${project.Slug}/issues">${project.Name}</a></td>
+          <td>
+            <div class="progress progress-tickets">
+              <% if project.OpenIssues.Count > 0: %><span class="meter open" style="width: ${project.OpenIssuesPercentageOf(20).ToString().Replace(",", "." )}%">${project.OpenIssues.Count} open</span><% end %>
+              <% if project.DoneIssues.Count > 0: %><span class="meter done" style="width: ${project.DoneIssuesPercentageOf(20).ToString().Replace(",", "." )}%">${project.DoneIssues.Count} done</span><% end %>
+              <% if project.HoldIssues.Count > 0: %><span class="meter hold" style="width: ${project.HoldIssuesPercentageOf(20).ToString().Replace(",", "." )}%">${project.HoldIssues.Count} hold</span><% end %>
+            </div>
+          </td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+    <table class="tickets-table striped hide-empties hide">
+      <thead>
+        <tr>
+          <th>Project</th>
+          <th style="width: 80%;">Tickets</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for project in serviceProjects: %>
+        <tr class="<% if project.TotalIssues.Count == 0 : %>empty-project<% end %>">
           <td><a href="/project/${project.Slug}/issues">${project.Name}</a></td>
           <td>
             <div class="progress progress-tickets">
@@ -75,6 +99,9 @@
   $(function () {
     $('#toggle-empties').change(function () {
       $('table.tickets-table').toggleClass('hide-empties', $(this).is(':checked'));
+    });
+    $('#toggle-overview').change(function () {
+      $('table.tickets-table').toggleClass('hide');
     });
   });
 </script>
