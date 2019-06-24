@@ -29,6 +29,10 @@ namespace Gitle.Web.Controllers
         {
             var invoices = session.Query<Invoice>().Where(x => x.IsActive).OrderByDescending(x => x.Number).ToList().OrderBy(x => (int)(x.State));
             PropertyBag.Add("invoices", invoices);
+
+            var today = DateTime.Today.AddMonths(-1);
+            PropertyBag.Add("startOfMonth", today.StartOfMonth());
+            PropertyBag.Add("endOfMonth", today.EndOfMonth());
         }
 
         [Danielle]
