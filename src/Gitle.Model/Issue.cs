@@ -99,6 +99,16 @@
             get { return State == IssueState.Done; }
         }
 
+        public virtual bool IsClosed
+        {
+            get { return State == IssueState.Closed; }
+        }
+
+        public virtual bool IsFullyInvoiced
+        {
+            get { return InvoiceLines.All(x => x.Invoice.IsDefinitive); }
+        }
+
         public virtual IssueState State
         {
             get

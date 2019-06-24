@@ -52,14 +52,14 @@
       </thead>
       <tbody>
         <% for project in serviceProjects: %>
-        <tr class="<% if project.OpenIssues == 0: %>empty-project<% end %>">
+        <tr class="<% if project.OpenIssues.Count == 0: %>empty-project<% end %>">
           <td><a href="/project/${project.Slug}/issues">${project.Name}</a></td>
           <td>
             <div class="progress progress-tickets">
-              <% if project.OpenIssues > 0: %><span class="meter open" style="width: ${project.OpenIssuesPercentage.ToString().Replace(",", "." )}%">${project.OpenIssues} open</span><% end %>
-              <% if project.DoneIssues > 0: %><span class="meter done" style="width: ${project.DoneIssuesPercentage.ToString().Replace(",", "." )}%">${project.DoneIssues} afgerond</span><% end %>
-              <% if project.HoldIssues > 0: %><span class="meter hold" style="width: ${project.HoldIssuesPercentage.ToString().Replace(",", "." )}%">${project.HoldIssues} hold</span><% end %>
-              <% if project.ClosedIssues > 0: %><span class="meter closed" style="width: ${project.ClosedIssuesPercentage.ToString().Replace(",", "." )}%">${project.ClosedIssues} gesloten</span><% end %>
+              <% if project.OpenIssues.Count > 0: %><span class="meter open" style="width: ${project.OpenIssuesPercentage.ToString().Replace(",", "." )}%">${project.OpenIssues.Count} open</span><% end %>
+              <% if project.DoneIssues.Count > 0: %><span class="meter done" style="width: ${project.DoneIssuesPercentage.ToString().Replace(",", "." )}%">${project.DoneIssues.Count} done</span><% end %>
+              <% if project.HoldIssues.Count > 0: %><span class="meter hold" style="width: ${project.HoldIssuesPercentage.ToString().Replace(",", "." )}%">${project.HoldIssues.Count} hold</span><% end %>
+              <% if project.ClosedIssues.Count > 0: %><span class="meter closed" style="width: ${project.ClosedIssuesPercentage.ToString().Replace(",", "." )}%">${project.ClosedIssues.Count} closed</span><% end %>
             </div>
           </td>
 
