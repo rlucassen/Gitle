@@ -1,12 +1,11 @@
-﻿namespace Gitle.Model
+﻿// ReSharper disable once IdentifierTypo
+namespace Gitle.Model
 {
     using Gitle.Model.Enum;
     using Gitle.Model.Interfaces.Model;
 
-
     public class Installation : ModelBase, ISlugger
     {
-        public virtual string Name { get; set; }
         public virtual string Slug { get; set; }
         public virtual Application Application { get; set; }
         public virtual InstallationType InstallationType { get; set; }

@@ -1,10 +1,10 @@
-﻿namespace Gitle.Model.Mapping
+﻿// ReSharper disable once IdentifierTypo
+namespace Gitle.Model.Mapping
 {
     public class InstallationMap : ModelBaseMap<Installation>
     {
         public InstallationMap()
         {
-            Map(x => x.Name);
             Map(x => x.Slug);
             Map(x => x.InstallationType);
             Map(x => x.Url);

@@ -1,6 +1,6 @@
-﻿namespace Gitle.Web.Controllers
+﻿// ReSharper disable once IdentifierTypo
+namespace Gitle.Web.Controllers
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
     using Castle.MonoRail.Framework;
@@ -28,18 +28,16 @@
         [Admin]
         public void Edit(string installationSlug)
         {
-            Installation installation = session.SlugOrDefault<Installation>(installationSlug);
+            var installation = session.SlugOrDefault<Installation>(installationSlug);
             var installationTypes = EnumHelper.ToDictionary(typeof(InstallationType));
-            var types = installationTypes.Where(t =>
-                    new[] { InstallationType.Live, InstallationType.Acceptance, InstallationType.Demo }.Contains((InstallationType)t.Key))
-                .ToList();
+            var types = installationTypes.Where(t => new[] { InstallationType.Live, InstallationType.Acceptance, InstallationType.Demo }.Contains((InstallationType)t.Key)).ToList();
 
             PropertyBag.Add("applications", session.Query<Application>().Where(x => x.IsActive).OrderBy(x => x.Name));
             PropertyBag.Add("applicationId", installation?.Application?.Id);
             PropertyBag.Add("servers", session.Query<Server>().Where(x => x.IsActive).OrderBy(x => x.Name));
             PropertyBag.Add("serverId", installation?.Server?.Id);
             PropertyBag.Add("installationTypes", types);
-            PropertyBag.Add("item", (installation != null) ? installation : new Installation());
+            PropertyBag.Add("item", installation ?? new Installation());
             RenderView("edit");
         }
 
@@ -50,14 +48,29 @@
             RenderView("edit");
         }
 
+        public string MakeUrlComplete(string url)
+        {
+            var ignoreString = new List<string> { "http://", "https://" };
+            var ignore = false;
+            
+            foreach (var key in ignoreString)
+            {
+                if (url.Substring(0, key.Length) == key)
+                    ignore = true;
+            }
+
+            if (!ignore)
+                url = "https://" + url;
+
+            return url;
+        }
+
         [Admin]
         public void Save(string installationSlug, long applicationId, long serverId)
         {
             var item = session.SlugOrDefault<Installation>(installationSlug);
             var application = session.Get<Application>(applicationId);
             var server = session.Get<Server>(serverId);
-            var ignoreString = new List<string>() { "http://", "https://" };
-            var ignore = false;
 
             if (item != null)
                 BindObjectInstance(item, "item");
@@ -66,22 +79,8 @@
 
             item.Application = application;
             item.Server = server;
-
-            var url = item.Url;
-
-            foreach (var key in ignoreString)
-            {
-                if (url.Substring(0, key.Length) == key)
-                {
-                    ignore = true;
-                }
-            }
-
-            if (!ignore)
-            {
-                url = "https://" + url;
-                item.Url = url;
-            }
+            item.Url = MakeUrlComplete(item.Url);
+            item.Slug = $"{application.Name}-{item.InstallationType.ToString()}".Slugify();
 
             using (var tx = session.BeginTransaction())
             {
@@ -109,27 +108,16 @@
         public object CheckInstallationName(string name, long installationId)
         {
             var validName = !session.Query<Installation>().Any(x => x.IsActive && x.Slug == name.Slugify() && x.Id != installationId);
-            var message = "Voer een naam in";
-            if (!validName)
-            {
-                message = "Deze naam is al in gebruik, kies een andere";
-            }
-            return new { success = validName, message = message };
+            return new { success = validName, message = validName ? "" : "Er bestaat al een installatie met deze naam! Kies een ander naam!" };
         }
 
         [return: JSONReturnBinder]
-        public object CheckUrl(string link)
+        public object CheckUrl(string link, long installationId)
         {
-            var urls = !session.Query<Installation>().Any(x => x.IsActive && x.Url == link);
-            var message = "Vul een geldige Url in";
-            if (!urls)
-            {
-                return new
-                {
-                    message = "Deze url is al in gebruik, kies een andere"
-                };
-            }
-            return new {success = urls, message = message};
+            link = MakeUrlComplete(link);
+
+            var validUrl = !session.Query<Installation>().Any(x => x.IsActive && x.Url == link && x.Id != installationId);
+            return new { success = validUrl, message = validUrl ? "" : "Er bestaat al een installatie met deze url!" };
         }
     }
 }

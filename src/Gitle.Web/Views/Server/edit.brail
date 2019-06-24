@@ -11,10 +11,10 @@
           ${Form.HiddenField("item.Id", {"data-serverId": "value"})}
           ${Form.HiddenField("item.Slug")}
           <div class="row">
-            <div class="large-3 columns">Naam</div>
+            <div class="large-3 columns">Naam van de server</div>
             <div class="large-9 columns">
               <input type="text" id="item_Name" name="item.Name" value="${?item.Name}" data-abide-validator="checkServerName" data-slugify="#item_Slug" required/>
-              <small class="error">Geef een naam op</small>
+              <small class="error">Geef een servernaam op</small>
             </div>
           </div>
           <div class="row">
@@ -98,15 +98,11 @@ Actie niet toegestaan.
 <% end %>
 
 <script>
-  //var msgTimer;
-
   $(document).ready(() => {
-    //$('.contact-message').hide();
 
     $('#removeContact').on('click', () => {
       if (confirm('Hiermee verwijdert u zowel de contact, als relaties van deze contact definitief. Weet u het zeker?')) {
         window.location.href = 'removeContact?contactId=' + $('#addContactId').val();
-        // $('#addContactId').find('option[value="' + $('#addContactId').val() + '"]').remove();
       }
     });
 
@@ -123,11 +119,6 @@ Actie niet toegestaan.
         $.ajax({
           url: 'addContact?addContactId=' + $('#addContactId').val()
         }).done(function (data) {
-          //$('.contact-message').text(data.message);
-          //$('.contact-message').show();
-
-          //clearTimeout(msgTimer);
-          //msgTimer = window.setTimeout(() => { $('.contact-message').hide() }, 1500);
 
           if (data.success) {
             let contact = data.contact;

@@ -8,19 +8,11 @@
     <% end %>
     <form action="/installation/<% if item.Slug: %>${item.Slug}<% else: %>0<% end %>/save" method="POST" autocomplete="off" data-abide onsubmit="return isValidForm()">
       ${Form.HiddenField("item.Id", {"data-installationId": "value"})}
-      ${Form.HiddenField("item.Slug")}
-      <div class="row">
-        <div class="large-3 columns">Naam installatie</div>
-        <div class="large-9 columns">
-          <input type="text" id="item_Name" name="item.Name" value="${?item.Name}" data-abide-validator="checkInstallationName" data-slugify="#item_Slug" required/>
-          <span class="error">Vul een geldige naam in</span>
-        </div>
-      </div>
       <div class="row">
         <div class="large-3 columns">Applicatie</div>
         <div class="large-9 columns">
           ${Form.Select("applicationId", applications, {"class": "chosen-select", "value": "Id", "text": "CompleteName", "firstoption": "Kies een applicatie", "pattern":"select", "required":"required"})}
-          <span class="validate hidden item-applicationId">Kies een applicatie</span>
+          <small id="applicationId-error" class="error">Kies een applicatie</small>
         </div>
       </div>
       <div class="row">
@@ -33,7 +25,7 @@
         <div class="large-3 columns">Server naam</div>
         <div class="large-9 columns">
           ${Form.Select("serverId", servers, {"class": "chosen-select", "value": "Id", "text": "Name", "firstoption": "Kies een server", "pattern":"select", "required":"required"})}
-          <span class="validate hidden item-serverId">Kies een server</span>
+          <small class="error">Kies een server</small>
         </div>
       </div>
       <div class="row">
@@ -63,23 +55,15 @@ Actie niet toegestaan.
   function isValidForm() {
 
     var valid = true;
-    
-    if ($('#serverId').val() == 0) {
-      $('#serverId_chosen, #serverId_chosen .chosen-single').addClass('not-valid');
-      $('.item-serverId').removeClass('hidden');
+
+    if ($('#serverId').chosen().val() == 0) {
+      $('#serverId').parent().addClass('error');
       valid = false;
-    } else {
-      $('#serverId_chosen, #serverId_chosen .chosen-single').removeClass('not-valid');
-      $('.item-serverId').addClass('hidden');
     }
-    if ($('#applicationId').val() == 0) {
-      $('#applicationId_chosen, #applicationId_chosen .chosen-single').addClass('not-valid');
-      $('.item-applicationId').removeClass('hidden');
+
+    if ($('#applicationId').chosen().val() == 0) {
+      $('#applicationId').parent().addClass('error');
       valid = false;
-    } else {
-      $('#applicationId_chosen, #applicationId_chosen .chosen-single').removeClass('not-valid');
-      $('.item-applicationId').addClass('hidden');
-    }
 
     return valid;
   }
