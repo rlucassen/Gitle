@@ -20,7 +20,7 @@
           <td><a href="/project/${project.Slug}/issues">${project.Name}</a></td>
           <td>${project.UnBillableHours}</td>
           <td>
-            <div class="progress progress-border progress-status">
+            <div class="progress progress-border progress-status" title="${project.RemainingHours} resterende uren">
               <% if project.BillableHours > project.BudgetHours and project.BudgetHours != 0: %>
               <span class="meter overbudget" style="width: ${project.Progress().ToString().Replace(",", "." )}% "></span>
               <% elif project.BudgetHours == 0: %>

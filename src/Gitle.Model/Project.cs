@@ -67,6 +67,7 @@
         public virtual double UnBillableMinutes => Bookings.Where(x => x.IsActive && x.Unbillable).Sum(x => x.Minutes);
         public virtual double UnBillableHours => Bookings.Where(x => x.IsActive && x.Unbillable).Sum(x => x.Hours);
         public virtual double TotalHours => Bookings.Where(x => x.IsActive).Sum(x => x.Hours);
+        public virtual double RemainingHours => BudgetHours - TotalHours;
 
         public virtual string CompleteName => $"{Name} ({Application?.Name}, {Application?.Customer?.Name})";
 
