@@ -92,10 +92,33 @@
             return Issues.Where(x => !x.IsArchived).Sum(x => x.TotalHours);
         }
 
+        public virtual double TotalEstimateAllOpenTickets()
+        {
+            return Issues.Where(x => !x.IsArchived && !x.IsDone && !x.IsClosed).Sum(x => x.TotalHours);
+        }
+
         public virtual double Progress()
         {
-            return BillableHours / TotalEstimateAllTickets() * 100;
+            //return BillableHours / TotalEstimateAllTickets() * 100;
+            var estimateTotalHours = TotalEstimateAllTickets();
+            if (estimateTotalHours > 0)
+                return Issues.Where(x => x.IsDone || x.IsClosed).Sum(x => x.TotalHours) / estimateTotalHours * 100;
+            if (BudgetHours > 0)
+                return TotalHours / BudgetHours * 100;
+            return TotalHours > 0 ? 100 : 0;
         }
+
+        public virtual double PercentageOverBudget()
+        {
+            var estimateTotalHours = TotalEstimateAllTickets();
+            if (estimateTotalHours > 0)
+                return (TotalHours + TotalEstimateAllOpenTickets()) / estimateTotalHours * 100 - 100;
+            if (BudgetHours > 0)
+                return TotalHours / BudgetHours * 100 - 100;
+            return TotalHours > 0 ? 100 : 0;
+        }
+
+        public virtual bool HasEstimate => TotalEstimateAllTickets() != 0 || BudgetHours != 0;
 
         public virtual double SumMaxOfEstimateAndBooking()
         {

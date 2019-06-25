@@ -18,12 +18,13 @@
         }
         public void Index()
         {
-            var initialProjects = session.Query<Project>().Where(x => !x.Closed && x.Type == ProjectType.Initial && x.Issues.Count > 0).OrderBy(x => x.Name);
+            var initialProjects = session.Query<Project>().Where(x => !x.Closed && x.Type == ProjectType.Initial && x.Issues.Count > 0).OrderBy(x => x.Name).ToList();
 
-            var serviceProjects = session.Query<Project>().Where(x => !x.Closed && x.Type == ProjectType.Service && x.Issues.Count > 0).OrderBy(x => x.Name);
+            var serviceProjects = session.Query<Project>().Where(x => !x.Closed && x.Type == ProjectType.Service && x.Issues.Count > 0).OrderBy(x => x.Name).ToList();
 
             PropertyBag.Add("initialProjects", initialProjects);
             PropertyBag.Add("serviceProjects", serviceProjects);
+            PropertyBag.Add("serviceProjectsMaxOpenIssues", serviceProjects.Max(project => project.OpenIssues.Count));
         }
 
         public void ExportOpenTicketsByProject()

@@ -266,6 +266,10 @@ table.tickets-table {
   }
 
   &.progress-status {
+    .overbudget-warn {
+      background-color: #f1b84f;
+    }
+
     .overbudget {
       background-color: #d09890;
     }
