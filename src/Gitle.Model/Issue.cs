@@ -106,7 +106,7 @@
 
         public virtual bool IsFullyInvoiced
         {
-            get { return InvoiceLines.All(x => x.Invoice.IsDefinitive); }
+            get { return !Bookings.Any(b => b.IsActive && !b.Unbillable && b.Hours > 0 && !b.IsDefinitive) || IsArchived; }
         }
 
         public virtual IssueState State

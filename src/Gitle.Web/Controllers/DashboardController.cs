@@ -22,6 +22,8 @@
 
             var serviceProjects = session.Query<Project>().Where(x => !x.Closed && x.Type == ProjectType.Service && x.Issues.Count > 0).OrderBy(x => x.Name).ToList();
 
+            var projects = serviceProjects.Where(x => x.Slug == "jeeves-service").Select(x => x.ClosedIssues).ToList();
+
             PropertyBag.Add("initialProjects", initialProjects);
             PropertyBag.Add("serviceProjects", serviceProjects);
             PropertyBag.Add("serviceProjectsMaxOpenIssues", serviceProjects.Max(project => project.OpenIssues.Count));
