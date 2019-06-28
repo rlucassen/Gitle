@@ -49,7 +49,6 @@
         <table class="tablesorter small-blocks">
           <thead>
             <tr>
-              <th>Naam</th>
               <th>Omgeving</th>
               <th>Server</th>
               <th>URL</th>
@@ -63,7 +62,6 @@
           <% else: %>
             <% for installation in installations: %>
             <tr>
-              <td class="name">${?installation.Name}</td>
               <td class="installation-type">${?installation.InstallationType}</td>
               <td class="server">${?installation.Server.Name}</td>
               <td class="url"><a target="_blank" href="https://myfinance.demo.auxilium.nl">${?installation.Url}</a></td>
