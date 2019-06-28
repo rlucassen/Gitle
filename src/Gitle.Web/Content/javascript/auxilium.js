@@ -375,6 +375,11 @@ $.fn.nestedTable = function (conf) {
 
   var deleteRow = function (e) {
     e.preventDefault();
+
+    if ($('#addContactId') && $('#addContactId').length > 0) {
+      $('#addContactId').append('<option value="' + $(this).parents('tr').find('input[name$=".Id"]').val() +'">'+ $(this).parents('tr').find('input[name$=".FullName"]').val() +'</option>');
+    }
+
     $(this).parents('tr').remove();
   };
 
@@ -396,6 +401,7 @@ $.fn.nestedTable = function (conf) {
       var newRowNumber = parseInt(fr.length == 0 ? 0 : fr.prop('name').match(/\d+/)[0]) + 1;
       var firstRow = table.find('tbody tr:first-child'); // use first row to clone
       var newRow = firstRow.clone().removeClass('hide');
+
       // rename all inputs
       newRow.find(':input').each(function () {
         var input = $(this);

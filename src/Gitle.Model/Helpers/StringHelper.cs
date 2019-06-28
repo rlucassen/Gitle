@@ -1,12 +1,13 @@
-﻿namespace Gitle.Model.Helpers
+﻿// ReSharper disable once IdentifierTypo
+namespace Gitle.Model.Helpers
 {
     using System.Globalization;
     using System.Text.RegularExpressions;
-    using System.Web;
     using MarkdownDeep;
 
     public static class StringHelper
     {
+        // ReSharper disable once IdentifierTypo
         public static string Slugify(this string phrase)
         {
             var str = phrase.RemoveAccent().ToLower();

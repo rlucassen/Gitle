@@ -17,6 +17,7 @@
         public virtual string Slug { get; set; }
         public virtual IList<User> Contacts { get; set; }
         public virtual IList<Project> Projects { get; set; }
+        public virtual IList<Installation> Installations { get; set; }
         public virtual string Comments { get; set; }
 
         public virtual IList<User> AllContacts

@@ -1,0 +1,111 @@
+﻿<% if CurrentUser.IsAdmin: %>
+<div class="row">
+  <div class="large-12 columns"> 
+    <% if item.Id > 0: %>
+    <h1>Hosting partij "${?item.Name}" bewerken</h1>
+    <% else: %>
+    <h1>Nieuw hosting partij</h1>
+    <% end %>
+    <form action="/hosting/<% if item.Slug: %>${item.Slug}<% else: %>0<% end %>/save" id="server-form" method="POST" autocomplete="off" data-abide onsubmit="return isValidForm()">
+      ${Form.HiddenField("item.Id", {"data-serverId": "value"})}
+      ${Form.HiddenField("item.Slug")}
+      <div class="row">
+        <div class="large-3 columns">Naam</div>
+        <div class="large-9 columns">
+          <input type="text" id="item_Name" name="item.Name" value="${?item.Name}"  data-slugify="#item_Slug" required/>
+          <small class="error">Geef een naam op</small>
+        </div>
+      </div> 
+      <div class="row">
+        <div class="large-3 columns">Telefoon</div>
+        <div class="large-9 columns">
+          <input type="text" id="item_Phone" name="item.Phone" value="${?item.Phone}" />
+          <small class="error">Geef een telefoonnummer op</small>
+        </div>
+      </div> 
+      <div class="row">
+        <div class="large-3 columns">Billing Mail</div>
+        <div class="large-9 columns">
+          <input type="text" id="item_BillingMail" name="item.BillingMail" value="${?item.BillingMail}" />
+          <small class="error">Geef een billing mail op</small>
+        </div>
+      </div> 
+      <div class="row">
+        <div class="large-3 columns">Support Mail</div>
+        <div class="large-9 columns">
+          <input type="text" id="item_SupportMail" name="item.SupportMail" value="${?item.SupportMail}" />
+          <small class="error">Geef een support mail op</small>
+        </div>
+      </div>
+      <div class="row">
+        <div class="large-3 columns">Website</div>
+        <div class="large-9 columns">
+          <input type="text" id="item_Website" name="item.Website" value="${?item.Website}" />
+          <small class="error">Geef de website op</small>
+        </div>
+      </div>  
+      <div class="row">
+        <div class="large-3 columns">Contactpersonen</div>
+        <div class="large-9 columns">
+          <div class="row"> 
+            <div class="medium-8 columns"> 
+            </div> 
+          </div>
+          <table class="nested addable-contacts">
+            <thead>
+              <tr>
+                <th>Volledige Naam *</th>
+                <th>Email *</th>
+                <th>Telefoon nummer</th> 
+              </tr>
+            </thead>
+            <tbody>
+              <% if item.Contacts.Count == 0 :%>
+              <tr class="hide">
+                <td>
+                  <input type="hidden" name="contacts[0].Id" value="" data-nested-remove="" />
+                  <input type="text" name="contacts[0].FullName" value="" />
+                </td>
+                <td>
+                  <input type="text" name="contacts[0].Email" value="" />
+                </td>
+                <td>
+                  <input type="text" name="contacts[0].PhoneNumber" value="" />
+                </td> 
+              </tr>
+              <% end %>
+              <% count = 0 %>
+              <% for contact in item.Contacts: %>
+              <tr>
+                <td>
+                  <input type="hidden" name="contact[${count}].Id" value="${contact.Id}" data-nested-remove />
+                  <input type="text" name="contacts[${count}].FullName" value="${contact.FullName}" />
+                </td>
+                <td>
+                  <input type="text" name="contacts[${count}].Email" value="${contact.Email}" />
+                </td>
+                <td>
+                  <input type="text" name="contacts[${count}].PhoneNumber" value="${contact.PhoneNumber}" />
+                </td>
+              </tr>
+              <% count++ %>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div> 
+      <div class="row">
+        <div class="large-3 columns">Beschrijving</div>
+        <div class="large-9 columns">
+          <textarea type="text" id="item_Description" name="item.Description" value="">${?item.Description}</textarea>
+        </div>
+      </div>
+      <div class="row">
+        <div class="large-12 columns"><input type="submit" class="button" value="Opslaan" /></div>
+      </div>
+    </form>
+  </div>
+</div>
+<% else :%>
+Actie niet toegestaan.
+<% end %> 

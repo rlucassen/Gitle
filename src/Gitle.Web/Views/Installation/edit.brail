@@ -1,0 +1,70 @@
+﻿<% if CurrentUser.IsAdmin: %>
+<div class="row">
+  <div class="large-12 columns">
+    <% if item.Id > 0: %>
+    <h1>Installatie bewerken</h1>
+    <% else: %>
+    <h1>Nieuwe installatie</h1>
+    <% end %>
+    <form action="/installation/<% if item.Slug: %>${item.Slug}<% else: %>0<% end %>/save" method="POST" autocomplete="off" data-abide onsubmit="return isValidForm()">
+      ${Form.HiddenField("item.Id", {"data-installationId": "value"})}
+      <div class="row">
+        <div class="large-3 columns">Applicatie</div>
+        <div class="large-9 columns">
+          ${Form.Select("applicationId", applications, {"class": "chosen-select", "value": "Id", "text": "CompleteName", "firstoption": "Kies een applicatie", "pattern":"select", "required":"required"})}
+          <small id="applicationId-error" class="error">Kies een applicatie</small>
+        </div>
+      </div>
+      <div class="row">
+        <div class="large-3 columns">Type</div>
+        <div class="large-9 columns">
+          ${Form.Select("item.InstallationType", installationTypes, {"value": "Key", "text": "Value", "pattern":"select", "required":"required"})}
+        </div>
+      </div>
+      <div class="row">
+        <div class="large-3 columns">Server naam</div>
+        <div class="large-9 columns">
+          ${Form.Select("serverId", servers, {"class": "chosen-select", "value": "Id", "text": "Name", "firstoption": "Kies een server", "pattern":"select", "required":"required"})}
+          <small class="error">Kies een server</small>
+        </div>
+      </div>
+      <div class="row">
+        <div class="large-3 columns">URL</div>
+        <div class="large-9 columns">
+          <input type="text" id="item_Url" name="item.Url" value="${?item.Url}" data-abide-validator="checkUrl" required/>
+          <small class="error">Vul een geldige Url in</small>
+        </div>
+      </div>
+      <div class="row">
+        <div class="large-3 columns">Beschrijving</div>
+        <div class="large-9 columns">
+          <textarea type="text" id="item_Description" name="item.Description" value="">${?item.Description}</textarea>
+        </div>
+      </div>
+      <div class="row">
+        <div class="large-12 columns"><input type="submit" class="button" value="Opslaan" /></div>
+      </div>
+    </form>
+  </div>
+</div>
+<% else :%>
+Actie niet toegestaan.
+<% end %>
+
+<script>
+  function isValidForm() {
+
+    var valid = true;
+
+    if ($('#serverId').chosen().val() == 0) {
+      $('#serverId').parent().addClass('error');
+      valid = false;
+    }
+
+    if ($('#applicationId').chosen().val() == 0) {
+      $('#applicationId').parent().addClass('error');
+      valid = false;
+
+    return valid;
+  }
+</script>
