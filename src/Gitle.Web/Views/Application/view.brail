@@ -64,7 +64,7 @@
             <tr>
               <td class="installation-type">${?installation.InstallationType}</td>
               <td class="server">${?installation.Server.Name}</td>
-              <td class="url"><a target="_blank" href="https://myfinance.demo.auxilium.nl">${?installation.Url}</a></td>
+              <td class="url"><a target="_blank" href="//${?installation.Url}">${?installation.Url}</a></td>
               <td>
                 <ul class="button-group">
                   <li><a class="button tiny secondary no-margin" href="/installation/${?installation.Slug}/edit">Bewerk</a></li>

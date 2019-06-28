@@ -47,24 +47,7 @@ namespace Gitle.Web.Controllers
             PropertyBag.Add("item", new Installation());
             RenderView("edit");
         }
-
-        public string MakeUrlComplete(string url)
-        {
-            var ignoreString = new List<string> { "http://", "https://" };
-            var ignore = false;
-            
-            foreach (var key in ignoreString)
-            {
-                if (url.Substring(0, key.Length) == key)
-                    ignore = true;
-            }
-
-            if (!ignore)
-                url = "https://" + url;
-
-            return url;
-        }
-
+        
         [Admin]
         public void Save(string installationSlug, long applicationId, long serverId)
         {
@@ -79,7 +62,7 @@ namespace Gitle.Web.Controllers
 
             item.Application = application;
             item.Server = server;
-            item.Url = MakeUrlComplete(item.Url);
+            item.Url = item.Url.Replace("https://", "").Replace("http://", "");
             item.Slug = $"{application.Name}-{item.InstallationType.ToString()}".Slugify();
 
             using (var tx = session.BeginTransaction())
@@ -109,15 +92,6 @@ namespace Gitle.Web.Controllers
         {
             var validName = !session.Query<Installation>().Any(x => x.IsActive && x.Slug == name.Slugify() && x.Id != installationId);
             return new { success = validName, message = validName ? "" : "Er bestaat al een installatie met deze naam! Kies een ander naam!" };
-        }
-
-        [return: JSONReturnBinder]
-        public object CheckUrl(string link, long installationId)
-        {
-            link = MakeUrlComplete(link);
-
-            var validUrl = !session.Query<Installation>().Any(x => x.IsActive && x.Url == link && x.Id != installationId);
-            return new { success = validUrl, message = validUrl ? "" : "Er bestaat al een installatie met deze url!" };
         }
     }
 }
