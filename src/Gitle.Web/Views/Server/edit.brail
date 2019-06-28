@@ -22,7 +22,7 @@
             <div class="large-9 columns">
 					    <select name="hostingId"> 
 						    <% for hosting in hostings: %>
-						    <option value="${hosting.Id}">${hosting.Name}</option>
+                <option value="${hosting.Id}" <% if item.Hosting is not null and item.Hosting.Id == hosting.Id: %>selected<% end %>>${hosting.Name}</option>
 						    <% end %>
 					    </select>
             </div>
