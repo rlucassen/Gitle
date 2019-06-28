@@ -17,7 +17,7 @@
         <tr>
           <td class="name">${item.Name}</td>
           <td class="hostingCompany"><a href="/hosting/${?item.Hosting.Slug}/view">${?item.Hosting.Name}</a></td>
-          <td class="isExternal"><span class="hide">${item.HaveAccessToServer}</span><% if item.HaveAccessToServer: %><i class="fa fa-times red"></i><% else: %><i class="fa fa-check green"></i><% end %></td>
+          <td><span class="hide">${item.HaveAccessToServer}</span><% if item.HaveAccessToServer: %><i class="fa fa-check green"></i><% else: %><i class="fa fa-times red"></i><% end %></td>
           <td class="actions">
             <ul class="button-group">
               <li><a class="button tiny secondary no-margin" href="/server/${item.Slug}/view">Details</a></li>
