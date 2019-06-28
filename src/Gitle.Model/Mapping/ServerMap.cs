@@ -6,7 +6,7 @@
         {
             Map(x => x.Name);
             Map(x => x.Slug); 
-            Map(x => x.IsExternal);
+            Map(x => x.HaveAccessToServer);
             References(x => x.Hosting);
             HasMany(x => x.Installations);
             Map(x => x.Description).CustomSqlType("nvarchar(max)");

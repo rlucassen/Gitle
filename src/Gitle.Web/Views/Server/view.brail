@@ -11,8 +11,8 @@
 </div>
 
 <div class="row">
-  <div class="large-2 columns">Intern</div>
-  <div class="large-10 columns"><% if item.IsExternal: %><i class="fa fa-times red"></i><% else: %><i class="fa fa-check green"></i><% end %></div>
+  <div class="large-2 columns">Toegang tot de server</div>
+  <div class="large-10 columns"><% if item.HaveAccessToServer: %><i class="fa fa-times red"></i><% else: %><i class="fa fa-check green"></i><% end %></div>
 </div>
 
 <div class="row">

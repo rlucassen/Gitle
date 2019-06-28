@@ -73,10 +73,10 @@
       </div>
       <% end %>
       <div class="row">
-        <div class="large-3 columns">Extern</div>
+        <div class="large-3 columns">Toegang tot de server</div>
         <div class="large-9 columns">
-          <input type="checkbox" id="item_IsExternal" name="item.IsExternal" <% if item.IsExternal: %>checked<% end %> />
-          <input type="hidden" name="item.IsExternal" value="false" />
+          <input type="checkbox" id="item_HaveAccessToServer" name="item.HaveAccessToServer" <% if item.HaveAccessToServer: %>checked<% end %> />
+          <input type="hidden" name="item.HaveAccessToServer" value="false" />
         </div>
       </div>
       <div class="row">
