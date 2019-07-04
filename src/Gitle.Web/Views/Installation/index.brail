@@ -21,7 +21,7 @@
           <td class="installation-type">${?item.InstallationType}</td>
           <td class="customer"><a href="/Customer/${?item.Application.Customer.Slug}/view">${?item.Application.Customer.Name}</a></td>
           <td class="server">${?item.Server.Name}</td>
-          <td class="url"><a target="_blank" href="${?item.Url}">${?item.Url}</a></td>
+          <td class="url"><a target="_blank" href="http://${?item.Url}">${?item.Url}</a></td>
           <td>
             <ul class="button-group">
               <li><a class="button tiny success no-margin" href="/installation/${?item.Slug}/edit">Bewerk</a></li>
