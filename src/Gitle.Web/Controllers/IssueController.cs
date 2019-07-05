@@ -587,11 +587,11 @@
 
             query = query?.ToLower() ?? "";
 
-            var issues = session.Query<Issue>().Where(i => i.Project.Id == projectId).ToList().Where(i => i.HasBeenOpenSince(DateTime.Today.AddDays(-7))).ToList();
+            var issues = session.Query<Issue>().Where(i => i.Project.Id == projectId && i.IsActive).ToList().Where(i => !i.IsArchived).ToList();
 
             if (!string.IsNullOrEmpty(query))
             {
-                issues = issues.Where(x => x.Number.ToString().StartsWith(query) || x.Name.ToLower().Contains(query) || x.Comments.Any(c => c.Id.ToString().StartsWith(query))).ToList();
+                issues = issues.Where(x => x.Number.ToString().StartsWith(query) || x.Name.ToLower().Contains(query) || x.Comments.Any(c => c.Id.ToString().StartsWith(query))).Take(10).ToList();
             }
 
             foreach (var issue in issues)
