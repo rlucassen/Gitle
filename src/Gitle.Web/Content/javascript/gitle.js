@@ -590,6 +590,7 @@ GitleIssues.prototype = {
     this.initQuickView();
     this.initBookingsChart();
     this.initTimeParser();
+    this.bookingRowInit();
   },
 
   initFilters: function () {
@@ -768,7 +769,31 @@ GitleIssues.prototype = {
         $(this).error("minimum is een kwartier");
       }
     });
+  },
+
+  bookingRowInit: function() {
+    var row = $('.project-chooser-issue').parent();
+
+    row.find('.project-chooser-issue').data('suggestion', undefined);
+
+    row.find('.project-chooser-issue').autocomplete({
+      serviceUrl: '/project/autocomplete',
+      autoSelectFirst: true,
+      noCache: true,
+      minChars: 0,
+      onSelect: function(suggestion) {
+        var projectChooser = row.find('.project-chooser-issue');
+        if (projectChooser.data('suggestion') != undefined && projectChooser.data('suggestion') == suggestion.data) return false;
+        projectChooser.data('suggestion', suggestion.data).val(suggestion.value);
+        row.find('.issue_Project_Id').val(suggestion.data);
+        row.find('.issue_Project_Slug').val(suggestion.extraValue3);
+      }
+    }).on('focus',
+      function() {
+        $(this).autocomplete().onValueChange();
+      });;
   }
+
 };
 
 var gitleIssues = null;
