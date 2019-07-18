@@ -701,7 +701,7 @@
             
             using (var transaction = session.BeginTransaction())
             {
-                var maxIssueNumber = targetProject.Issues.Except(sourceProject.Issues.Intersect(issues)).Max(x => x.Number);
+                var maxIssueNumber = targetProject.Issues.Except(sourceProject.Issues.Intersect(issues)).Any() ? targetProject.Issues.Except(sourceProject.Issues.Intersect(issues)).Max(x => x.Number) : 0;
 
                 foreach (var issue in issues)
                 {
