@@ -9,6 +9,7 @@
             Map(x => x.Comments).CustomSqlType("nvarchar(max)");
             HasMany(x => x.Projects);
             HasMany(x => x.Contacts);
+            HasMany(x => x.Installations);
         }
     }
 }

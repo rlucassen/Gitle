@@ -76,6 +76,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Contact.cs" />
     <Compile Include="Application.cs" />
     <Compile Include="Booking.cs" />
     <Compile Include="Change.cs" />
@@ -83,6 +84,7 @@
     <Compile Include="Comment.cs" />
     <Compile Include="Document.cs" />
     <Compile Include="DummyIssue.cs" />
+    <Compile Include="Enum\InstallationType.cs" />
     <Compile Include="Enum\InvoiceState.cs" />
     <Compile Include="Customer.cs" />
     <Compile Include="Enum\IssueBookingState.cs" />
@@ -90,16 +92,22 @@
     <Compile Include="Enum\IssueState.cs" />
     <Compile Include="Enum\Salutation.cs" />
     <Compile Include="Helpers\ISessionExtension.cs" />
+    <Compile Include="Installation.cs" />
     <Compile Include="Interfaces\Model\ISlugger.cs" />
     <Compile Include="Interfaces\Service\IBookingQueryParserService.cs" />
+    <Compile Include="Interfaces\Service\IJamesRegistrationService.cs" />
     <Compile Include="Interfaces\Service\IProjectNumberService.cs" />
     <Compile Include="Interfaces\Service\ISettingService.cs" />
     <Compile Include="James\Employee.cs" />
     <Compile Include="James\ExportWeeksGitleVsJames.cs" />
+    <Compile Include="Mapping\ContactMap.cs" />
+    <Compile Include="Mapping\InstallationMap.cs" />
     <Compile Include="Mapping\PlanningCommentMap.cs" />
     <Compile Include="Mapping\PlanningItemMap.cs" />
     <Compile Include="Mapping\PlanningResourceMap.cs" />
     <Compile Include="Mapping\ReportPresetMap.cs" />
+    <Compile Include="Mapping\HostingMap.cs" />
+    <Compile Include="Mapping\ServerMap.cs" />
     <Compile Include="Mapping\SettingMap.cs" />
     <Compile Include="PlanningComment.cs" />
     <Compile Include="PlanningItem.cs" />
@@ -152,6 +160,8 @@
     <Compile Include="Pickup.cs" />
     <Compile Include="Project.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Hosting.cs" />
+    <Compile Include="Server.cs" />
     <Compile Include="Setting.cs" />
     <Compile Include="Touch.cs" />
     <Compile Include="Touchable.cs" />

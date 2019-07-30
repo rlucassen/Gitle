@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using Castle.MonoRail.Framework;
+    using Gitle.Model.Enum;
     using Helpers;
     using Model;
     using NHibernate;

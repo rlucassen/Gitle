@@ -453,6 +453,7 @@ $(function () {
   calculateTotals();
 
   $('.invoiceline-hours-input').on('change keyup', function () {
+    $(this).data('changed', true);
     var invoiceLine = $(this).parents('.invoiceline');
     computePriceForInvoiceLine(invoiceLine);
     invoiceLine.find('.invoiceline-estimate, .invoiceline-hours').removeClass('active');
@@ -470,12 +471,12 @@ $(function () {
     calculateTotals();
   });
 
-  $('.invoiceline-estimate, .invoiceline-hours').click(function (e) {
+  $('.invoiceline-estimate, .invoiceline-hours, .invoiceline-extrahours').click(function (e) {
     e.preventDefault();
     var estimate = $(this).text();
     var invoiceLine = $(this).parents('.invoiceline');
     invoiceLine.find('.invoiceline-hours-input').val(estimate).change();
-    invoiceLine.find('.invoiceline-estimate, .invoiceline-hours').removeClass('active');
+    invoiceLine.find('.invoiceline-estimate, .invoiceline-hours, .invoiceline-extrahours').removeClass('active');
     $(this).addClass('active');
   });
 
@@ -558,15 +559,23 @@ $(function () {
 
   $('[data-booking]').each(function () {
     var bookingRow = $(this);
-    var bookingHours = bookingRow.find('.booking-hours').val();
+    var bookingHours = parseFloat(bookingRow.find('.booking-hours').val().replace(',', '.'));
     var issueId = bookingRow.data('issue');
     var invoiceLine = $('.invoiceline-issue[data-issue=' + issueId + ']');
     var invoiceLineHoursInput = invoiceLine.find('.invoiceline-hours-input');
     bookingRow.find('.delete-booking').click(function (e) {
       e.preventDefault();
       bookingRow.remove();
-      var newInvoiceLineHours = parseFloat(invoiceLineHoursInput.val().replace(',', '.')) - parseFloat(bookingHours);
-      invoiceLineHoursInput.val(newInvoiceLineHours.toString().replace(".", ","));
+      var newInvoiceLineHours = parseFloat(invoiceLineHoursInput.val().replace(',', '.')) - bookingHours;
+      if (!invoiceLineHoursInput.data('changed')) invoiceLineHoursInput.val(newInvoiceLineHours.toString().replace('.', ','));
+      if (bookingRow.data('billable') === 'True') {
+        var invoiceLineHours = invoiceLine.find('.invoiceline-hours');
+        invoiceLineHours.html((parseFloat(invoiceLineHours.text().replace(',', '.')) - bookingHours).toString().replace('.', ','));
+        var invoiceLineExtraHours = invoiceLine.find('.invoiceline-extrahours');
+        var extraHours = parseFloat(invoiceLineExtraHours.text().replace(',', '.')) - bookingHours;
+        if (extraHours < 0) extraHours = 0;
+        invoiceLineExtraHours.html(extraHours.toString().replace('.', ','));
+      }
       computePriceForInvoiceLine(invoiceLine);
     });
   });
@@ -581,6 +590,7 @@ GitleIssues.prototype = {
     this.initQuickView();
     this.initBookingsChart();
     this.initTimeParser();
+    this.bookingRowInit();
   },
 
   initFilters: function () {
@@ -759,7 +769,31 @@ GitleIssues.prototype = {
         $(this).error("minimum is een kwartier");
       }
     });
+  },
+
+  bookingRowInit: function() {
+    var row = $('.project-chooser-issue').parent();
+
+    row.find('.project-chooser-issue').data('suggestion', undefined);
+
+    row.find('.project-chooser-issue').autocomplete({
+      serviceUrl: '/project/autocomplete',
+      autoSelectFirst: true,
+      noCache: true,
+      minChars: 0,
+      onSelect: function(suggestion) {
+        var projectChooser = row.find('.project-chooser-issue');
+        if (projectChooser.data('suggestion') != undefined && projectChooser.data('suggestion') == suggestion.data) return false;
+        projectChooser.data('suggestion', suggestion.data).val(suggestion.value);
+        row.find('.issue_Project_Id').val(suggestion.data);
+        row.find('.issue_Project_Slug').val(suggestion.extraValue3);
+      }
+    }).on('focus',
+      function() {
+        $(this).autocomplete().onValueChange();
+      });;
   }
+
 };
 
 var gitleIssues = null;

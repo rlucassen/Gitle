@@ -99,6 +99,16 @@
             get { return State == IssueState.Done; }
         }
 
+        public virtual bool IsClosed
+        {
+            get { return State == IssueState.Closed; }
+        }
+
+        public virtual bool IsFullyInvoiced
+        {
+            get { return !Bookings.Any(b => b.IsActive && !b.Unbillable && b.Hours > 0 && !b.IsDefinitive) || IsArchived; }
+        }
+
         public virtual IssueState State
         {
             get
@@ -363,6 +373,16 @@
         public virtual string UnbillableBookingHoursString()
         {
             return UnbillableBookingHours().ToHourDayNotation();
+        }
+
+        public virtual double BillableBookingHoursInvoiced()
+        {
+            return InvoiceLines.Where(x => x.Invoice.IsDefinitive).Sum(x => x.BookingHours);
+        }
+
+        public virtual double UnbillableBookingHoursInvoiced()
+        {
+            return InvoiceLines.Where(x => x.Invoice.IsDefinitive).Sum(x => x.BookingHoursUnbillable);
         }
 
         public virtual double BookingHours(DateTime startDate, DateTime endDate)

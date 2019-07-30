@@ -67,29 +67,58 @@
         public virtual double UnBillableMinutes => Bookings.Where(x => x.IsActive && x.Unbillable).Sum(x => x.Minutes);
         public virtual double UnBillableHours => Bookings.Where(x => x.IsActive && x.Unbillable).Sum(x => x.Hours);
         public virtual double TotalHours => Bookings.Where(x => x.IsActive).Sum(x => x.Hours);
+        public virtual double RemainingHours => BudgetHours - TotalHours;
 
         public virtual string CompleteName => $"{Name} ({Application?.Name}, {Application?.Customer?.Name})";
 
-        public virtual int OpenIssues => Issues.Count(x => x.IsOpen && x.State != IssueState.Done && x.State != IssueState.Hold && !x.IsArchived && !x.IsAdministrative);
-        public virtual int DoneIssues => Issues.Count(x => x.State == IssueState.Done && !x.IsArchived);
-        public virtual int HoldIssues => Issues.Count(x => x.State == IssueState.Hold && !x.IsArchived);
-        public virtual int ClosedIssues => Issues.Count(x => !x.IsOpen && x.State != IssueState.Done && x.State != IssueState.Hold && !x.IsArchived);
-        public virtual int TotalIssues => Issues.Count(x => !x.IsArchived && !x.IsAdministrative);
+        public virtual IReadOnlyList<Issue> OpenIssues => Issues.Where(x => !x.IsArchived && !x.IsAdministrative && x.IsOpen).ToList();
+        public virtual IReadOnlyList<Issue> DoneIssues => Issues.Where(x => !x.IsArchived && !x.IsAdministrative && x.IsDone).ToList();
+        public virtual IReadOnlyList<Issue> HoldIssues => Issues.Where(x => !x.IsArchived && !x.IsAdministrative && x.IsOnHold).ToList();
+        public virtual IReadOnlyList<Issue> ClosedIssues => Issues.Where(x => !x.IsArchived && !x.IsAdministrative && x.IsClosed && !x.IsFullyInvoiced).ToList();
+        public virtual IReadOnlyList<Issue> TotalIssues => Issues.Where(x => !x.IsArchived && !x.IsAdministrative && (!x.IsClosed || !x.IsFullyInvoiced)).ToList();
 
-        public virtual double OpenIssuesPercentage => TotalIssues == 0 ? 0 : OpenIssues / (TotalIssues * 1.0) * 100;
-        public virtual double DoneIssuesPercentage => TotalIssues == 0 ? 0 : DoneIssues / (TotalIssues * 1.0) * 100;
-        public virtual double HoldIssuesPercentage => TotalIssues == 0 ? 0 : HoldIssues / (TotalIssues * 1.0) * 100;
-        public virtual double ClosedIssuesPercentage => TotalIssues == 0 ? 0 : ClosedIssues / (TotalIssues * 1.0) * 100;
+        public virtual double OpenIssuesPercentageOf(int totalIssues) => PercentageOf(OpenIssues.Count, totalIssues);
+        public virtual double DoneIssuesPercentageOf(int totalIssues) => PercentageOf(DoneIssues.Count, totalIssues);
+        public virtual double HoldIssuesPercentageOf(int totalIssues) => PercentageOf(HoldIssues.Count, totalIssues);
+        public virtual double ClosedIssuesPercentageOf(int totalIssues) => PercentageOf(ClosedIssues.Count, totalIssues);
+
+        public virtual double OpenIssuesPercentage => OpenIssuesPercentageOf(TotalIssues.Count);
+        public virtual double DoneIssuesPercentage => DoneIssuesPercentageOf(TotalIssues.Count);
+        public virtual double HoldIssuesPercentage => HoldIssuesPercentageOf(TotalIssues.Count);
+        public virtual double ClosedIssuesPercentage => ClosedIssuesPercentageOf(TotalIssues.Count);
 
         public virtual double TotalEstimateAllTickets()
         {
             return Issues.Where(x => !x.IsArchived).Sum(x => x.TotalHours);
         }
 
+        public virtual double TotalEstimateAllOpenTickets()
+        {
+            return Issues.Where(x => !x.IsArchived && !x.IsDone && !x.IsClosed).Sum(x => x.TotalHours);
+        }
+
         public virtual double Progress()
         {
-            return BillableHours / TotalEstimateAllTickets() * 100;
+            //return BillableHours / TotalEstimateAllTickets() * 100;
+            var estimateTotalHours = TotalEstimateAllTickets();
+            if (estimateTotalHours > 0)
+                return Issues.Where(x => x.IsDone || x.IsClosed).Sum(x => x.TotalHours) / estimateTotalHours * 100;
+            if (BudgetHours > 0)
+                return TotalHours / BudgetHours * 100;
+            return TotalHours > 0 ? 100 : 0;
         }
+
+        public virtual double PercentageOverBudget()
+        {
+            var estimateTotalHours = TotalEstimateAllTickets();
+            if (estimateTotalHours > 0)
+                return (TotalHours + TotalEstimateAllOpenTickets()) / estimateTotalHours * 100 - 100;
+            if (BudgetHours > 0)
+                return TotalHours / BudgetHours * 100 - 100;
+            return TotalHours > 0 ? 100 : 0;
+        }
+
+        public virtual bool HasEstimate => TotalEstimateAllTickets() != 0 || BudgetHours != 0;
 
         public virtual double SumMaxOfEstimateAndBooking()
         {
@@ -117,5 +146,7 @@
             }
             return 0.0;
         }
+
+        private static double PercentageOf(int numerator, int denominator) => denominator == 0 ? 0 : numerator / (denominator * 1.0) * 100;
     }
 }

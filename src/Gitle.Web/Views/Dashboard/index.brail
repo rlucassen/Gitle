@@ -10,26 +10,38 @@
       <thead>
         <tr>
           <th>Project</th>
-          <th>Unbillable uren</th>
-          <th style="width: 70%;">Voortang</th>
+          <th>Budget</th>
+          <th>Saldo</th>
+          <th style="width: 70%;">Voortgang</th>
         </tr>
       </thead>
       <tbody>
         <% for project in initialProjects: %>
         <tr>
           <td><a href="/project/${project.Slug}/issues">${project.Name}</a></td>
-          <td>${project.UnBillableHours}</td>
+          <td style="text-align: right;">${project.BudgetHours}</td>
+          <td style="text-align: right;" class="<% if project.RemainingHours < 0 : %> red <% end %>">${project.RemainingHours.ToString("F2")}</td>
           <td>
-            <div class="progress progress-border progress-status">
-              <% if project.BillableHours > project.BudgetHours and project.BudgetHours != 0: %>
-              <span class="meter overbudget" style="width: ${project.Progress().ToString().Replace(",", "." )}%; max-width: 100%"></span>
-              <% elif project.BudgetHours == 0: %>
+            <div class="progress progress-border progress-status" title="${project.Progress().ToString("F0")}% afgerond, verwacht ${project.PercentageOverBudget().ToString("F0")}% overshoot">
+              <% if not project.HasEstimate and project.TotalHours > 0 : %>
               <span class="meter noestimate" style="width: 100%"></span>
+              <% elif project.PercentageOverBudget() > 25 : %>
+              <span class="meter overbudget" style="width: ${project.Progress().ToString().Replace(",", "." )}%; max-width: 100%"></span>
+              <% elif project.PercentageOverBudget() > 0 : %>
+              <span class="meter overbudget-warn" style="width: ${project.Progress().ToString().Replace(",", "." )}% "></span>
               <% else: %>
               <span class="meter inbudget" style="width: ${project.Progress().ToString().Replace(",", "." )}%; max-width: 100%"></span>
               <% end %>
-              <span class="left-value">${project.BudgetHours} beschikbare uren</span>
-              <span class="right-value">${project.BillableHours} uur gemaakt</span>
+              <% if project.TotalEstimateAllTickets() > 0 : %>
+              <span class="left-value">${project.TotalEstimateAllTickets()} uur geschat</span>
+              <% else : %>
+              <span class="left-value">${project.BudgetHours} uur budget</span>
+              <% end %>
+              <% if project.TotalEstimateAllOpenTickets() > 0 : %>
+              <span class="right-value">${project.TotalEstimateAllOpenTickets()} uur te doen</span>
+              <% else : %>
+              <span class="right-value">${project.RemainingHours} uur over</span>
+              <% end %>
             </div>
           </td>
         </tr>
@@ -38,7 +50,9 @@
     </table>
   </div>
   <div class="content" id="service">
-    <input type="checkbox" id="toggle-empties" checked /> Verberg projecten zonder open tickets
+    <input type="checkbox" id="toggle-overview" /> Toon alle tickets
+    <br/>
+    <input type="checkbox" id="toggle-empties" checked /> Verberg projecten zonder tickets
     <div class="large-0 small-6 columns right">
       <a href="/dashboard/exportopenticketsbyproject" class="button tiny">Export openstaande issues</a>
     </div>
@@ -52,14 +66,34 @@
       </thead>
       <tbody>
         <% for project in serviceProjects: %>
-        <tr class="<% if project.OpenIssues == 0: %>empty-project<% end %>">
+        <tr class="<% if project.OpenIssues.Count == 0 : %>empty-project<% end %>">
           <td><a href="/project/${project.Slug}/issues">${project.Name}</a></td>
           <td>
             <div class="progress progress-tickets">
-              <% if project.OpenIssues > 0: %><span class="meter open" style="width: ${project.OpenIssuesPercentage.ToString().Replace(",", "." )}%">${project.OpenIssues} open</span><% end %>
-              <% if project.DoneIssues > 0: %><span class="meter done" style="width: ${project.DoneIssuesPercentage.ToString().Replace(",", "." )}%">${project.DoneIssues} afgerond</span><% end %>
-              <% if project.HoldIssues > 0: %><span class="meter hold" style="width: ${project.HoldIssuesPercentage.ToString().Replace(",", "." )}%">${project.HoldIssues} hold</span><% end %>
-              <% if project.ClosedIssues > 0: %><span class="meter closed" style="width: ${project.ClosedIssuesPercentage.ToString().Replace(",", "." )}%">${project.ClosedIssues} gesloten</span><% end %>
+              <% if project.OpenIssues.Count > 0: %><span class="meter open" style="width: ${project.OpenIssuesPercentageOf(serviceProjectsMaxOpenIssues).ToString().Replace(",", "." )}%">${project.OpenIssues.Count} open</span><% end %>
+            </div>
+          </td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+    <table class="tickets-table striped hide-empties hide">
+      <thead>
+        <tr>
+          <th>Project</th>
+          <th style="width: 80%;">Tickets</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for project in serviceProjects: %>
+        <tr class="<% if project.TotalIssues.Count == 0 : %>empty-project<% end %>">
+          <td><a href="/project/${project.Slug}/issues">${project.Name}</a></td>
+          <td>
+            <div class="progress progress-tickets">
+              <% if project.OpenIssues.Count > 0: %><span class="meter open" style="width: ${project.OpenIssuesPercentage.ToString().Replace(",", "." )}%">${project.OpenIssues.Count} open</span><% end %>
+              <% if project.DoneIssues.Count > 0: %><span class="meter done" style="width: ${project.DoneIssuesPercentage.ToString().Replace(",", "." )}%">${project.DoneIssues.Count} done</span><% end %>
+              <% if project.HoldIssues.Count > 0: %><span class="meter hold" style="width: ${project.HoldIssuesPercentage.ToString().Replace(",", "." )}%">${project.HoldIssues.Count} hold</span><% end %>
+              <% if project.ClosedIssues.Count > 0: %><span class="meter closed" style="width: ${project.ClosedIssuesPercentage.ToString().Replace(",", "." )}%">${project.ClosedIssues.Count} closed</span><% end %>
             </div>
           </td>
 
@@ -92,6 +126,9 @@
   $(function () {
     $('#toggle-empties').change(function () {
       $('table.tickets-table').toggleClass('hide-empties', $(this).is(':checked'));
+    });
+    $('#toggle-overview').change(function () {
+      $('table.tickets-table').toggleClass('hide');
     });
   });
 </script>

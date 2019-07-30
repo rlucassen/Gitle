@@ -1,0 +1,39 @@
+﻿<% if CurrentUser.IsAdmin: %>
+<div class="row">
+  <div class="large-12 columns">
+    <h1>Installatie</h1>
+    <a class="button" href="/installation/0/edit">Nieuw</a>
+    <table class="tablesorter small-blocks">
+      <thead>
+        <tr>
+          <th>Applicatie</th>
+          <th>Type</th>
+          <th>Klant</th>
+          <th>Server</th>
+          <th>URL</th>
+          <th class="{sorter: false}"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for item in items: %>
+        <tr>
+          <td class="application"><a href="/Application/${?item.Application.Slug}/view">${?item.Application.Name}</a></td>
+          <td class="installation-type">${?item.InstallationType}</td>
+          <td class="customer"><a href="/Customer/${?item.Application.Customer.Slug}/view">${?item.Application.Customer.Name}</a></td>
+          <td class="server">${?item.Server.Name}</td>
+          <td class="url"><a target="_blank" href="http://${?item.Url}">${?item.Url}</a></td>
+          <td>
+            <ul class="button-group">
+              <li><a class="button tiny success no-margin" href="/installation/${?item.Slug}/edit">Bewerk</a></li>
+              <li><a class="button tiny alert no-margin" href="/installation/${?item.Slug}/delete" data-confirm="Weet je het zeker?">Verwijder</a></li>
+            </ul>
+          </td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+<% else :%>
+Actie niet toegestaan.
+<% end %>

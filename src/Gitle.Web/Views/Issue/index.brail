@@ -236,7 +236,24 @@
                 <a href="/project/${project.Slug}/changestate?state=5" data-group-action class="button tiny no-margin alert"><i class="fa fa-trash"></i> Archiveren</a>
                 <% end %>
               </div>
-            </div>
+                <% if CurrentUser.IsDanielle: %>
+                <div class="large-0 small-12 columns">
+                  <div class="row">
+                    <div class="large-5 columns">
+                      <button id="move-issues-button" data-group-action="" class="tiny">Verplaats taken</button>
+                    </div>
+                    <div class="large-5 columns">
+                      <input type="text" class="project-chooser-issue" id="move-issues-targetProject" name="targetProject" value="${project.Name}" placeholder="Project" required="" />
+                      <input type="hidden" name="issue.Project.Id" value="${project.Id}" class="issue_Project_Id" />
+                      <input type="hidden" value="${project.Slug}" class="issue_Project_Slug" />
+                    </div>
+                    <div class="large-2 columns">
+                      <input type="checkbox" id="move-issues-renumber" name="renumber" />
+                    </div>
+                  </div>
+                </div>
+                <% end %>
+              </div>
           </div>
         </div>
       </div>
@@ -322,5 +339,14 @@
       issue.css('background-color', '#fce87c');
     }
 
+    <% if CurrentUser.IsDanielle : %>
+    $('#move-issues-button').click(function (e) {
+      e.preventDefault();
+      var targetProject = $('.issue_Project_Slug').val();
+      var renumber = $('#move-issues-renumber').prop('checked');
+      var issues = $('#group-actions input[name=issues]').val();
+      location.href = '/issue/changeproject?sourceProjectSlug=${project.Slug}&targetProjectSlug=' + targetProject + '&renumber=' + renumber + '&issueNumbers=' + issues;
+    });
+    <% end %>
   });
 </script>

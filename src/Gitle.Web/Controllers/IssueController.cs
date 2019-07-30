@@ -587,11 +587,11 @@
 
             query = query?.ToLower() ?? "";
 
-            var issues = session.Query<Issue>().Where(i => i.Project.Id == projectId).ToList().Where(i => i.HasBeenOpenSince(DateTime.Today.AddDays(-7))).ToList();
+            var issues = session.Query<Issue>().Where(i => i.Project.Id == projectId && i.IsActive).ToList().Where(i => !i.IsArchived).ToList();
 
             if (!string.IsNullOrEmpty(query))
             {
-                issues = issues.Where(x => x.Number.ToString().StartsWith(query) || x.Name.ToLower().Contains(query) || x.Comments.Any(c => c.Id.ToString().StartsWith(query))).ToList();
+                issues = issues.Where(x => x.Number.ToString().StartsWith(query) || x.Name.ToLower().Contains(query) || x.Comments.Any(c => c.Id.ToString().StartsWith(query))).Take(10).ToList();
             }
 
             foreach (var issue in issues)
@@ -669,6 +669,120 @@
                 session.SaveOrUpdate(project);
                 tx.Commit();
             }
+        }
+
+        [Danielle]
+        public void ChangeProject(string sourceProjectSlug, string issueNumbers, string targetProjectSlug, bool renumber)
+        {
+            if (targetProjectSlug == null)
+            {
+                Error("selecteer een project", true);
+                return;
+            }
+
+            if (issueNumbers == null)
+            {
+                Error("selecteer een taak", true);
+                return;
+            }
+
+            var sourceProject = session.SlugOrDefault<Project>(sourceProjectSlug);
+            var targetProject = session.SlugOrDefault<Project>(targetProjectSlug);
+
+            var issues = session.Query<Issue>().Where(x => issueNumbers.Split(',').Select(int.Parse).Contains(x.Number) && x.Project == sourceProject).OrderBy(x => x.Number).ToList();
+
+            var invoicedIssues = issues.Where(x => x.Invoices.Any(i => i.IsActive && !i.IsArchived)).ToList();
+
+            if (invoicedIssues.Any())
+            {
+                Error($"Gefactureerde taken mogen niet verplaatst worden.\r\nTaken: {string.Join(", ", invoicedIssues.Select(x => x.Number))}", true);
+                return;
+            }
+            
+            using (var transaction = session.BeginTransaction())
+            {
+                var maxIssueNumber = targetProject.Issues.Except(sourceProject.Issues.Intersect(issues)).Any() ? targetProject.Issues.Except(sourceProject.Issues.Intersect(issues)).Max(x => x.Number) : 0;
+
+                foreach (var issue in issues)
+                {
+                    //var issue = session.Query<Issue>().Single(x => x.Number == issueNumber && x.Project == sourceProject);
+
+                    //if (issue.Invoices.Any())
+                    //{
+                    //    Error($"ticket {issue.Number} is gefactureerd", true);
+                    //    transaction.Rollback();
+                    //    return;
+                    //}
+
+                    foreach (var sourceLabel in issue.Labels.ToList())
+                    {
+                        var targetLabel =
+                            targetProject.Labels.FirstOrDefault(
+                                x => x.IsActive
+                                     && x.ApplicableByCustomer == sourceLabel.ApplicableByCustomer
+                                     && x.Color == sourceLabel.Color
+                                     && (x.Name == sourceLabel.Name || x.Name == $"{sourceLabel.Name} (copy from {sourceProject.Name})")
+                                     //&& x.ToFreckle == sourceLabel.ToFreckle
+                                     && x.VisibleForCustomer == sourceLabel.VisibleForCustomer);
+
+                        if (targetLabel == null)
+                        {
+                            targetLabel = new Label
+                            {
+                                Project = targetProject,
+                                ApplicableByCustomer = sourceLabel.ApplicableByCustomer,
+                                Color = sourceLabel.Color,
+                                //Name = sourceLabel.Name,
+                                Name = $"{sourceLabel.Name} (copy from {sourceProject.Name})",
+                                ToFreckle = sourceLabel.ToFreckle,
+                                VisibleForCustomer = sourceLabel.VisibleForCustomer
+                            };
+
+                            targetProject.Labels.Add(targetLabel);
+
+                            session.SaveOrUpdate(targetLabel);
+                        }
+
+                        issue.Labels.Remove(sourceLabel);
+                        issue.Labels.Add(targetLabel);
+                    }
+
+                    foreach (var booking in issue.Bookings.ToList())
+                    {
+                        sourceProject.Bookings.Remove(booking);
+                        booking.Project = targetProject;
+                        targetProject.Bookings.Add(booking);
+
+                        session.SaveOrUpdate(booking);
+                    }
+
+                    issue.Comments.Add(
+                        new Comment
+                        {
+                            Text = $"Dit ticket is verplaatst van {sourceProject.Name} en had daar nummer {issue.Number}.",
+                            CreatedAt = DateTime.Now,
+                            Issue = issue,
+                            User = CurrentUser,
+                            IsInternal = true
+                        });
+
+                    sourceProject.Issues.Remove(issue);
+                    issue.Project = targetProject;
+                    if (renumber || issue.Number <= maxIssueNumber) issue.Number = ++maxIssueNumber;
+                    targetProject.Issues.Add(issue);
+                    
+                    session.SaveOrUpdate(issue);
+                }
+
+                transaction.Commit();
+            }
+
+            if (session.Query<PlanningItem>().Any(x => x.Resource == $"p{sourceProject}" && x.Start >= DateTime.Today))
+            {
+                Information("Er is een toekomstige planning op het oude project. Deze wordt niet automatisch aangepast.");
+            }
+
+            RedirectToUrl($"/project/{targetProject.Slug}/issues");
         }
     }
 }

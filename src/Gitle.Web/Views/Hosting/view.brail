@@ -1,0 +1,61 @@
+﻿<% if CurrentUser.IsAdmin: %>
+<div class="row">
+  <div class="large-12 columns">
+    <h1>Hosting Partij: ${item.Name}</h1>
+  </div>
+</div>
+
+<div class="row">
+  <div class="large-2 columns">Beschrijving</div>
+  <div class="large-10 columns">${?item.Description}</div>
+</div>
+
+<div class="row">
+  <div class="large-2 columns">Telefoon</div>
+  <div class="large-10 columns"><a href="tel:${?item.Phone}">${?item.Phone}</a></div>
+</div>
+<div class="row">
+  <div class="large-2 columns">Billing Mail</div>
+  <div class="large-10 columns"><a href="mailto:${?item.BillingMail}">${?item.BillingMail}</a></div>
+</div>
+<div class="row">
+  <div class="large-2 columns">Support Mail</div>
+  <div class="large-10 columns"><a href="mailto:${?item.SupportMail}">${?item.SupportMail}</a></div>
+</div>
+<div class="row">
+  <div class="large-2 columns">Website</div>
+  <div class="large-10 columns"><a href="${?item.Website}" target="_blank">${?item.Website}</a></div>
+</div> 
+
+<div class="row">
+  <div class="large-12 columns">
+    <h2>Contactpersonen</h2>
+    <table class="small-blocks" id="customers">
+      <thead>
+        <tr>
+          <th>Naam</th>
+          <th>Emailadres</th>
+          <th>Telefoonnummer</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for contact in item.Contacts: %>
+        <tr>
+          <td>${contact.FullName}</td>
+          <td>${contact.Email}</td>
+          <td>${contact.PhoneNumber}</td>
+        </tr>
+        <% end %>
+        <% if item.Contacts.Count == 0 :%>
+      <td>Nog geen contactpersonen toegevoegd aan deze server.</td>
+      <td></td>
+      <td></td>
+      <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<% else :%>
+Actie niet toegestaan.
+<% end %>

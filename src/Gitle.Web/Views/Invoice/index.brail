@@ -17,15 +17,15 @@
   </div>
   <div class="row">
     <div class="large-3 columns">
-      <input type="text" name="startDate" id="startDate" class="date" placeholder="Startdatum" />
+      <input type="text" name="startDate" id="startDate" class="date" placeholder="Startdatum" value="${startOfMonth.ToString("dd-MM-yyyy")}" />
     </div>
     <div class="large-3 columns end">
-      <input type="text" name="endDate" id="endDate" class="date" placeholder="Einddatum" />
+      <input type="text" name="endDate" id="endDate" class="date" placeholder="Einddatum" value="${endOfMonth.ToString("dd-MM-yyyy")}" />
     </div>
   </div>
   <div class="row">
     <div class="large-12 columns">
-      ${Form.CheckboxField("oldBookings", {"class": "inline"})} Neem oudere boekingen mee die nog niet op een definitieve factuur staan
+      ${Form.CheckboxField("oldBookings", {"class": "inline", "checked":"checked"})} Neem oudere boekingen mee die nog niet op een definitieve factuur staan
     </div>
   </div>
   <div class="row">

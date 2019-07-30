@@ -16,11 +16,13 @@ namespace Gitle.Web.Controllers
 
     public class BookingController : SecureController
     {
+        protected IJamesRegistrationService JamesRegistrationService { get; }
         protected ISettingService SettingService { get; }
 
-        public BookingController(ISessionFactory sessionFactory, ISettingService settingService) : base(sessionFactory)
+        public BookingController(IJamesRegistrationService jamesRegistrationService, ISessionFactory sessionFactory, ISettingService settingService) : base(sessionFactory)
         {
             SettingService = settingService;
+            JamesRegistrationService = jamesRegistrationService;
         }
 
         [BookHours]
@@ -36,7 +38,7 @@ namespace Gitle.Web.Controllers
                 .Where(x => x.IsActive && x.User == CurrentUser && x.Date >= date.StartOfWeek() && x.Date <= date.EndOfWeek())
                 .OrderByDescending(x => x.Date)
                 .GroupBy(x => x.Date.Date)
-                .ToDictionary(g => new { date = g.Key, total = g.ToList().Sum(x => x.Minutes) }, g => g.ToList());
+                .ToDictionary(g => new { date = g.Key, total = g.ToList().Sum(x => x.Minutes), jamesTotal = JamesRegistrationService.GetTotalMinutesForEmployee(CurrentUser.JamesEmployeeId, g.Key) }, g => g.ToList());
             PropertyBag.Add("bookings", bookings);
             PropertyBag.Add("billablePercentage", bookings.Count > 0 ? Math.Round(bookings.Sum(x => x.Value.Where(y => !y.Unbillable).Sum(y => y.Minutes)) / bookings.Sum(x => x.Value.Sum(y => y.Minutes)), 4) * 100d : 0);
             PropertyBag.Add("billableAmount", bookings.Count > 0 ? bookings.Sum(x => x.Value.Where(y => !y.Unbillable).Sum(y => (decimal) y.Hours * y.Project.HourPrice)) : 0);
