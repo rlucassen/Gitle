@@ -15,7 +15,7 @@
         public static string IssuesCsv(Project project, IList<Issue> issues)
         {
             const string rowTemplate =
-                "\"{2}\"{0}\"{3}\"{0}\"{4}\"{0}\"{5}\"{0}\"{6}\"{0}\"{7}\"{0}\"{8}\"{0}\"{9}\"{0}\"{10}\"{0}\"{11}\"{0}\"{12}\"{0}\"{13}\"{0}\"{14}\"{0}\"{15}\"{0}{1}";
+                "\"{2}\"{0}\"{3}\"{0}\"{4}\"{0}\"{5}\"{0}\"{6}\"{0}\"{7}\"{0}\"{8}\"{0}\"{9}\"{0}\"{10}\"{0}\"{11}\"{0}\"{12}\"{0}\"{13}\"{0}\"{14}\"{0}\"{15}\"{0}\"{16}\"{0}{1}";
 
             var header = string.Format(rowTemplate, fieldseparator, lineEnd,
                                           "Taaknummer",
@@ -24,6 +24,7 @@
                                           "Geopend door",
                                           "Gesloten op",
                                           "Gesloten door",
+                                          "Status",
                                           "Totale schatting in uren",
                                           "Totaal billable boekingen in uren",
                                           "Totaal unbillable boekingen in uren",
@@ -43,6 +44,7 @@
                                       issue.CreatedBy?.FullName,
                                       !issue.IsOpen ? issue.ClosedAt?.ToString("yyyy-MM-dd") : "",
                                       !issue.IsOpen ? issue.ClosedBy?.FullName : "",
+                                      issue.StateString,
                                       issue.TotalHours,
                                       issue.BillableBookingHours(),
                                       issue.UnbillableBookingHours(),
