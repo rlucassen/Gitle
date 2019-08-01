@@ -531,7 +531,7 @@ a.quickview-delay {
     }
   }
 
-  .ChangeState i, .Change i, .Pickup i {
+  .ChangeState i, .Change i, .Pickup i, .HandOver i {
     font-size: 2em;
     margin: 0.3em 0.6em;
   }
@@ -540,7 +540,7 @@ a.quickview-delay {
     margin-top: 1.1em;
   }
 
-  .Change, .Pickup {
+  .Change, .Pickup, .HandOver {
     .small-11 {
       margin-top: 1.1em;
     }
@@ -1635,4 +1635,10 @@ a.prefix {
   &.hidden { 
     display: none;
   }
+}
+
+.forwardtask {
+a {
+  width: 100%;
+  }  
 }

@@ -101,6 +101,7 @@
     <Compile Include="James\ExportWeeksGitleVsJames.cs" />
     <Compile Include="Mapping\ContactMap.cs" />
     <Compile Include="Mapping\InstallationMap.cs" />
+    <Compile Include="Mapping\HandOverMap.cs" />
     <Compile Include="Mapping\PlanningCommentMap.cs" />
     <Compile Include="Mapping\PlanningItemMap.cs" />
     <Compile Include="Mapping\PlanningResourceMap.cs" />
@@ -108,6 +109,7 @@
     <Compile Include="Mapping\HostingMap.cs" />
     <Compile Include="Mapping\ServerMap.cs" />
     <Compile Include="Mapping\SettingMap.cs" />
+    <Compile Include="HandOver.cs" />
     <Compile Include="PlanningComment.cs" />
     <Compile Include="PlanningItem.cs" />
     <Compile Include="PlanningResource.cs" />

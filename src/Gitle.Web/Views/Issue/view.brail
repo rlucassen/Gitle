@@ -62,7 +62,19 @@
         <% end %>
         <% if not project.Closed and not item.IsArchived and not item.IsAdministrative :%>
         <% if CurrentUser.IsAdmin :%>
-        <a href="pickup" class="button large-12 no-margin">Taak oppakken</a>
+        <% if item.PickedUpBy != CurrentUser :%>
+        <a href="pickup" class="button large-12">Taak oppakken</a>
+        <% end %>
+        <p class="forwardtask no-margin">
+          <a href="#" data-dropdown="forwardTask" class="button dropdown">Taak doorgeven</a>
+        </p>
+        <ul id="forwardTask" data-dropdown-content class="f-dropdown">
+          <% for user in users: %>
+            <% if CurrentUser.IsAdmin and user != CurrentUser and user != item.PickedUpBy :%>
+          <li><a href="/project/${project.Slug}/issue/${item.Number}/handover?userId=${user.Id}">${user.FullName}</a></li>
+            <% end %>
+          <% end %>
+        </ul>
         <hr />
         <% end %>
         <% if item.State.ToString() != "Open" and item.State.ToString() != "Closed": %>

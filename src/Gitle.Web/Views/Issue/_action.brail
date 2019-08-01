@@ -36,6 +36,15 @@
         ${action.HtmlText}
       </div>
     </div>
+    <% elif action.GetType().Name == "HandOver": %>
+    <div class="row ${action.GetType().Name}">
+      <div class="small-1 columns">
+        <i class="fa fa-sign-out"></i>
+      </div>
+      <div class="small-11 columns">
+        ${action.HtmlText}
+      </div>
+    </div>
     <% else: %>
     <% if action.IsInternal and (not CurrentUser.CanBookHours and not CurrentUser.IsAdmin) :%>
     <% else: %>
