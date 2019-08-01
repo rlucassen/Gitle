@@ -58,7 +58,7 @@
             PropertyBag.Add("customerLabels", CurrentUser.IsAdmin ? project.Labels : project.Labels.Where(l => l.ApplicableByCustomer).ToList());
             PropertyBag.Add("filterPresets", filterPresets);
             PropertyBag.Add("globalFilterPresets", globalFilterPresets);
-            PropertyBag.Add("allAdmins", session.Query<User>().Where(x => x.IsAdmin).ToList());
+            PropertyBag.Add("allAdmins", session.Query<User>().Where(x => x.IsAdmin && x.IsActive).ToList());
             PropertyBag.Add("selectedPickupbys", parser.SelectedPickupbys);
             PropertyBag.Add("pickupany", parser.PickupAny);
             PropertyBag.Add("pickupnone", parser.PickupNone);
