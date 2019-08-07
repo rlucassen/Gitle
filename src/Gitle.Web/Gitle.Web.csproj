@@ -563,6 +563,7 @@
     <Content Include="Views\Hosting\view.brail" />
     <None Include="Views\Template\invoice.brail" />
     <None Include="Views\Report\index.brail" />
+    <Content Include="Views\User\issues.brail" />
     <None Include="Views\User\profile.brail" />
     <None Include="Views\User\edit.brail" />
     <None Include="Views\User\index.brail" />

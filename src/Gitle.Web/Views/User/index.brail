@@ -28,6 +28,7 @@
               <li><a class="button tiny no-margin" href="/user/${item.Id}/view">Details</a></li>
               <li><a class="button tiny success no-margin" href="/user/${item.Id}/edit">Bewerk</a></li>
               <li><a class="button tiny alert no-margin" href="/user/${item.Id}/delete" data-confirm="Weet je het zeker?">Verwijder</a></li>
+              <% if item.IsAdmin: %><li><a class="button tiny no-margin" href="/user/${item.Id}/issues">Taken</a></li><% end %>
             </ul>
           </td>
         </tr>

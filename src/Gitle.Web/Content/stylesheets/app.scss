@@ -1642,3 +1642,22 @@ a {
   width: 100%;
   }  
 }
+
+.accordion {
+
+  .fa.hidden {
+    display: none;
+  }
+
+  .content {
+    margin: 0;
+    width: 100%;
+  }
+
+  .accordion-navigation {
+    margin-bottom: 10px!important;
+    > .content {
+      padding: 0;
+    }
+  }
+}
