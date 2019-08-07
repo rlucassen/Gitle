@@ -109,9 +109,9 @@
   <li class="has-form"><a id="initiate-joyride" class="button success" href="#"><i class="fa fa-question"></i></a></li>-->
         <li class="divider"></li>
         <li class="has-dropdown">
-          <a href="#"><a href="/user/${?CurrentUser.Id}/issues">Ingelogd als: ${?CurrentUser.Name}</a></a>
+          <a href="#"><a href="#">Ingelogd als: ${?CurrentUser.Name}</a></a>
           <ul class="dropdown">
-            <li><a href="#">Mijn taken</a></li>
+            <li><a href="/user/${?CurrentUser.Id}/issues">Mijn tickets</a></li>
           </ul>
         </li>
         <li class="divider"></li>
