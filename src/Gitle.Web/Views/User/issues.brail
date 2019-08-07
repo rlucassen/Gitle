@@ -183,8 +183,38 @@
   $(document).on('ready', function () {
     for (let i = 0; i < $('b.project-link').length; i++) {
       let link = $('.project-link').eq(i);
+      let row = link.parents('.accordion-navigation').find('.project-container > .row');
+      let order = ['open', 'done', 'hold'];
+      let tickets = {
+        'open': [],
+        'done': [],
+        'hold': []
+      }
 
-      link.text(link.parent().parent().find('.project-container > .row').length + ' tickets')
+      link.text(row.length + ' tickets');
+
+      for (let i = 0; i < row.find('.issue').length; i++) {
+        let issue = row.find('.issue').eq(i);
+        let classes = issue.attr('class').split(' ');
+
+        for (let u = 0; u < classes.length; u++) {
+          classes[u] = classes[u].toLowerCase();
+
+          if (tickets[classes[u]] != null) {
+            tickets[classes[u]].push(issue);
+          }
+        }
+      }
+
+      let html = '';
+
+      for (let i = 0; i < order.length; i++) {
+        for (let u = 0; u < tickets[order[i]].length; u++) {
+          html += '<div class="row">' + tickets[order[i]][u].parents('.row').html() + '</div>';
+        }
+      }
+
+      link.parents('.accordion-navigation').find('.project-container').html(html);
     }
 
     $('.fa-chevron-down, .fa-chevron-up').parent().on('click', function () {
