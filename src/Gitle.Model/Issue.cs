@@ -135,8 +135,12 @@
                     Pickups.OrderBy(x => x.CreatedAt).LastOrDefault();
                 var handover =
                     HandOvers.OrderBy(x => x.CreatedAt).LastOrDefault();
+                User result = null;
 
-                var result = pickup?.CreatedAt >= handover?.CreatedAt ? pickup.User : handover?.User;
+                if (handover?.CreatedAt != null)
+                    result = pickup?.CreatedAt >= handover?.CreatedAt ? pickup.User : handover?.User;
+                else
+                    result = pickup?.User;
 
                 return result != null ? result : null;
             }

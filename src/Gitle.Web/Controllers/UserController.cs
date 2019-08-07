@@ -253,7 +253,7 @@
             {
                 foreach (var issue in project.Issues)
                 {
-                    if (issue.PickedUpBy?.Id == userId)
+                    if (issue.PickedUpBy?.Id == userId && !issue.IsClosed)
                         projects.Add(project);
                 }
             }
