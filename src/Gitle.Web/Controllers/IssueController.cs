@@ -293,6 +293,9 @@
         {
             RedirectToReferrer();
             var project = session.Slug<Project>(projectSlug);
+
+            body = Regex.Replace(body, "<.*?>", String.Empty);
+
             if (project.Closed)
             {
                 throw new ProjectClosedException(project);
