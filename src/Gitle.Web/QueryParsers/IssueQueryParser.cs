@@ -193,19 +193,12 @@
 
             if (PickupAny)
             {
-                itemsQuery = itemsQuery.Where(x => x.Pickups.Any());
+                itemsQuery = itemsQuery.Where(x => x.Pickups.Any() || x.HandOvers.Any());
             }
 
             if (PickupNone)
             {
                 itemsQuery = itemsQuery.Where(x => x.Pickups.Count == 0);
-            }
-
-            if (pickupbys.Any())
-            {
-                itemsQuery = itemsQuery.Where(
-                    x => x.Pickups.Any(
-                        a => a.User != null && pickupbys.Contains(a.User.Name) || pickupbys.Contains(a.User.FullName)));
             }
 
             if (querySorts.Count > 0)
@@ -217,6 +210,12 @@
             }
 
             var items = itemsQuery.ToList();
+
+            if (pickupbys.Any())
+            {
+                items = items.Where(x =>
+                    x.PickedUpBy != null && (pickupbys.Contains(x.PickedUpBy.Name) || pickupbys.Contains(x.PickedUpBy.FullName))).ToList();
+            }
 
             if (linqSorts.Count > 0)
             {
