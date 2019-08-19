@@ -103,6 +103,22 @@
             }
         }
 
+        public void SendHandOverNotification(HandOver handOver)
+        {
+            if (!string.IsNullOrEmpty(handOver.User.EmailAddress))
+            {
+                var message = new MailMessage(_sourceAddress, handOver.User.EmailAddress)
+                {
+                    Subject = $"Gitle: {handOver.EmailSubject} - {handOver.Issue.Project.Name}",
+                    IsBodyHtml = true
+                };
+
+                message.Body = GetBody("issue-action", new Hashtable { { "item", handOver }, { "user", handOver.User } });
+
+                SendMessage(message);
+            }
+        }
+
         public void SendPasswordLink(User user)
         {
             var message = new MailMessage(_sourceAddress, user.EmailAddress)

@@ -73,7 +73,7 @@
             <div class="row detailsrow">
               <div class="large-7 columns">
                 <% if issue.PickedUpBy != null and issue.IsOpen: %>
-                Behandelaar: <strong>${?issue.PickedUpBy.FullName}</strong> <% if issue.PickedUpAt != null: %>(opgepakt op ${Helpers.DateTimeHelper.Readable(issue.PickedUpAt)})<% end %>
+                Behandelaar: <strong>${?issue.PickedUpBy.FullName}</strong> <% if issue.PickedUpAt != null: %>(sinds ${Helpers.DateTimeHelper.Readable(issue.PickedUpAt)})<% end %>
                 <% end %>
                 &nbsp;
               </div>

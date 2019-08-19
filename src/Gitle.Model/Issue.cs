@@ -17,6 +17,7 @@
             ChangeStates = new List<ChangeState>();
             Changes = new List<Change>();
             Pickups = new List<Pickup>();
+            HandOvers = new List<HandOver>();
             Bookings = new List<Booking>();
             InvoiceLines = new List<InvoiceLine>();
             EstimatePublic = true;
@@ -42,6 +43,7 @@
         public virtual IList<ChangeState> ChangeStates { get; set; }
         public virtual IList<Change> Changes { get; set; }
         public virtual IList<Pickup> Pickups { get; set; }
+        public virtual IList<HandOver> HandOvers { get; set; }
         public virtual IList<Booking> Bookings { get; set; }
         public virtual IList<InvoiceLine> InvoiceLines { get; set; }
 
@@ -130,8 +132,17 @@
             get
             {
                 var pickup =
-                    Pickups.OrderByDescending(x => x.CreatedAt).LastOrDefault();
-                return pickup != null ? pickup.User : null;
+                    Pickups.OrderBy(x => x.CreatedAt).LastOrDefault();
+                var handover =
+                    HandOvers.OrderBy(x => x.CreatedAt).LastOrDefault();
+                User result = null;
+
+                if (handover?.CreatedAt != null)
+                    result = pickup?.CreatedAt >= handover?.CreatedAt ? pickup.User : handover?.User;
+                else
+                    result = pickup?.User;
+
+                return result != null ? result : null;
             }
         }
 
@@ -229,6 +240,7 @@
                 actions.AddRange(ChangeStates);
                 actions.AddRange(Changes);
                 actions.AddRange(Pickups);
+                actions.AddRange(HandOvers);
                 return actions.OrderByDescending(x => x.CreatedAt).ToList();
             }
         }
@@ -353,6 +365,11 @@
         public virtual void Pickup(User user)
         {
             Pickups.Add(new Pickup() { CreatedAt = DateTime.Now, User = user, Issue = this });
+        }
+
+        public virtual void HandOver(User user, User byUser)
+        {
+            HandOvers.Add(new HandOver() { CreatedAt = DateTime.Now, User = user, ByUser = byUser, Issue = this });
         }
 
         public virtual double BillableBookingHours()

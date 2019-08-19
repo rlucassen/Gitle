@@ -32,12 +32,14 @@
         protected ISettingService SettingService { get; }
         private readonly ISessionFactory sessionFactory;
         private readonly IEntryClient entryClient;
+        private readonly IEmailService emailService;
 
-        public IssueController(ISessionFactory sessionFactory, IEntryClient entryClient, ISettingService settingService) : base(sessionFactory)
+        public IssueController(ISessionFactory sessionFactory, IEntryClient entryClient, ISettingService settingService, IEmailService emailService) : base(sessionFactory)
         {
             SettingService = settingService;
             this.sessionFactory = sessionFactory;
             this.entryClient = entryClient;
+            this.emailService = emailService;
         }
 
         [MustHaveProject]
@@ -56,7 +58,7 @@
             PropertyBag.Add("customerLabels", CurrentUser.IsAdmin ? project.Labels : project.Labels.Where(l => l.ApplicableByCustomer).ToList());
             PropertyBag.Add("filterPresets", filterPresets);
             PropertyBag.Add("globalFilterPresets", globalFilterPresets);
-            PropertyBag.Add("allAdmins", session.Query<User>().Where(x => x.IsAdmin).ToList());
+            PropertyBag.Add("allAdmins", session.Query<User>().Where(x => x.IsAdmin && x.IsActive).ToList());
             PropertyBag.Add("selectedPickupbys", parser.SelectedPickupbys);
             PropertyBag.Add("pickupany", parser.PickupAny);
             PropertyBag.Add("pickupnone", parser.PickupNone);
@@ -98,6 +100,7 @@
                 .ToList();
 
             PropertyBag.Add("item", item);
+            PropertyBag.Add("users", session.Query<User>().Where(x => x.IsAdmin && x.IsActive).OrderBy(x => x.FullName));
             PropertyBag.Add("comments", item.Comments);
             PropertyBag.Add("days", DayHelper.GetPastDaysList(setting));
             PropertyBag.Add("statusList", statusList);
@@ -258,6 +261,29 @@
                     session.SaveOrUpdate(issue);
                     transaction.Commit();
                 }
+            }
+            RedirectToReferrer();
+        }
+
+        [Admin]
+        public void HandOver(string projectSlug, int issueId, long userId)
+        {
+            var user = session.Get<User>(userId);
+            var project = session.Slug<Project>(projectSlug);
+            if (project.Closed)
+            {
+                throw new ProjectClosedException(project);
+            }
+            var issue = session.Query<Issue>().Single(i => i.Number == issueId && i.Project == project);
+            if (!issue.IsArchived && user != CurrentUser && user != issue.PickedUpBy)
+            {
+                issue.HandOver(user, CurrentUser);
+                using (var transaction = session.BeginTransaction())
+                {
+                    session.SaveOrUpdate(issue);
+                    transaction.Commit();
+                }
+                emailService.SendHandOverNotification(issue.HandOvers.LastOrDefault());
             }
             RedirectToReferrer();
         }

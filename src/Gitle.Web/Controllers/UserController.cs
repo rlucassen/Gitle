@@ -15,6 +15,7 @@
     using Model.Helpers;
     using Model.Nested;
     using NHibernate;
+    using NHibernate.Context;
     using NHibernate.Linq;
 
     public class UserController : SecureController
@@ -247,6 +248,26 @@
                 message = "Deze naam is al in gebruik, kies een andere";
             }
             return new { success = validName, message = message };
+        }
+
+        [Admin]
+        public void Issues(long userId)
+        {
+            var allProjects = session.Query<Project>().Where(x => x.IsActive && !x.Closed);
+            var projects = new List<Project>();
+
+            foreach (var project in allProjects)
+            {
+                foreach (var issue in project.Issues)
+                {
+                    if (issue.PickedUpBy?.Id == userId && !issue.IsClosed)
+                        projects.Add(project);
+                }
+            }
+
+            PropertyBag.Add("user", session.Get<User>(userId));
+            PropertyBag.Add("projects", projects.Distinct());
+            PropertyBag.Add("count", projects.Distinct().Count());
         }
 
 

@@ -532,7 +532,7 @@ a.quickview-delay {
     }
   }
 
-  .ChangeState i, .Change i, .Pickup i {
+  .ChangeState i, .Change i, .Pickup i, .HandOver i {
     font-size: 2em;
     margin: 0.3em 0.6em;
   }
@@ -541,7 +541,7 @@ a.quickview-delay {
     margin-top: 1.1em;
   }
 
-  .Change, .Pickup {
+  .Change, .Pickup, .HandOver {
     .small-11 {
       margin-top: 1.1em;
     }
@@ -1645,4 +1645,29 @@ a.prefix {
   background-color: #fff;
   border-radius: 5px;
   transform: translate(-50%, 0);
+}
+
+.forwardtask {
+a {
+  width: 100%;
+  }  
+}
+
+.accordion {
+
+  .fa.hidden {
+    display: none;
+  }
+
+  .content {
+    margin: 0;
+    width: 100%;
+  }
+
+  .accordion-navigation {
+    margin-bottom: 10px!important;
+    > .content {
+      padding: 0;
+    }
+  }
 }
