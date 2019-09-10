@@ -85,7 +85,11 @@
                 <% if not issue.EstimatePublic: %><i class="fa fa-exclamation-triangle" title="schatting nog niet publiek"></i><% end %> ${issue.TotalHoursString}
               </div>
               <div class="large-2 columns text-right">
+                <% if not issue.Unbillable : %>
                 ${issue.CostString(project.HourPrice)}
+                <% else :%>
+                &euro; 0,00
+                <% end %>
               </div>
               <% end %>
             </div>
