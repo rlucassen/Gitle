@@ -19,6 +19,7 @@
         <p class="created no-margin"><strong>Gesloten op:</strong> <span title="${Helpers.DateTimeHelper.Readable(item.ClosedAt)}">${Helpers.DateTimeHelper.Readable(item.ClosedAt)}</span></p>
         <% end %>
         <% if item.EstimatePublic or CurrentUser.IsAdmin: %>
+        <p class="hours no-margin"><strong>Billable:</strong> <% if item.Unbillable: %> Nee <% else: %> Ja <% end %></p>
         <p class="hours no-margin"><strong>Geschatte tijd:</strong> ${item.EstimateString}  <% if not item.EstimatePublic: %><i class="fa fa-exclamation-triangle" title="schatting nog niet publiek"></i><% end %></p>
         <p class="price no-margin"><strong>Geschatte prijs:</strong> ${item.CostString(project.HourPrice)}  <% if not item.EstimatePublic: %><i class="fa fa-exclamation-triangle" title="schatting nog niet publiek"></i><% end %></p>
         <% if CurrentUser.IsAdmin: %>
@@ -70,9 +71,9 @@
         </p>
         <ul id="forwardTask" data-dropdown-content class="f-dropdown">
           <% for user in users: %>
-            <% if CurrentUser.IsAdmin and user != CurrentUser and user != item.PickedUpBy :%>
+          <% if CurrentUser.IsAdmin and user != CurrentUser and user != item.PickedUpBy :%>
           <li><a href="/project/${project.Slug}/issue/${item.Number}/handover?userId=${user.Id}">${user.FullName}</a></li>
-            <% end %>
+          <% end %>
           <% end %>
         </ul>
         <hr />
