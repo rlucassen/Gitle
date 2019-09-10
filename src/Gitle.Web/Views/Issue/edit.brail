@@ -53,6 +53,12 @@
           </div>
         </div>
       </div>
+      <% if not project.Unbillable :%>
+      <div class="row">
+        <div class="large-3 columns">Unbillable</div>
+        <div class="large-9 columns">${Form.CheckboxField("item.Unbillable")}</div>
+      </div>
+      <% end %>
       <div class="row">
         <div class="small-6 medium-3 columns">Filter Label</div>
         <div class="large-3 columns end">

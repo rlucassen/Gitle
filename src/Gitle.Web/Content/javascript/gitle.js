@@ -244,6 +244,11 @@ $(function () {
         row.find('.issue-chooser').val(suggestion.value);
         row.find('.booking_Comment').prop("required", false);
         $(document).foundation('abide', 'reflow');
+        if (suggestion.extraValue == "unbillable") {
+          setUnbillable(row);
+        } else {
+          setBillable(row);
+        }
 
       }
     }).blur(function() {

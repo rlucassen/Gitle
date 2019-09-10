@@ -31,6 +31,7 @@
         public virtual int Devvers { get; set; }
         public virtual bool EstimatePublic { get; set; }
         public virtual bool Administrative { get; set; }
+        public virtual bool Unbillable { get; set; }
 
         public virtual bool Prioritized { get; set; }
         public virtual int PrioOrder { get; set; }
