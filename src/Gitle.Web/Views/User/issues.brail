@@ -1,6 +1,16 @@
 ﻿<div class="row">
-  <div class="large-12 columns">
+  <div class="large-9 columns">
     <h1>Taken van: <a href="/user/${user.Id}/view">${user.FullName}</a></h1>
+  </div>
+  <div class="large-3 columns">
+    <p class="view-issues no-margin">
+      <a href="#" data-dropdown="viewIssues" class="button dropdown">Bekijk taken van..</a>
+    </p>
+    <ul id="viewIssues" data-dropdown-content class="f-dropdown">
+      <% for otherUser in users: %>
+      <li><a href="/user/${otherUser.Id}/issues">${otherUser.FullName}</a></li>
+      <% end %>
+    </ul>
   </div>
   <div class="large-12 columns">
     <% if count == 0 : %>
@@ -81,7 +91,7 @@
                     </div>
                     <div class="row detailsrow">
                       <div class="large-7 columns">
-                        <% if issue.PickedUpBy != null and issue.IsOpen: %>
+                        <% if issue.PickedUpBy != null and (issue.IsOpen or issue.IsOnHold or issue.IsDone) : %>
                         Behandelaar: <strong>${?issue.PickedUpBy.FullName}</strong> <% if issue.PickedUpAt != null: %>(sinds ${Helpers.DateTimeHelper.Readable(issue.PickedUpAt)})<% end %>
                         <% end %>
                         &nbsp;

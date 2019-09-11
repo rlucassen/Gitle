@@ -266,6 +266,7 @@
             }
 
             PropertyBag.Add("user", session.Get<User>(userId));
+            PropertyBag.Add("users", session.Query<User>().Where(x => x.IsAdmin && x.IsActive).OrderBy(x => x.FullName));
             PropertyBag.Add("projects", projects.Distinct());
             PropertyBag.Add("count", projects.Distinct().Count());
         }
