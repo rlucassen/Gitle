@@ -1653,13 +1653,25 @@ a.prefix {
   transform: translate(-50%, 0);
 }
 
-.forwardtask, .view-issues {
+.forwardtask {
 a {
   width: 100%;
   }  
 }
 
+.view-issues {
+  a {
+    float: right;
+    font-size: 0.7rem;
+  }
+}
+
 .accordion {
+
+  &.issues-accordion{
+    font-size: 1em;
+    line-height: 22px;
+  } 
 
   .fa.hidden {
     display: none;

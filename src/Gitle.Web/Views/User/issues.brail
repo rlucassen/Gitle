@@ -6,7 +6,7 @@
     <p class="view-issues no-margin">
       <a href="#" data-dropdown="viewIssues" class="button dropdown">Bekijk taken van..</a>
     </p>
-    <ul id="viewIssues" data-dropdown-content class="f-dropdown">
+    <ul id="viewIssues" data-dropdown-content class="f-dropdown right-align">
       <% for otherUser in users: %>
       <li><a href="/user/${otherUser.Id}/issues">${otherUser.FullName}</a></li>
       <% end %>
@@ -19,7 +19,7 @@
 
     <% for project in projects : %>
     <% issueCount = 0 %>
-    <ul class="accordion" data-accordion>
+    <ul class="accordion issues-accordion" data-accordion>
       <li class="accordion-navigation">
         <a href="#panel${project.Id}">${project.Name} - <b class="project-link"></b> <i class="fa fa-chevron-down right"></i><i class="fa fa-chevron-up right hidden"></i></a>
         <div id="panel${project.Id}" class="content project-container">
@@ -34,7 +34,6 @@
                     <div class="row">
                       <div class="small-6 columns">
                         <span class="number">#${issue.Number}</span>
-                        <input type="checkbox" name="issue" value="${issue.Number}" class="no-margin" />
                       </div>
                       <div class="small-6 columns large-text-center medium-text-right">
                         <% if not issue.IsAdministrative : %>
@@ -171,6 +170,7 @@
                           <li><a class="button tiny no-margin" href="/project/${project.Slug}/issue/${issue.Number}/view">Open</a></li>
                           <% if not issue.IsArchived : %>
                           <li><a class="button tiny success no-margin" href="/project/${project.Slug}/issue/${issue.Number}/edit">Bewerk</a></li>
+                          <li><a class="button tiny alert no-margin" href="/project/${project.Slug}/issue/${issue.Number}/close">Sluit</a></li>
                           <% end %>
                         </ul>
                       </div>
