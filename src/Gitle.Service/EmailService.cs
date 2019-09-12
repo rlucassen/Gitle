@@ -45,10 +45,23 @@
         {
             if (action.Issue.Project.IsMuted) return;
 
+            bool notForClient = action is HandOver || action is Pickup;
+
             if (action is ChangeState)
                 action = _session.Get<ChangeState>(((ChangeState)action).Id);
             var project = action.Issue.Project;
             IList<User> users = (from userProject in project.Users where userProject.Notifications && (!userProject.OnlyOwnIssues || action.Issue.CreatedBy == userProject.User) && userProject.User != action.User && userProject.IsActive && userProject.User.IsActive select userProject.User).ToList();
+
+            if (notForClient)
+            {
+                var userlist = users.ToList();
+
+                foreach (var user in userlist)
+                {
+                    if (!user.IsAdmin)
+                        users.Remove(user);
+                }
+            }
 
             if ((action as ChangeState)?.IssueState == IssueState.Open)
             {

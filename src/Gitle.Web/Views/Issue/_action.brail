@@ -27,7 +27,8 @@
         ${action.HtmlText}
       </div>
     </div>
-    <% elif action.GetType().Name == "Pickup": %>
+    <% elif action.GetType().Name == "Pickup" : %>
+    <% if CurrentUser.IsAdmin: %>
     <div class="row ${action.GetType().Name}">
       <div class="small-1 columns">
         <i class="fa fa-sign-out"></i>
@@ -36,7 +37,9 @@
         ${action.HtmlText}
       </div>
     </div>
-    <% elif action.GetType().Name == "HandOver": %>
+    <% end %>
+    <% elif action.GetType().Name == "HandOver" : %>
+    <% if CurrentUser.IsAdmin: %>
     <div class="row ${action.GetType().Name}">
       <div class="small-1 columns">
         <i class="fa fa-sign-out"></i>
@@ -45,6 +48,7 @@
         ${action.HtmlText}
       </div>
     </div>
+    <% end %>
     <% else: %>
     <% if action.IsInternal and (not CurrentUser.CanBookHours and not CurrentUser.IsAdmin) :%>
     <% else: %>

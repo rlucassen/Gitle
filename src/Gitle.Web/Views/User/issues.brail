@@ -72,7 +72,7 @@
                         <% else :%>
                         <% count = 0 %>
                         <% for comment in issue.Comments :%>
-                        <% if not comment.IsInternal :%>
+                        <% if not comment.IsInternal? :%>
                         <% count++ %>
                         <% end %>
                         <% end %>
