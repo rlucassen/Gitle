@@ -4,11 +4,10 @@
     using Helpers;
     using Interfaces.Model;
 
-    public class HandOver : Touchable, IIssueAction
+    public class Pickup : Touchable, IIssueAction
     {
         public virtual Issue Issue { get; set; }
         public virtual User User { get; set; }
-        public virtual User ByUser { get; set; }
         public virtual DateTime CreatedAt { get; set; }
 
         public virtual string Text
@@ -17,9 +16,8 @@
             {
                 return
                     string.Format(
-                        "De taak is doorgegeven{0}{1}",
-                        User != null ? string.Format(" aan <strong>{0}</strong>", User.FullName) : "",
-                        ByUser != null ? string.Format(" door <strong>{0}</strong>", ByUser.FullName) : "");
+                        "De taak is opgepakt{0}",
+                        User != null ? string.Format(" door <strong>{0}</strong>", User.FullName) : "");
             }
         }
 
@@ -29,18 +27,13 @@
             {
                 return
                     string.Format(
-                        "De taak is doorgegeven{0}{1} op <strong>{2}</strong>",
-                        User != null ? string.Format(" aan <strong>{0}</strong>", User.FullName) : "",
-                        ByUser != null ? string.Format(" door <strong>{0}</strong>", ByUser.FullName) : "",
+                        "De taak is opgepakt{0} op <strong>{1}</strong>",
+                        User != null ? string.Format(" door <strong>{0}</strong>", User.FullName) : "",
                         DateTimeHelper.Readable(CreatedAt));
             }
         }
 
-        public virtual string EmailSubject { get { return string.Format("Taak {2} is doorgegeven{0}{1}",
-                                                                        User != null ? string.Format(" aan {0}", User.FullName) : "",
-                                                                        ByUser != null ? string.Format(" door {0}", ByUser.FullName) : "",
-                                                                        Issue.Number); } }
-
+        public virtual string EmailSubject { get { return string.Format("Taak {1} is opgepakt door {0}", User != null ? User.FullName : "", Issue.Number); } }
 
     }
 }

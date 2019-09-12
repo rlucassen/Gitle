@@ -91,7 +91,13 @@
                     <div class="row detailsrow">
                       <div class="large-7 columns">
                         <% if issue.PickedUpBy != null and (issue.IsOpen or issue.IsOnHold or issue.IsDone) : %>
-                        Behandelaar: <strong>${?issue.PickedUpBy.FullName}</strong> <% if issue.PickedUpAt != null: %>(sinds ${Helpers.DateTimeHelper.Readable(issue.PickedUpAt)})<% end %>
+                        <% count = 1 %>
+                        <% for handover in issue.HandOvers : %>
+                        <% if issue.HandOvers.Count == count : %>
+                        ${handover.HandedOverByText}
+                        <% end %>
+                        <% count++ %>
+                        <% end %>
                         <% end %>
                         &nbsp;
                       </div>
