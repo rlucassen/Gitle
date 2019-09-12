@@ -230,5 +230,34 @@
     $('.fa-chevron-down, .fa-chevron-up').parent().on('click', function () {
       $(this).find('.fa-chevron-down, .fa-chevron-up').toggleClass('hidden');
     });
+
+    var quickviewDelay = 800;
+    $('[data-quickview]').hover(function () {
+      var link = $(this);
+      if ($(this).data('tooltip') == undefined) {
+        var offset = $(this).position();
+        var tooltip = $('<div class="quickview">').css('top', offset.top + $(this).height()).css('left', offset.left).css('z-index', 10);
+        $(this).data('tooltip', tooltip);
+        tooltip.load($(this).data('quickview'), function () {
+          tooltip.find('.marked').each(function () {
+            $(this).html(marked($(this).html()));
+          });
+          link.append(tooltip.hide());
+          link.data('timeout', setTimeout(function () {
+            if (link.is(':hover')) {
+              link.data('tooltip').show();
+            }
+          }, quickviewDelay));
+        });
+      } else {
+        link.data('timeout', setTimeout(function () {
+          if (link.is(':hover')) {
+            link.data('tooltip').show();
+          }
+        }, quickviewDelay));
+      }
+    }, function () {
+      $('.quickview').hide();
+    });
   });
 </script>
