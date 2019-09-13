@@ -111,5 +111,19 @@
         $(".invoices .invoice:not([data-invoice-number*='" + query + "'])").hide();
       }
     });
+
+    $('#startDate').on('change', function () {
+      if (Date.parse($('#startDate').val()) >= Date.parse($('#endDate').val())) {
+        debugger;
+        $('#endDate').val($('#startDate').val());
+      }
+    });
+
+    $('#endDate').on('change', function () {
+      if (Date.parse($('#endDate').val()) <= Date.parse($('#startDate').val())) {
+        debugger;
+        $('#startDate').val($('#endDate').val());
+      }
+    });
   });
 </script>
