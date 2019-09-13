@@ -602,7 +602,7 @@
             {
                 issues = issues.Where(i => i.Number.ToString().Contains(query) || i.Name.Contains(query));
             }
-            suggestions.AddRange(issues.ToList().Where(i => i.HasBeenOpenSince(DateTime.Today.AddDays(-7))).Select(x => new Suggestion($"#{x.Number} - {x.Name}", x.Id.ToString())));
+            suggestions.AddRange(issues.ToList().Where(i => !i.IsArchived && i.HasBeenOpenSince(DateTime.Today.AddDays(-7))).Select(x => new Suggestion($"#{x.Number} - {x.Name}", x.Id.ToString(), x.State.ToString())));
             return new { query = query, suggestions = suggestions };
         }
 

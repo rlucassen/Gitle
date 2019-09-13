@@ -242,16 +242,22 @@ $(function () {
         row.find('.booking_Issue_Id').val(suggestion.data);
         row.find('.booking_Issue_Id').trigger('change');
         row.find('.issue-chooser').val(suggestion.value);
+        if (suggestion.extraValue === 'Closed') row.find('.issue-chooser').css('color','red');
         row.find('.booking_Comment').prop("required", false);
         $(document).foundation('abide', 'reflow');
-
+      },
+      formatResult: function(suggestion, currentValue) {
+        var result = $.Autocomplete.formatResult(suggestion, currentValue);
+        if (suggestion.extraValue === 'Closed') {
+          result = '<div class="red">' + result + ' (gesloten)</div>';
+        }
+        return result;
       }
     }).blur(function() {
       if ($(this).val() == '') {
         row.find('.booking_Issue_Id').val('');
       }
     });
-
 
     row.find('.booking-row-null-toggle').click(function (e) {
       e.preventDefault();
