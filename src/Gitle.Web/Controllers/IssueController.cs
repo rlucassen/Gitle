@@ -234,6 +234,7 @@
             }
 
             issue.Labels = labels.Select(label => session.Query<Label>().FirstOrDefault(l => l.Id == label.Id)).ToList();
+            issue.Name = Regex.Replace(issue.Name, "<.*?>", String.Empty);
 
             using (var transaction = session.BeginTransaction())
             {
