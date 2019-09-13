@@ -8,6 +8,12 @@
     <textarea data-live-comments="/project/${project.Slug}/comments">${?project.Comments}</textarea>
 
     <% if CurrentUser.IsAdmin: %>
+    <% if project.Deadline.ToString("dd-MM-yyyy") != "01-01-0001" : %>
+    <div class="row">
+      <div class="large-2 columns">Deadline</div>
+      <div class="large-10 columns">${project.Deadline.ToString("dd-MM-yyyy")}</div>
+    </div>
+    <% end %>
     <% if application != null: %>
     <% if application.Customer != null: %>
     <div class="row">

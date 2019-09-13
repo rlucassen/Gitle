@@ -68,6 +68,12 @@
         </div>
       </div>
       <div class="row">
+        <div class="large-3 columns">Deadline</div>
+        <div class="large-9 columns">
+          <input type="text" name="item.Deadline" id="item_Deadline" class="date" placeholder="Deadline" value="${?item.Deadline.ToString(" dd-MM-yyyy")}" />
+        </div>
+      </div>
+      <div class="row">
         <div class="large-3 columns">Projectinformatie</div>
         <div class="large-9 columns">
           ${Form.TextArea("item.Information", {"class": "uploadarea"})}

@@ -33,6 +33,8 @@
         public virtual string Information { get; set; }
         public virtual string Comments { get; set; }
 
+        public virtual DateTime Deadline { get; set; }
+
         public virtual double BudgetMinutes { get; set; }
         public virtual double BudgetHours => BudgetMinutes / 60.0;
         public virtual string BudgetTime => $"{Math.Floor(BudgetHours)}:{BudgetMinutes - (Math.Floor(BudgetHours)*60):00}";

@@ -15,6 +15,7 @@
             Map(x => x.FreckleName);
             Map(x => x.Information).CustomSqlType("nvarchar(max)");
             Map(x => x.Comments).CustomSqlType("nvarchar(max)");
+            Map(x => x.Deadline);
             Map(x => x.Type);
             Map(x => x.TicketRequiredForBooking);
             Map(x => x.BudgetMinutes);
