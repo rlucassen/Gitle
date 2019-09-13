@@ -88,7 +88,6 @@
         <li class="divider"></li>
         <li><a href="/projects">Projecten</a></li>
         <% end %>
-        ${CurrentUser.Projects.Count}
         <% if CurrentUser.IsAdmin: %>
         <li class="divider"></li>
         <li><a href="/users">Gebruikers</a></li>
