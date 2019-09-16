@@ -39,6 +39,17 @@ body > .row {
   margin-bottom: 80px;
 }
 
+nav.top-bar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 40;
+}
+
+div.page-content{
+  margin-top: 45px;
+}
+
 .top-bar {
   margin-bottom: 0;
 }
