@@ -60,30 +60,9 @@
                 users.Add(servicedesk);
             }
 
-            if (action is Comment)
+            if (action is Comment comment && comment.IsInternal)
             {
-                var userlist = users.ToList();
-
-                if ((action as Comment).IsInternal)
-                {
-                    foreach (var user in userlist)
-                    {
-                        if (!user.CanBookHours && !user.IsAdmin)
-                        {
-                            users.Remove(user);
-                        }
-                    }
-                }
-                else
-                {
-                    foreach (var user in userlist)
-                    {
-                        if (user.CanBookHours || user.IsAdmin)
-                        {
-                            users.Remove(user);
-                        }
-                    }
-                }
+                users = users.Where(x => x.CanBookHours || x.IsAdmin).ToList();
             }
 
             foreach (var user in users)
