@@ -39,7 +39,7 @@
           <td class="application"><a href="/Application/${?installation.Application.Slug}/view">${?installation.Application.Name}</a></td>
           <td class="installation-type">${?installation.InstallationType}</td>
           <td class="customer"><a href="/Customer/${?installation.Application.Customer.Slug}/view">${?installation.Application.Customer.Name}</a></td>
-          <td class="url"><a target="_blank" href="https://myfinance.demo.auxilium.nl">${?installation.Url}</a></td>
+          <td class="url"><a target="_blank" href="https://${?installation.Url}">${?installation.Url}</a></td>
           <td>
             <ul class="button-group">
               <li><a class="button tiny secondary no-margin" href="/installation/${?installation.Slug}/edit">Bewerk</a></li>
