@@ -106,14 +106,22 @@
         row.find('.booking_Issue_Id').val(suggestion.data);
         row.find('.booking_Issue_Id').trigger('change');
         row.find('.issue-chooser').val(suggestion.value);
+        if (suggestion.extraValue === 'Done') row.find('.issue-chooser').css('color','green');
         if (suggestion.extraValue === 'Closed') row.find('.issue-chooser').css('color','red');
+        if (suggestion.extraValue === 'Hold') row.find('.issue-chooser').css('color','orange');
         row.find('.booking_Comment').prop("required", false);
         $(document).foundation('abide', 'reflow');
       },
       formatResult: function(suggestion, currentValue) {
         var result = $.Autocomplete.formatResult(suggestion, currentValue);
+        if (suggestion.extraValue === 'Done') {
+          result = '<div class="green">' + result + ' (uitgevoerd)</div>';
+        }
         if (suggestion.extraValue === 'Closed') {
           result = '<div class="red">' + result + ' (gesloten)</div>';
+        }
+        if (suggestion.extraValue === 'Hold') {
+          result = '<div class="orange">' + result + ' (on hold)</div>';
         }
         return result;
       }
