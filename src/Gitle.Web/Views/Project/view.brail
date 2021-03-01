@@ -1,6 +1,14 @@
 ﻿<div class="row">
   <div class="large-12 columns">
-    <h1>${project.Name} #${project.Number}</h1>
+    <div class="row">
+      <div class="small-10 columns">
+        <h1>${project.Name} #${project.Number}</h1>
+      </div>
+      <div class="small-2 columns text-right" style="padding-top: 15px;">
+        <a class="button" href="/project/${project.Slug}/edit">Bewerk</a>
+      </div>
+    </div>
+    
     <% if project.Closed: %>
     <p class="red">Dit project is gesloten, er kunnen geen taken meer aangemaakt worden.</p>
     <% end %>
