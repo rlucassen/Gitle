@@ -1,6 +1,13 @@
 ﻿<div class="row">
-  <div class="large-12 columns">
-    <h1><a href="/project/${project.Slug}/view">${project.Name}</a>: ${result.TotalResultCount} Taken</h1>
+  <div class="small-12 columns">
+    <h1 class="no-bottom-margin"><a href="/project/${project.Slug}/view">${project.Name}</a>: ${result.TotalResultCount} Taken</h1>
+  </div>
+</div>
+
+<hr style="margin: 0 0 20px 0;" />
+
+<div class="row">
+  <div class="small-12 columns">
     <% if not project.Closed: %>
     <a class="button" href="/project/${project.Slug}/issue/new">Nieuwe taak</a>
     <% else: %>
@@ -24,246 +31,229 @@
     <a class="button icon success" href="/project/${project.Slug}/issue/muteproject" title="Alle geabonneerden worden genotificeerd."><i class="fa fa-envelope-o fa-fw"></i></a>
     <% end %>
     <% end %>
-    <div class="row">
-      <div class="large-12 columns">
-        <div class="row">
-          <div class="large-12 columns">
-            <form id="query-form" method="GET">
-              <div class="row collapse">
-                <div class="large-9 small-1 columns">
-                  <input type="text" id="query" name="query" data-remember="filter-${project.Slug}" value="${result.Query}" />
-                </div>
-                <div class="large-1 small-1 columns">
-                  <a href="#" data-filter="" data-filter-clear="" class="button postfix alert">
-                    <i class="fa fa-close"></i>
-                  </a>
-                </div>
-                <div class="large-2 small-5 columns">
-                  <span class="button split postfix"><a href="#" class="submit">Filter</a> <span data-dropdown="drop"></span></span>
-                  <ul id="drop" class="f-dropdown medium" data-dropdown-content>
-                    <% for filterPreset in filterPresets: %>
-                    <li>
-                      <a class="filter-preset" data-filter="${filterPreset.FilterString}" data-filter-clear href="#">${filterPreset.Name}</a>
-                      <a href="/filterpreset/${filterPreset.Id}/delete" class="remove-link">
-                        <i class="fa fa-close red"></i>
-                      </a>
-                    </li>
-                    <% end %>
-                    <li class="divider"></li>
-                    <% for filterPreset in globalFilterPresets: %>
-                    <li><a class="filter-preset" data-filter="${filterPreset.FilterString}" data-filter-clear href="#">${filterPreset.Name}</a></li>
-                    <% end %>
-                    <li class="divider"></li>
-                    <li><strong><a href="#" data-reveal-id="newFilterPreset">Nieuwe filter</a></strong></li>
-                  </ul>
-                </div>
-              </div>
-            </form>
-          </div>
-        </div>
-        <div class="row filters collapse">
-          <div class="large-1 small-12 columns">
-            <span class="three-state-checker button tiny" data-state="none" data-selector=".issues .issuestate input[type=checkbox]"></span>
-          </div>
-          <div class="large-4 columns">
-            <ul class="button-group">
-              <li>
-                <a href="#" data-filter="state:Open" class="button tiny no-margin secondary<% if result.States.Contains(Gitle.Model.Enum.IssueState.Open): %> active<% end %>">Open</a>
-              </li>
-              <li>
-                <a href="#" data-filter="state:Closed" class="button tiny no-margin secondary<% if result.States.Contains(Gitle.Model.Enum.IssueState.Closed): %> active<% end %>">Gesloten</a>
-              </li>
-              <li>
-                <a href="#" data-filter="state:Done" class="button tiny no-margin secondary<% if result.States.Contains(Gitle.Model.Enum.IssueState.Done): %> active<% end %>">Uitgevoerd</a>
-              </li>
-              <li>
-                <a href="#" data-filter="state:Hold" class="button tiny no-margin secondary<% if result.States.Contains(Gitle.Model.Enum.IssueState.Hold): %> active<% end %>">On hold</a>
-              </li>
-            </ul>
-          </div>
-          <div class="large-3 columns">
-            <ul class="button-group">
-              <li>
-                <a href="#" data-filter="bookingstate:Any" class="button tiny no-margin secondary<% if result.BookingStates.Contains(Gitle.Model.Enum.IssueBookingState.Any): %> active<% end %>">Geboekt</a>
-              </li>
-              <li>
-                <a href="#" data-filter="bookingstate:None" class="button tiny no-margin secondary<% if result.BookingStates.Contains(Gitle.Model.Enum.IssueBookingState.None): %> active<% end %>">Ongeboekt</a>
-              </li>
-            </ul>
-          </div>
-          <div class="large-2 small-12 columns">
-            <button href="#" data-dropdown="sorts" aria-controls="sorts" aria-expanded="false" class="button tiny dropdown no-margin">Sorteren:</button>
-            <ul id="sorts" data-dropdown-content="" class="f-dropdown" aria-hidden="true" tabindex="-1">
-              <% for sort in result.AllSorts: %>
-              <% isSorted = result.SelectedSorts.ContainsKey(sort.Key) %>
-              <li>
-                <a href="#" data-filter="sort<% if not isSorted or (isSorted and not result.SelectedSorts[sort.Key]): %>desc<% end %>:${sort.Key}" data-filter-opposite="sort<% if isSorted and result.SelectedSorts[sort.Key]: %>desc<% end %>:${sort.Key}">
-                  <% if isSorted and result.SelectedSorts[sort.Key]: %>
-                  <i class="fa fa-chevron-down"></i>
-                  <% end %>
-                  <% if isSorted and not result.SelectedSorts[sort.Key]: %>
-                  <i class="fa fa-chevron-up"></i>
-                  <% end %>
-                  ${sort.Value}
-                </a>
-                <% if isSorted: %>
-                <a href="#" class="remove-filter" data-filter="sort<% if not isSorted or (isSorted and result.SelectedSorts[sort.Key]): %>desc<% end %>:${sort.Key}">
-                  <i class="fa fa-close red"></i>
-                </a>
-                <% end %>
-              </li>
-              <% end %>
-            </ul>
-          </div>
-          <div class="large-5 small-12 columns">
-
-            <% if labels.Count > 0: %>
-
-            <button href="#" data-dropdown="selectedLabels" aria-controls="selectedLabels" aria-expanded="false" class="button tiny dropdown no-margin">Bevat labels:</button>
-            <ul id="selectedLabels" data-dropdown-content="" class="f-dropdown labels" aria-hidden="true" tabindex="-1">
-              <% for label in labels: %>
-              <li>
-                <a href="#" data-filter="label:'${label.Name}'">
-                  <% if result.SelectedLabels.Contains(label.Name): %>
-                  <i class="fa fa-check"></i>
-                  <% end %>
-                  <span class="label no-margin"
-                  <% if label.VisibleForCustomer: %> radius<% end %>" title="${label.Name}" style="background-color: #${label.Color} ;">${label.Name}</span>
-                </a>
-              </li>
-              <% end %>
-            </ul>
-
-            <button href="#" data-dropdown="anySelectedLabels" aria-controls="anySelectedLabels" aria-expanded="false" class="button tiny dropdown no-margin">Bevat een label:</button>
-            <ul id="anySelectedLabels" data-dropdown-content="" class="f-dropdown labels" aria-hidden="true" tabindex="-1">
-              <% for label in labels: %>
-              <li>
-                <a href="#" data-filter="anylabel:'${label.Name}'">
-                  <% if result.AnySelectedLabels.Contains(label.Name): %>
-                  <i class="fa fa-check"></i>
-                  <% end %>
-                  <span class="label no-margin"
-                  <% if label.VisibleForCustomer: %> radius<% end %>" title="${label.Name}" style="background-color: #${label.Color} ;">${label.Name}</span>
-                </a>
-              </li>
-              <% end %>
-            </ul>
-
-            <button href="#" data-dropdown="notSelectedLabels" aria-controls="notSelectedLabels" aria-expanded="false" class="button tiny dropdown no-margin">Bevat niet labels:</button>
-            <ul id="notSelectedLabels" data-dropdown-content="" class="f-dropdown labels" aria-hidden="true" tabindex="-1">
-              <% for label in labels: %>
-              <li>
-                <a href="#" data-filter="notlabel:'${label.Name}'">
-                  <% if result.NotSelectedLabels.Contains(label.Name): %>
-                  <i class="fa fa-check"></i>
-                  <% end %>
-                  <span class="label no-margin"
-                  <% if label.VisibleForCustomer: %> radius<% end %>" title="${label.Name}" style="background-color: #${label.Color} ;">${label.Name}</span>
-                </a>
-              </li>
-              <% end %>
-            </ul>
-
-            <% else: %>
-
-            <a href="#" class="button tiny secondary disabled">Geen labels om te filteren</a>
-
-            <% end %>
-
-          </div>
-          <% if CurrentUser.IsAdmin: %>
-          <div class="large-7 small-12 columns">
-            <button href="#" data-dropdown="pickupbys" aria-controls="pickupbys" aria-expanded="false" class="button tiny dropdown no-margin">Behandelaar:</button>
-            <ul id="pickupbys" data-dropdown-content="" class="f-dropdown" aria-hidden="true" tabindex="-1">
-              <li>
-                <a href="#" data-filter="pickup:any" data-filter-opposite="pickup:none">
-                  <% if pickupany: %><i class="fa fa-check"></i><% end %>
-                  <strong>Opgepakt</strong>
-                </a>
-              </li>
-              <li>
-                <a href="#" data-filter="pickup:none" data-filter-opposite="pickup:any">
-                  <% if pickupnone: %><i class="fa fa-check"></i><% end %>
-                  <strong>Niet opgepakt</strong>
-                </a>
-              </li>
-              <li class="divider"></li>
-              <% for admin in allAdmins: %>
-              <% isSelected = selectedPickupbys.Contains(admin) %>
-              <li>
-                <a href="#" data-filter="pickup:${admin.Name}">
-                  <% if isSelected: %><i class="fa fa-check"></i><% end %>
-                  ${admin.FullName}
-                </a>
-                <% if isSelected: %>
-                <a href="#" class="remove-filter" data-filter="pickup:${admin.Name}">
-                  <i class="fa fa-close red"></i>
-                </a>
-                <% end %>
-              </li>
-              <% end %>
-            </ul>
-          </div>
-        </div>
-        <div class="row">
-          <% end %>
-          <div class="large-0 small-12 columns">
-            <div class="row" id="group-actions">
-              <input type="hidden" name="issues" />
-              <div class="large-0 small-12 columns text-right small-text-left">
-                <label>Geselecteerde taken:</label>
-              </div>
-              <% if not project.Closed: %>
-              <div class="large-0 small-12 columns">
-                <button href="#" data-dropdown="addLabels" aria-controls="addLabels" aria-expanded="false" class="button tiny dropdown">Label toevoegen</button>
-                <ul id="addLabels" data-dropdown-content class="f-dropdown" aria-hidden="true" tabindex="-1">
-                  <% for label in customerLabels: %>
-                  <li>
-                    <a href="/project/${project.Slug}/addlabel?label=${WebUtility.UrlEncode(label.Name)}" data-group-action>
-                      <span class="label no-margin<% if label.VisibleForCustomer: %> radius<% end %>" title="${label.Name}" style="background-color: #${label.Color}; ">${label.Name}</span>
-                    </a>
-                  </li>
-                  <% end %>
-                </ul>
-              </div>
-              <% end %>
-              <div class="large-0 small-12 columns">
-                <a href="/project/${project.Slug}/changestate?state=4" data-group-action class="button tiny no-margin alert"><i class="fa fa-ban"></i> Sluiten</a>
-                <a href="/project/${project.Slug}/changestate?state=1" data-group-action class="button tiny no-margin"><i class="fa fa-info-circle"></i> Openen</a>
-                <a href="/project/${project.Slug}/changestate?state=3" data-group-action class="button tiny no-margin on-hold"><i class="fa fa-hand-paper-o"></i> On hold</a>
-                <% if CurrentUser.IsAdmin: %>
-                <a href="/project/${project.Slug}/changestate?state=2" data-group-action class="button tiny no-margin success"><i class="fa fa-thumbs-o-up"></i> Uitgevoerd</a>
-                <a href="/project/${project.Slug}/changestate?state=5" data-group-action class="button tiny no-margin alert"><i class="fa fa-trash"></i> Archiveren</a>
-                <% end %>
-              </div>
-                <% if CurrentUser.IsDanielle: %>
-                <div class="large-0 small-12 columns">
-                  <div class="row">
-                    <div class="large-5 columns">
-                      <button id="move-issues-button" data-group-action="" class="tiny">Verplaats taken</button>
-                    </div>
-                    <div class="large-5 columns">
-                      <input type="text" class="project-chooser-issue" id="move-issues-targetProject" name="targetProject" value="${project.Name}" placeholder="Project" required="" />
-                      <input type="hidden" name="issue.Project.Id" value="${project.Id}" class="issue_Project_Id" />
-                      <input type="hidden" value="${project.Slug}" class="issue_Project_Slug" />
-                    </div>
-                    <div class="large-2 columns">
-                      <input type="checkbox" id="move-issues-renumber" name="renumber" />
-                    </div>
-                  </div>
-                </div>
-                <% end %>
-              </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <% if dump != null and CurrentUser.IsDanielle: %>
-    <% OutputSubView("_dummyissue") %>
-    <% end %>
-    <% OutputSubView("_issuetable", {"actions": true}) %>
   </div>
 </div>
+
+<div class="row">
+  <div class="small-12 columns">
+    <form id="query-form" method="GET">
+      <div class="row collapse">
+        <div class="large-9 small-1 columns">
+          <input type="text" id="query" name="query" data-remember="filter-${project.Slug}" value="${result.Query}" />
+        </div>
+        <div class="large-1 small-1 columns">
+          <a href="#" data-filter="" data-filter-clear="" class="button postfix alert">
+            <i class="fa fa-close"></i>
+          </a>
+        </div>
+        <div class="large-2 small-5 columns">
+          <span class="button split postfix"><a href="#" class="submit">Filter</a> <span data-dropdown="drop"></span></span>
+          <ul id="drop" class="f-dropdown medium" data-dropdown-content>
+            <% for filterPreset in filterPresets: %>
+            <li>
+              <a class="filter-preset" data-filter="${filterPreset.FilterString}" data-filter-clear href="#">${filterPreset.Name}</a>
+              <a href="/filterpreset/${filterPreset.Id}/delete" class="remove-link">
+                <i class="fa fa-close red"></i>
+              </a>
+            </li>
+            <% end %>
+            <li class="divider"></li>
+            <% for filterPreset in globalFilterPresets: %>
+            <li><a class="filter-preset" data-filter="${filterPreset.FilterString}" data-filter-clear href="#">${filterPreset.Name}</a></li>
+            <% end %>
+            <li class="divider"></li>
+            <li><strong><a href="#" data-reveal-id="newFilterPreset">Nieuwe filter</a></strong></li>
+          </ul>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Normale filters -->
+<div class="row filters collapse">
+  <div class="small-12 columns">
+    <div class="row collapse">
+      <div class="large-1 small-12 columns">
+        <span class="three-state-checker button tiny" data-state="none" data-selector=".issues .issuestate input[type=checkbox]"></span>
+      </div>
+      <div class="large-4 columns">
+        <ul class="button-group">
+          <li><a href="#" data-filter="state:Open" class="button tiny no-margin secondary<% if result.States.Contains(Gitle.Model.Enum.IssueState.Open): %> active<% end %>">Open</a></li>
+          <li><a href="#" data-filter="state:Closed" class="button tiny no-margin secondary<% if result.States.Contains(Gitle.Model.Enum.IssueState.Closed): %> active<% end %>">Gesloten</a></li>
+          <li><a href="#" data-filter="state:Done" class="button tiny no-margin secondary<% if result.States.Contains(Gitle.Model.Enum.IssueState.Done): %> active<% end %>">Uitgevoerd</a></li>
+          <li><a href="#" data-filter="state:Hold" class="button tiny no-margin secondary<% if result.States.Contains(Gitle.Model.Enum.IssueState.Hold): %> active<% end %>">On hold</a></li>
+        </ul>
+      </div>
+      <div class="large-3 columns">
+        <ul class="button-group">
+          <li><a href="#" data-filter="bookingstate:Any" class="button tiny no-margin secondary<% if result.BookingStates.Contains(Gitle.Model.Enum.IssueBookingState.Any): %> active<% end %>">Geboekt</a></li>
+          <li><a href="#" data-filter="bookingstate:None" class="button tiny no-margin secondary<% if result.BookingStates.Contains(Gitle.Model.Enum.IssueBookingState.None): %> active<% end %>">Ongeboekt</a></li>
+        </ul>
+      </div>
+      <div class="large-2 small-12 columns">
+        <button href="#" data-dropdown="sorts" aria-controls="sorts" aria-expanded="false" class="button tiny dropdown no-margin">Sorteren:</button>
+        <ul id="sorts" data-dropdown-content="" class="f-dropdown" aria-hidden="true" tabindex="-1">
+          <% for sort in result.AllSorts: %>
+          <% isSorted = result.SelectedSorts.ContainsKey(sort.Key) %>
+          <li>
+            <a href="#" data-filter="sort<% if not isSorted or (isSorted and not result.SelectedSorts[sort.Key]): %>desc<% end %>:${sort.Key}" data-filter-opposite="sort<% if isSorted and result.SelectedSorts[sort.Key]: %>desc<% end %>:${sort.Key}">
+              <% if isSorted and result.SelectedSorts[sort.Key]: %>
+              <i class="fa fa-chevron-down"></i>
+              <% end %>
+              <% if isSorted and not result.SelectedSorts[sort.Key]: %>
+              <i class="fa fa-chevron-up"></i>
+              <% end %>
+              ${sort.Value}
+            </a>
+            <% if isSorted: %>
+            <a href="#" class="remove-filter" data-filter="sort<% if not isSorted or (isSorted and result.SelectedSorts[sort.Key]): %>desc<% end %>:${sort.Key}"><i class="fa fa-close red"></i></a>
+            <% end %>
+          </li>
+          <% end %>
+        </ul>
+      </div>
+      <div class="large-5 small-12 columns">
+        <% if labels.Count > 0: %>
+        <button href="#" data-dropdown="selectedLabels" aria-controls="selectedLabels" aria-expanded="false" class="button tiny dropdown no-margin">Bevat labels:</button>
+        <ul id="selectedLabels" data-dropdown-content="" class="f-dropdown labels" aria-hidden="true" tabindex="-1">
+          <% for label in labels: %>
+          <li>
+            <a href="#" data-filter="label:'${label.Name}'">
+              <% if result.SelectedLabels.Contains(label.Name): %>
+              <i class="fa fa-check"></i>
+              <% end %>
+              <span class="label no-margin"
+                    <% if label.VisibleForCustomer: %> radius<% end %>" title="${label.Name}" style="background-color: #${label.Color} ;">${label.Name}</span>
+            </a>
+          </li>
+          <% end %>
+        </ul>
+
+        <button href="#" data-dropdown="anySelectedLabels" aria-controls="anySelectedLabels" aria-expanded="false" class="button tiny dropdown no-margin">Bevat een label:</button>
+        <ul id="anySelectedLabels" data-dropdown-content="" class="f-dropdown labels" aria-hidden="true" tabindex="-1">
+          <% for label in labels: %>
+          <li>
+            <a href="#" data-filter="anylabel:'${label.Name}'">
+              <% if result.AnySelectedLabels.Contains(label.Name): %>
+              <i class="fa fa-check"></i>
+              <% end %>
+              <span class="label no-margin"
+                    <% if label.VisibleForCustomer: %> radius<% end %>" title="${label.Name}" style="background-color: #${label.Color} ;">${label.Name}</span>
+            </a>
+          </li>
+          <% end %>
+        </ul>
+
+        <button href="#" data-dropdown="notSelectedLabels" aria-controls="notSelectedLabels" aria-expanded="false" class="button tiny dropdown no-margin">Bevat niet labels:</button>
+        <ul id="notSelectedLabels" data-dropdown-content="" class="f-dropdown labels" aria-hidden="true" tabindex="-1">
+          <% for label in labels: %>
+          <li>
+            <a href="#" data-filter="notlabel:'${label.Name}'">
+              <% if result.NotSelectedLabels.Contains(label.Name): %>
+              <i class="fa fa-check"></i>
+              <% end %>
+              <span class="label no-margin"
+                    <% if label.VisibleForCustomer: %> radius<% end %>" title="${label.Name}" style="background-color: #${label.Color};">${label.Name}</span>
+            </a>
+          </li>
+          <% end %>
+        </ul>
+
+        <% else: %>
+        <a href="#" class="button tiny secondary disabled">Geen labels om te filteren</a>
+        <% end %>
+      </div>
+
+      <% if CurrentUser.IsAdmin: %>
+      <div class="large-7 small-12 columns">
+        <button href="#" data-dropdown="pickupbys" aria-controls="pickupbys" aria-expanded="false" class="button tiny dropdown no-margin">Behandelaar:</button>
+        <ul id="pickupbys" data-dropdown-content="" class="f-dropdown" aria-hidden="true" tabindex="-1">
+          <li>
+            <a href="#" data-filter="pickup:any" data-filter-opposite="pickup:none">
+              <% if pickupany: %><i class="fa fa-check"></i><% end %>
+              <strong>Opgepakt</strong>
+            </a>
+          </li>
+          <li>
+            <a href="#" data-filter="pickup:none" data-filter-opposite="pickup:any">
+              <% if pickupnone: %><i class="fa fa-check"></i><% end %>
+              <strong>Niet opgepakt</strong>
+            </a>
+          </li>
+          <li class="divider"></li>
+          <% for admin in allAdmins: %>
+          <% isSelected = selectedPickupbys.Contains(admin) %>
+          <li>
+            <a href="#" data-filter="pickup:${admin.Name}">
+              <% if isSelected: %><i class="fa fa-check"></i><% end %>
+              ${admin.FullName}
+            </a>
+            <% if isSelected: %>
+            <a href="#" class="remove-filter" data-filter="pickup:${admin.Name}">
+              <i class="fa fa-close red"></i>
+            </a>
+            <% end %>
+          </li>
+          <% end %>
+        </ul>
+      </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<div id="group-actions">
+  <input type="hidden" name="issues" />
+  <hr />
+  <div class="row">
+    <div class="small-2 columns">Geselecteerde taken:</div>
+    <div class="small-10 columns">
+      <% if not project.Closed: %>
+      <button href="#" data-dropdown="addLabels" aria-controls="addLabels" aria-expanded="false" class="button tiny dropdown">Label toevoegen</button>
+      <ul id="addLabels" data-dropdown-content class="f-dropdown" aria-hidden="true" tabindex="-1">
+        <% for label in customerLabels: %>
+        <li>
+          <a href="/project/${project.Slug}/addlabel?label=${WebUtility.UrlEncode(label.Name)}" data-group-action>
+            <span class="label no-margin<% if label.VisibleForCustomer: %> radius<% end %>" title="${label.Name}" style="background-color: #${label.Color}; ">${label.Name}</span>
+          </a>
+        </li>
+        <% end %>
+      </ul>
+      <% end %>
+      <a href="/project/${project.Slug}/changestate?state=4" data-group-action class="button tiny no-margin alert"><i class="fa fa-ban"></i> Sluiten</a>
+      <a href="/project/${project.Slug}/changestate?state=1" data-group-action class="button tiny no-margin"><i class="fa fa-info-circle"></i> Openen</a>
+      <a href="/project/${project.Slug}/changestate?state=3" data-group-action class="button tiny no-margin on-hold"><i class="fa fa-hand-paper-o"></i> On hold</a>
+      <% if CurrentUser.IsAdmin: %>
+      <a href="/project/${project.Slug}/changestate?state=2" data-group-action class="button tiny no-margin success"><i class="fa fa-thumbs-o-up"></i> Uitgevoerd</a>
+      <a href="/project/${project.Slug}/changestate?state=5" data-group-action class="button tiny no-margin alert"><i class="fa fa-trash"></i> Archiveren</a>
+      <% end %>
+    </div>
+  </div>
+  <% if CurrentUser.IsDanielle: %>
+  <div class="row">
+    <div class="small-2 columns">Verplaats taken naar een ander project:</div>
+    <div class="small-6 columns">
+      <input type="text" class="project-chooser-issue" id="move-issues-targetProject" name="targetProject" value="${project.Name}" placeholder="Project" required="" />
+      <input type="hidden" name="issue.Project.Id" value="${project.Id}" class="issue_Project_Id" />
+      <input type="hidden" value="${project.Slug}" class="issue_Project_Slug" />
+    </div>
+    <div class="small-2 columns">
+      <input type="checkbox" id="move-issues-renumber" name="renumber" /><label for="move-issues-renumber">Opnieuw nummeren</label>
+    </div>
+    <div class="small-2 columns">
+      <button id="move-issues-button" data-group-action="" class="tiny">Verplaats taken</button>
+    </div>
+  </div>
+  <% end %>
+  <hr style="margin-top: 10px;" />
+</div>
+
+<% if dump != null and CurrentUser.IsDanielle: %>
+  <% OutputSubView("_dummyissue") %>
+<% end %>
+
+<% OutputSubView("_issuetable", {"actions": true}) %>
 
 <% if result.ResultCount < result.TotalResultCount: %>
 <div class="row">
@@ -288,7 +278,7 @@
         <label for="item_FilterString">Filter: </label>
       </div>
       <div class="small-9 columns">
-        <input type="text" id="item_FilterString" name="item.FilterString"/>
+        <input type="text" id="item_FilterString" name="item.FilterString" />
       </div>
     </div>
     <div class="row">
@@ -296,7 +286,7 @@
         <label for="item_Name">Naam: </label>
       </div>
       <div class="small-9 columns">
-        <input type="text" id="item_Name" name="item.Name"/>
+        <input type="text" id="item_Name" name="item.Name" />
       </div>
     </div>
     <div class="row">
@@ -309,7 +299,7 @@
     </div>
     <div class="row">
       <div class="small-12 columns text-right">
-        <input type="submit" class="button small" value="Nieuw"/>
+        <input type="submit" class="button small" value="Nieuw" />
       </div>
     </div>
   </form>
@@ -340,13 +330,13 @@
     }
 
     <% if CurrentUser.IsDanielle : %>
-    $('#move-issues-button').click(function (e) {
-      e.preventDefault();
-      var targetProject = $('.issue_Project_Slug').val();
-      var renumber = $('#move-issues-renumber').prop('checked');
-      var issues = $('#group-actions input[name=issues]').val();
-      location.href = '/issue/changeproject?sourceProjectSlug=${project.Slug}&targetProjectSlug=' + targetProject + '&renumber=' + renumber + '&issueNumbers=' + issues;
-    });
+      $('#move-issues-button').click(function (e) {
+        e.preventDefault();
+        var targetProject = $('.issue_Project_Slug').val();
+        var renumber = $('#move-issues-renumber').prop('checked');
+        var issues = $('#group-actions input[name=issues]').val();
+        location.href = '/issue/changeproject?sourceProjectSlug=${project.Slug}&targetProjectSlug=' + targetProject + '&renumber=' + renumber + '&issueNumbers=' + issues;
+      });
     <% end %>
   });
 </script>

@@ -809,9 +809,12 @@ table {
   padding-top: 10px;
   margin-bottom: 10px;
 
-  a, button {
+  a {
+    margin-bottom: 0px !important;
+  }
+  
+  button {
     margin-bottom: 10px !important;
-
   }
 
   .button.active {
@@ -1088,7 +1091,7 @@ table {
   }
 
   label {
-    font-size: 0.8em;
+    font-size: 0.9rem;
     margin-top: 0.5em;
   }
 }
