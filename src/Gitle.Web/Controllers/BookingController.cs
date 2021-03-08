@@ -39,6 +39,19 @@ namespace Gitle.Web.Controllers
                 .OrderByDescending(x => x.Date)
                 .GroupBy(x => x.Date.Date)
                 .ToDictionary(g => new { date = g.Key, total = g.ToList().Sum(x => x.Minutes), jamesTotal = JamesRegistrationService.GetTotalMinutesForEmployee(CurrentUser.JamesEmployeeId, g.Key) }, g => g.ToList());
+
+            for (var day = date.StartOfWeek(); day <= date.EndOfWeek() && day <= DateTime.Today; day = day.AddDays(1))
+            {
+                if (bookings.Keys.All(x => x.date != day))
+                {
+                    var jamesTotal = JamesRegistrationService.GetTotalMinutesForEmployee(CurrentUser.JamesEmployeeId, day);
+                    if (jamesTotal > 0 || day == DateTime.Today)
+                        bookings.Add(new { date = day, total = 0d, jamesTotal}, new List<Booking>());
+                }
+            }
+
+            bookings = bookings.OrderByDescending(x => x.Key.date).ToDictionary(x => x.Key, x => x.Value);
+            
             PropertyBag.Add("bookings", bookings);
             PropertyBag.Add("billablePercentage", bookings.Count > 0 ? Math.Round(bookings.Sum(x => x.Value.Where(y => !y.Unbillable).Sum(y => y.Minutes)) / bookings.Sum(x => x.Value.Sum(y => y.Minutes)), 4) * 100d : 0);
             PropertyBag.Add("billableAmount", bookings.Count > 0 ? bookings.Sum(x => x.Value.Where(y => !y.Unbillable).Sum(y => (decimal) y.Hours * y.Project.HourPrice)) : 0);

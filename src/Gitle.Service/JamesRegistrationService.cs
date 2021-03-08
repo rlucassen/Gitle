@@ -51,7 +51,7 @@
         {
             var result = 0;
 
-            using (var reader = ExecuteSqlQuery("james", "SELECT SUM(datediff(mi, wd.StartTijd, wd.EindTijd)) + ISNULL((SELECT SUM(r.DuurMinuten) " +
+            using (var reader = ExecuteSqlQuery($"james", $"SELECT SUM(datediff(mi, wd.StartTijd, ISNULL(wd.EindTijd, '{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}'))) + ISNULL((SELECT SUM(r.DuurMinuten) " +
                                                          "FROM [Registratie] r " +
                                                          "JOIN Werkdag wd on wd.Id = r.Werkdag " +
                                                          "JOIN [Week] w on w.Id = wd.[Week] " +
