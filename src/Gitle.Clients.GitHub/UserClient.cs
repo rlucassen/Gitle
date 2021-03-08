@@ -1,10 +1,5 @@
-﻿using System;
-using Newtonsoft.Json;
-
-namespace Gitle.Clients.GitHub
+﻿namespace Gitle.Clients.GitHub
 {
-    using System.Collections.Generic;
-    using System.Configuration;
     using Gitle.Clients.GitHub.Models;
     using Interfaces;
     using ServiceStack.ServiceClient.Web;
@@ -21,7 +16,8 @@ namespace Gitle.Clients.GitHub
 
         public User Get(string accessToken)
         {
-            return _client.Get<User>("user?access_token=" + accessToken);
+            _client.Headers.Add("Authorization", "token " + accessToken);
+            return _client.Get<User>("user");
         }
     }
 }
