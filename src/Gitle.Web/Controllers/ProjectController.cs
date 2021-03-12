@@ -56,6 +56,17 @@
             long customer, long application, ProjectType type, bool closed)
         {
             var projects = session.Query<Project>().Where(x => x.IsActive);
+
+            if (!CurrentUser.IsDanielle)
+            {
+                projects = projects.Where(x => x.Type != ProjectType.Administration);
+            }
+
+            if (!CurrentUser.IsAdmin)
+            {
+                projects = projects.Where(p => p.Users.Any(x => x.User == CurrentUser));
+            }
+
             var recordsTotal = projects.Count();
 
             if (!string.IsNullOrEmpty(orderColumn))
@@ -88,16 +99,6 @@
                 projects = projects.Where(x => x.Number.ToString() == search || x.Name.Contains(search) ||
                                                x.Application.Name.Contains(search) ||
                                                x.Application.Customer.Name.Contains(search));
-            }
-
-            if (!CurrentUser.IsDanielle)
-            {
-                projects = projects.Where(x => x.Type != ProjectType.Administration);
-            }
-
-            if (!CurrentUser.IsAdmin)
-            {
-                projects = projects.Where(p => p.Users.Any(x => x.User == CurrentUser));
             }
 
             var recordsFiltered = projects.Count();
