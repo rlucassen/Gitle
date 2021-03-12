@@ -45,8 +45,11 @@
         <div class="large-0 small-12 columns">
           <input type="checkbox" id="closedProjects" /> Laat gesloten projecten zien
         </div>
-
       </div>
+    </div>
+    <% else: %>
+    <div class="large-0 small-12 columns">
+      <input type="checkbox" id="closedProjects" /> Laat gesloten projecten zien
     </div>
     <% end %>
     <table id="project-table" class="small-blocks"></table>

@@ -62,20 +62,20 @@
 
         public virtual int NewIssueNumber => (Issues.Any() ? Issues.Max(x => x.Number) : 0) + 1;
 
-        public virtual double BillableMinutes => Bookings.Where(x => x.IsActive && !x.Unbillable).Sum(x => x.Minutes);
-        public virtual double BillableHours => Bookings.Where(x => x.IsActive && !x.Unbillable).Sum(x => x.Hours);
-        public virtual double UnBillableMinutes => Bookings.Where(x => x.IsActive && x.Unbillable).Sum(x => x.Minutes);
-        public virtual double UnBillableHours => Bookings.Where(x => x.IsActive && x.Unbillable).Sum(x => x.Hours);
-        public virtual double TotalHours => Bookings.Where(x => x.IsActive).Sum(x => x.Hours);
+        public virtual double BillableMinutes => Bookings?.Where(x => x.IsActive && !x.Unbillable).Sum(x => x.Minutes) ?? 0;
+        public virtual double BillableHours => Bookings?.Where(x => x.IsActive && !x.Unbillable).Sum(x => x.Hours) ?? 0;
+        public virtual double UnBillableMinutes => Bookings?.Where(x => x.IsActive && x.Unbillable).Sum(x => x.Minutes) ?? 0;
+        public virtual double UnBillableHours => Bookings?.Where(x => x.IsActive && x.Unbillable).Sum(x => x.Hours) ?? 0;
+        public virtual double TotalHours => Bookings?.Where(x => x.IsActive).Sum(x => x.Hours) ?? 0;
         public virtual double RemainingHours => BudgetHours - TotalHours;
 
         public virtual string CompleteName => $"{Name} ({Application?.Name}, {Application?.Customer?.Name})";
 
-        public virtual IReadOnlyList<Issue> OpenIssues => Issues.Where(x => !x.IsArchived && !x.IsAdministrative && x.IsOpen).ToList();
-        public virtual IReadOnlyList<Issue> DoneIssues => Issues.Where(x => !x.IsArchived && !x.IsAdministrative && x.IsDone).ToList();
-        public virtual IReadOnlyList<Issue> HoldIssues => Issues.Where(x => !x.IsArchived && !x.IsAdministrative && x.IsOnHold).ToList();
-        public virtual IReadOnlyList<Issue> ClosedIssues => Issues.Where(x => !x.IsArchived && !x.IsAdministrative && x.IsClosed && !x.IsFullyInvoiced).ToList();
-        public virtual IReadOnlyList<Issue> TotalIssues => Issues.Where(x => !x.IsArchived && !x.IsAdministrative && (!x.IsClosed || !x.IsFullyInvoiced)).ToList();
+        public virtual IReadOnlyList<Issue> OpenIssues => Issues?.Where(x => !x.IsArchived && !x.IsAdministrative && x.IsOpen).ToList() ?? new List<Issue>();
+        public virtual IReadOnlyList<Issue> DoneIssues => Issues?.Where(x => !x.IsArchived && !x.IsAdministrative && x.IsDone).ToList() ?? new List<Issue>();
+        public virtual IReadOnlyList<Issue> HoldIssues => Issues?.Where(x => !x.IsArchived && !x.IsAdministrative && x.IsOnHold).ToList() ?? new List<Issue>();
+        public virtual IReadOnlyList<Issue> ClosedIssues => Issues?.Where(x => !x.IsArchived && !x.IsAdministrative && x.IsClosed && !x.IsFullyInvoiced).ToList() ?? new List<Issue>();
+        public virtual IReadOnlyList<Issue> TotalIssues => Issues?.Where(x => !x.IsArchived && !x.IsAdministrative && (!x.IsClosed || !x.IsFullyInvoiced)).ToList() ?? new List<Issue>();
 
         public virtual double OpenIssuesPercentageOf(int totalIssues) => PercentageOf(OpenIssues.Count, totalIssues);
         public virtual double DoneIssuesPercentageOf(int totalIssues) => PercentageOf(DoneIssues.Count, totalIssues);

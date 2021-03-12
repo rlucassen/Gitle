@@ -163,10 +163,12 @@
 <script>
   $(function () {
     $('#closedProjects').change(function () {
-      if ($(this).is(':checked'))
+      if ($(this).is(':checked')) {
         $('#projecten tr.red').show();
-      else
+      } else {
         $('#projecten tr.red').hide();
+        $('#projecten tr.red input[type=checkbox]:checked').closest('tr').show();
+      }
     }).change();
 
   });
