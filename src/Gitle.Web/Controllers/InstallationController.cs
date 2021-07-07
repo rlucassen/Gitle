@@ -56,14 +56,29 @@ namespace Gitle.Web.Controllers
             var server = session.Get<Server>(serverId);
 
             if (item != null)
+            {
                 BindObjectInstance(item, "item");
-            else
-                item = BindObject<Installation>("item");
 
-            item.Application = application;
-            item.Server = server;
-            item.Url = item.Url.Replace("https://", "").Replace("http://", "");
-            item.Slug = $"{application.Name}-{item.InstallationType.ToString()}".Slugify();
+                item.Server = server;
+                item.Url = item.Url.Replace("https://", "").Replace("http://", "");
+            }
+            else
+            {
+                item = BindObject<Installation>("item");
+                
+                var itemAlreadyExists = session.Query<Installation>().Any(x => x.IsActive && x.Application.Id == applicationId && x.InstallationType == item.InstallationType);
+                if (itemAlreadyExists)
+                {
+                    Flash.Add("error", "De installatie welke u wilde opslaan bestaat al. Het gaat hier om de combinatie van Applicatie en Type...");
+                    RedirectToUrl("/installation");
+                    return;
+                }
+
+                item.Application = application;
+                item.Server = server;
+                item.Url = item.Url.Replace("https://", "").Replace("http://", "");
+                item.Slug = $"{application.Name}-{item.InstallationType.ToString()}".Slugify();
+            }
 
             using (var tx = session.BeginTransaction())
             {
